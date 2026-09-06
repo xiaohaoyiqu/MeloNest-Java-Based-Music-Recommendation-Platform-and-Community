@@ -1,17 +1,17 @@
-   
-                      
-                                         
-                   
-  
-                                             
-                    
-  
-                                                 
-   
 
-                                                                     
 
-                  
+
+
+
+
+
+
+
+
+
+
+
+
 .el-input .el-input__wrapper,
 .el-input--large .el-input__wrapper,
 .el-input__wrapper {
@@ -52,7 +52,7 @@
   color: var(--text-secondary) !important;
 }
 
-                     
+
 .el-select .el-input__wrapper {
   background: var(--input-bg) !important;
   border: 1px solid var(--input-border) !important;
@@ -66,7 +66,7 @@
   color: var(--text-primary) !important;
 }
 
-                     
+
 .el-textarea .el-textarea__inner {
   background: var(--input-bg) !important;
   border: 1px solid var(--input-border) !important;
@@ -86,7 +86,7 @@
   color: var(--text-primary) !important;
 }
 
-                           
+
 .el-radio-button__inner {
   background: var(--input-bg) !important;
   border: 1px solid var(--input-border) !important;
@@ -104,7 +104,7 @@
   border-left: 1px solid var(--input-border) !important;
 }
 
-                             
+
 .el-select-dropdown {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;
@@ -123,24 +123,24 @@
   background: var(--input-bg-hover) !important;
 }
 
-                                   
-                      
-                                  
 
-                    
-                    
-                        
-                   
-                  
-                     
 
-                  
+
+
+
+
+
+
+
+
+
+
 .el-switch.is-checked .el-switch__core {
   background-color: var(--el-color-primary, #409eff) !important;
   border-color: var(--el-color-primary, #409eff) !important;
 }
 
-                  
+
 .el-slider__runway {
   background: var(--input-bg) !important;
 }
@@ -153,7 +153,7 @@
   border: 2px solid var(--el-color-primary, #409eff) !important;
 }
 
-                     
+
 .el-progress__text {
   color: var(--text-primary) !important;
 }
@@ -166,20 +166,20 @@
   background: var(--el-color-primary, #409eff) !important;
 }
 
-                    
+
 .el-overlay {
   background: rgba(0, 0, 0, 0.7) !important;
 }
 
-                                                      
+
 
 body {
   margin: 0;
   font-family: var(--app-font-body);
 }
 
-                                                               
-                                     
+
+
 :root {
   --text-primary: rgba(30, 30, 30, 0.95);
   --text-secondary: rgba(60, 60, 60, 0.75);

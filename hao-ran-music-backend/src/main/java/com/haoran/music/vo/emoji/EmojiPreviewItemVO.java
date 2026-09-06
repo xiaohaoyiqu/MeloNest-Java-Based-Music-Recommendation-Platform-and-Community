@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.vo.emoji;
 
@@ -8,7 +8,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-                               
+
 @Data
 public class EmojiPreviewItemVO implements Serializable {
 

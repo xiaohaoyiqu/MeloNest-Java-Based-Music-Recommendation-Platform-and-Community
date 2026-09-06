@@ -20,10 +20,10 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
-   
-                      
-                      
-   
+
+
+
+
 @Slf4j
 @Aspect
 @Component
@@ -35,50 +35,50 @@ public class ApiLogAspect {
     @Resource
     private ApiPerformanceMetricsService apiPerformanceMetricsService;
 
-       
-                           
-       
+
+
+
     @Pointcut("@annotation(com.haoran.music.common.aspect.ApiLog)")
     public void apiLogPointcut() {
     }
 
-       
-           
-      
-                           
-                     
-                           
-       
+
+
+
+
+
+
+
     @Around("apiLogPointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
-                 
+
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         ApiLog apiLog = method.getAnnotation(ApiLog.class);
 
-                 
+
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = method.getName();
         String module = StringUtils.isNotBlank(apiLog.module()) ? apiLog.module() : className;
 
-               
+
         Object[] args = joinPoint.getArgs();
         String params = "";
         if (apiLog.logArgs() && args != null && args.length > 0) {
             params = summarizeArguments(args);
         }
 
-                 
+
         log.debug("【{}】{}.{}() 开始执行 - 参数: {}", module, className, methodName, params);
 
         Object result = null;
         try {
-                     
+
             result = joinPoint.proceed();
 
-                     
+
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
 

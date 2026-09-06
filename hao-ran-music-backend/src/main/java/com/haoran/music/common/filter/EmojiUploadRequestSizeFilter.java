@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.common.filter;
 
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-                                                                                                
+
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 20)
 public class EmojiUploadRequestSizeFilter extends OncePerRequestFilter {

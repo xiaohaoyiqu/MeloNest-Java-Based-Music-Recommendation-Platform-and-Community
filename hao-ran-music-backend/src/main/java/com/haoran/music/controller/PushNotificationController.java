@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/push-notifications")
@@ -24,11 +24,11 @@ public class PushNotificationController {
     @Autowired
     private PushNotificationService pushNotificationService;
 
-       
-                    
-      
-                     
-       
+
+
+
+
+
     @GetMapping("/active")
     @ApiLog("获取推送通知")
     public Result<List<PushNotificationVO>> getActivePushNotifications() {
@@ -36,12 +36,12 @@ public class PushNotificationController {
         return Result.success(pushes);
     }
 
-       
-                  
-      
-                       
-                     
-       
+
+
+
+
+
+
     @GetMapping("/type/{type}")
     @ApiLog("获取指定类型推送")
     public Result<List<PushNotificationVO>> getPushNotificationsByType(@PathVariable String type) {
@@ -49,12 +49,12 @@ public class PushNotificationController {
         return Result.success(pushes);
     }
 
-       
-                    
-      
-                         
-                      
-       
+
+
+
+
+
+
     @PostMapping("/create")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @ApiLog("创建推送通知")
@@ -66,12 +66,12 @@ public class PushNotificationController {
         return Result.error(500, "创建推送失败");
     }
 
-       
-                    
-      
-                         
-                   
-       
+
+
+
+
+
+
     @DeleteMapping("/{pushId}")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @ApiLog("删除推送通知")

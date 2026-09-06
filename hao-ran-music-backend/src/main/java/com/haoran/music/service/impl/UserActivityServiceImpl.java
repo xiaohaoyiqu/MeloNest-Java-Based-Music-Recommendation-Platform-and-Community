@@ -20,10 +20,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                             
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserActivityServiceImpl implements UserActivityService {
@@ -49,14 +49,14 @@ public class UserActivityServiceImpl implements UserActivityService {
     @Resource
     private com.haoran.music.mapper.UserMapper userMapper;
 
-       
-               
-       
+
+
+
     private static final Map<String, String> ACTIVITY_TYPE_MAP = new HashMap<>();
 
-       
-               
-       
+
+
+
     private static final Map<String, String> TARGET_TYPE_MAP = new HashMap<>();
 
     static {
@@ -83,7 +83,7 @@ public class UserActivityServiceImpl implements UserActivityService {
 
         List<UserActivityVO> activities = new ArrayList<>();
 
-                      
+
         if ("all".equals(type) || "post".equals(type)) {
             activities.addAll(getPostActivities(userId));
         }
@@ -100,18 +100,18 @@ public class UserActivityServiceImpl implements UserActivityService {
             activities.addAll(getShareActivities(userId));
         }
 
-                
+
         activities.sort(Comparator.comparing(
                 UserActivityVO::getCreatedTime,
                 Comparator.nullsLast(Comparator.reverseOrder())));
 
-             
+
         int total = activities.size();
         int start = (page - 1) * size;
         int end = Math.min(start + size, total);
         List<UserActivityVO> pageRecords = start < total ? activities.subList(start, end) : new ArrayList<>();
 
-                 
+
         for (UserActivityVO activity : pageRecords) {
             activity.setTimeDescription(formatTimeDescription(activity.getCreatedTime()));
         }
@@ -138,19 +138,19 @@ public class UserActivityServiceImpl implements UserActivityService {
             return stats;
         }
 
-                 
+
         Long postCount = musicPostMapper.selectCount(
                 new LambdaQueryWrapper<MusicPost>().eq(MusicPost::getUserId, userId)
         );
         stats.put("postCount", postCount != null ? postCount.intValue() : 0);
 
-                 
+
         Long commentCount = commentMapper.selectCount(
                 new LambdaQueryWrapper<Comment>().eq(Comment::getUserId, userId)
         );
         stats.put("commentCount", commentCount != null ? commentCount.intValue() : 0);
 
-                 
+
         Long likeCount = songLikeMapper.selectCount(
                 new LambdaQueryWrapper<SongLike>()
                         .eq(SongLike::getUserId, userId)
@@ -158,7 +158,7 @@ public class UserActivityServiceImpl implements UserActivityService {
         );
         stats.put("likeCount", likeCount != null ? likeCount.intValue() : 0);
 
-                                  
+
         Long favoriteCount = songLikeMapper.selectCount(
                 new LambdaQueryWrapper<SongLike>()
                         .eq(SongLike::getUserId, userId)
@@ -166,7 +166,7 @@ public class UserActivityServiceImpl implements UserActivityService {
         );
         stats.put("favoriteCount", favoriteCount != null ? favoriteCount.intValue() : 0);
 
-                 
+
         Long shareCount = userActivityMapper.selectCount(
                 new LambdaQueryWrapper<UserActivity>()
                         .eq(UserActivity::getUserId, userId)
@@ -178,8 +178,8 @@ public class UserActivityServiceImpl implements UserActivityService {
         return stats;
     }
 
-       
-       
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void recordActivity(Long userId, String activityType, String targetType, Long targetId, String content) {
@@ -199,9 +199,9 @@ public class UserActivityServiceImpl implements UserActivityService {
         log.info("记录用户活动: userId={}, type={}, target={}, id={}", userId, activityType, targetType, targetId);
     }
 
-       
-             
-       
+
+
+
     private List<UserActivityVO> getPostActivities(Long userId) {
         List<MusicPost> posts = musicPostMapper.selectList(
                 new LambdaQueryWrapper<MusicPost>()
@@ -221,7 +221,7 @@ public class UserActivityServiceImpl implements UserActivityService {
             vo.setContent(post.getContent());
             vo.setCreatedTime(post.getCreateTime());
 
-                   
+
             Map<String, Object> target = new HashMap<>();
             target.put("id", post.getId());
             target.put("content", post.getContent());
@@ -234,9 +234,9 @@ public class UserActivityServiceImpl implements UserActivityService {
         }).collect(Collectors.toList());
     }
 
-       
-             
-       
+
+
+
     private List<UserActivityVO> getCommentActivities(Long userId) {
         List<Comment> comments = commentMapper.selectList(
                 new LambdaQueryWrapper<Comment>()
@@ -260,9 +260,9 @@ public class UserActivityServiceImpl implements UserActivityService {
         }).collect(Collectors.toList());
     }
 
-       
-             
-       
+
+
+
     private List<UserActivityVO> getLikeActivities(Long userId) {
         List<SongLike> likes = songLikeMapper.selectList(
                 new LambdaQueryWrapper<SongLike>()
@@ -286,9 +286,9 @@ public class UserActivityServiceImpl implements UserActivityService {
         }).collect(Collectors.toList());
     }
 
-       
-             
-       
+
+
+
     private List<UserActivityVO> getFavoriteActivities(Long userId) {
         List<SongLike> favorites = songLikeMapper.selectList(
                 new LambdaQueryWrapper<SongLike>()
@@ -359,15 +359,15 @@ public class UserActivityServiceImpl implements UserActivityService {
         return target;
     }
 
-       
-               
-                                                     
-       
+
+
+
+
     private String determineCommentTargetType(Comment comment) {
         if (comment.getTargetType() != null) {
-                                               
+
             Integer targetType = comment.getTargetType();
-                                  
+
             switch (targetType) {
                 case 1: return "song";
                 case 2: return "album";
@@ -379,13 +379,13 @@ public class UserActivityServiceImpl implements UserActivityService {
         return "post";
     }
 
-       
-                          
-      
-                     
-                       
-                      
-       
+
+
+
+
+
+
+
     private PageResult<UserActivityVO> emptyActivityPage(Integer page, Integer size) {
         long safePage = page == null || page <= 0 ? 1L : page;
         long safeSize = size == null || size <= 0 ? 20L : size;
@@ -398,9 +398,9 @@ public class UserActivityServiceImpl implements UserActivityService {
         return result;
     }
 
-       
-              
-       
+
+
+
     private String formatTimeDescription(LocalDateTime time) {
         if (time == null) {
             return "";

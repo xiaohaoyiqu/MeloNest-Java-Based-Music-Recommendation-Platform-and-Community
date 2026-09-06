@@ -1,12 +1,12 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
-   
-                                                                                
-                                                                 
-   
+
+
+
+
 public final class ValidPlayPolicy {
 
     private static final int DEFAULT_THRESHOLD_SECONDS = 30;

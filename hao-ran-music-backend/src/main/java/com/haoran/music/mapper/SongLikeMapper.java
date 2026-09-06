@@ -9,21 +9,21 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-   
-                      
-                               
-   
+
+
+
+
 @Mapper
 public interface SongLikeMapper extends BaseMapper<SongLike> {
 
-       
-                           
-      
-                           
-                                 
-                          
-                               
-       
+
+
+
+
+
+
+
+
     @Select("<script>"
             + "SELECT sl.user_id "
             + "FROM song_like sl "
@@ -44,7 +44,7 @@ public interface SongLikeMapper extends BaseMapper<SongLike> {
                                           @Param("songIds") List<Long> songIds,
                                           @Param("limit") int limit);
 
-                             
+
     @Select("SELECT COUNT(*) FROM song_like sl "
             + PublicStatsSql.INNER_USER_JOIN + "sl.user_id "
             + "WHERE sl.is_favorite = 1 AND sl.deleted = 0"

@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-   
-                           
-  
-                      
-   
+
+
+
+
+
 @Data
 public class MediaReplicaReconciliationVO {
     private LocalDateTime checkedAt;
@@ -36,10 +36,10 @@ public class MediaReplicaReconciliationVO {
     private Map<String, Object> queueObservation;
     private List<String> warnings = new ArrayList<>();
 
-       
-                              
-      
-  
+
+
+
+
     @Data
     public static class Mismatch {
         private String type;

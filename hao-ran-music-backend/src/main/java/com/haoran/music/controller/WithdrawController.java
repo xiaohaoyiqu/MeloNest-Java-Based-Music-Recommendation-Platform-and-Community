@@ -1,7 +1,7 @@
-   
-                      
-                     
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Map;
 
-   
-        
-                     
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/withdraw")
@@ -32,9 +32,9 @@ public class WithdrawController {
         this.withdrawService = withdrawService;
     }
 
-       
-                
-       
+
+
+
     @ApiLog("申请提现")
     @PostMapping("/apply")
     public Result applyWithdraw(HttpServletRequest request,
@@ -47,9 +47,9 @@ public class WithdrawController {
                 withdrawType, withdrawAccount, withdrawName));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取提现记录")
     @GetMapping("/my")
     public Result getMyWithdrawRecords(HttpServletRequest request,
@@ -60,9 +60,9 @@ public class WithdrawController {
         return Result.success(withdrawService.getMyWithdrawRecords(creatorId, status, page, size));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取提现统计")
     @GetMapping("/statistics")
     public Result getWithdrawStatistics(HttpServletRequest request) {
@@ -70,9 +70,9 @@ public class WithdrawController {
         return Result.success(withdrawService.getWithdrawStatistics(creatorId));
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取可提现金额")
     @GetMapping("/available")
     public Result getAvailableAmount(HttpServletRequest request) {
@@ -80,9 +80,9 @@ public class WithdrawController {
         return Result.success(withdrawService.getAvailableAmount(creatorId));
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("获取待审核提现")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending")
@@ -91,9 +91,9 @@ public class WithdrawController {
         return Result.success(withdrawService.getPendingWithdraws(page, size));
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("审核提现")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/review/{id}")
@@ -108,9 +108,9 @@ public class WithdrawController {
                 approved, reviewReason));
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("完成提现")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{id}/complete")
@@ -123,9 +123,9 @@ public class WithdrawController {
         return Result.success(withdrawService.completeWithdraw(id, transactionId, operatorId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取提现详情")
     @GetMapping("/{id}")
     public Result getWithdrawDetail(HttpServletRequest request,

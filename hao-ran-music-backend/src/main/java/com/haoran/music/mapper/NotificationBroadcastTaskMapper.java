@@ -1,8 +1,8 @@
-   
-                           
-  
-                      
-   
+
+
+
+
+
 package com.haoran.music.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -57,9 +57,9 @@ public interface NotificationBroadcastTaskMapper extends BaseMapper<Notification
     @Update("UPDATE notification_broadcast_task SET status = 'success', error_message = NULL, next_retry_time = NULL, completed_at = NOW(), update_time = NOW() WHERE task_id = #{taskId} AND deleted = 0 AND status = 'running'")
     int markSuccess(@Param("taskId") String taskId);
 
-       
-                                
-       
+
+
+
     @Update("UPDATE notification_broadcast_task SET status = 'failed', error_message = #{errorMessage}, cursor_user_id = #{cursorUserId}, success_count = #{successCount}, fail_count = #{failCount}, batch_count = #{batchCount}, next_retry_time = CASE WHEN #{retryDelayMinutes} IS NULL THEN NULL ELSE DATE_ADD(NOW(), INTERVAL #{retryDelayMinutes} MINUTE) END, completed_at = NOW(), update_time = NOW() WHERE task_id = #{taskId} AND deleted = 0 AND status = 'running'")
     int markFailed(@Param("taskId") String taskId,
                    @Param("cursorUserId") Long cursorUserId,

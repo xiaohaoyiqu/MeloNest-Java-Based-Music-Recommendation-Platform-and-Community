@@ -8,22 +8,22 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Data
 public class DJMixGenerateDTO {
 
     @Positive(message = "起始歌曲ID必须为正数")
     private Long baseSongId;
 
-                    
+
     @Positive(message = "起始歌曲ID必须为正数")
     private Long startSongId;
 
-                    
+
     @Positive(message = "歌曲ID必须为正数")
     private Long songId;
 
@@ -31,7 +31,7 @@ public class DJMixGenerateDTO {
     @Max(value = 180, message = "混音时长不能超过180分钟")
     private Integer durationMinutes;
 
-                                     
+
     @Size(max = 29, message = "一次最多手选29首歌曲")
     private List<@Positive(message = "手选歌曲ID必须为正数") Long> selectedSongIds;
 

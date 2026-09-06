@@ -29,11 +29,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class MusicHealthReportServiceImpl implements MusicHealthReportService {
@@ -78,19 +78,19 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
 
         Map<String, Object> report = new HashMap<>();
 
-               
+
         report.put("listeningSummary", getListeningSummary(userId));
 
-               
+
         report.put("explorationScore", getExplorationScore(userId));
 
-                 
+
         report.put("timeDistribution", getListeningTimeDistribution(userId));
 
-               
+
         report.put("musicFingerprint", getMusicFingerprint(userId));
 
-                     
+
         int lastYear = LocalDate.now().getYear() - 1;
         report.put("yearlyReport", getYearlyReport(userId, lastYear));
 
@@ -124,12 +124,12 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
     private Integer loadExplorationScore(Long userId) {
         log.debug("计算探索指数: userId={}", userId);
 
-                                                     
+
 
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         LocalDateTime ninetyDaysAgo = LocalDateTime.now().minusDays(90);
 
-                     
+
         LambdaQueryWrapper<ListenHistory> recentWrapper = new LambdaQueryWrapper<>();
         recentWrapper.eq(ListenHistory::getUserId, userId)
                 .eq(ListenHistory::getDeleted, 0)
@@ -141,7 +141,7 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-                       
+
         LambdaQueryWrapper<ListenHistory> pastWrapper = new LambdaQueryWrapper<>();
         pastWrapper.eq(ListenHistory::getUserId, userId)
                 .eq(ListenHistory::getDeleted, 0)
@@ -154,7 +154,7 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-                                         
+
         Set<Long> newSongIds = new HashSet<>(recentSongIds);
         newSongIds.removeAll(pastSongIds);
         int newSongRatio = recentSongIds.isEmpty() ? 0 :
@@ -162,14 +162,14 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
 
         Map<Long, Song> recentSongMap = loadSongMap(recentSongIds);
 
-                
+
         Set<String> genres = recentSongMap.values().stream()
                 .map(Song::getMainType)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
         int genreDiversity = Math.min(genres.size() * 5, 30);         
 
-                
+
         Set<String> artists = recentSongMap.values().stream()
                 .map(Song::getArtistNames)
                 .filter(Objects::nonNull)
@@ -192,7 +192,7 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
     private Map<String, Integer> loadListeningTimeDistribution(Long userId) {
         Map<String, Integer> distribution = new HashMap<>();
 
-                 
+
         distribution.put("深夜(0-6点)", 0);
         distribution.put("早晨(6-12点)", 0);
         distribution.put("下午(12-18点)", 0);
@@ -343,7 +343,7 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
         report.put("topArtists", topArtists);
         report.put("topSongs", topSongs);
 
-               
+
         Map<String, Integer> monthlyDistribution = monthlySummaryCovered
                 ? buildMonthlyDistributionFromSummaries(monthlySummaries)
                 : buildMonthlyDistributionFromHistories(histories);
@@ -387,7 +387,7 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
         Map<String, Object> fingerprint = new HashMap<>();
         fingerprint.put("userId", userId);
 
-                     
+
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
 
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
@@ -409,7 +409,7 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
 
         List<Song> songs = songMapper.selectBatchIds(new ArrayList<>(songIds));
 
-               
+
         Map<String, Integer> genreCounts = songs.stream()
                 .map(Song::getMainType)
                 .filter(Objects::nonNull)
@@ -423,7 +423,7 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
 
         fingerprint.put("genres", topGenres);
 
-                 
+
         Double avgEnergy = songs.stream()
                 .map(Song::getEnergy)
                 .filter(Objects::nonNull)
@@ -443,13 +443,13 @@ public class MusicHealthReportServiceImpl implements MusicHealthReportService {
         fingerprint.put("energyLevel", avgEnergy > 0.6 ? "高能量" : avgEnergy < 0.4 ? "低能量" : "中等能量");
         fingerprint.put("mood", avgValence > 0.6 ? "积极" : avgValence < 0.4 ? "消极" : "中性");
 
-             
+
         List<String> tags = new ArrayList<>();
         tags.addAll(topGenres);
         tags.add(fingerprint.get("energyLevel").toString());
         tags.add(fingerprint.get("mood").toString());
 
-                 
+
         int morningCount = 0, nightCount = 0;
         for (ListenHistory h : histories) {
             if (h.getCreateTime() == null) continue;

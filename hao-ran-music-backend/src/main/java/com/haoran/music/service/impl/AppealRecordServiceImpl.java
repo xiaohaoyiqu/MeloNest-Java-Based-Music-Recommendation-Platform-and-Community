@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-   
-                      
-                        
-   
+
+
+
+
 @Slf4j
 @Service
 public class AppealRecordServiceImpl extends ServiceImpl<AppealRecordMapper, AppealRecord> implements AppealRecordService {

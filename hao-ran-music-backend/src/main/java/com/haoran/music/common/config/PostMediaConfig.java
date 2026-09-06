@@ -1,7 +1,7 @@
-   
-                      
-                                                               
-   
+
+
+
+
 package com.haoran.music.common.config;
 
 import lombok.Data;
@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-   
-                                                                       
-   
+
+
+
 @Data
 @Component
 @ConfigurationProperties(prefix = "music.post")

@@ -17,10 +17,10 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Component
 public class FileUploadUtil {
@@ -35,7 +35,7 @@ public class FileUploadUtil {
     @Value("${music.upload-url-prefix}")
     private String urlPrefix;
 
-                  
+
     @Value("${music.node3.host}")
     private String node3Host;
 
@@ -48,13 +48,13 @@ public class FileUploadUtil {
     @Value("${music.node3.images-path}")
     private String node3ImagesPath;
 
-                             
+
     @Value("${music.nginx-url-prefix}")
     private String nginxUrlPrefix;
 
-                                                                       
 
-             
+
+
     @Resource
     private SecurityConfig securityConfig;
 
@@ -64,54 +64,54 @@ public class FileUploadUtil {
     @Resource
     private VirusScanService virusScanService;
 
-       
-                     
-       
+
+
+
     public String uploadAvatar(MultipartFile file) throws IOException {
         return uploadImage(file, avatarPath, "avatars", true, null, null);
     }
 
-       
-                           
-                        
-                         
-                          
-       
+
+
+
+
+
+
     public String uploadAvatar(MultipartFile file, Long userId, String username) throws IOException {
         return uploadImage(file, avatarPath, "avatars", true, userId, username);
     }
 
-       
-                       
-       
+
+
+
     public String uploadPlaylistCover(MultipartFile file) throws IOException {
         return uploadImage(file, playlistCoverPath, "playlist-covers", true, null, null);
     }
 
-       
-                             
-                        
-                         
-                          
-       
+
+
+
+
+
+
     public String uploadPlaylistCover(MultipartFile file, Long userId, String username) throws IOException {
         return uploadImage(file, playlistCoverPath, "playlist-covers", true, userId, username);
     }
 
-       
-           
-                        
-                               
-                                                
-                                    
-                                    
-                                     
-       
+
+
+
+
+
+
+
+
+
     private String uploadImage(MultipartFile file, String uploadPath, String type, boolean syncToNode3,
                                Long userId, String username) throws IOException {
         validateImageFile(file);
 
-               
+
         if (musicUploadConfig.isVirusScanEnabled() && virusScanService != null) {
             try {
                 boolean isClean = virusScanService.scanInputStream(
@@ -128,7 +128,7 @@ public class FileUploadUtil {
             } catch (Exception e) {
                 log.error("event=managed_upload_virus_scan_failed userId={} errorType={}",
                         userId, e.getClass().getSimpleName());
-                                                                                         
+
                 throw new SecurityException("virus scan failed, please try again later", e);
             }
         }
@@ -141,10 +141,10 @@ public class FileUploadUtil {
         String originalFilename = file.getOriginalFilename();
         String extension = getFileExtension(originalFilename);
 
-                                                    
+
         String filename;
         if (userId != null && username != null) {
-                                          
+
             String cleanUsername = username.replaceAll("[^a-zA-Z0-9_\\u4e00-\\u9fa5]", "_");
             filename = userId + "_" + cleanUsername + "_" + System.currentTimeMillis() + extension;
         } else {
@@ -153,18 +153,18 @@ public class FileUploadUtil {
 
         Path targetPath = Paths.get(uploadPath, filename);
 
-               
+
         long fileSize = file.getSize();
         if (musicUploadConfig.isCompressEnabled() && fileSize > musicUploadConfig.getCompressThreshold()) {
-                          
+
             File tempFile = File.createTempFile("upload_", extension);
             file.transferTo(tempFile);
 
             try {
-                           
+
                 float quality = ImageCompressUtil.getRecommendedQuality(fileSize);
 
-                       
+
                 long compressedSize = ImageCompressUtil.compressImage(
                         tempFile.getAbsolutePath(),
                         targetPath.toString(),
@@ -176,38 +176,38 @@ public class FileUploadUtil {
                         type, fileSize, compressedSize, ratio);
 
             } finally {
-                         
+
                 if (tempFile.exists()) {
                     tempFile.delete();
                 }
             }
         } else {
-                   
+
             Files.copy(file.getInputStream(), targetPath);
         }
 
-                   
+
         if (syncToNode3) {
             syncToNode3(targetPath.toString(), filename, type);
         }
 
-                                 
-                             
+
+
         if (securityConfig.isHideIp()) {
-                      
+
             return "/" + type + "/" + filename;
         } else {
-                            
+
             return nginxUrlPrefix + type + "/" + filename;
         }
     }
 
-       
-                      
-       
+
+
+
     private void syncToNode3(String localFilePath, String filename, String type) {
         try {
-                            
+
             String node3TargetPath = node3ImagesPath + type;
 
             ProcessExecutionUtil.Result result = ProcessExecutionUtil.execute(java.util.Arrays.asList(
@@ -229,9 +229,9 @@ public class FileUploadUtil {
         }
     }
 
-       
-             
-       
+
+
+
     private void validateImageFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("文件不能为空");
@@ -248,9 +248,9 @@ public class FileUploadUtil {
         }
     }
 
-       
-              
-       
+
+
+
     private String getFileExtension(String filename) {
         if (filename == null || filename.isEmpty()) {
             return ".jpg";
@@ -262,9 +262,9 @@ public class FileUploadUtil {
         return filename.substring(lastDotIndex).toLowerCase();
     }
 
-       
-              
-       
+
+
+
     private String formatSize(long bytes) {
         if (bytes < 1024) {
             return bytes + " B";
@@ -275,9 +275,9 @@ public class FileUploadUtil {
         }
     }
 
-       
-                          
-       
+
+
+
     public boolean deleteFile(String fileUrl) {
         if (fileUrl == null || fileUrl.isEmpty()) {
             return false;
@@ -286,7 +286,7 @@ public class FileUploadUtil {
         try {
             String filename = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
 
-                     
+
             File localFile = null;
             String type = null;
             if (fileUrl.contains("/avatars/")) {
@@ -301,7 +301,7 @@ public class FileUploadUtil {
                 localFile.delete();
             }
 
-                          
+
             if (type != null) {
                 deleteFromNode3(filename, type);
             }
@@ -313,18 +313,18 @@ public class FileUploadUtil {
         return false;
     }
 
-       
-                             
-       
+
+
+
     private void deleteFromNode3(String filename, String type) {
         try {
-                              
+
             if (!WorkProcessingUtil.isPathSafe(filename)) {
                 log.error("event=managed_upload_delete_rejected reason=invalid_filename");
                 return;
             }
 
-                                          
+
             ProcessExecutionUtil.execute(java.util.Arrays.asList(
                     "ssh",
                     node3User + "@" + node3Host,
@@ -335,9 +335,9 @@ public class FileUploadUtil {
         }
     }
 
-       
-               
-       
+
+
+
 
     public long getMaxImageSize() {
         return musicUploadConfig.getImageMaxFileSize();
@@ -355,9 +355,9 @@ public class FileUploadUtil {
         return musicUploadConfig.isCompressEnabled();
     }
 
-       
-             
-       
+
+
+
     public long getCompressThreshold() {
         return musicUploadConfig.getCompressThreshold();
     }

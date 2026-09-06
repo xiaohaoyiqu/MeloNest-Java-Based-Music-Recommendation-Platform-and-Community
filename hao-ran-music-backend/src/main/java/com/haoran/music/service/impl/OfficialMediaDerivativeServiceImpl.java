@@ -40,11 +40,11 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
-   
-                                                                     
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivativeService {
@@ -142,16 +142,16 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return tasks.size();
     }
 
-       
-                                                     
-      
-                                  
-                              
-                                  
-                                    
-                                          
-                                                                         
-       
+
+
+
+
+
+
+
+
+
+
     private MediaDerivativeTask registerTask(String mediaType, Long mediaId, String sourceUrl,
                                              Long sourceSize, Integer sourceQuality) {
         MediaDerivativeTask existing = mediaDerivativeTaskMapper.selectLatest(mediaType, mediaId, sourceUrl);
@@ -188,11 +188,11 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return task;
     }
 
-       
-                                                                
-      
-                            
-       
+
+
+
+
+
     private void submitTask(Long taskId) {
         if (ObjectUtils.isEmpty(taskId)) {
             return;
@@ -206,11 +206,11 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         }
     }
 
-       
-                                              
-      
-                            
-       
+
+
+
+
+
     private void processTask(Long taskId) {
         if (mediaDerivativeTaskMapper.claimForProcessing(taskId, staleProcessingBefore()) != 1) {
             return;
@@ -237,11 +237,11 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         }
     }
 
-       
-                                 
-      
-                            
-       
+
+
+
+
+
     private void markTaskCompleted(Long taskId) {
         MediaDerivativeTask task = mediaDerivativeTaskMapper.selectById(taskId);
         if (ObjectUtils.isEmpty(task)) {
@@ -256,12 +256,12 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         mediaDerivativeTaskMapper.updateById(task);
     }
 
-       
-                                                                        
-      
-                            
-                                  
-       
+
+
+
+
+
+
     private void markTaskFailed(Long taskId, String error) {
         MediaDerivativeTask task = mediaDerivativeTaskMapper.selectById(taskId);
         if (ObjectUtils.isEmpty(task)) {
@@ -309,9 +309,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return value.substring(0, maxLength);
     }
 
-       
-                                                        
-       
+
+
+
     private void generateSongDerivatives(Long songId, String sourceUrl, Long sourceSize, Integer sourceQuality) {
         Song song = songMapper.selectById(songId);
         if (ObjectUtils.isEmpty(song)) {
@@ -389,9 +389,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         throw new IllegalStateException("歌曲派生文件生成失败");
     }
 
-       
-                                                    
-       
+
+
+
     private void generateMvDerivatives(Long mvId, String sourceUrl) {
         File sourceFile = resolveSourceFile(sourceUrl);
         if (ObjectUtils.isEmpty(sourceFile)) {
@@ -431,9 +431,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         throw new IllegalStateException("MV 派生文件生成失败");
     }
 
-       
-                                                                                
-       
+
+
+
     private boolean generateMvVariant(MV update, String originalPath, Long mvId, int sourceHeight,
                                       int targetHeight, int crf) {
         if (targetHeight > 360 && (sourceHeight <= 0 || sourceHeight < targetHeight)) {
@@ -467,9 +467,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return true;
     }
 
-       
-                                                                  
-       
+
+
+
     private void submitAfterCommit(Runnable task) {
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
@@ -483,9 +483,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         task.run();
     }
 
-       
-                                                      
-       
+
+
+
     private File resolveSourceFile(String sourceUrl) {
         String localPath = resolveUploadedSubmissionPath(sourceUrl);
         if (StrUtil.isBlank(localPath)) {
@@ -504,11 +504,11 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return file;
     }
 
-       
-                                                                              
-                                                                               
-                                              
-       
+
+
+
+
+
     private String resolveUploadedSubmissionPath(String sourceUrl) {
         if (StrUtil.isBlank(sourceUrl) || StrUtil.isBlank(multiFilePath)) {
             return null;
@@ -549,9 +549,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return result;
     }
 
-       
-                                                                
-       
+
+
+
     private String remotePath(String basePath, String... parts) {
         String path = normalizeDir(basePath);
         for (String part : parts) {
@@ -570,9 +570,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
     }
 
-       
-                                                              
-       
+
+
+
     private String buildPublicUrl(String relativePath) {
         String prefix = normalizeDir(nginxUrlPrefix);
         String cleanPath = relativePath.replace("\\", "/");
@@ -582,9 +582,9 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return prefix + cleanPath;
     }
 
-       
-                                                            
-       
+
+
+
     private String normalizeDir(String path) {
         String normalized = StrUtil.blankToDefault(path, "").replace("\\", "/");
         while (normalized.endsWith("//")) {
@@ -593,36 +593,36 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return normalized.endsWith("/") ? normalized : normalized + "/";
     }
 
-       
-                                                
-       
+
+
+
     private String extensionOr(String fileName, String fallback) {
         String extension = CommonUtil.getFileExtension(fileName);
         return StrUtil.isNotBlank(extension) ? extension : fallback;
     }
 
-       
-                          
-      
-                       
-                           
-                    
-       
+
+
+
+
+
+
+
     private String officialSongFileName(Song song, String extension) {
         return OfficialMediaFileNameUtil.build(song.getName(), song.getArtistNames(),
                 song.getVersionName(), extension);
     }
 
-       
-                                              
-                                         
-      
-                         
-                       
-                          
-                             
-                                 
-       
+
+
+
+
+
+
+
+
+
+
     private void reserveSongTarget(Long songId, String role, String fileName,
                                    String publicUrl, String storagePath) {
         MediaAsset existing = mediaAssetMapper.selectByStorage(
@@ -687,18 +687,18 @@ public class OfficialMediaDerivativeServiceImpl implements OfficialMediaDerivati
         return "audio/mpeg";
     }
 
-       
-                                                                           
-       
+
+
+
     private boolean isLosslessSource(String extension, Integer sourceQuality) {
         return LOSSLESS_AUDIO_EXTENSIONS.contains(extension)
                 || (ObjectUtils.isNotEmpty(sourceQuality) && sourceQuality >= 3
                 && LOSSLESS_AUDIO_EXTENSIONS.contains(extension));
     }
 
-       
-                                                                     
-       
+
+
+
     private void setSongSize(Song update, String quality, long size) {
         if (size <= 0) {
             return;

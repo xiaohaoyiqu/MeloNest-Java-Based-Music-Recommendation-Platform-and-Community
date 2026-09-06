@@ -1,15 +1,15 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import cn.hutool.core.util.StrUtil;
 
 import java.net.URI;
 
-   
-                                                                   
-   
+
+
+
 public final class MediaSourceUrlUtil {
 
     private MediaSourceUrlUtil() {
@@ -33,9 +33,9 @@ public final class MediaSourceUrlUtil {
             return value;
         }
         try {
-                                                                               
-                                                                                
-                                                                          
+
+
+
             URI uri = URI.create(UrlHelper.encodePath(value));
             String path = uri.getRawPath();
             if (path == null || !path.startsWith(mediaRoot)) {

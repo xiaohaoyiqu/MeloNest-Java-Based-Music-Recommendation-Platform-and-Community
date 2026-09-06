@@ -47,10 +47,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-   
-                      
-                               
-   
+
+
+
+
 @Slf4j
 @Service
 public class SongResourceRequestServiceImpl implements SongResourceRequestService {
@@ -65,7 +65,7 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
     private final AlbumMapper albumMapper;
     private final UserMapper userMapper;
     private final SongRequestConfig songRequestConfig;
-                                                        
+
 
     @Autowired
     private AudioQualityDetector audioQualityDetector;
@@ -160,10 +160,10 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
         AudioQualityDetector.AudioInfo audioInfo = null;
 
         if (file != null && !file.isEmpty()) {
-                      
+
             fileUrl = handleFileUpload(file, userId);
 
-                      
+
             try {
                 audioInfo = audioQualityDetector.detectAudioInfo(fileUrl);
                 log.info("[SongResourceRequest] 音质检测完成: {} -> {}", songName, audioInfo.getQualityName());
@@ -183,7 +183,7 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
         request.setRemark(remark);
         request.setFileUrl(fileUrl);
 
-                   
+
         if (audioInfo != null) {
             request.setDetectedQuality(audioInfo.getQualityLevel());
             request.setFileSize(audioInfo.getFileSize());
@@ -228,7 +228,7 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
         request.setMatchedSongId(dto.getMatchedSongId());
         request.setHandleResult(dto.getHandleResult());
 
-                              
+
         if ("completed".equals(dto.getStatus()) && StrUtil.isNotBlank(request.getFileUrl())) {
             Long autoSongId = autoCreateSongFromRequest(request);
             if (autoSongId == null) {
@@ -250,13 +250,13 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
                 dto.getId(), dto.getStatus(), handlerId, request.getAutoSongId());
     }
 
-       
-                  
-       
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public Long autoCreateSongFromRequest(SongResourceRequest request) {
         try {
-                          
+
             LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<Song>()
                 .eq(Song::getName, request.getSongName());
             Song existingSong = songMapper.selectOne(wrapper);
@@ -266,21 +266,21 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
                 return existingSong.getId();
             }
 
-                                          
+
             Artist artist = workProcessingUtil.getOrCreateArtist(request.getArtistName());
 
-                      
+
             Album album = null;
             if (StrUtil.isNotBlank(request.getAlbumName())) {
                 album = getOrCreateAlbum(request.getAlbumName(), artist.getId());
             }
 
-                     
+
             Song song = new Song();
             song.setName(request.getSongName());
             song.setCover(album != null ? album.getCover() : "/default-cover.png");
 
-                                         
+
             Integer quality = request.getDetectedQuality() != null ? request.getDetectedQuality() : 2;
             WorkProcessingUtil.setSongQualityField(song, quality, request.getFileUrl(), request.getFileSize());
 
@@ -295,7 +295,7 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
                 throw new BusinessException(ResultCode.ERROR, "歌曲资源发布失败，请稍后重试");
             }
 
-                                         
+
             workProcessingUtil.createSongArtistRelation(song.getId(), artist.getId(), artist.getName());
             officialMediaDerivativeService.submitSongDerivativeJob(song.getId(), request.getFileUrl(),
                     request.getFileSize(), request.getDetectedQuality());
@@ -315,9 +315,9 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
         }
     }
 
-       
-              
-       
+
+
+
     private Album getOrCreateAlbum(String albumName, Long artistId) {
         LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<Album>()
             .eq(Album::getName, albumName);
@@ -349,7 +349,7 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
             throw new BusinessException(ResultCode.ERROR, "文件名不能为空");
         }
 
-                                      
+
         SecurityCheckUtil.CheckResult nameCheck = SecurityCheckUtil.checkFileName(originalFilename);
         if (!nameCheck.isSafe()) {
             throw new BusinessException(ResultCode.ERROR, "文件名包含非法字符");
@@ -381,13 +381,13 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
         File targetFile = new File(targetDir, safeFilename);
         try {
             file.transferTo(targetFile);
-                                                                
+
             boolean clean = virusScanService.scanFile(targetFile);
             if (!clean) {
                 targetFile.delete();
                 throw new BusinessException(ResultCode.ERROR, "song resource virus scan failed");
             }
-                                                                                                               
+
             boolean synced = copyToNode2(targetFile.getAbsolutePath(), songRequestConfig.getNode2().getPath() + "/" + datePath + "/" + userPath, safeFilename);
             if (synced) {
                 log.info("event=song_resource_file_synced target=node2");
@@ -471,9 +471,9 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
         return result;
     }
 
-       
-                                                  
-       
+
+
+
     private boolean copyToNode2(String localFilePath, String node2Dir, String filename) {
         try {
             validatePathSafety(localFilePath);
@@ -519,14 +519,14 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
             return false;
         }
     }
-       
-              
-       
+
+
+
     private void validatePathSafety(String path) {
         if (StrUtil.isBlank(path)) {
             throw new SecurityException("路径不能为空");
         }
-                   
+
         if (path.contains("|") || path.contains("&") || path.contains(";") ||
             path.contains("$") || path.contains("`") || path.contains("\n") ||
             path.contains("\r") || path.contains("\\") && !path.contains("/")) {
@@ -611,7 +611,7 @@ public class SongResourceRequestServiceImpl implements SongResourceRequestServic
         vo.setNotified(entity.getNotified() == 1);
         vo.setCreateTime(entity.getCreateTime());
 
-                 
+
         vo.setDetectedQuality(entity.getDetectedQuality());
         vo.setQualityName(entity.getDetectedQuality() != null ?
             audioQualityDetector.getQualityName(entity.getDetectedQuality()) : null);

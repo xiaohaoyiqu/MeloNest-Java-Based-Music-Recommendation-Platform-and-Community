@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-   
-                         
-  
-                      
-   
+
+
+
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,10 +21,10 @@ public class Node3MediaInventory {
     private String errorCategory;
     private List<FileEntry> files = new ArrayList<>();
 
-       
-                     
-      
-  
+
+
+
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

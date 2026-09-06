@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -14,31 +14,31 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
-   
-             
-   
+
+
+
 @Mapper
 public interface ConversationMapper extends BaseMapper<Conversation> {
 
-       
-                
-      
-                         
-                   
-       
+
+
+
+
+
+
     @Select("SELECT * FROM conversation " +
             "WHERE (user_a_id = #{userId} OR user_b_id = #{userId}) " +
             "AND is_deleted = 0 " +
             "ORDER BY last_message_time DESC")
     List<Conversation> getConversationsByUserId(@Param("userId") Long userId);
 
-       
-                  
-      
-                            
-                            
-                   
-       
+
+
+
+
+
+
+
     @Select("SELECT * FROM conversation " +
             "WHERE ((user_a_id = #{userId1} AND user_b_id = #{userId2}) " +
             "OR (user_a_id = #{userId2} AND user_b_id = #{userId1})) " +
@@ -64,12 +64,12 @@ public interface ConversationMapper extends BaseMapper<Conversation> {
     int decrementUnreadCount(@Param("receiverId") Long receiverId,
                              @Param("senderId") Long senderId);
 
-       
-                 
-      
-                         
-                     
-       
+
+
+
+
+
+
     @Select("SELECT CASE " +
             "WHEN user_a_id = #{userId} THEN user_a_unread_count " +
             "ELSE user_b_unread_count " +

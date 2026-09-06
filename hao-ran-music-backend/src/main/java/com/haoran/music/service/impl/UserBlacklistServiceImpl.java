@@ -1,7 +1,7 @@
-   
-                      
-                         
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -30,17 +30,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-   
-            
-   
+
+
+
 @Slf4j
 @Service
 public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, UserBlacklist>
         implements UserBlacklistService {
 
-       
-                        
-  
+
+
+
     private static final int MAX_BLACKLIST = 200;
 
     private final UserBlacklistMapper userBlacklistMapper;
@@ -70,13 +70,13 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
             return false;
         }
 
-                     
+
         if (userId.equals(blacklistedUserId)) {
             log.warn("不能将自己加入黑名单: userId={}", userId);
             return false;
         }
 
-                        
+
         LambdaQueryWrapper<UserBlacklist> countWrapper = new LambdaQueryWrapper<>();
         countWrapper.eq(UserBlacklist::getUserId, userId);
         Long currentCount = userBlacklistMapper.selectCount(countWrapper);
@@ -85,7 +85,7 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
             return false;
         }
 
-                     
+
         LambdaQueryWrapper<UserBlacklist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserBlacklist::getUserId, userId)
                 .eq(UserBlacklist::getBlacklistedUserId, blacklistedUserId);
@@ -96,14 +96,14 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
             return true;
         }
 
-                      
+
         User blacklistedUser = userMapper.selectById(blacklistedUserId);
         if (ObjectUtils.isEmpty(blacklistedUser)) {
             log.warn("被拉黑用户不存在: blacklistedUserId={}", blacklistedUserId);
             return false;
         }
 
-                  
+
         UserBlacklist blacklist = new UserBlacklist();
         blacklist.setUserId(userId);
         blacklist.setBlacklistedUserId(blacklistedUserId);
@@ -113,10 +113,10 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
 
         int result = userBlacklistMapper.insert(blacklist);
 
-                   
+
         updateMutualStatus(userId, blacklistedUserId);
 
-                         
+
         if (result > 0) {
             cleanupRelationshipsForBlacklist(userId, blacklistedUserId);
             try {
@@ -146,7 +146,7 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
 
         int result = userBlacklistMapper.delete(wrapper);
 
-                   
+
         updateMutualStatus(userId, blacklistedUserId);
 
         log.info("移除黑名单成功: userId={}, blacklistedUserId={}", userId, blacklistedUserId);
@@ -198,18 +198,18 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
         return count != null && count > 0;
     }
 
-       
-                  
-                         
-                          
-       
+
+
+
+
+
     @Override
     public List<BlacklistUserVO> getBlacklistUserInfo(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return new ArrayList<>();
         }
 
-                  
+
         LambdaQueryWrapper<UserBlacklist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserBlacklist::getUserId, userId)
                 .orderByDesc(UserBlacklist::getCreateTime);
@@ -219,19 +219,19 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
             return new ArrayList<>();
         }
 
-                      
+
         List<Long> blacklistedUserIds = blacklistList.stream()
                 .map(UserBlacklist::getBlacklistedUserId)
                 .collect(Collectors.toList());
 
-                   
+
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.in(User::getId, blacklistedUserIds);
         List<User> users = userMapper.selectList(userWrapper);
         java.util.Map<Long, User> userMap = users.stream()
                 .collect(Collectors.toMap(User::getId, u -> u));
 
-               
+
         return blacklistList.stream()
                 .map(blacklist -> {
                     BlacklistUserVO vo = new BlacklistUserVO();
@@ -241,7 +241,7 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
                     vo.setCreateTime(blacklist.getCreateTime());
                     vo.setIsMutual(blacklist.getIsMutual());
 
-                             
+
                     User user = userMap.get(blacklist.getBlacklistedUserId());
                     if (user != null) {
                         vo.setNickname(user.getNickname());
@@ -258,9 +258,9 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
                 .collect(Collectors.toList());
     }
 
-       
-                                     
-       
+
+
+
     private void cleanupRelationshipsForBlacklist(Long userId, Long blacklistedUserId) {
         int removedForwardFollow = deleteFollowRelation(userId, blacklistedUserId);
         if (removedForwardFollow > 0) {
@@ -301,30 +301,30 @@ public class UserBlacklistServiceImpl extends ServiceImpl<UserBlacklistMapper, U
             userMapper.decrementFansCount(followeeId);
         }
     }
-       
-               
-                         
-                                       
-       
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateMutualStatus(Long userId, Long blacklistedUserId) {
-                                         
+
         LambdaQueryWrapper<UserBlacklist> wrapper1 = new LambdaQueryWrapper<>();
         wrapper1.eq(UserBlacklist::getUserId, userId)
                 .eq(UserBlacklist::getBlacklistedUserId, blacklistedUserId);
         UserBlacklist record1 = userBlacklistMapper.selectOne(wrapper1);
 
-                                         
+
         LambdaQueryWrapper<UserBlacklist> wrapper2 = new LambdaQueryWrapper<>();
         wrapper2.eq(UserBlacklist::getUserId, blacklistedUserId)
                 .eq(UserBlacklist::getBlacklistedUserId, userId);
         UserBlacklist record2 = userBlacklistMapper.selectOne(wrapper2);
 
-                   
+
         boolean isMutual = (record1 != null) && (record2 != null);
 
-                       
+
         if (record1 != null && !java.util.Objects.equals(record1.getIsMutual(), isMutual ? 1 : 0)) {
             record1.setIsMutual(isMutual ? 1 : 0);
             userBlacklistMapper.updateById(record1);

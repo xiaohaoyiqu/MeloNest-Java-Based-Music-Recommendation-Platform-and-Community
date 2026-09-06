@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-                                                                        
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("user_vip_exchange_order")

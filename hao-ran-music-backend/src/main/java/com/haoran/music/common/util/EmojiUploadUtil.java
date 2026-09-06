@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -25,40 +25,40 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-   
-           
-      
-              
-                 
-                       
-            
-   
+
+
+
+
+
+
+
+
 @Slf4j
 @Component
 public class EmojiUploadUtil {
 
 
-       
-              
-       
+
+
+
     @Value("${music.upload.emoji-path}")
     private String emojiPath;
 
-       
-                
-       
+
+
+
     @Value("${music.node3.emoji-path}")
     private String node3EmojiPath;
 
-       
-                
-       
+
+
+
     @Value("${music.node3.host}")
     private String node3Host;
 
-       
-              
-       
+
+
+
     @Value("${music.node3.user}")
     private String node3User;
 
@@ -72,9 +72,9 @@ public class EmojiUploadUtil {
     private VirusScanService virusScanService;
 
 
-       
-            
-       
+
+
+
     @PostConstruct
     public void init() {
         try {
@@ -102,23 +102,23 @@ public class EmojiUploadUtil {
         }
     }
 
-       
-             
-      
-                            
-                           
-                               
-                     
-                               
-                                            
-       
+
+
+
+
+
+
+
+
+
+
     public String uploadEmoji(MultipartFile file, Long userId, String packageName) throws IOException {
         String generatedFileName = FileSecurityUtil.generateSafeFileName(
                 file == null ? null : file.getOriginalFilename(), "emoji_" + userId);
         return uploadEmoji(file, userId, packageName, generatedFileName);
     }
 
-                                                                                                       
+
     public String uploadEmoji(MultipartFile file, Long userId, String packageName,
                               String managedFileName) throws IOException {
         if (file == null || file.isEmpty()) {
@@ -132,19 +132,19 @@ public class EmojiUploadUtil {
                 || managedFileName.indexOf('/') >= 0 || managedFileName.indexOf('\\') >= 0) {
             throw new IllegalArgumentException("非法的托管文件名");
         }
-                  
+
         File tempFile = null;
         File targetFile = null;
         String safeFileName = null;
         boolean node3SyncAttempted = false;
         boolean uploadCompleted = false;
         try {
-                          
+
             String tempFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             tempFile = new File(new File(emojiPath, "temp"), tempFileName);
             file.transferTo(tempFile);
 
-                                
+
             FileSecurityUtil.SecurityCheckResult result =
                     FileSecurityUtil.checkImageSecurity(tempFile, file.getOriginalFilename(), file.getContentType(),
                              musicUploadConfig.getEmojiMaxFileSize(),
@@ -157,7 +157,7 @@ public class EmojiUploadUtil {
                 throw new IllegalArgumentException(result.getMessage());
             }
 
-                   
+
             if (musicUploadConfig.isEmojiVirusScanEnabled() && virusScanService != null) {
                 try {
                     boolean isClean = virusScanService.scanFile(tempFile);
@@ -171,36 +171,36 @@ public class EmojiUploadUtil {
                 } catch (Exception e) {
                     log.error("event=emoji_upload_virus_scan_failed userId={} errorType={}",
                             userId, e.getClass().getSimpleName());
-                                                                                                 
+
                     throw new SecurityException("virus scan failed, please try again later", e);
                 }
             }
 
-                       
+
             safeFileName = managedFileName;
 
-                        
+
             File targetDir = new File(emojiPath, "custom");
             targetFile = new File(targetDir, safeFileName);
 
-                      
+
             if (musicUploadConfig.isEmojiCompressEnabled() && result.getFileSize() > musicUploadConfig.getEmojiCompressThreshold()) {
-                                 
+
                 float quality = ImageCompressUtil.getRecommendedQuality(result.getFileSize());
                 ImageCompressUtil.compressImage(tempFile.getAbsolutePath(),
                         targetFile.getAbsolutePath(), quality);
                 log.info("event=emoji_image_compressed originalBytes={} compressedBytes={}",
                         result.getFileSize(), targetFile.length());
             } else {
-                       
+
                 Files.copy(tempFile.toPath(), targetFile.toPath());
             }
 
-                          
+
             node3SyncAttempted = true;
             syncToNode3(targetFile, safeFileName);
 
-                        
+
             uploadCompleted = true;
             return "/emojis/custom/" + safeFileName;
 
@@ -216,7 +216,7 @@ public class EmojiUploadUtil {
                             e.getClass().getSimpleName());
                 }
             }
-                     
+
             if (tempFile != null && tempFile.exists()) {
                 try {
                     Files.deleteIfExists(tempFile.toPath());
@@ -228,25 +228,25 @@ public class EmojiUploadUtil {
         }
     }
 
-       
-              
-      
-                            
-                           
-                     
-                               
-       
+
+
+
+
+
+
+
+
     public String uploadPackageCover(MultipartFile file, Long userId) throws IOException {
         return uploadEmoji(file, userId, "cover");
     }
 
-       
-             
-      
-                          
-                          
-                        
-       
+
+
+
+
+
+
+
     public java.util.List<String> batchUploadEmojis(java.util.List<MultipartFile> files, Long userId) {
         java.util.List<String> result = new java.util.ArrayList<>();
 
@@ -265,12 +265,12 @@ public class EmojiUploadUtil {
         return result;
     }
 
-       
-                 
-      
-                            
-                           
-       
+
+
+
+
+
+
     void syncToNode3(File localFile, String fileName) throws IOException {
         try {
             ProcessExecutionUtil.Result result = executeNode3SyncCommand(java.util.Arrays.asList(
@@ -298,12 +298,12 @@ public class EmojiUploadUtil {
         return ProcessExecutionUtil.execute(command, 120);
     }
 
-       
-             
-      
-                            
-                   
-       
+
+
+
+
+
+
     public boolean deleteEmoji(String imagePath) {
         if (imagePath == null || imagePath.isEmpty()) {
             return false;
@@ -327,10 +327,10 @@ public class EmojiUploadUtil {
                 return false;
             }
 
-                     
+
             Files.deleteIfExists(target);
 
-                        
+
             if (!deleteFromNode3(fileName)) {
                 return false;
             }
@@ -344,20 +344,20 @@ public class EmojiUploadUtil {
         }
     }
 
-       
-                 
-      
-                          
-       
+
+
+
+
+
     boolean deleteFromNode3(String fileName) {
         try {
-                              
+
             if (!WorkProcessingUtil.isPathSafe(fileName)) {
                 log.error("event=emoji_node3_delete_rejected reason=invalid_filename");
                 return false;
             }
 
-                                          
+
             ProcessExecutionUtil.Result result = ProcessExecutionUtil.execute(java.util.Arrays.asList(
                     "ssh",
                     node3User + "@" + node3Host,
@@ -374,11 +374,11 @@ public class EmojiUploadUtil {
         }
     }
 
-       
-             
-      
-                      
-       
+
+
+
+
+
     public int cleanupTempFiles() {
         File tempDir = new File(emojiPath, "temp");
         if (!tempDir.exists()) {
@@ -403,20 +403,20 @@ public class EmojiUploadUtil {
         return count;
     }
 
-       
-                
-      
-                   
-       
+
+
+
+
+
     public String getEmojiPath() {
         return emojiPath;
     }
 
-       
-             
-      
-                   
-       
+
+
+
+
+
     public int getRetentionDays() {
         return musicUploadConfig.getEmojiRetentionDays();
     }

@@ -1,7 +1,7 @@
-   
-                      
-                            
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -16,9 +16,9 @@ import org.apache.ibatis.annotations.Update;
 import java.util.Map;
 import java.util.List;
 
-   
-               
-   
+
+
+
 @Mapper
 public interface PaymentOrderMapper extends BaseMapper<PaymentOrder> {
 

@@ -25,18 +25,18 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-   
-                      
-                                
-  
-        
-                                                            
-          
-                                                                        
-                                       
-                                      
-                                                 
-   
+
+
+
+
+
+
+
+
+
+
+
+
 @Configuration
 public class KafkaConsumerConfig {
 
@@ -49,9 +49,9 @@ public class KafkaConsumerConfig {
     @Value("${haoran.kafka.play-consumer-group:haoran-music-consumer}")
     private String playConsumerGroup;
 
-       
-              
-       
+
+
+
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> config = new HashMap<>();
@@ -67,12 +67,12 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(config);
     }
 
-       
-                   
-              
-                                         
-                        
-       
+
+
+
+
+
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
@@ -81,10 +81,10 @@ public class KafkaConsumerConfig {
         factory.setConcurrency(3);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
 
-                         
+
         factory.setRecordInterceptor(new PlayEventRecordInterceptor());
 
-                         
+
         ExponentialBackOffWithMaxRetries backOff = new ExponentialBackOffWithMaxRetries(3);
         backOff.setInitialInterval(1000);          
         backOff.setMultiplier(2.0);                 
@@ -96,11 +96,11 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-       
-                      
-               
-               
-       
+
+
+
+
+
     @Bean("fixedRetryKafkaListenerContainerFactory")
     public ConcurrentKafkaListenerContainerFactory<String, String> fixedRetryKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
@@ -109,10 +109,10 @@ public class KafkaConsumerConfig {
         factory.setConcurrency(3);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
 
-                  
+
         factory.setRecordInterceptor(new PlayEventRecordInterceptor());
 
-                 
+
         FixedBackOff backOff = new FixedBackOff(2000, 5);              
         CommonErrorHandler errorHandler = buildErrorHandler(backOff);
         factory.setCommonErrorHandler(errorHandler);

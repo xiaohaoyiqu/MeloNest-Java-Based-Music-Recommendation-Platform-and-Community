@@ -18,20 +18,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-   
-                      
-                            
-  
-                                         
-                                 
-   
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class GenericMusicSpiderImpl extends AbstractMusicSpider implements MusicSpiderService {
 
-       
-                      
-       
+
+
+
     private static final String API_BASE_URL = "https://api.example.com";
 
     @Override
@@ -44,7 +44,7 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         if (responseJson == null) {
             return false;
         }
-                        
+
         Integer code = responseJson.getInt("code");
         return code != null && code == 200;
     }
@@ -64,10 +64,10 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         List<Song> result = new ArrayList<>();
 
         try {
-                                    
+
             String url = getBaseUrl() + "/search/song?keyword=" + encode(keyword) + "&limit=" + limit;
 
-                   
+
             String response = doGet(url, null);
             JSONObject json = parseJson(response);
 
@@ -76,7 +76,7 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
                 return result;
             }
 
-                                  
+
             JSONArray songs = json.getJSONArray("data");
             if (songs != null && !songs.isEmpty()) {
                 for (int i = 0; i < songs.size() && result.size() < limit; i++) {
@@ -250,12 +250,12 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         return result;
     }
 
-       
-             
-      
-                        
-                   
-       
+
+
+
+
+
+
     private Song parseSong(JSONObject obj) {
         if (obj == null) {
             return null;
@@ -264,7 +264,7 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         try {
             Song song = new Song();
 
-                            
+
             song.setId(obj.getLong("id"));
             song.setName(obj.getStr("name"));
             song.setArtistIds(obj.getStr("artistIds"));
@@ -272,30 +272,30 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
             song.setAlbumId(obj.getLong("albumId"));
             song.setAlbumName(obj.getStr("albumName"));
 
-                   
+
             String durationStr = obj.getStr("duration");
             song.setDuration(parseDuration(durationStr));
 
-                   
+
             String dateStr = obj.getStr("publishDate");
             if (StrUtil.isNotBlank(dateStr)) {
                 try {
                     song.setReleaseDate(LocalDate.parse(dateStr));
                 } catch (Exception e) {
-                                
+
                 }
             }
 
-                   
+
             song.setMainType(obj.getStr("mainType"));
             song.setSubTypes(obj.getStr("subTypes"));
 
-                    
+
             song.setUrlStandard(obj.getStr("urlStandard"));
             song.setUrlHigh(obj.getStr("urlHigh"));
             song.setUrlLossless(obj.getStr("urlLossless"));
 
-                   
+
             song.setCover(obj.getStr("cover"));
 
             return song;
@@ -306,12 +306,12 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         }
     }
 
-       
-             
-      
-                        
-                   
-       
+
+
+
+
+
+
     private Artist parseArtist(JSONObject obj) {
         if (obj == null) {
             return null;
@@ -330,7 +330,7 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
             artist.setSongCount(Long.valueOf(obj.getInt("songCount", 0)));
             artist.setAlbumCount(Long.valueOf(obj.getInt("albumCount", 0)));
 
-                    
+
             String name = obj.getStr("name");
             if (StrUtil.isNotBlank(name)) {
                 artist.setFirstLetter(getFirstLetter(name));
@@ -344,12 +344,12 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         }
     }
 
-       
-             
-      
-                        
-                   
-       
+
+
+
+
+
+
     private Album parseAlbum(JSONObject obj) {
         if (obj == null) {
             return null;
@@ -361,13 +361,13 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
             album.setId(obj.getLong("id"));
             album.setName(obj.getStr("name"));
 
-                   
+
             String dateStr = obj.getStr("publishDate");
             if (StrUtil.isNotBlank(dateStr)) {
                 try {
                     album.setReleaseDate(LocalDate.parse(dateStr));
                 } catch (Exception e) {
-                             
+
                 }
             }
 
@@ -388,12 +388,12 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         }
     }
 
-       
-              
-      
-                     
-                  
-       
+
+
+
+
+
+
     private String getFirstLetter(String str) {
         if (StrUtil.isBlank(str)) {
             return "#";
@@ -401,13 +401,13 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
 
         char first = str.charAt(0);
 
-                    
+
         if (first >= 0x4E00 && first <= 0x9FA5) {
-                                    
+
             return String.valueOf(Character.toUpperCase(first));
         }
 
-               
+
         if ((first >= 'a' && first <= 'z') || (first >= 'A' && first <= 'Z')) {
             return String.valueOf(Character.toUpperCase(first));
         }
@@ -415,12 +415,12 @@ public class GenericMusicSpiderImpl extends AbstractMusicSpider implements Music
         return "#";
     }
 
-       
-            
-      
-                     
-                      
-       
+
+
+
+
+
+
     private String encode(String str) {
         if (StrUtil.isBlank(str)) {
             return "";

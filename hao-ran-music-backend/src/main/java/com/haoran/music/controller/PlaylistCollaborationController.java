@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                              
-   
+
+
+
+
 @RestController
 @RequestMapping("/playlist/collab")
 public class PlaylistCollaborationController {
@@ -24,9 +24,9 @@ public class PlaylistCollaborationController {
     @Resource
     private PlaylistCollaborationService playlistCollaborationService;
 
-       
-             
-       
+
+
+
     @ApiLog("开启歌单协作")
     @PostMapping("/{playlistId}/enable")
     public Result<Void> enableCollaboration(@PathVariable Long playlistId) {
@@ -34,12 +34,12 @@ public class PlaylistCollaborationController {
         return Result.success();
     }
 
-       
-              
-      
-                             
-                    
-  
+
+
+
+
+
+
     @ApiLog("关闭歌单协作")
     @PostMapping("/{playlistId}/disable")
     public Result<Void> disableCollaboration(@PathVariable Long playlistId) {
@@ -47,9 +47,9 @@ public class PlaylistCollaborationController {
         return Result.success();
     }
 
-       
-            
-       
+
+
+
     @ApiLog("邀请歌单协作者")
     @PostMapping("/{playlistId}/invite")
     public Result<Void> inviteCollaborator(
@@ -60,9 +60,9 @@ public class PlaylistCollaborationController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @ApiLog("接受协作邀请")
     @PostMapping("/{playlistId}/accept")
     public Result<Void> acceptInvitation(@PathVariable Long playlistId) {
@@ -70,9 +70,9 @@ public class PlaylistCollaborationController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @ApiLog("拒绝协作邀请")
     @PostMapping("/{playlistId}/decline")
     public Result<Void> declineInvitation(@PathVariable Long playlistId) {
@@ -80,9 +80,9 @@ public class PlaylistCollaborationController {
         return Result.success();
     }
 
-       
-            
-       
+
+
+
     @ApiLog("移除协作者")
     @DeleteMapping("/{playlistId}/collaborator/{userId}")
     public Result<Void> removeCollaborator(
@@ -99,9 +99,9 @@ public class PlaylistCollaborationController {
         return Result.success();
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取协作者列表")
     @GetMapping("/{playlistId}/collaborators")
     public Result<List<CollaboratorVO>> getCollaborators(
@@ -111,9 +111,9 @@ public class PlaylistCollaborationController {
         return Result.success(result);
     }
 
-       
-              
-       
+
+
+
     @ApiLog("更新协作者权限")
     @PutMapping("/{playlistId}/collaborator/{userId}")
     public Result<Void> updateCollaboratorPermission(
@@ -128,9 +128,9 @@ public class PlaylistCollaborationController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取歌单操作记录")
     @GetMapping("/{playlistId}/logs")
     public Result<PageResult<PlaylistOperationLogVO>> getOperationLogs(
@@ -143,9 +143,9 @@ public class PlaylistCollaborationController {
         return Result.success(result);
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("获取歌单协作审计摘要")
     @GetMapping("/{playlistId}/audit-events")
     public Result<List<Map<String, Object>>> getAuditEvents(
@@ -155,9 +155,9 @@ public class PlaylistCollaborationController {
         return Result.success(playlistCollaborationService.getAuditEvents(playlistId, limit, viewerId));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取我的协作歌单")
     @GetMapping("/my")
     public Result<List> getMyCollaborativePlaylists() {
@@ -165,9 +165,9 @@ public class PlaylistCollaborationController {
         return Result.success(result);
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("获取待处理的协作邀请")
     @GetMapping("/invitations/pending")
     public Result<List> getPendingInvitations() {

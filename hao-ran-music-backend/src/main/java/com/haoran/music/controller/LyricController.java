@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                     
-   
+
+
+
+
 
 @Slf4j
 @RestController
@@ -30,13 +30,13 @@ public class LyricController {
     @Resource
     private LyricService lyricService;
 
-       
-             
-      
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取歌曲歌词")
 
     @GetMapping("/{songId}")
@@ -46,12 +46,12 @@ public class LyricController {
         return Result.success(result);
     }
 
-       
-                
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取歌曲多语言歌词")
 
     @GetMapping("/{songId}/all")
@@ -62,16 +62,16 @@ public class LyricController {
         return Result.success(result);
     }
 
-       
-           
-      
-                            
-                            
-                          
-                            
-                            
-                   
-       
+
+
+
+
+
+
+
+
+
+
     @ApiLog("保存歌词")
 
     @PostMapping
@@ -86,19 +86,19 @@ public class LyricController {
         if (userId == null) {
             return Result.error(401, "请先登录");
         }
-                                                         
+
         Boolean result = lyricService.saveLyric(songId, content, language, lyricType,
                 CommonConstants.LYRIC_SOURCE_ADMIN, userId);
         return Result.success(result);
     }
 
-       
-           
-      
-                          
-                           
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("删除歌词")
 
     @DeleteMapping("/{lyricId}")
@@ -114,15 +114,15 @@ public class LyricController {
         return Result.success(result);
     }
 
-       
-             
-      
-                                 
-                                 
-                                           
-                                
-                     
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("请求翻译歌词")
 
     @PostMapping("/translate")
@@ -140,12 +140,12 @@ public class LyricController {
         return Result.success(taskId);
     }
 
-       
-             
-      
-                           
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取翻译状态")
 
     @GetMapping("/translate/status/{taskId}")
@@ -162,9 +162,9 @@ public class LyricController {
         return Result.success(result);
     }
 
-       
-                          
-       
+
+
+
     @ApiLog("找回最近歌词翻译任务")
     @GetMapping("/translate/latest/{songId}")
     @RateLimit(maxRequests = 30, timeWindowSeconds = 60, operation = "lyricTranslationLatest",
@@ -179,11 +179,11 @@ public class LyricController {
         return Result.success(lyricService.getLatestTranslationStatus(songId, userId));
     }
 
-       
-                
-      
-                   
-       
+
+
+
+
+
     @ApiLog("获取支持的语言")
 
     @GetMapping("/languages")
@@ -192,11 +192,11 @@ public class LyricController {
         return Result.success(result);
     }
 
-       
-                   
-      
-                   
-       
+
+
+
+
+
     @ApiLog("测试DeepSeek连接")
 
     @GetMapping("/test/deepseek")
@@ -206,12 +206,12 @@ public class LyricController {
         return Result.success(result);
     }
 
-       
-                     
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("读取本地歌词文件")
     @GetMapping("/local/{songId}")
     public Result<String> getLocalLyric(@PathVariable("songId") Long songId) {

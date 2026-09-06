@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.haoran.music.mapper.MusicPostMapper">
 
-        
-                           
-                        
-                               
-       
+
+
+
+
+
     <select id="selectByCondition" resultType="com.haoran.music.entity.MusicPost">
         SELECT * FROM post
         <where>

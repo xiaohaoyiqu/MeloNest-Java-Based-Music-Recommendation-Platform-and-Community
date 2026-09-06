@@ -1,7 +1,7 @@
-   
-                      
-                     
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -24,9 +24,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-   
-        
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/message")
@@ -48,13 +48,13 @@ public class MessageController {
         return userId;
     }
 
-       
-             
-      
-                                                  
-                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/send/text")
     @ApiLog("发送文本消息")
     @RateLimit(maxRequests = 12, timeWindowSeconds = 60, operation = "sendPrivateText",
@@ -69,13 +69,13 @@ public class MessageController {
         return Result.success(messageId);
     }
 
-       
-             
-      
-                                                    
-                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/send/emoji")
     @ApiLog("发送表情消息")
     public Result<Long> sendEmojiMessage(@RequestBody Map<String, Object> params,
@@ -88,13 +88,13 @@ public class MessageController {
         return Result.success(messageId);
     }
 
-       
-             
-      
-                                                            
-                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/image")
     @ApiLog("发送图片消息")
     public Result<Long> sendImageMessage(@RequestBody Map<String, Object> params,
@@ -117,13 +117,13 @@ public class MessageController {
         return Result.success(messageId);
     }
 
-       
-           
-      
-                                                           
-                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/send/song")
     @ApiLog("分享歌曲")
     public Result<Long> sendSongMessage(@RequestBody Map<String, Object> params,
@@ -137,13 +137,13 @@ public class MessageController {
         return Result.success(messageId);
     }
 
-       
-           
-      
-                                                             
-                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/send/album")
     @ApiLog("分享专辑")
     public Result<Long> sendAlbumMessage(@RequestBody Map<String, Object> params,
@@ -157,9 +157,9 @@ public class MessageController {
         return Result.success(messageId);
     }
 
-       
-            
-       
+
+
+
     @PostMapping("/send/mv")
     @ApiLog("分享视频")
     public Result<Long> sendMvMessage(@RequestBody Map<String, Object> params,
@@ -173,13 +173,13 @@ public class MessageController {
         return Result.success(messageId);
     }
 
-       
-           
-      
-                                                                   
-                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/send/playlist")
     @ApiLog("分享歌单")
     public Result<Long> sendPlaylistMessage(@RequestBody Map<String, Object> params,
@@ -193,15 +193,15 @@ public class MessageController {
         return Result.success(messageId);
     }
 
-       
-                   
-      
-                                
-                           
-                             
-                              
-                   
-       
+
+
+
+
+
+
+
+
+
     @GetMapping("/chat/{otherUserId}")
     @ApiLog("获取聊天消息")
     public Result<IPage<Map<String, Object>>> getChatMessages(@PathVariable Long otherUserId,
@@ -216,12 +216,12 @@ public class MessageController {
         return Result.success(messages);
     }
 
-       
-             
-      
-                            
-                   
-       
+
+
+
+
+
+
     @GetMapping("/conversations")
     @ApiLog("获取会话列表")
     public Result<List<Map<String, Object>>> getConversations(HttpServletRequest request) {
@@ -232,13 +232,13 @@ public class MessageController {
         return Result.success(conversations);
     }
 
-       
-              
-      
-                            
-                             
-                 
-       
+
+
+
+
+
+
+
     @PostMapping("/read/{messageId}")
     @ApiLog("标记消息已读")
     public Result<Boolean> markAsRead(@PathVariable Long messageId,
@@ -250,13 +250,13 @@ public class MessageController {
         return Result.success(success);
     }
 
-       
-                      
-      
-                                
-                              
-                      
-       
+
+
+
+
+
+
+
     @PostMapping("/read-all/{otherUserId}")
     @ApiLog("标记所有消息已读")
     public Result<Integer> markAllAsRead(@PathVariable Long otherUserId,
@@ -268,13 +268,13 @@ public class MessageController {
         return Result.success(count);
     }
 
-       
-           
-      
-                            
-                             
-                 
-       
+
+
+
+
+
+
+
     @PostMapping("/recall/{messageId}")
     @ApiLog("撤回消息")
     public Result<Boolean> recallMessage(@PathVariable Long messageId,
@@ -286,13 +286,13 @@ public class MessageController {
         return success ? Result.success(true) : Result.error(400, "撤回失败，可能超过2分钟限制或无权限操作");
     }
 
-       
-           
-      
-                            
-                             
-                 
-       
+
+
+
+
+
+
+
     @DeleteMapping("/{messageId}")
     @ApiLog("删除消息")
     public Result<Boolean> deleteMessage(@PathVariable Long messageId,
@@ -321,12 +321,12 @@ public class MessageController {
                 body.getMessageIds(), requireLogin(request), body.getReceiverId()));
     }
 
-       
-               
-      
-                            
-                     
-       
+
+
+
+
+
+
     @GetMapping("/unread/count")
     @ApiLog("获取未读消息数")
     public Result<Integer> getTotalUnreadCount(HttpServletRequest request) {
@@ -337,13 +337,13 @@ public class MessageController {
         return Result.success(count);
     }
 
-       
-                    
-      
-                                
-                              
-                     
-       
+
+
+
+
+
+
+
     @GetMapping("/unread/count/{otherUserId}")
     @ApiLog("获取指定用户未读消息数")
     public Result<Integer> getUnreadCountFromUser(@PathVariable Long otherUserId,
@@ -355,14 +355,14 @@ public class MessageController {
         return Result.success(count);
     }
 
-       
-                
-      
-                                
-                             
-                              
-                 
-       
+
+
+
+
+
+
+
+
     @PostMapping("/pin/{otherUserId}")
     @ApiLog("置顶会话")
     public Result<Boolean> setConversationPinned(@PathVariable Long otherUserId,
@@ -375,14 +375,14 @@ public class MessageController {
         return Result.success(success);
     }
 
-       
-                  
-      
-                                
-                             
-                              
-                 
-       
+
+
+
+
+
+
+
+
     @PostMapping("/block/{otherUserId}")
     @ApiLog("屏蔽用户")
     public Result<Boolean> setUserBlocked(@PathVariable Long otherUserId,
@@ -395,13 +395,13 @@ public class MessageController {
         return Result.success(success);
     }
 
-       
-                   
-      
-                                
-                              
-                      
-       
+
+
+
+
+
+
+
     @DeleteMapping("/chat/{otherUserId}")
     @ApiLog("清空聊天记录")
     public Result<Integer> clearChatHistory(@PathVariable Long otherUserId,
@@ -413,15 +413,15 @@ public class MessageController {
         return Result.success(count);
     }
 
-       
-             
-      
-                            
-                         
-                           
-                            
-                   
-       
+
+
+
+
+
+
+
+
+
     @GetMapping("/search")
     @ApiLog("搜索聊天消息")
     public Result<IPage<Map<String, Object>>> searchMessages(@RequestParam String keyword,
@@ -436,14 +436,14 @@ public class MessageController {
         return Result.success(messages);
     }
 
-                                                         
 
-       
-                   
-      
-                            
-                       
-       
+
+
+
+
+
+
+
     @GetMapping("/social/recommend/preference")
     @ApiLog("获取社交推荐偏好")
     public Result<MessageKeywordService.SocialRecommendPreference> getSocialRecommendPreference(HttpServletRequest request) {
@@ -454,13 +454,13 @@ public class MessageController {
         return Result.success(preference);
     }
 
-       
-                 
-      
-                                            
-                            
-                 
-       
+
+
+
+
+
+
+
     @PostMapping("/social/recommend/enabled")
     @ApiLog("设置社交推荐开关")
     public Result<Void> setSocialRecommendEnabled(@RequestBody Map<String, Boolean> params,
@@ -473,13 +473,13 @@ public class MessageController {
         return Result.success();
     }
 
-       
-                   
-      
-                             
-                              
-                 
-       
+
+
+
+
+
+
+
     @PostMapping("/social/recommend/preference")
     @ApiLog("保存社交推荐偏好")
     public Result<Void> saveSocialRecommendPreference(@RequestBody MessageKeywordService.SocialRecommendPreference preference,
@@ -491,12 +491,12 @@ public class MessageController {
         return Result.success();
     }
 
-       
-                 
-      
-                            
-                 
-       
+
+
+
+
+
+
     @DeleteMapping("/social/recommend/keywords")
     @ApiLog("清除社交推荐关键词")
     public Result<Void> clearUserKeywords(HttpServletRequest request) {

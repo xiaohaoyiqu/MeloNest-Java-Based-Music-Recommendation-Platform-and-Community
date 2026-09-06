@@ -2,40 +2,40 @@ package com.haoran.music.enums;
 
 import lombok.Getter;
 
-   
-                      
-                        
-   
+
+
+
+
 @Getter
 public enum VersionType {
-       
-         
-       
+
+
+
     ORIGINAL("original", "原版"),
 
-       
-          
-       
+
+
+
     REMIX("remix", "混音版"),
 
-       
-          
-       
+
+
+
     LIVE("live", "现场版"),
 
-       
-          
-       
+
+
+
     INSTRUMENTAL("instrumental", "伴奏版"),
 
-       
-           
-       
+
+
+
     ACOUSTIC("acoustic", "不插电版"),
 
-       
-          
-       
+
+
+
     EXTENDED("extended", "扩展版");
 
     private final String code;

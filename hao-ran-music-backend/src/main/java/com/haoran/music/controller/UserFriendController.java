@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -22,9 +22,9 @@ import javax.validation.Valid;
 import javax.annotation.Resource;
 import java.util.List;
 
-   
-          
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/friend")
@@ -33,13 +33,13 @@ public class UserFriendController {
     @Resource
     private UserFriendService userFriendService;
 
-       
-             
-      
-                           
-                                 
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("发送好友请求")
     @PostMapping("/request/{targetUserId}")
     public Result<Boolean> sendFriendRequest(
@@ -52,14 +52,14 @@ public class UserFriendController {
         return success ? Result.success(true) : Result.error("发送好友请求失败");
     }
 
-       
-                    
-      
-                           
-                            
-                                               
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("处理好友请求")
     @PutMapping("/request/{requestId}")
     public Result<Boolean> handleFriendRequest(
@@ -73,13 +73,13 @@ public class UserFriendController {
         return success ? Result.success(true) : Result.error("处理好友请求失败");
     }
 
-       
-             
-      
-                           
-                              
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取好友列表")
     @GetMapping("/list")
     public Result<List<FriendVO>> getFriendList(
@@ -92,12 +92,12 @@ public class UserFriendController {
         return Result.success(friends);
     }
 
-       
-                   
-      
-                           
-                       
-       
+
+
+
+
+
+
     @ApiLog("获取好友请求列表")
     @GetMapping("/requests")
     public Result<List<FriendRequestVO>> getFriendRequests(
@@ -109,13 +109,13 @@ public class UserFriendController {
         return Result.success(requests);
     }
 
-       
-             
-      
-                           
-                             
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("取消好友")
     @DeleteMapping("/{friendId}")
     public Result<Boolean> unfriend(
@@ -128,14 +128,14 @@ public class UserFriendController {
         return success ? Result.success(true) : Result.error("取消好友失败");
     }
 
-       
-             
-      
-                           
-                             
-                                                                  
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("设置特别关注")
     @PutMapping("/special/{friendId}")
     public Result<Boolean> setSpecialMark(
@@ -149,13 +149,13 @@ public class UserFriendController {
         return success ? Result.success(true) : Result.error("设置特别关注失败");
     }
 
-       
-             
-      
-                           
-                                           
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("设置好友分组")
     @PutMapping("/group")
     public Result<Boolean> setFriendGroup(
@@ -168,13 +168,13 @@ public class UserFriendController {
         return success ? Result.success(true) : Result.error("设置分组失败");
     }
 
-       
-             
-      
-                           
-                                          
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("设置好友备注")
     @PutMapping("/remark")
     public Result<Boolean> setFriendRemark(
@@ -187,14 +187,14 @@ public class UserFriendController {
         return success ? Result.success(true) : Result.error("设置备注失败");
     }
 
-       
-           
-      
-                           
-                             
-                          
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("屏蔽好友")
     @PutMapping("/block/{friendId}")
     public Result<Boolean> blockFriend(
@@ -208,13 +208,13 @@ public class UserFriendController {
         return success ? Result.success(true) : Result.error("操作失败");
     }
 
-       
-              
-      
-                           
-                                 
-                    
-       
+
+
+
+
+
+
+
     @ApiLog("检查是否为好友")
     @GetMapping("/check/{targetUserId}")
     public Result<Boolean> isFriend(
@@ -227,13 +227,13 @@ public class UserFriendController {
         return Result.success(isFriend);
     }
 
-       
-               
-      
-                           
-                             
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("检查是否特别关注")
     @GetMapping("/special/check/{friendId}")
     public Result<Boolean> isSpecialFollow(
@@ -246,12 +246,12 @@ public class UserFriendController {
         return Result.success(isSpecial);
     }
 
-       
-               
-      
-                           
-                       
-       
+
+
+
+
+
+
     @ApiLog("获取特别关注列表")
     @GetMapping("/special/list")
     public Result<List<FriendVO>> getSpecialFollows(
@@ -263,12 +263,12 @@ public class UserFriendController {
         return Result.success(friends);
     }
 
-       
-                      
-      
-                           
-                              
-       
+
+
+
+
+
+
     @ApiLog("获取互关好友列表")
     @GetMapping("/mutual/not-special")
     public Result<List<FriendVO>> getMutualFriendsNotSpecial(
@@ -280,12 +280,12 @@ public class UserFriendController {
         return Result.success(friends);
     }
 
-       
-               
-      
-                           
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取好友分组列表")
     @GetMapping("/groups")
     public Result<List<FriendGroupVO>> getFriendGroups(
@@ -297,13 +297,13 @@ public class UserFriendController {
         return Result.success(groups);
     }
 
-       
-             
-      
-                           
-                                   
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("创建好友分组")
     @PostMapping("/group")
     public Result<Long> createFriendGroup(
@@ -316,13 +316,13 @@ public class UserFriendController {
         return Result.success(groupId);
     }
 
-       
-             
-      
-                             
-                          
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("删除好友分组")
     @DeleteMapping("/group/{groupId}")
     public Result<Boolean> deleteFriendGroup(

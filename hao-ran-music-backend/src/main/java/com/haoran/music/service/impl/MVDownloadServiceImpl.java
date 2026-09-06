@@ -29,10 +29,10 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class MVDownloadServiceImpl implements MVDownloadService {
@@ -59,28 +59,28 @@ public class MVDownloadServiceImpl implements MVDownloadService {
             UserAccountStatusUtil.requireCanInteract(userId, userMapper::selectById, "下载MV");
         }
 
-                 
+
         MV mv = mvMapper.selectById(mvId);
         if (ObjectUtils.isEmpty(mv)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "MV不存在");
         }
         contentAccessService.requireMvAccess(mv, userId);
 
-                     
+
         checkVipPermissionForQuality(userId, quality);
 
-                      
+
         String downloadUrl = getDownloadUrl(mv, quality);
         if (StrUtil.isBlank(downloadUrl)) {
             throw new BusinessException("该清晰度暂无下载资源");
         }
 
-                
+
         response.setContentType("video/mp4");
         response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s - %s.mp4\"",
                 mv.getArtistNames() != null ? mv.getArtistNames() : "未知歌手", mv.getName()));
 
-                       
+
         if (userId != null) {
             try {
                 recommendService.recordUserAction(userId, "download_mv", mvId, 1);
@@ -90,7 +90,7 @@ public class MVDownloadServiceImpl implements MVDownloadService {
             }
         }
 
-               
+
         streamDownload(downloadUrl, response);
 
         log.info("event=mv_download_completed mvId={} quality={} userId={}", mvId, quality, userId);
@@ -111,7 +111,7 @@ public class MVDownloadServiceImpl implements MVDownloadService {
         info.put("mvName", mv.getName());
         info.put("artistNames", mv.getArtistNames() != null ? mv.getArtistNames() : "未知歌手");
 
-                    
+
         Map<String, Long> sizes = new HashMap<>();
         if (mv.getSize360p() != null && mv.getSize360p() > 0) {
             sizes.put("360p", mv.getSize360p());
@@ -124,7 +124,7 @@ public class MVDownloadServiceImpl implements MVDownloadService {
         }
         info.put("sizes", sizes);
 
-                                          
+
         String controlledUrl = "/api/mv/download/" + mvId + "?quality=" + quality;
         Long size = getFileSize(mv, quality);
         info.put("url", controlledUrl);
@@ -134,21 +134,21 @@ public class MVDownloadServiceImpl implements MVDownloadService {
         return info;
     }
 
-       
-                      
-                         
-                           
-       
+
+
+
+
+
     private void checkVipPermissionForQuality(Long userId, String quality) {
-                                
+
         VideoQuality videoQuality = parseVideoQuality(quality);
 
-                            
+
         if (videoQuality.isRequireVip()) {
             if (userId == null) {
                 throw new BusinessException(ResultCode.UNAUTHORIZED, "请先登录");
             }
-                             
+
             Boolean isVip = userVipService.isVip(userId);
             if (isVip == null || !isVip) {
                 throw new BusinessException("该清晰度需要VIP会员才能下载，请开通VIP后重试");
@@ -156,20 +156,20 @@ public class MVDownloadServiceImpl implements MVDownloadService {
         }
     }
     private VideoQuality parseVideoQuality(String quality) {
-                       
+
         String normalizedQuality = quality;
         if (quality.endsWith("p")) {
             normalizedQuality = quality.replace("p", "");
         }
 
-                     
+
         int resolution = Integer.parseInt(normalizedQuality);
         for (VideoQuality vq : com.haoran.music.enums.VideoQuality.values()) {
             if (vq.getResolution() == resolution) {
                 return vq;
             }
         }
-                 
+
         return VideoQuality.SD;
     }
 
@@ -182,15 +182,15 @@ public class MVDownloadServiceImpl implements MVDownloadService {
         }
     }
 
-       
-                  
-      
-                         
-                                                         
-                   
-       
+
+
+
+
+
+
+
     private String getDownloadUrl(MV mv, String quality) {
-                              
+
         String normalizedQuality = quality;
         if (!quality.endsWith("p")) {
             normalizedQuality = quality + "p";
@@ -213,15 +213,15 @@ public class MVDownloadServiceImpl implements MVDownloadService {
         }
     }
 
-       
-                  
-      
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
     private Long getFileSize(MV mv, String quality) {
-                       
+
         String normalizedQuality = quality;
         if (!quality.endsWith("p")) {
             normalizedQuality = quality + "p";
@@ -238,12 +238,12 @@ public class MVDownloadServiceImpl implements MVDownloadService {
         }
     }
 
-       
-           
-      
-                           
-                             
-       
+
+
+
+
+
+
     private void streamDownload(String url, HttpServletResponse response) {
         HttpURLConnection connection = null;
         InputStream inputStream = null;

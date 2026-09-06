@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.YearMonth;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Component
 public class SimpleUserTask {
@@ -28,9 +28,9 @@ public class SimpleUserTask {
     @Autowired
     private UserMusicSummaryService userMusicSummaryService;
 
-       
-                    
-       
+
+
+
     @Scheduled(cron = "${schedule.task.simple-user.daily-classification-cron}")
     public void dailyUserClassification() {
         log.info("========== 开始执行每日用户分类任务 ==========");
@@ -46,9 +46,9 @@ public class SimpleUserTask {
         }
     }
 
-       
-                     
-       
+
+
+
     @Scheduled(cron = "${schedule.task.simple-user.bot-check-cron}")
     public void checkBotUsers() {
         try {

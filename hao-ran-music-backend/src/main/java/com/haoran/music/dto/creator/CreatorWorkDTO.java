@@ -6,10 +6,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-   
-                      
-                          
-   
+
+
+
+
 @Data
 public class CreatorWorkDTO {
 
@@ -39,48 +39,48 @@ public class CreatorWorkDTO {
     @NotNull(message = "请选择是否展示实名信息")
     private Boolean showRealName;
 
-       
-                           
-       
+
+
+
     private Integer allowDownload;
 
-       
-                           
-       
+
+
+
     private Integer allowComment;
 
-       
-                           
-       
+
+
+
     private Integer allowShare;
 
-       
-                        
-       
+
+
+
     private Integer isPaid;
 
-       
-            
-       
+
+
+
     private Integer price;
 
-       
-              
-       
+
+
+
     private Integer subscribePeriod;
 
-       
-                             
-       
+
+
+
     private Integer uploadType;
 
-       
-                       
-       
+
+
+
     private String fileUrls;
 
-       
-               
-       
+
+
+
     private String zipFileUrl;
 }

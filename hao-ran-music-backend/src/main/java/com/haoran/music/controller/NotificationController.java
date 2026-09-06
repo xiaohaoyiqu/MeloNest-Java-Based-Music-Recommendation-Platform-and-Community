@@ -17,10 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                     
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/notifications")
@@ -29,12 +29,12 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-       
-                 
-      
-                                    
-                   
-       
+
+
+
+
+
+
     @GetMapping("/unread-count")
     @ApiLog("获取未读通知数量")
     public Result<Integer> getUnreadCount(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -45,14 +45,14 @@ public class NotificationController {
         return Result.success(count.intValue());
     }
 
-       
-               
-      
-                                    
-                       
-                         
-                   
-       
+
+
+
+
+
+
+
+
     @GetMapping("/list")
     @ApiLog("获取通知列表")
     public Result<Page<Notification>> getNotificationList(
@@ -83,13 +83,13 @@ public class NotificationController {
         return Result.success(result);
     }
 
-       
-             
-      
-                                    
-                         
-                   
-       
+
+
+
+
+
+
+
     @GetMapping("/latest")
     @ApiLog("获取最新通知")
     public Result<List<Notification>> getLatestNotifications(
@@ -103,13 +103,13 @@ public class NotificationController {
         return Result.success(notifications);
     }
 
-       
-                  
-      
-                           
-                                  
-                         
-       
+
+
+
+
+
+
+
     @GetMapping("/group/{groupId}")
     @ApiLog("获取聚合通知详情")
     public Result<List<NotificationDetailVO>> getNotificationGroup(
@@ -119,7 +119,7 @@ public class NotificationController {
             return Result.error(ResultCode.UNAUTHORIZED);
         }
 
-                           
+
         if (!validateGroupOwnership(groupId, userId)) {
             return Result.error(403, "无权访问此通知");
         }
@@ -128,13 +128,13 @@ public class NotificationController {
         return Result.success(details);
     }
 
-       
-              
-      
-                                 
-                                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/read/{notificationId}")
     @ApiLog("标记通知已读")
     public Result<Void> markAsRead(
@@ -147,12 +147,12 @@ public class NotificationController {
         return success ? Result.success() : Result.error(400, "操作失败");
     }
 
-       
-                
-      
-                                    
-                    
-       
+
+
+
+
+
+
     @PostMapping("/read-all")
     @ApiLog("标记所有通知已读")
     public Result<Integer> markAllAsRead(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -163,13 +163,13 @@ public class NotificationController {
         return Result.success(count);
     }
 
-       
-           
-      
-                                 
-                                             
-                   
-       
+
+
+
+
+
+
+
     @DeleteMapping("/{notificationId}")
     @ApiLog("删除通知")
     public Result<Void> deleteNotification(
@@ -182,12 +182,12 @@ public class NotificationController {
         return success ? Result.success() : Result.error(400, "删除失败");
     }
 
-       
-                     
-      
-                              
-                   
-       
+
+
+
+
+
+
     @DeleteMapping("/delete-read")
     @ApiLog("删除全部已读通知")
     public Result<Integer> deleteReadNotifications(
@@ -198,19 +198,19 @@ public class NotificationController {
         return Result.success(notificationService.deleteReadNotifications(userId));
     }
 
-       
-                   
-      
-                           
-                          
-                     
-       
+
+
+
+
+
+
+
     private boolean validateGroupOwnership(String groupId, Long userId) {
         if (groupId == null || groupId.isEmpty()) {
             return false;
         }
 
-                                                
+
         String[] parts = groupId.split(":");
         if (parts.length >= 2) {
             try {

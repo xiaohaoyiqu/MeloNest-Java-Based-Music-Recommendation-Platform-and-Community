@@ -8,10 +8,10 @@ import com.haoran.music.service.UserExtensionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-   
-                      
-                                                     
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserExtensionServiceImpl extends ServiceImpl<UserExtensionMapper, UserExtension> implements UserExtensionService {

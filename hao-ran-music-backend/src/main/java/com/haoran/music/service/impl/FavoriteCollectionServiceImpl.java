@@ -34,7 +34,7 @@ import java.util.Locale;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-                                        
+
 @Slf4j
 @Service
 public class FavoriteCollectionServiceImpl implements FavoriteCollectionService {

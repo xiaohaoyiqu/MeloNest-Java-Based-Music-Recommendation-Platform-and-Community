@@ -1,7 +1,7 @@
-   
-                      
-                    
-   
+
+
+
+
 package com.haoran.music.common.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,25 +19,25 @@ public class SecurityConfig {
     private boolean userAgentCheckEnabled = true;
     private boolean sensitiveLogEnabled = true;
 
-                                                       
+
 
     private int ipRateLimitPerDay = 300;
     private int ipRateLimitPerDayForLoggedIn = 5000;
 
-                                                       
+
 
     private boolean behaviorCheckEnabled = true;
     private int fastAccessThresholdPerMinute = 100;
     private int sustainedFastThresholdPerMinute = 50;
 
-                                                      
+
 
     private boolean captchaEnabled = true;
     private int captchaTriggerThreshold = 80;
     private int captchaTriggerWindowSeconds = 120;
     private int captchaWhitelistMinutes = 30;
 
-                                                         
+
 
     private int paidContentDailyViewLimit = 200;
     private int paidContentDownloadLimit = 5;
@@ -48,28 +48,28 @@ public class SecurityConfig {
     private int paidContentDistinctBlockThreshold = 80;
     private boolean paidContentHardBlockEnabled = true;
 
-                                                       
+
 
     private ContentTypeConfig contentType = new ContentTypeConfig();
 
-                                                     
+
 
     private List<String> allowedOrigins;
 
-       
-                                                                            
-                                                                           
-       
+
+
+
+
     private boolean queryTokenEnabled = false;
     private boolean authCookieSecure = false;
     private int authCookieMaxAgeSeconds = 604800;
-       
-                                                                     
-                                                           
-       
+
+
+
+
     private List<String> trustedProxies = new ArrayList<>();
 
-                                                              
+
 
     public boolean isHideIp() { return hideIp; }
     public void setHideIp(boolean hideIp) { this.hideIp = hideIp; }

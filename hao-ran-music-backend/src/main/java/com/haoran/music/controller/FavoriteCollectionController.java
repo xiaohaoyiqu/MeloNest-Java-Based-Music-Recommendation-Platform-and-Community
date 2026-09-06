@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-                               
+
 @RestController
 @RequestMapping("/favorite-groups")
 public class FavoriteCollectionController {

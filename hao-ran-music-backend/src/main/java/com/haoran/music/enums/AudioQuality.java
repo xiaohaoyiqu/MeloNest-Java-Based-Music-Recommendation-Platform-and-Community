@@ -2,25 +2,25 @@ package com.haoran.music.enums;
 
 import lombok.Getter;
 
-   
-                      
-                      
-   
+
+
+
+
 @Getter
 public enum AudioQuality {
-       
-                      
-       
+
+
+
     STANDARD(1, "标准音质", 0, 128),
 
-       
-                       
-       
+
+
+
     HIGH(2, "高品质", 128, 320),
 
-       
-                                    
-       
+
+
+
     LOSSLESS(3, "无损音质", 320, Integer.MAX_VALUE);
 
     private final Integer code;
@@ -35,12 +35,12 @@ public enum AudioQuality {
         this.maxBitrate = maxBitrate;
     }
 
-       
-                  
-                               
-                                               
-                   
-       
+
+
+
+
+
+
     public static AudioQuality fromBitrate(Integer bitrate, boolean isLossless) {
         if (isLossless) {
             return LOSSLESS;
@@ -56,9 +56,9 @@ public enum AudioQuality {
         return LOSSLESS;
     }
 
-       
-                 
-       
+
+
+
     public static AudioQuality fromCode(Integer code) {
         if (code == null) {
             return STANDARD;

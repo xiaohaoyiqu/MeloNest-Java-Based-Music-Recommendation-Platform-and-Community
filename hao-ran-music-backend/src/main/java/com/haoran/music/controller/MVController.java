@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 
 @RestController
 @RequestMapping("/mv")
@@ -27,12 +27,12 @@ public class MVController {
     @Resource
     private MVService mvService;
 
-       
-             
-      
-                      
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取MV详情")
 
     @GetMapping("/info/{id}")
@@ -42,16 +42,16 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-               
-      
-                            
-                                        
-                                      
-                           
-                                         
-                   
-       
+
+
+
+
+
+
+
+
+
+
     @ApiLog("查询MV列表")
     @DetectCrawler(operation = "查询MV列表", checkReferer = true, checkBehavior = false)
 
@@ -79,12 +79,12 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-                   
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取歌曲的MV列表")
 
     @GetMapping("/song/{songId}")
@@ -94,13 +94,13 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-                     
-      
-                            
-                            
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取歌手的MV列表")
 
     @GetMapping("/artist/{artistId}")
@@ -111,12 +111,12 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-               
-      
-                        
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取热门MV列表")
 
     @GetMapping("/hot")
@@ -126,12 +126,12 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-               
-      
-                        
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取最新MV列表")
 
     @GetMapping("/newest")
@@ -141,12 +141,12 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-             
-      
-                        
-                 
-       
+
+
+
+
+
+
     @ApiLog("记录MV播放")
 
     @PostMapping("/play/{mvId}")
@@ -156,12 +156,12 @@ public class MVController {
         return Result.success();
     }
 
-       
-           
-      
-                        
-                 
-       
+
+
+
+
+
+
     @ApiLog("收藏MV")
 
     @PostMapping("/favorite/{mvId}")
@@ -174,12 +174,12 @@ public class MVController {
         return Result.success();
     }
 
-       
-             
-      
-                        
-                 
-       
+
+
+
+
+
+
     @ApiLog("取消收藏MV")
 
     @DeleteMapping("/favorite/{mvId}")
@@ -192,12 +192,12 @@ public class MVController {
         return Result.success();
     }
 
-       
-                  
-      
-                         
-                      
-       
+
+
+
+
+
+
     @ApiLog("获取用户收藏MV")
 
     @GetMapping("/favorites")
@@ -207,12 +207,12 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-           
-      
-                        
-                 
-       
+
+
+
+
+
+
     @ApiLog("点赞MV")
 
     @PostMapping("/like/{mvId}")
@@ -222,12 +222,12 @@ public class MVController {
         return Result.success();
     }
 
-       
-             
-      
-                        
-                 
-       
+
+
+
+
+
+
     @ApiLog("取消点赞MV")
 
     @DeleteMapping("/like/{mvId}")
@@ -237,13 +237,13 @@ public class MVController {
         return Result.success();
     }
 
-       
-                
-      
-                           
-                         
-                    
-       
+
+
+
+
+
+
+
     @ApiLog(value = "获取MV播放URL", logReturn = false)
     @DetectCrawler(operation = "获取MV播放链接", checkReferer = true, riskThreshold = 50)
     @GetMapping("/url/{mvId}")
@@ -256,9 +256,9 @@ public class MVController {
         return Result.successData(url);
     }
 
-       
-                                              
-       
+
+
+
     @ApiLog(value = "获取MV试看URL", logReturn = false)
     @DetectCrawler(operation = "获取MV试看链接", checkReferer = true, riskThreshold = 50)
     @GetMapping("/preview/{mvId}")
@@ -281,13 +281,13 @@ public class MVController {
         mvService.streamMV(mvId, quality, grant, range, userId, response);
     }
 
-       
-               
-      
-                         
-                        
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("获取相似MV推荐")
     @GetMapping("/{mvId}/similar")
     public Result<List<MVVO>> getSimilarMVs(@PathVariable("mvId") Long mvId,
@@ -296,13 +296,13 @@ public class MVController {
         return Result.success(result);
     }
 
-       
-                  
-      
-                         
-                        
-                       
-       
+
+
+
+
+
+
+
     @ApiLog("获取歌手其他MV推荐")
     @GetMapping("/{mvId}/artist-mvs")
     public Result<List<MVVO>> getArtistOtherMVs(@PathVariable("mvId") Long mvId,

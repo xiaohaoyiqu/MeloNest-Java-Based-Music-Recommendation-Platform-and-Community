@@ -1,13 +1,13 @@
-  
-                     
-                              
-                  
-                                           
-  
 
-                                                    
+
+
+
+
+
+
+
 .search-history-page {
-                                                   
+
   .sh-album-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -51,7 +51,7 @@
     color: var(--text-secondary, rgba(255, 255, 255, 0.6));
   }
 
-                                                   
+
   .sh-artist-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -99,7 +99,7 @@
     }
   }
 
-                                                   
+
   .sh-playlist-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -170,7 +170,7 @@
     color: var(--text-secondary, rgba(255, 255, 255, 0.6));
   }
 
-                                                   
+
   .sh-mv-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -245,7 +245,7 @@
     color: var(--text-secondary, rgba(255, 255, 255, 0.6));
   }
 
-                                                   
+
   .sh-user-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -293,7 +293,7 @@
     }
   }
 
-                                                    
+
   @media (max-width: 1024px) {
     .sh-album-grid {
       grid-template-columns: repeat(3, 1fr);

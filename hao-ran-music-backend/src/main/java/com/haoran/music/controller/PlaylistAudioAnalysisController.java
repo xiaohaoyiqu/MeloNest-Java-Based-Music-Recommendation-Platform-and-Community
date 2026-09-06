@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-   
-                                                                                
-  
-                      
-   
+
+
+
+
+
 @RestController
 @RequestMapping("/playlist-audio")
 public class PlaylistAudioAnalysisController {
@@ -33,27 +33,27 @@ public class PlaylistAudioAnalysisController {
         this.playlistAudioAnalysisService = playlistAudioAnalysisService;
     }
 
-       
-                                                                    
-       
+
+
+
     @ApiLog
     @GetMapping("/analyze/{playlistId}")
     public Result<PlaylistAudioAnalysis> analyzePlaylist(@PathVariable Long playlistId) {
         return Result.success(playlistAudioAnalysisService.analyzePlaylist(playlistId));
     }
 
-       
-                                                                  
-       
+
+
+
     @ApiLog
     @GetMapping("/tags/{playlistId}")
     public Result<List<String>> generateAutoTags(@PathVariable Long playlistId) {
         return Result.success(playlistAudioAnalysisService.generateAutoTags(playlistId));
     }
 
-       
-                                                     
-       
+
+
+
     @ApiLog
     @PostMapping("/update-tags/{playlistId}")
     public Result<Map<String, Object>> updatePlaylistAudioTags(@PathVariable Long playlistId,
@@ -62,27 +62,27 @@ public class PlaylistAudioAnalysisController {
         return Result.success(playlistAudioAnalysisService.updatePlaylistAudioTags(playlistId, operatorId));
     }
 
-       
-                                                          
-       
+
+
+
     @ApiLog
     @GetMapping("/distribution/{playlistId}")
     public Result<Map<String, Object>> getPlaylistFeatureDistribution(@PathVariable Long playlistId) {
         return Result.success(playlistAudioAnalysisService.getPlaylistFeatureDistribution(playlistId));
     }
 
-       
-                                                       
-       
+
+
+
     @ApiLog
     @GetMapping("/consistency/{playlistId}")
     public Result<Double> checkPlaylistConsistency(@PathVariable Long playlistId) {
         return Result.success(playlistAudioAnalysisService.checkPlaylistConsistency(playlistId));
     }
 
-       
-                                                                      
-       
+
+
+
     @ApiLog
     @GetMapping("/recommend")
     public Result<List<Long>> recommendPlaylistsByFeatures(@RequestParam Double valence,
@@ -91,9 +91,9 @@ public class PlaylistAudioAnalysisController {
         return Result.success(playlistAudioAnalysisService.recommendPlaylistsByFeatures(valence, energy, limit));
     }
 
-       
-                                                                                 
-       
+
+
+
     @ApiLog
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/batch-update")

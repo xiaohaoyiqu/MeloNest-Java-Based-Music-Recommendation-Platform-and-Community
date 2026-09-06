@@ -1,7 +1,7 @@
-   
-                      
-                                    
-   
+
+
+
+
 package com.haoran.music.common.util;
 
 import com.haoran.music.common.config.SecurityConfig;
@@ -25,13 +25,13 @@ public class IpRateLimiter {
     private static final String IP_CAPTCHA_WINDOW_KEY = "ip:captcha:window:";            
     private static final String CAPTCHA_WHITELIST = "captcha:whitelist:";             
 
-       
-                   
-      
-                        
-                              
-                                       
-       
+
+
+
+
+
+
+
     public boolean checkIpLimit(String ip, boolean isLoggedIn) {
         if (!securityConfig.isIpRateLimitEnabled()) {
             return true;
@@ -43,7 +43,7 @@ public class IpRateLimiter {
         }
 
         try {
-                       
+
             if (isCaptchaWhitelisted(ip)) {
                 return true;
             }
@@ -51,13 +51,13 @@ public class IpRateLimiter {
             String key = IP_COUNT_KEY + ip;
             Long count = redisUtils.increment(key);
 
-                             
+
             if (count == 1) {
                 long secondsUntilEndOfDay = getSecondsUntilEndOfDay();
                 redisUtils.expire(key, secondsUntilEndOfDay, TimeUnit.SECONDS);
             }
 
-                           
+
             int limit = isLoggedIn ? securityConfig.getIpRateLimitPerDayForLoggedIn()
                                    : securityConfig.getIpRateLimitPerDay();
 
@@ -77,12 +77,12 @@ public class IpRateLimiter {
         }
     }
 
-       
-                      
-      
-                      
-                                       
-       
+
+
+
+
+
+
     public boolean needCaptcha(String ip) {
         if (!securityConfig.isCaptchaEnabled()) {
             return false;
@@ -93,7 +93,7 @@ public class IpRateLimiter {
         }
 
         try {
-                                                                                                  
+
             String windowKey = IP_CAPTCHA_WINDOW_KEY + ip;
             int windowSeconds = Math.max(1, securityConfig.getCaptchaTriggerWindowSeconds());
             Long count = redisUtils.increment(windowKey);
@@ -113,9 +113,9 @@ public class IpRateLimiter {
         }
     }
 
-       
-                  
-       
+
+
+
     public void addToCaptchaWhitelist(String ip) {
         if (ip == null || ip.isEmpty()) {
             return;
@@ -130,9 +130,9 @@ public class IpRateLimiter {
         }
     }
 
-       
-                                                                           
-       
+
+
+
     public void addToCaptchaWhitelist(String ip, String scene) {
         if (ip == null || ip.isEmpty() || scene == null || scene.isEmpty()) {
             return;
@@ -147,9 +147,9 @@ public class IpRateLimiter {
         }
     }
 
-       
-                                                 
-       
+
+
+
     public boolean consumeCaptchaWhitelist(String ip, String scene) {
         if (ip == null || ip.isEmpty() || scene == null || scene.isEmpty()) {
             return false;
@@ -168,9 +168,9 @@ public class IpRateLimiter {
         }
     }
 
-       
-                  
-       
+
+
+
     private boolean isCaptchaWhitelisted(String ip) {
         try {
             String key = CAPTCHA_WHITELIST + ip;
@@ -180,25 +180,25 @@ public class IpRateLimiter {
         }
     }
 
-       
-            
-       
+
+
+
     public boolean checkIpLimit(String ip) {
         return checkIpLimit(ip, false);
     }
 
-       
-                 
-       
+
+
+
     private long getSecondsUntilEndOfDay() {
         java.time.LocalDateTime now = java.time.LocalDateTime.now();
         java.time.LocalDateTime endOfDay = now.toLocalDate().atTime(23, 59, 59);
         return java.time.Duration.between(now, endOfDay).getSeconds() + 1;
     }
 
-       
-                 
-       
+
+
+
     public long getCurrentCount(String ip) {
         if (ip == null || ip.isEmpty()) {
             return 0;
@@ -216,9 +216,9 @@ public class IpRateLimiter {
         return 0;
     }
 
-       
-                 
-       
+
+
+
     public long getRemainingCount(String ip, boolean isLoggedIn) {
         int limit = isLoggedIn ? securityConfig.getIpRateLimitPerDayForLoggedIn()
                                : securityConfig.getIpRateLimitPerDay();
@@ -226,9 +226,9 @@ public class IpRateLimiter {
         return Math.max(0, limit - current);
     }
 
-       
-                        
-       
+
+
+
     public long getCurrentMinuteCount(String ip) {
         try {
             String windowKey = IP_CAPTCHA_WINDOW_KEY + ip;
@@ -242,16 +242,16 @@ public class IpRateLimiter {
         return 0;
     }
 
-       
-            
-       
+
+
+
     public long getRemainingCount(String ip) {
         return getRemainingCount(ip, false);
     }
 
-       
-               
-       
+
+
+
     public boolean resetIpCount(String ip) {
         if (ip == null || ip.isEmpty()) {
             return false;

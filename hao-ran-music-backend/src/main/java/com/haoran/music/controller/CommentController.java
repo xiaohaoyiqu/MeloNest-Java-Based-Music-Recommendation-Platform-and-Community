@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 
 @RestController
 @RequestMapping("/comment")
@@ -26,12 +26,12 @@ public class CommentController {
     @Resource
     private CommentService commentService;
 
-       
-             
-      
-                     
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取评论详情")
 
     @GetMapping("/info/{id}")
@@ -41,14 +41,14 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-               
-      
-                             
-                             
-                             
-                     
-       
+
+
+
+
+
+
+
+
     @ApiLog("查询评论列表")
 
     @GetMapping("/page")
@@ -59,13 +59,13 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                             
-                            
-                      
-       
+
+
+
+
+
+
+
     @ApiLog("获取子评论")
 
     @GetMapping("/{id}/replies")
@@ -77,12 +77,12 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-           
-      
-                      
-                   
-       
+
+
+
+
+
+
     @ApiLog("发表评论")
     @RateLimit(maxRequests = 30, timeWindowSeconds = 3600, operation = "createComment",
                message = "评论发表过于频繁，请稍后再试")
@@ -96,12 +96,12 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-           
-      
-                     
-                 
-       
+
+
+
+
+
+
     @ApiLog("删除评论")
 
     @DeleteMapping("/{id}")
@@ -114,12 +114,12 @@ public class CommentController {
         return Result.success();
     }
 
-       
-           
-      
-                     
-                 
-       
+
+
+
+
+
+
     @ApiLog("点赞评论")
 
     @PostMapping("/{id}/like")
@@ -132,12 +132,12 @@ public class CommentController {
         return Result.success();
     }
 
-       
-             
-      
-                     
-                 
-       
+
+
+
+
+
+
     @ApiLog("取消点赞评论")
 
     @DeleteMapping("/{id}/like")
@@ -150,13 +150,13 @@ public class CommentController {
         return Result.success();
     }
 
-       
-             
-      
-                             
-                             
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("获取热门评论")
 
     @GetMapping("/hot")
@@ -166,12 +166,12 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-                
-      
-                            
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取用户评论")
 
     @GetMapping("/my")
@@ -184,12 +184,12 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                      
-                 
-       
+
+
+
+
+
+
     @ApiLog("编辑评论")
     @PutMapping("/edit")
     public Result<Void> editComment(@RequestBody @Valid com.haoran.music.dto.comment.CommentEditDTO dto,
@@ -201,12 +201,12 @@ public class CommentController {
         return Result.success();
     }
 
-       
-               
-      
-                            
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取评论编辑历史")
 
     @GetMapping("/{id}/history")
@@ -218,14 +218,14 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-           
-      
-                             
-                            
-                              
-                 
-       
+
+
+
+
+
+
+
+
     @ApiLog("举报评论")
     @PostMapping("/report")
     public Result<Void> reportComment(@RequestParam Long commentId,
@@ -239,16 +239,16 @@ public class CommentController {
         return Result.success();
     }
 
-                                                          
 
-       
-                       
-      
-                                                  
-                             
-                             
-                     
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("获取优质评论")
     @GetMapping("/quality/{targetType}/{targetId}")
     public Result<List<CommentVO>> getQualityComments(
@@ -260,14 +260,14 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-                       
-      
-                                                  
-                             
-                             
-                     
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取好友评论")
     @GetMapping("/friends/{targetType}/{targetId}")
     public Result<List<CommentVO>> getFriendComments(
@@ -282,14 +282,14 @@ public class CommentController {
         return Result.success(result);
     }
 
-       
-                          
-      
-                                                  
-                             
-                             
-                     
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取评论区推荐用户")
     @GetMapping("/users/{targetType}/{targetId}")
     public Result<List<com.haoran.music.vo.user.UserVO>> getCommentRecommendedUsers(

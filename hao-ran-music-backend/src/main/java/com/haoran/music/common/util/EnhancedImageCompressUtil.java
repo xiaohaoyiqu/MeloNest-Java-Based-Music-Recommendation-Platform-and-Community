@@ -1,9 +1,9 @@
-   
-                      
-                                            
-                                                      
-                                                      
-   
+
+
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -17,22 +17,22 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-             
-  
-      
-                            
-                                
-                
-            
-            
-   
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 public class EnhancedImageCompressUtil {
 
-       
-             
-       
+
+
+
     public enum ImageSize {
         THUMBNAIL("缩略图", 150, 150),
         SMALL("小图", 300, 300),
@@ -55,9 +55,9 @@ public class EnhancedImageCompressUtil {
         public int getHeight() { return height; }
     }
 
-       
-             
-       
+
+
+
     public static class CompressResult {
         private final boolean success;
         private final String outputPath;
@@ -85,9 +85,9 @@ public class EnhancedImageCompressUtil {
         public String getFormat() { return format; }
     }
 
-       
-              
-       
+
+
+
     public static class MultiVersionResult {
         private final String originalPath;
         private final Map<String, String> versionPaths;
@@ -108,53 +108,53 @@ public class EnhancedImageCompressUtil {
         public Map<String, Long> getVersionSizes() { return versionSizes; }
     }
 
-       
-             
-       
+
+
+
     private static final float DEFAULT_QUALITY = 0.85f;
     private static final float HIGH_QUALITY = 0.95f;
     private static final float MEDIUM_QUALITY = 0.75f;
     private static final float LOW_QUALITY = 0.65f;
 
-       
-             
-       
+
+
+
     private static final int MAX_WIDTH = 4096;
     private static final int MAX_HEIGHT = 4096;
 
-       
-                
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
     public static CompressResult compress(String inputPath, String outputPath) {
         return compress(inputPath, outputPath, DEFAULT_QUALITY, MAX_WIDTH, MAX_HEIGHT);
     }
 
-       
-                 
-      
-                             
-                             
-                                      
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult compress(String inputPath, String outputPath, float quality) {
         return compress(inputPath, outputPath, quality, MAX_WIDTH, MAX_HEIGHT);
     }
 
-       
-                 
-      
-                             
-                             
-                             
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
+
+
+
     public static CompressResult compress(String inputPath, String outputPath,
                                          float quality, int maxWidth, int maxHeight) {
         File inputFile = new File(inputPath);
@@ -167,7 +167,7 @@ public class EnhancedImageCompressUtil {
         String format = getImageFormat(inputPath);
 
         try {
-                                
+
             Thumbnails.of(inputPath)
                     .size(maxWidth, maxHeight)
                     .outputQuality(quality)
@@ -188,25 +188,25 @@ public class EnhancedImageCompressUtil {
         }
     }
 
-       
-                 
-      
-                              
-                             
-                       
-       
+
+
+
+
+
+
+
     public static byte[] compress(byte[] imageData, String formatName) {
         return compress(imageData, formatName, DEFAULT_QUALITY);
     }
 
-       
-                      
-      
-                              
-                             
-                             
-                       
-       
+
+
+
+
+
+
+
+
     public static byte[] compress(byte[] imageData, String formatName, float quality) {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
              ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
@@ -224,15 +224,15 @@ public class EnhancedImageCompressUtil {
         }
     }
 
-       
-               
-      
-                             
-                             
-                              
-                                
-                    
-       
+
+
+
+
+
+
+
+
+
     public static MultiVersionResult generateVersions(String inputPath, String outputDir,
                                                      String baseName, ImageSize... sizes) {
         File inputFile = new File(inputPath);
@@ -245,12 +245,12 @@ public class EnhancedImageCompressUtil {
         Map<String, String> versionPaths = new HashMap<>();
         Map<String, Long> versionSizes = new HashMap<>();
 
-                   
+
         new File(outputDir).mkdirs();
 
         for (ImageSize size : sizes) {
             if (size == ImageSize.ORIGINAL) {
-                         
+
                 String originalOutput = outputDir + "/" + baseName + "_original." + getImageFormat(inputPath);
                 try {
                     Files.copy(inputFile.toPath(), new File(originalOutput).toPath());
@@ -260,10 +260,10 @@ public class EnhancedImageCompressUtil {
                     log.error("event=image_original_copy_failed errorType={}", e.getClass().getSimpleName());
                 }
             } else {
-                         
+
                 String versionOutput = outputDir + "/" + baseName + "_" + size.name().toLowerCase() + "." + getImageFormat(inputPath);
 
-                           
+
                 float quality = selectQualityBySize(size);
 
                 CompressResult result = compress(inputPath, versionOutput, quality,
@@ -281,14 +281,14 @@ public class EnhancedImageCompressUtil {
         return new MultiVersionResult(inputPath, versionPaths, originalSize, versionSizes);
     }
 
-       
-                      
-      
-                             
-                                    
-                             
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult convertToWebP(String inputPath, String outputPath, float quality) {
         File inputFile = new File(inputPath);
         if (!inputFile.exists()) {
@@ -298,7 +298,7 @@ public class EnhancedImageCompressUtil {
         long originalSize = inputFile.length();
 
         try {
-                        
+
             Thumbnails.of(inputPath)
                     .outputQuality(quality)
                     .outputFormat("webp")
@@ -318,13 +318,13 @@ public class EnhancedImageCompressUtil {
         }
     }
 
-       
-                            
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
     public static CompressResult smartCompress(String inputPath, String outputPath) {
         File inputFile = new File(inputPath);
         if (!inputFile.exists()) {
@@ -333,35 +333,35 @@ public class EnhancedImageCompressUtil {
 
         long fileSize = inputFile.length();
 
-                         
+
         if (fileSize < 50 * 1024) {
             return compress(inputPath, outputPath, HIGH_QUALITY, MAX_WIDTH, MAX_HEIGHT);
         }
-                            
+
         else if (fileSize < 200 * 1024) {
             return compress(inputPath, outputPath, HIGH_QUALITY, 1920, 1920);
         }
-                              
+
         else if (fileSize < 1024 * 1024) {
             return compress(inputPath, outputPath, MEDIUM_QUALITY, 1920, 1920);
         }
-                           
+
         else if (fileSize < 5 * 1024 * 1024) {
             return compress(inputPath, outputPath, LOW_QUALITY, 1280, 1280);
         }
-                         
+
         else {
             return compress(inputPath, outputPath, LOW_QUALITY, 1024, 1024);
         }
     }
 
-       
-           
-      
-                                
-                              
-                     
-       
+
+
+
+
+
+
+
     public static Map<String, CompressResult> batchCompress(File[] inputFiles, String outputDir) {
         Map<String, CompressResult> results = new HashMap<>();
 
@@ -378,11 +378,11 @@ public class EnhancedImageCompressUtil {
         return results;
     }
 
-                                                     
 
-       
-               
-       
+
+
+
+
     private static float selectQualityBySize(ImageSize size) {
         switch (size) {
             case THUMBNAIL:
@@ -398,9 +398,9 @@ public class EnhancedImageCompressUtil {
         }
     }
 
-       
-             
-       
+
+
+
     private static String getImageFormat(String filePath) {
         String extension = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
         if (extension.equals("jpg")) {
@@ -409,9 +409,9 @@ public class EnhancedImageCompressUtil {
         return extension;
     }
 
-       
-              
-       
+
+
+
     private static String formatSize(long bytes) {
         if (bytes < 1024) {
             return bytes + " B";
@@ -422,9 +422,9 @@ public class EnhancedImageCompressUtil {
         }
     }
 
-       
-                
-       
+
+
+
     public static float getRecommendedQuality(long fileSize) {
         if (fileSize < 100 * 1024) {
             return 0.95f;

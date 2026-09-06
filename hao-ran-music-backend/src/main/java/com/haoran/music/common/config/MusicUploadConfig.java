@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-   
-                                                                                    
-  
-                      
-   
+
+
+
+
+
 @Data
 @Component
 @ConfigurationProperties(prefix = "music.upload")
@@ -63,9 +63,9 @@ public class MusicUploadConfig {
     private int emojiMaxConcurrentUploads = 2;
     private int emojiBatchProcessingMinutes = 30;
 
-       
-                                                                      
-       
+
+
+
     public boolean isAllowedImageType(String contentType) {
         if (contentType == null) {
             return false;

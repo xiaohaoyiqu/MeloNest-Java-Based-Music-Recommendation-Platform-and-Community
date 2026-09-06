@@ -1,7 +1,7 @@
-   
-                      
-                                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -32,10 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-          
-                       
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/moderation")
@@ -56,11 +56,11 @@ public class ModerationController {
     @Autowired
     private PermissionService permissionService;
 
-       
-               
-      
-                     
-  
+
+
+
+
+
     @ApiLog("获取工作状态")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/work-status")
@@ -79,11 +79,11 @@ public class ModerationController {
         return Result.success(status);
     }
 
-       
-                
-      
-                      
-  
+
+
+
+
+
     @ApiLog("获取在线审核员")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/online-moderators")
@@ -92,11 +92,11 @@ public class ModerationController {
         return Result.success(moderators);
     }
 
-       
-                
-      
-                      
-  
+
+
+
+
+
     @ApiLog("获取活跃审核员")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/active-moderators")
@@ -105,11 +105,11 @@ public class ModerationController {
         return Result.success(moderators);
     }
 
-       
-                
-      
-                           
-  
+
+
+
+
+
     @ApiLog("获取审核员负载")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/moderator-loads")
@@ -118,12 +118,12 @@ public class ModerationController {
         return Result.success(loads);
     }
 
-       
-                    
-      
-                            
-                 
-  
+
+
+
+
+
+
     @ApiLog("用户下线")
     @PostMapping("/offline")
     public Result<Void> offline(HttpServletRequest request) {
@@ -135,16 +135,16 @@ public class ModerationController {
         return Result.success();
     }
 
-       
-             
-      
-                             
-                           
-                               
-                                   
-                                  
-                     
-  
+
+
+
+
+
+
+
+
+
+
     @ApiLog("创建审核记录")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/create")
@@ -167,12 +167,12 @@ public class ModerationController {
         return Result.success(recordId);
     }
 
-       
-             
-      
-                             
-                       
-  
+
+
+
+
+
+
     @ApiLog("分配审核任务")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/assign/{recordId}")
@@ -192,13 +192,13 @@ public class ModerationController {
         return Result.success(assignedModeratorId);
     }
 
-       
-           
-      
-                             
-                            
-                 
-  
+
+
+
+
+
+
+
     @ApiLog("开始审核")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/start/{recordId}")
@@ -212,14 +212,14 @@ public class ModerationController {
         return Result.success();
     }
 
-       
-           
-      
-                             
-                             
-                            
-                 
-  
+
+
+
+
+
+
+
+
     @ApiLog("通过审核")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/approve/{recordId}")
@@ -235,14 +235,14 @@ public class ModerationController {
         return Result.success();
     }
 
-       
-           
-      
-                             
-                         
-                            
-                 
-  
+
+
+
+
+
+
+
+
     @ApiLog("拒绝审核")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/reject/{recordId}")
@@ -258,14 +258,14 @@ public class ModerationController {
         return Result.success();
     }
 
-       
-           
-      
-                             
-                         
-                            
-                 
-  
+
+
+
+
+
+
+
+
     @ApiLog("跳过审核")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/skip/{recordId}")
@@ -281,14 +281,14 @@ public class ModerationController {
         return Result.success();
     }
 
-       
-                
-      
-                                 
-                                       
-                            
-                   
-  
+
+
+
+
+
+
+
+
     @ApiLog("获取待分配任务")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending-assignments")
@@ -307,14 +307,14 @@ public class ModerationController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                               
-                           
-                            
-                   
-  
+
+
+
+
+
+
+
+
     @ApiLog("获取审核员任务")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/my-tasks/{moderatorId}")
@@ -331,12 +331,12 @@ public class ModerationController {
         return Result.success(result);
     }
 
-       
-                
-      
-                               
-                   
-  
+
+
+
+
+
+
     @ApiLog("获取审核员统计")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/stats/{moderatorId}")
@@ -348,11 +348,11 @@ public class ModerationController {
         return Result.success(stats);
     }
 
-       
-               
-      
-                   
-  
+
+
+
+
+
     @ApiLog("获取全局审核统计")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/stats/global")
@@ -365,12 +365,12 @@ public class ModerationController {
         return Result.success(stats);
     }
 
-       
-                 
-      
-                               
-                    
-  
+
+
+
+
+
+
     @ApiLog("检查审核员配额")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/has-quota/{moderatorId}")
@@ -424,12 +424,12 @@ public class ModerationController {
         public String getReason() { return reason; }
         public void setReason(String reason) { this.reason = reason; }
     }
-       
-                 
-      
-                            
-                   
-  
+
+
+
+
+
+
 
     private void ensureCanOperateRecord(Long currentUserId, Long recordId) {
         ModerationRecord record = moderationRecordService.getById(recordId);

@@ -8,7 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-                               
+
 @Data
 @TableName("favorite_collection_item")
 public class FavoriteCollectionItem implements Serializable {

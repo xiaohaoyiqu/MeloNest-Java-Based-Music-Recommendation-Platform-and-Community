@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.haoran.music.common.exception.BusinessException;
@@ -16,10 +16,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
-   
-                    
-                                        
-   
+
+
+
+
 @Slf4j
 @Service
 public class CreatorEligibilityOutboxServiceImpl implements CreatorEligibilityOutboxService {
@@ -82,7 +82,7 @@ public class CreatorEligibilityOutboxServiceImpl implements CreatorEligibilityOu
         }
         int claimed = 0;
         for (Long eventId : outboxMapper.selectDueEventIds(safeLimit)) {
-                                           
+
             Boolean eventClaimed = eventTransaction.execute(status -> {
                 if (outboxMapper.claimEvent(eventId) != 1) {
                     return false;
@@ -126,7 +126,7 @@ public class CreatorEligibilityOutboxServiceImpl implements CreatorEligibilityOu
             long currentVersion = current.getCreatorEligibilityVersion() == null
                     ? 0L : current.getCreatorEligibilityVersion();
             if (currentVersion < event.getEventVersion()) {
-                                                          
+
                 markTerminalFailure(event, "创作者资格事件版本超前", "FUTURE_EVENT_VERSION");
                 return;
             }

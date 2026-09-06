@@ -15,22 +15,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-   
-                      
-                      
-   
+
+
+
+
 @Component
 public class JwtUtils {
 
-       
-                          
-       
+
+
+
     @Value("${jwt.secret}")
     private String secret;
 
-       
-                    
-       
+
+
+
     @Value("${jwt.expiration}")
     private Long expiration;
 
@@ -58,33 +58,33 @@ public class JwtUtils {
                 || normalized.contains("external");
     }
 
-       
-           
-      
-                        
-       
+
+
+
+
+
     private SecretKey getSignKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-       
-              
-      
-                         
-                    
-       
+
+
+
+
+
+
     public String generateToken(Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         return generateToken(claims);
     }
 
-       
-                     
-      
-                          
-                    
-       
+
+
+
+
+
+
     public String generateToken(Map<String, Object> claims) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expiration);
@@ -98,12 +98,12 @@ public class JwtUtils {
                 .compact();
     }
 
-       
-                      
-      
-                         
-                     
-       
+
+
+
+
+
+
     public Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
@@ -112,23 +112,23 @@ public class JwtUtils {
                 .getBody();
     }
 
-       
-                    
-      
-                         
-                   
-       
+
+
+
+
+
+
     public Long getUserIdFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
         return claims.get("userId", Long.class);
     }
 
-       
-                  
-      
-                         
-                               
-       
+
+
+
+
+
+
     public boolean validateToken(String token) {
         try {
             Claims claims = getClaimsFromToken(token);
@@ -139,12 +139,12 @@ public class JwtUtils {
         }
     }
 
-       
-              
-      
-                          
-                     
-       
+
+
+
+
+
+
     public String refreshToken(String token) {
         Claims claims = getClaimsFromToken(token);
         claims.setId(UUID.randomUUID().toString());

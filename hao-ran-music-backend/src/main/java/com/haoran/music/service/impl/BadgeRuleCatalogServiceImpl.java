@@ -14,11 +14,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-   
-                   
-  
-                      
-   
+
+
+
+
+
 @Service
 public class BadgeRuleCatalogServiceImpl implements BadgeRuleCatalogService {
 
@@ -84,9 +84,9 @@ public class BadgeRuleCatalogServiceImpl implements BadgeRuleCatalogService {
         return ObjectUtils.isEmpty(rule.getIconFallback()) ? DEFAULT_ICON : rule.getIconFallback();
     }
 
-       
-                          
-       
+
+
+
     private boolean isPublicBadgeAsset(MediaAsset asset) {
         return ObjectUtils.isNotEmpty(asset)
                 && MediaAsset.STATUS_ACTIVE.equals(asset.getStatus())
@@ -96,9 +96,9 @@ public class BadgeRuleCatalogServiceImpl implements BadgeRuleCatalogService {
                 && ObjectUtils.isNotEmpty(asset.getPublicUrl());
     }
 
-       
-                     
-       
+
+
+
     private LocalDateTime safeNow(LocalDateTime now) {
         return ObjectUtils.isEmpty(now) ? LocalDateTime.now() : now;
     }

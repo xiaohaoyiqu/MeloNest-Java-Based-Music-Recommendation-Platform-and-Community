@@ -1,14 +1,14 @@
 #!/bin/bash
-                                                                               
-                      
-                     
-                  
-                                                
-                                                                               
+
+
+
+
+
+
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-        
+
 if [ -f "${SCRIPT_DIR}/env.sh" ]; then
     source "${SCRIPT_DIR}/env.sh"
 else
@@ -21,9 +21,9 @@ export DB_PASSWORD="${DB_PASS}"
 export REDIS_PASSWORD
 export JWT_SECRET
 
-                                                                               
-      
-                                                                               
+
+
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -38,9 +38,9 @@ log_step()  { echo -e "${BLUE}[STEP]${NC} $1"; }
 log_ok()    { echo -e "${GREEN}✓${NC} $1"; }
 log_fail()  { echo -e "${RED}✗${NC} $1"; }
 
-                                                                               
-             
-                                                                               
+
+
+
 get_script_dir() {
     local node=$1
     case "$node" in
@@ -51,9 +51,9 @@ get_script_dir() {
     esac
 }
 
-                                                                               
-         
-                                                                               
+
+
+
 check_ssh() {
     ssh ${SSH_OPTS} ${CLUSTER_USER}@$1 "echo ok" 2>/dev/null | grep -q "ok"
 }
@@ -87,9 +87,9 @@ check_all_ssh() {
     return 0
 }
 
-                                                                               
-        
-                                                                               
+
+
+
 exec_remote() {
     local node=$1 cmd=$2 silent=${3:-false}
     local env_sh=$(get_node_env_sh $node)
@@ -116,17 +116,17 @@ exec_on_zk() {
     for node in "${ZK_NODES[@]}"; do exec_remote "${node}" "$1" & done; wait
 }
 
-                      
-                                                
+
+
 run_local_script() {
     local script_name=$1
     shift
     bash "${SCRIPT_DIR}/${script_name}" "$@"
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 start_zk() {
     log_step "[1/9] 启动 ZooKeeper..."
     run_local_script "zookeeper.sh" start
@@ -190,9 +190,9 @@ start_nginx() {
     log_ok "Nginx (node1:3223, node2:8082, node3:8081)"
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 stop_nginx() {
     log_step "停止 Nginx..."
     run_local_script "nginx.sh" stop
@@ -256,9 +256,9 @@ stop_zk() {
     log_ok "ZooKeeper"
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 start() {
     echo ""
     echo "=========================================="
@@ -285,9 +285,9 @@ start() {
     show_urls
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 stop() {
     echo ""
     echo "=========================================="
@@ -309,18 +309,18 @@ stop() {
     log_info "集群已停止"
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 restart() {
     stop
     sleep 5
     start
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 status() {
     echo ""
     echo "=========================================="
@@ -336,9 +336,9 @@ status() {
     done
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 health() {
     echo ""
     echo "=========================================="
@@ -392,9 +392,9 @@ health() {
     echo ""
 }
 
-                                                                               
-       
-                                                                               
+
+
+
 init_cluster() {
     echo ""
     echo "=========================================="
@@ -428,9 +428,9 @@ init_cluster() {
     echo ""
 }
 
-                                                                               
-        
-                                                                               
+
+
+
 show_urls() {
     echo ""
     echo "=========================================="
@@ -449,9 +449,9 @@ show_urls() {
     echo "=========================================="
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 show_help() {
     echo ""
     echo "=========================================="
@@ -485,9 +485,9 @@ echo "  node1控制: ZooKeeper -> Hadoop -> Kafka -> Redis -> MySQL -> Hive -> S
     echo "=========================================="
 }
 
-                                                                               
-     
-                                                                               
+
+
+
 COMMAND="${1:-}"
 
 case "${COMMAND}" in

@@ -1,17 +1,17 @@
-   
-                      
-                        
-  
-                                                   
-                                     
-                         
-  
-                                        
-                                 
-                    
-                          
-                                                               
-   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -46,10 +46,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-   
-           
-                   
-   
+
+
+
+
 @Slf4j
 @Service
 public class CreatorServiceImpl implements CreatorService {
@@ -81,15 +81,15 @@ public class CreatorServiceImpl implements CreatorService {
     @Resource
     private UserFollowMapper userFollowMapper;
 
-       
-                         
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> applyCreator(Long userId, String realName, String idCardNo,
                                             String idCardUrl, String phone, String email,
                                             String applyReason, String worksSample) {
-               
+
         if (ObjectUtils.isEmpty(userId)) {
             throw new BusinessException("用户ID不能为空");
         }
@@ -103,7 +103,7 @@ public class CreatorServiceImpl implements CreatorService {
             throw new BusinessException("邮箱格式不正确");
         }
 
-                   
+
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
@@ -111,12 +111,12 @@ public class CreatorServiceImpl implements CreatorService {
         UserAccountStatusUtil.requireCanInteract(user, "申请创作者");
         validateCreatorApplication(realName, idCardNo, idCardUrl, email, applyReason, worksSample);
 
-                     
+
         if (user.getIsCreator() != null && user.getIsCreator() == 1) {
             throw new BusinessException("您已经是创作者，无需重复申请");
         }
 
-                      
+
         LambdaQueryWrapper<CreatorApply> pendingWrapper = new LambdaQueryWrapper<>();
         pendingWrapper.eq(CreatorApply::getUserId, userId)
                 .eq(CreatorApply::getStatus, "pending");
@@ -125,8 +125,8 @@ public class CreatorServiceImpl implements CreatorService {
             throw new BusinessException("您有待审核的申请，请勿重复提交");
         }
 
-                                                                                
-                                                                          
+
+
         long registerDays = user.getCreateTime() == null ? 0L
                 : java.time.temporal.ChronoUnit.DAYS.between(user.getCreateTime(), LocalDateTime.now());
         Long publishedWorkCount = songMapper.selectCount(
@@ -142,7 +142,7 @@ public class CreatorServiceImpl implements CreatorService {
                     CREATOR_MIN_REGISTER_DAYS, CREATOR_MIN_PUBLISHED_WORKS));
         }
 
-                  
+
         String idCardMasked = null;
         if (ObjectUtils.isNotEmpty(idCardNo)) {
             if (!DataMaskingUtil.isValidIdCard(idCardNo)) {
@@ -151,15 +151,15 @@ public class CreatorServiceImpl implements CreatorService {
             idCardMasked = DataMaskingUtil.maskIdCard(idCardNo);
         }
 
-                 
+
         CreatorApply apply = new CreatorApply();
         apply.setUserId(userId);
         apply.setUsername(user.getUsername());
         apply.setArtistName(ObjectUtils.isNotEmpty(user.getNickname()) ? user.getNickname() : user.getUsername());
         apply.setRealName(realName);
-                                                                              
-                                                                               
-                                       
+
+
+
         apply.setIdCardNo("");
         apply.setIdCardMasked(idCardMasked);
         apply.setIdCardUrl(idCardUrl);
@@ -189,15 +189,15 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-              
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> reviewCreatorApply(Long applicationId, Long reviewerId,
                                                   Boolean approved, String reviewReason,
                                                   String creatorType, BigDecimal feeRate) {
-               
+
         if (ObjectUtils.isEmpty(applicationId)) {
             throw new BusinessException("申请ID不能为空");
         }
@@ -220,18 +220,18 @@ public class CreatorServiceImpl implements CreatorService {
             throw new BusinessException("审核原因不能超过1000字");
         }
 
-                 
+
         CreatorApply apply = creatorApplyMapper.selectById(applicationId);
         if (ObjectUtils.isEmpty(apply)) {
             throw new BusinessException("申请记录不存在");
         }
 
-                 
+
         if (!"pending".equals(apply.getStatus())) {
             throw new BusinessException("该申请已被审核");
         }
 
-                
+
         User reviewer = userMapper.selectById(reviewerId);
         if (ObjectUtils.isEmpty(reviewer)) {
             throw new BusinessException("审核人不存在");
@@ -264,7 +264,7 @@ public class CreatorServiceImpl implements CreatorService {
             result.put("creatorId", apply.getUserId());
             result.put("message", "审核通过");
         } else {
-                   
+
             log.info("event=creator_application_reviewed userId={} reviewerId={} approved=false",
                     apply.getUserId(), reviewerId);
             result.put("success", true);
@@ -275,9 +275,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-                
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> externalCreatorApply(String realName, String idCardNo, String idCardUrl,
@@ -286,7 +286,7 @@ public class CreatorServiceImpl implements CreatorService {
                                                      String externalHomepage, String worksDescription,
                                                      String cooperationType, BigDecimal expectedFeeRate,
                                                      String attachmentUrls) {
-               
+
         if (ObjectUtils.isEmpty(realName) || realName.trim().isEmpty()) {
             throw new BusinessException("请输入真实姓名");
         }
@@ -294,7 +294,7 @@ public class CreatorServiceImpl implements CreatorService {
             throw new BusinessException("请输入创作者名称");
         }
 
-                  
+
         String idCardMasked = null;
         if (ObjectUtils.isNotEmpty(idCardNo)) {
             if (!DataMaskingUtil.isValidIdCard(idCardNo)) {
@@ -303,7 +303,7 @@ public class CreatorServiceImpl implements CreatorService {
             idCardMasked = DataMaskingUtil.maskIdCard(idCardNo);
         }
 
-                   
+
         ExternalCreatorApply apply = new ExternalCreatorApply();
         apply.setRealName(realName);
         apply.setIdCardNo(idCardNo);
@@ -334,9 +334,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-              
-       
+
+
+
     @Override
     public Map<String, Object> getCreatorInfo(Long creatorId) {
         if (ObjectUtils.isEmpty(creatorId)) {
@@ -359,7 +359,7 @@ public class CreatorServiceImpl implements CreatorService {
         result.put("avatar", user.getAvatar());
         result.put("userName", ObjectUtils.isNotEmpty(user.getNickname()) ? user.getNickname() : user.getUsername());
         result.put("userAvatar", user.getAvatar());
-                                    
+
         result.put("signature", user.getIntroduction());
         result.put("isCreator", user.getIsCreator() != null && user.getIsCreator() == 1);
         result.put("creatorStatus", user.getCreatorStatus());
@@ -369,13 +369,13 @@ public class CreatorServiceImpl implements CreatorService {
         result.put("creatorApplyTime", user.getCreatorApplyTime());
         result.put("creatorNote", user.getCreatorNote());
 
-                                       
+
         LambdaQueryWrapper<CreatorEarnings> earningsWrapper = new LambdaQueryWrapper<>();
         earningsWrapper.eq(CreatorEarnings::getUserId, creatorId);
 
         List<CreatorEarnings> earningsList = creatorEarningsMapper.selectList(earningsWrapper);
 
-               
+
         BigDecimal totalEarnings = BigDecimal.ZERO;
         if (ObjectUtils.isNotEmpty(earningsList)) {
             for (CreatorEarnings earnings : earningsList) {
@@ -388,7 +388,7 @@ public class CreatorServiceImpl implements CreatorService {
             }
         }
 
-                            
+
         if (user.getTotalEarnings() != null) {
             result.put("totalEarnings", user.getTotalEarnings());
         } else {
@@ -401,30 +401,30 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-                
-       
+
+
+
     @Override
     public Map<String, Object> getMyCreatorInfo(Long userId) {
         return getCreatorInfo(userId);
     }
 
-       
-                
-       
+
+
+
     @Override
     public Map<String, Object> getCreatorEarnings(Long creatorId) {
         if (ObjectUtils.isEmpty(creatorId)) {
             throw new BusinessException("创作者ID不能为空");
         }
 
-                 
+
         User user = userMapper.selectById(creatorId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
         }
 
-                                
+
         LambdaQueryWrapper<CreatorEarnings> earningsWrapper = new LambdaQueryWrapper<>();
         earningsWrapper.eq(CreatorEarnings::getUserId, creatorId);
 
@@ -446,15 +446,15 @@ public class CreatorServiceImpl implements CreatorService {
         result.put("totalEarnings", user.getTotalEarnings() != null ? user.getTotalEarnings() : totalEarnings);
         result.put("withdrawnAmount", user.getWithdrawnEarnings() != null ? user.getWithdrawnEarnings() : BigDecimal.ZERO);
         result.put("pendingAmount", user.getPendingEarnings() != null ? user.getPendingEarnings() : BigDecimal.ZERO);
-                                             
+
         result.put("lastWithdrawTime", null);
 
         return result;
     }
 
-       
-                   
-       
+
+
+
     @Override
     public Map<String, Object> getCreatorList(String status, String creatorType, Integer page, Integer size) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
@@ -481,9 +481,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-                             
-       
+
+
+
     @Override
     public Map<String, Object> getPendingApplications(Integer page, Integer size) {
         LambdaQueryWrapper<CreatorApply> wrapper = new LambdaQueryWrapper<>();
@@ -502,9 +502,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-                            
-       
+
+
+
     @Override
     public Map<String, Object> getPendingApplicationsPublic(Integer page, Integer size) {
         LambdaQueryWrapper<CreatorApply> wrapper = new LambdaQueryWrapper<>();
@@ -523,9 +523,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-                       
-       
+
+
+
     @Override
     public CreatorApplyPrivateVO getApplicationDetail(Long applicationId) {
         if (ObjectUtils.isEmpty(applicationId)) {
@@ -540,9 +540,9 @@ public class CreatorServiceImpl implements CreatorService {
         return convertToPrivateVO(apply);
     }
 
-       
-                      
-       
+
+
+
     @Override
     public CreatorApplyPublicVO getApplicationDetailPublic(Long applicationId) {
         if (ObjectUtils.isEmpty(applicationId)) {
@@ -557,9 +557,9 @@ public class CreatorServiceImpl implements CreatorService {
         return convertToPublicVO(apply);
     }
 
-       
-                     
-       
+
+
+
     @Override
     public CreatorApplyPublicVO getMyApplication(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -577,15 +577,15 @@ public class CreatorServiceImpl implements CreatorService {
         }
 
         CreatorApplyPublicVO result = convertToPublicVO(apply);
-                                                                            
-                                                                          
+
+
         result.setReviewComment(apply.getReviewReason());
         return result;
     }
 
-       
-              
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateCreatorStatus(Long creatorId, String status, String reason) {
@@ -610,10 +610,10 @@ public class CreatorServiceImpl implements CreatorService {
         return true;
     }
 
-       
-              
-                                                             
-       
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean removeCreator(Long creatorId, String reason) {
@@ -636,9 +636,9 @@ public class CreatorServiceImpl implements CreatorService {
         }
     }
 
-       
-                            
-       
+
+
+
     @Override
     public Map<String, Object> getCreatorStats(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -650,22 +650,22 @@ public class CreatorServiceImpl implements CreatorService {
             throw new BusinessException("用户不存在");
         }
 
-                 
+
         long registerDays = 0;
         if (ObjectUtils.isNotEmpty(user.getCreateTime())) {
             registerDays = java.time.temporal.ChronoUnit.DAYS.between(user.getCreateTime(), LocalDateTime.now());
         }
 
-                             
+
         Long publishedWorkCount = songMapper.selectCount(
                 new LambdaQueryWrapper<Song>()
                         .eq(Song::getUploaderId, userId)
                         .eq(Song::getStatus, 1)
         );
-                                           
+
         long publishedWorkCountValue = publishedWorkCount != null ? publishedWorkCount : 0L;
 
-                  
+
         long totalPlays = 0L;
         List<Song> userSongs = songMapper.selectList(
                 new LambdaQueryWrapper<Song>()
@@ -679,12 +679,12 @@ public class CreatorServiceImpl implements CreatorService {
             }
         }
 
-                
+
         Long fansCount = userFollowMapper.selectCount(
                 new LambdaQueryWrapper<UserFollow>()
                         .eq(UserFollow::getFolloweeId, userId)
         );
-                                  
+
         long fansCountValue = fansCount != null ? fansCount : 0L;
 
         Map<String, Object> result = new HashMap<>();
@@ -695,7 +695,7 @@ public class CreatorServiceImpl implements CreatorService {
         result.put("fansCount", fansCountValue);
         result.put("creditScore", user.getCreditScore() != null ? user.getCreditScore() : 0);
 
-                                    
+
         boolean canApply = registerDays >= CREATOR_MIN_REGISTER_DAYS
                 && publishedWorkCountValue >= CREATOR_MIN_PUBLISHED_WORKS;
         result.put("requiredRegisterDays", CREATOR_MIN_REGISTER_DAYS);
@@ -708,11 +708,11 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-                                                     
 
-       
-                 
-       
+
+
+
+
     private List<Map<String, Object>> convertToCreatorInfoList(List<User> users) {
         List<Map<String, Object>> result = new ArrayList<>();
         for (User user : users) {
@@ -721,7 +721,7 @@ public class CreatorServiceImpl implements CreatorService {
             info.put("username", user.getUsername());
             info.put("nickname", user.getNickname());
             info.put("avatar", user.getAvatar());
-                                        
+
             info.put("signature", user.getIntroduction());
             info.put("creatorType", user.getCreatorType());
             info.put("creatorStatus", user.getCreatorStatus());
@@ -732,9 +732,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-                
-       
+
+
+
     private List<CreatorApplyPrivateVO> convertToPrivateVOList(List<CreatorApply> applies) {
         List<CreatorApplyPrivateVO> result = new ArrayList<>();
         for (CreatorApply apply : applies) {
@@ -743,9 +743,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-              
-       
+
+
+
     private CreatorApplyPrivateVO convertToPrivateVO(CreatorApply apply) {
         CreatorApplyPrivateVO vo = new CreatorApplyPrivateVO();
         vo.setId(apply.getId() != null ? String.valueOf(apply.getId()) : null);
@@ -765,7 +765,7 @@ public class CreatorServiceImpl implements CreatorService {
         vo.setReviewerId(apply.getReviewerId() != null ? String.valueOf(apply.getReviewerId()) : null);
         vo.setReviewComment(apply.getReviewReason());
 
-                  
+
         if (ObjectUtils.isNotEmpty(apply.getReviewerId())) {
             User reviewer = userMapper.selectById(apply.getReviewerId());
             if (ObjectUtils.isNotEmpty(reviewer)) {
@@ -773,7 +773,7 @@ public class CreatorServiceImpl implements CreatorService {
             }
         }
 
-                          
+
         if (ObjectUtils.isNotEmpty(apply.getUserId())) {
             Long fans = userFollowMapper.selectCount(
                     new LambdaQueryWrapper<UserFollow>()
@@ -791,9 +791,9 @@ public class CreatorServiceImpl implements CreatorService {
         return vo;
     }
 
-       
-                
-       
+
+
+
     private List<CreatorApplyPublicVO> convertToPublicVOList(List<CreatorApply> applies) {
         if (applies == null || applies.isEmpty()) {
             return Collections.emptyList();
@@ -814,9 +814,9 @@ public class CreatorServiceImpl implements CreatorService {
         return result;
     }
 
-       
-              
-       
+
+
+
     private CreatorApplyPublicVO convertToPublicVO(CreatorApply apply) {
         User user = apply.getUserId() == null ? null : userMapper.selectById(apply.getUserId());
         return convertToPublicVO(apply, user);
@@ -828,14 +828,14 @@ public class CreatorServiceImpl implements CreatorService {
         vo.setUserId(apply.getUserId());
         vo.setUsername(apply.getUsername());
 
-                                                          
+
         if (user != null) {
             vo.setUsername(user.getUsername());
             vo.setNickname(user.getNickname());
             vo.setAvatar(user.getAvatar());
             vo.setCreatorType(user.getCreatorType());
         }
-                                                   
+
         if (vo.getCreatorType() == null && apply.getCreatorType() != null) {
             vo.setCreatorType(apply.getCreatorType());
         }

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.common.filter;
 
@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-                                                                                          
+
 @Component
 @Order(0)
 public class CsrfOriginFilter implements Filter {

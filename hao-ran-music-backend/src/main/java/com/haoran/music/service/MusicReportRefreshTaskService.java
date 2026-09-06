@@ -1,13 +1,13 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service;
 
 import java.util.Map;
 
-   
-                      
-   
+
+
+
 public interface MusicReportRefreshTaskService {
 
     Map<String, Object> refreshNow(Long userId, String reportType, Integer year);

@@ -18,10 +18,10 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
-   
-                      
-                                 
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/appeal")
@@ -30,27 +30,27 @@ public class AppealController {
     @Resource
     private AppealService appealService;
 
-       
-           
-      
-                      
-                   
-       
+
+
+
+
+
+
     @PostMapping("/create")
     @ApiLog("用户创建申诉")
     public Result<Long> createAppeal(@Valid @RequestBody AppealCreateDTO dto) {
-                               
+
         Long userId = getCurrentUserId();
         Long appealId = appealService.createAppeal(userId, dto);
         return Result.success(appealId);
     }
 
-       
-               
-      
-                      
-                   
-       
+
+
+
+
+
+
     @PostMapping("/my")
     @ApiLog("用户获取我的申诉列表")
     public Result<PageResult<AppealVO>> getMyAppeals(@RequestBody AppealQueryDTO dto) {
@@ -59,30 +59,30 @@ public class AppealController {
         return Result.success(buildPageResult(page));
     }
 
-       
-             
-      
-                           
-                   
-       
+
+
+
+
+
+
     @GetMapping("/detail/{appealId}")
     @ApiLog("用户获取申诉详情")
     public Result<AppealVO> getAppealDetail(@PathVariable Long appealId) {
         Long userId = getCurrentUserId();
         AppealVO vo = appealService.getAppealDetail(appealId);
-                    
+
         if (!vo.getUserId().equals(userId)) {
             return Result.error("无权查看此申诉");
         }
         return Result.success(vo);
     }
 
-       
-           
-      
-                           
-                   
-       
+
+
+
+
+
+
     @PostMapping("/cancel/{appealId}")
     @ApiLog("用户取消申诉")
     public Result<Void> cancelAppeal(@PathVariable Long appealId) {
@@ -91,11 +91,11 @@ public class AppealController {
         return Result.success();
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     private Long getCurrentUserId() {
         Long userId = UserContext.getCurrentUserId();
         if (ObjectUtils.isEmpty(userId)) {
@@ -104,9 +104,9 @@ public class AppealController {
         return userId;
     }
 
-       
-             
-       
+
+
+
     private PageResult<AppealVO> buildPageResult(IPage<AppealVO> page) {
         PageResult<AppealVO> result = new PageResult<>();
         result.setRecords(page.getRecords());

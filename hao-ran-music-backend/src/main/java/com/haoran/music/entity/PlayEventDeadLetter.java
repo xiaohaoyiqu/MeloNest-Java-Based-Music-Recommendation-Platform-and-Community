@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -11,9 +11,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-                     
-   
+
+
+
 @Data
 @TableName("play_event_dead_letter")
 public class PlayEventDeadLetter implements Serializable {

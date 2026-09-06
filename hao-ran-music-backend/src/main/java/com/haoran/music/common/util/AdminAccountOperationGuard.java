@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import com.haoran.music.common.exception.BusinessException;
@@ -8,9 +8,9 @@ import com.haoran.music.common.result.ResultCode;
 import com.haoran.music.entity.User;
 import com.haoran.music.enums.UserRole;
 
-   
-                                                                         
-   
+
+
+
 public final class AdminAccountOperationGuard {
 
     private AdminAccountOperationGuard() {

@@ -1,15 +1,15 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.dto.curated;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
-   
-          
-   
+
+
+
 @Data
 public class CuratedReviewRequest {
 

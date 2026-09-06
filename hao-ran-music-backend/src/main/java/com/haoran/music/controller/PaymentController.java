@@ -1,7 +1,7 @@
-   
-                      
-                              
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -30,11 +30,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-   
-                 
-  
-                                                 
-   
+
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/payment")
@@ -61,17 +61,17 @@ public class PaymentController {
         this.paymentProofLifecycleService = paymentProofLifecycleService;
     }
 
-       
-             
-      
-                            
-                               
-                             
-                                         
-                                           
-                                 
-                   
-  
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("创建支付订单")
     @PostMapping("/create")
     public Result createOrder(HttpServletRequest request,
@@ -89,12 +89,12 @@ public class PaymentController {
                 businessId, amount, payeeId, userRemark, idempotencyKey));
     }
 
-       
-              
-      
-                          
-                    
-  
+
+
+
+
+
+
     @ApiLog("获取付款码")
     @GetMapping("/qrcode/{orderId}")
     public Result getOrderQrCode(@PathVariable Long orderId,
@@ -105,14 +105,14 @@ public class PaymentController {
         return Result.success(paymentOrderService.getOrderQrCode(orderId, userId));
     }
 
-       
-             
-      
-                          
-                            
-                            
-                   
-  
+
+
+
+
+
+
+
+
     @ApiLog("提交付款凭证")
     @PostMapping("/submit")
     public Result submitPayment(@RequestParam Long orderId,
@@ -125,11 +125,11 @@ public class PaymentController {
         return Result.success(paymentOrderService.submitPayment(orderId, userId, proofUrl, verifyCode));
     }
 
-       
-                
-      
-                                                               
-       
+
+
+
+
+
     @ApiLog("重新提交付款凭证")
     @PostMapping("/resubmit")
     public Result resubmitPayment(@RequestParam Long orderId,
@@ -142,12 +142,12 @@ public class PaymentController {
         return Result.success(paymentOrderService.submitPayment(orderId, userId, proofUrl, verifyCode));
     }
 
-       
-              
-      
-                                                          
-                                          
-       
+
+
+
+
+
+
     @ApiLog("上传支付凭证")
     @PostMapping("/proof/upload")
     public Result<String> uploadPaymentProof(@RequestParam("file") MultipartFile file,
@@ -189,7 +189,7 @@ public class PaymentController {
                 return Result.error(400, "付款凭证安全检测失败");
             }
 
-                                        
+
             if (musicUploadConfig.isVirusScanEnabled()) {
                 boolean clean = virusScanService.scanFile(tempFile);
                 if (!clean) {
@@ -243,9 +243,9 @@ public class PaymentController {
         }
     }
 
-       
-                                       
-       
+
+
+
     @ApiLog("查看付款凭证")
     @GetMapping("/proof/{orderId}")
     public void getPaymentProof(@PathVariable Long orderId,
@@ -282,15 +282,15 @@ public class PaymentController {
         }
     }
 
-       
-                    
-      
-                          
-                              
-                           
-                                   
-                   
-  
+
+
+
+
+
+
+
+
+
     @ApiLog("审核支付订单")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/review/{orderId}")
@@ -305,16 +305,16 @@ public class PaymentController {
                 approved, reviewReason));
     }
 
-       
-               
-      
-                            
-                             
-                                   
-                     
-                       
-                   
-  
+
+
+
+
+
+
+
+
+
+
     @ApiLog("获取我的订单")
     @GetMapping("/my")
     public Result getMyOrders(HttpServletRequest request,
@@ -329,14 +329,14 @@ public class PaymentController {
         return Result.success(paymentOrderService.getMyOrders(userId, status, businessType, page, size));
     }
 
-       
-                
-      
-                               
-                     
-                       
-                      
-  
+
+
+
+
+
+
+
+
     @ApiLog("获取待审核订单")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending")
@@ -346,9 +346,9 @@ public class PaymentController {
         return Result.success(paymentOrderService.getPendingOrders(payeeId, page, size));
     }
 
-       
-                         
-       
+
+
+
     @ApiLog("获取待补发支付订单")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/completion-pending")
@@ -357,13 +357,13 @@ public class PaymentController {
         return Result.success(paymentOrderService.getPendingCompletionOrders(page, size));
     }
 
-       
-           
-      
-                            
-                          
-                   
-  
+
+
+
+
+
+
+
     @ApiLog("取消订单")
     @PostMapping("/cancel/{orderId}")
     public Result cancelOrder(HttpServletRequest request,
@@ -375,12 +375,12 @@ public class PaymentController {
         return Result.success(paymentOrderService.cancelOrder(orderId, userId));
     }
 
-       
-                
-      
-                          
-                            
-       
+
+
+
+
+
+
     @ApiLog("获取支付订单状态")
     @GetMapping("/{orderId}/status")
     public Result getOrderStatus(@PathVariable Long orderId,
@@ -391,11 +391,11 @@ public class PaymentController {
         return Result.success(paymentOrderService.getOrderStatus(orderId, userId));
     }
 
-       
-                
-      
-                                           
-       
+
+
+
+
+
     @ApiLog("获取支付订单统计")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/statistics")
@@ -403,12 +403,12 @@ public class PaymentController {
         return Result.success(paymentOrderService.getOrderStatistics());
     }
 
-       
-             
-      
-                          
-                   
-  
+
+
+
+
+
+
     @ApiLog("获取订单详情")
     @GetMapping("/{orderId}")
     public Result getOrderDetail(@PathVariable Long orderId,
@@ -419,12 +419,12 @@ public class PaymentController {
         return Result.success(paymentOrderService.getOrderDetail(orderId, userId));
     }
 
-       
-              
-      
-                         
-                   
-  
+
+
+
+
+
+
     @ApiLog("查询订单")
     @GetMapping("/order/{orderNo}")
     public Result getOrderByNo(@PathVariable String orderNo,
@@ -435,12 +435,12 @@ public class PaymentController {
         return Result.success(paymentOrderService.getOrderByNo(orderNo, userId));
     }
 
-       
-                 
-      
-                                    
-                          
-       
+
+
+
+
+
+
     @ApiLog("补发支付订单权益")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/retry-completion/{orderId}")
@@ -452,9 +452,9 @@ public class PaymentController {
         return Result.success(paymentOrderService.retryOrderCompletion(orderId, operatorId));
     }
 
-       
-                             
-       
+
+
+
     @ApiLog("获取付款凭证回收状态")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/proof/cleanup/status")
@@ -462,9 +462,9 @@ public class PaymentController {
         return Result.success(paymentProofLifecycleService.getStatusSummary());
     }
 
-       
-                              
-       
+
+
+
     @ApiLog("获取付款凭证回收失败")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/proof/cleanup/failures")
@@ -473,9 +473,9 @@ public class PaymentController {
         return Result.success(paymentProofLifecycleService.getRecentFailures(limit));
     }
 
-       
-                         
-       
+
+
+
     @ApiLog("重试付款凭证回收")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/proof/cleanup/retry/{assetId}")
@@ -483,16 +483,16 @@ public class PaymentController {
         return Result.success(paymentProofLifecycleService.retryFailedCleanup(assetId));
     }
 
-       
-                                   
-       
+
+
+
     private Session createPaymentSshSession() throws Exception {
         return paymentSshSessionFactory.connect();
     }
 
-       
-                                      
-       
+
+
+
     private void ensureRemoteDirectory(ChannelSftp channel, String directory) throws Exception {
         String normalized = directory.replace("\\", "/");
         String[] parts = normalized.split("/");
@@ -512,9 +512,9 @@ public class PaymentController {
         }
     }
 
-       
-                             
-       
+
+
+
     private String normalizeDirectory(String directory) {
         if (directory == null || directory.isEmpty()) {
             return "/sdb1/myprojoct/haoranmusic/song_requests/payment/proof/";
@@ -523,9 +523,9 @@ public class PaymentController {
         return normalized.endsWith("/") ? normalized : normalized + "/";
     }
 
-       
-                                      
-       
+
+
+
     private String resolveProofRelativePath(String reference) {
         String prefix = "payment-proof:";
         if (reference == null || !reference.startsWith(prefix)) {
@@ -538,9 +538,9 @@ public class PaymentController {
         return relativePath;
     }
 
-       
-                             
-       
+
+
+
     private String resolveProofContentType(String relativePath) {
         String lower = relativePath.toLowerCase();
         if (lower.endsWith(".png")) {
@@ -555,9 +555,9 @@ public class PaymentController {
         return "image/jpeg";
     }
 
-       
-                                   
-       
+
+
+
     private String resolveImageExtension(String originalFilename, String contentType) {
         String lowerName = originalFilename == null ? "" : originalFilename.toLowerCase();
         if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg")) {

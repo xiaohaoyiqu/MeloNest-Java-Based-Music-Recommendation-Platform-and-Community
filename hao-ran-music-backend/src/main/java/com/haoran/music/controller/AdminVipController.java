@@ -1,11 +1,11 @@
-   
-                      
-                                         
-  
-        
-                                                   
-                                                 
-   
+
+
+
+
+
+
+
+
 package com.haoran.music.controller;
 
 
@@ -18,10 +18,10 @@ import com.haoran.music.service.VipService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-   
-            
-                                  
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/admin/vip")
@@ -34,13 +34,13 @@ public class AdminVipController {
         this.vipService = vipService;
     }
 
-       
-                        
-      
-                     
-                       
-                    
-  
+
+
+
+
+
+
+
     @ApiLog("获取待审核VIP申请")
     @GetMapping("/applications/pending")
     public Result getPendingVipApplies(@RequestParam(defaultValue = "1") Integer page,
@@ -48,15 +48,15 @@ public class AdminVipController {
         return Result.success(vipService.getPendingVipApplies(page, size));
     }
 
-       
-                      
-      
-                     
-                              
-                           
-                                   
-                   
-  
+
+
+
+
+
+
+
+
+
     @ApiLog("审核VIP申请")
     @PostMapping("/creator-apply/review/{id}")
     public Result reviewCreatorVipApply(@PathVariable Long id,
@@ -70,14 +70,14 @@ public class AdminVipController {
                 approved, reviewReason));
     }
 
-       
-                               
-      
-                             
-                     
-                       
-                   
-  
+
+
+
+
+
+
+
+
     @ApiLog("获取VIP订单")
     @GetMapping("/orders")
     public Result getUserVipOrders(@RequestParam(required = false) Long userId,
@@ -86,19 +86,19 @@ public class AdminVipController {
         if (userId != null) {
             return Result.success(vipService.getUserVipOrders(userId, page, size));
         }
-                                     
+
         return Result.success(vipService.getPendingVipApplies(page, size));
     }
 
-       
-                 
-      
-                         
-                        
-                             
-                              
-                   
-  
+
+
+
+
+
+
+
+
+
     @ApiLog("授予VIP")
     @PostMapping("/grant")
     public Result grantVip(@RequestParam Long userId,
@@ -111,23 +111,23 @@ public class AdminVipController {
         return Result.success(vipService.grantVip(userId, days, reason, operatorId));
     }
 
-       
-                     
-      
-                   
-  
+
+
+
+
+
     @ApiLog("获取VIP价格配置")
     @GetMapping("/price-config")
     public Result getVipPriceConfig() {
         return Result.success(vipService.getVipPriceConfig());
     }
 
-       
-                   
-      
-                             
-                   
-  
+
+
+
+
+
+
     @ApiLog("获取VIP申请条件")
     @GetMapping("/creator-condition/{creatorId}")
     public Result checkCreatorVipCondition(@PathVariable Long creatorId) {

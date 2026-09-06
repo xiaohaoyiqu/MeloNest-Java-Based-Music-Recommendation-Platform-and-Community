@@ -1,11 +1,11 @@
-   
-                      
-                      
-  
-          
-                
-                     
-   
+
+
+
+
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -41,9 +41,9 @@ import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.util.*;
 
-   
-         
-   
+
+
+
 @Slf4j
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -53,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserMapper userMapper;
     private final UserVipService userVipService;
     private final PaymentConfig paymentConfig;
-                                        
+
     private final DecorationConfigMapper decorationConfigMapper;
     private final UserDecorationMapper userDecorationMapper;
 
@@ -77,33 +77,33 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createVipOrder(Long userId, Integer months, String paymentType) {
-               
+
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
         }
         UserAccountStatusUtil.requireCanInteract(user, "创建VIP支付订单");
 
-                 
+
         if (months < paymentConfig.getVip().getMinMonths() || months > paymentConfig.getVip().getMaxMonths()) {
             throw new BusinessException("\u8d2d\u4e70\u6708\u6570\u5fc5\u987b\u5728" + paymentConfig.getVip().getMinMonths() + "-" + paymentConfig.getVip().getMaxMonths() + "\u4e2a\u6708\u4e4b\u95f4");
         }
 
-                 
+
         if (!"alipay".equals(paymentType) && !"wechat".equals(paymentType)) {
             throw new BusinessException("不支持的支付类型");
         }
 
-                     
+
         int amount = paymentConfig.getVip().getPricePerMonth() * months;
 
-                
+
         String orderNo = generateOrderNo("VIP");
 
-                       
+
         LocalDateTime expireTime = LocalDateTime.now().plusMinutes(paymentConfig.getOrderExpireMinutes());
 
-               
+
         PaymentOrder order = new PaymentOrder();
         order.setOrderNo(orderNo);
         order.setUserId(userId);
@@ -115,7 +115,7 @@ public class PaymentServiceImpl implements PaymentService {
         order.setStatus("pending");
         order.setExpireTime(expireTime);
 
-                 
+
         Map<String, Object> productInfo = new HashMap<>();
         productInfo.put("months", months);
         productInfo.put("vipDays", months * paymentConfig.getVip().getDaysPerMonth());
@@ -123,7 +123,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         paymentOrderMapper.insert(order);
 
-                 
+
         Map<String, Object> paymentInfo = new HashMap<>();
         paymentInfo.put("orderNo", orderNo);
         paymentInfo.put("orderAmount", amount);
@@ -132,12 +132,12 @@ public class PaymentServiceImpl implements PaymentService {
         paymentInfo.put("pricePerMonth", paymentConfig.getVip().getPricePerMonth());
 
         if ("alipay".equals(paymentType)) {
-                              
+
             String payUrl = buildAlipayPayUrl(orderNo, months + "个月VIP", amount);
             paymentInfo.put("payUrl", payUrl);
             paymentInfo.put("qrCodeUrl", payUrl);
         } else {
-                            
+
             Map<String, String> wechatPayParams = buildWechatPayParams(orderNo, months + "个月VIP", amount);
             paymentInfo.put("codeUrl", wechatPayParams.get("codeUrl"));
             paymentInfo.put("prepayId", wechatPayParams.get("prepayId"));
@@ -152,47 +152,47 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> createDecorationOrder(Long userId, String decorationId, String paymentType) {
-               
+
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
         }
         UserAccountStatusUtil.requireCanInteract(user, "创建装饰支付订单");
 
-                 
+
         DecorationConfig config = getDecorationConfig(decorationId);
         if (config == null) {
             throw new BusinessException("装饰不存在");
         }
 
-                   
+
         if (config.getIsEnabled() == null || config.getIsEnabled() != 1) {
             throw new BusinessException("装饰暂不可用");
         }
 
-                  
+
         if (hasDecoration(userId, decorationId)) {
             throw new BusinessException("已拥有该装饰");
         }
 
-                 
+
         if (!"alipay".equals(paymentType) && !"wechat".equals(paymentType)) {
             throw new BusinessException("不支持的支付类型");
         }
 
-                                    
+
         Integer amount = config.getCashPrice();
         if (amount == null || amount <= 0) {
             throw new BusinessException("该装饰不支持现金购买，请使用活跃值兑换");
         }
 
-                
+
         String orderNo = generateOrderNo("DEC");
 
-                       
+
         LocalDateTime expireTime = LocalDateTime.now().plusMinutes(paymentConfig.getOrderExpireMinutes());
 
-               
+
         PaymentOrder order = new PaymentOrder();
         order.setOrderNo(orderNo);
         order.setUserId(userId);
@@ -204,7 +204,7 @@ public class PaymentServiceImpl implements PaymentService {
         order.setStatus("pending");
         order.setExpireTime(expireTime);
 
-                 
+
         Map<String, Object> productInfo = new HashMap<>();
         productInfo.put("decorationId", decorationId);
         productInfo.put("decorationType", config.getDecorationType());
@@ -212,7 +212,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         paymentOrderMapper.insert(order);
 
-                 
+
         Map<String, Object> paymentInfo = new HashMap<>();
         paymentInfo.put("orderNo", orderNo);
         paymentInfo.put("orderAmount", amount);
@@ -249,7 +249,7 @@ public class PaymentServiceImpl implements PaymentService {
             return "failure";
         }
 
-               
+
         try {
             boolean signVerified = AlipaySignature.rsaCheckV1(
                     params,
@@ -266,14 +266,14 @@ public class PaymentServiceImpl implements PaymentService {
             return "failure";
         }
 
-               
+
         PaymentOrder order = getOrderByNo(orderNo);
         if (order == null) {
             log.warn("订单不存在: orderNo={}", orderNo);
             return "failure";
         }
 
-                 
+
         if (isPaymentHandled(order)) {
             return "success";        
         }
@@ -282,7 +282,7 @@ public class PaymentServiceImpl implements PaymentService {
             return "success";
         }
 
-               
+
         if (!markPaymentPaid(order, tradeNo, JSON.toJSONString(params))) {
             return "success";
         }
@@ -297,7 +297,7 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("收到微信支付回调");
 
         try {
-                    
+
             Map<String, String> params = parseXmlToMap(xmlData);
 
             String orderNo = params.get("out_trade_no");
@@ -315,21 +315,21 @@ public class PaymentServiceImpl implements PaymentService {
                 return buildWechatXml("SUCCESS", "OK");
             }
 
-                   
+
             String sign = params.get("sign");
             if (!verifyWechatSign(params, sign)) {
                 log.warn("微信签名验证失败: orderNo={}", orderNo);
                 return buildWechatXml("FAIL", "签名验证失败");
             }
 
-                   
+
             PaymentOrder order = getOrderByNo(orderNo);
             if (order == null) {
                 log.warn("订单不存在: orderNo={}", orderNo);
                 return buildWechatXml("FAIL", "订单不存在");
             }
 
-                     
+
             if (isPaymentHandled(order)) {
                 return buildWechatXml("SUCCESS", "OK");
             }
@@ -338,7 +338,7 @@ public class PaymentServiceImpl implements PaymentService {
                 return buildWechatXml("SUCCESS", "OK");
             }
 
-                   
+
             if (!markPaymentPaid(order, params.get("transaction_id"), xmlData)) {
                 return buildWechatXml("SUCCESS", "OK");
             }
@@ -378,7 +378,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BusinessException("订单不存在");
         }
 
-                    
+
         if (!"pending".equals(order.getStatus())) {
             throw new BusinessException("订单状态不允许取消");
         }
@@ -417,11 +417,11 @@ public class PaymentServiceImpl implements PaymentService {
         return config;
     }
 
-                                                     
 
-       
-           
-       
+
+
+
+
     private void deliverGoods(PaymentOrder order) {
         if (!UserAccountStatusUtil.canInteract(order.getUserId(), userMapper::selectById)) {
             log.warn("支付成功但账号状态不可用，暂不发放权益: orderId={}, userId={}, businessType={}",
@@ -433,7 +433,7 @@ public class PaymentServiceImpl implements PaymentService {
         Map<String, Object> productInfo = parseProductInfo(order.getProductInfo());
 
         if ("vip".equals(orderType)) {
-                    
+
             Integer months = (Integer) productInfo.get("months");
             Integer vipDays = (Integer) productInfo.get("vipDays");
 
@@ -446,7 +446,7 @@ public class PaymentServiceImpl implements PaymentService {
                         ? previousExpireTime : now;
                 userVipService.grantVip(order.getUserId(), 1, vipDays, "payment");
 
-                         
+
                 VipPurchaseRecord record = new VipPurchaseRecord();
                 record.setUserId(order.getUserId());
                 record.setOrderId(order.getId());
@@ -469,7 +469,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
         } else if ("decoration".equals(orderType)) {
-                   
+
             String decorationId = (String) productInfo.get("decorationId");
 
             try {
@@ -484,7 +484,7 @@ public class PaymentServiceImpl implements PaymentService {
                 userDecoration.setSource("payment");
                 userDecoration.setRarity(config.getRarity());
 
-                               
+
                 if (config.getIsPermanent() == 0 && config.getDurationDays() != null) {
                     userDecoration.setExpireTime(LocalDateTime.now().plusDays(config.getDurationDays()));
                 }
@@ -535,19 +535,19 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentOrderMapper.update(null, transition) == 1;
     }
 
-       
-            
-       
+
+
+
     private String generateOrderNo(String prefix) {
         return prefix + System.currentTimeMillis() + (int)(Math.random() * 10000);
     }
 
-       
-                 
-       
+
+
+
     private String buildAlipayPayUrl(String orderNo, String subject, int amount) {
         try {
-                       
+
             AlipayClient alipayClient = new DefaultAlipayClient(
                     paymentConfig.getAlipay().getGateway(),
                     paymentConfig.getAlipay().getAppId(),
@@ -558,7 +558,7 @@ public class PaymentServiceImpl implements PaymentService {
                     "RSA2"
             );
 
-                     
+
             AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
             request.setBizContent("{" +
                     "\"out_trade_no\":\"" + orderNo + "\"," +
@@ -568,7 +568,7 @@ public class PaymentServiceImpl implements PaymentService {
                     "\"store_id\":\"haoran_music\"" +
                     "}");
 
-                   
+
             AlipayTradePrecreateResponse response = alipayClient.execute(request);
 
             if (response.isSuccess()) {
@@ -579,20 +579,20 @@ public class PaymentServiceImpl implements PaymentService {
             }
         } catch (AlipayApiException e) {
             log.error("event=alipay_sdk_call_failed errorType={}", e.getClass().getSimpleName());
-                                  
+
             return String.format("%s?orderNo=%s&subject=%s&amount=%d",
                     paymentConfig.getAlipay().getGateway(), orderNo, subject, amount);
         }
     }
 
-       
-               
-       
+
+
+
     private Map<String, String> buildWechatPayParams(String orderNo, String subject, int amount) {
         Map<String, String> params = new HashMap<>();
 
         try {
-                     
+
             Map<String, Object> data = new HashMap<>();
             data.put("appid", paymentConfig.getWechat().getAppId());
             data.put("mch_id", paymentConfig.getWechat().getMchId());
@@ -604,14 +604,14 @@ public class PaymentServiceImpl implements PaymentService {
             data.put("notify_url", paymentConfig.getWechat().getNotifyUrl());
             data.put("trade_type", "NATIVE");
 
-                   
+
             String sign = generateWechatSign(data);
             data.put("sign", sign);
 
-                     
+
             String xml = mapToXml(data);
 
-                                       
+
             params.put("codeUrl", "weixin://wxpay/bizpayurl?pr=pending");
             params.put("prepayId", "pending");
 
@@ -625,9 +625,9 @@ public class PaymentServiceImpl implements PaymentService {
         return params;
     }
 
-       
-              
-       
+
+
+
     private boolean verifyAlipaySign(Map<String, String> params, String sign) {
         try {
             return AlipaySignature.rsaCheckV1(
@@ -642,20 +642,20 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-       
-             
-       
+
+
+
     private boolean verifyWechatSign(Map<String, String> params, String sign) {
         try {
-                       
+
             Map<String, String> data = new HashMap<>(params);
             data.remove("sign");
 
-                     
+
             List<String> keys = new ArrayList<>(data.keySet());
             Collections.sort(keys);
 
-                    
+
             StringBuilder sb = new StringBuilder();
             for (String key : keys) {
                 if (data.get(key) != null && !"".equals(data.get(key))) {
@@ -664,7 +664,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
             sb.append("key=").append(paymentConfig.getWechat().getApiKey());
 
-                    
+
             String calculatedSign = md5(sb.toString()).toUpperCase();
 
             return sign.equals(calculatedSign);
@@ -674,9 +674,9 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-       
-             
-       
+
+
+
     private String generateWechatSign(Map<String, Object> params) {
         try {
             List<String> keys = new ArrayList<>(params.keySet());
@@ -697,9 +697,9 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-       
-            
-       
+
+
+
     private String md5(String str) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -715,16 +715,16 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-       
-              
-       
+
+
+
     private String generateNonceStr() {
         return UUID.randomUUID().toString().replace("-", "").substring(0, 32);
     }
 
-       
-              
-       
+
+
+
                                                                                                                              private String buildWechatXml(String returnCode, String returnMsg) {        return "<xml><return_code><![CDATA[" + returnCode + "]]></return_code>"               + "<return_msg><![CDATA[" + returnMsg + "]]></return_msg></xml>";    }
     private String mapToXml(Map<String, Object> data) {
         StringBuilder sb = new StringBuilder("<xml>");
@@ -737,13 +737,13 @@ public class PaymentServiceImpl implements PaymentService {
         return sb.toString();
     }
 
-       
-              
-       
-       
-              
-                             
-       
+
+
+
+
+
+
+
     private Map<String, String> parseXmlToMap(String xml) {
         Map<String, String> map = new HashMap<>();
         if (StrUtil.isBlank(xml)) {
@@ -751,8 +751,8 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         try {
-                                
-                                                                   
+
+
             java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("<([^>]+)>(.*?)</\1>");
             java.util.regex.Matcher matcher = pattern.matcher(xml);
 
@@ -760,28 +760,28 @@ public class PaymentServiceImpl implements PaymentService {
                 String key = matcher.group(1);
                 String value = matcher.group(2);
 
-                          
+
                 if (value.contains("<![CDATA[")) {
                     value = value.replaceAll("<!\\[CDATA\\[(.*?)\\]\\]>", "$1");
                 }
 
-                             
+
                 if (StrUtil.isNotBlank(key) && !"xml".equals(key)) {
                     map.put(key.trim(), value.trim());
                 }
             }
         } catch (Exception e) {
             log.error("解析XML失败: {}", xml);
-                      
+
             return parseXmlToMapSimple(xml);
         }
 
         return map;
     }
 
-       
-                     
-       
+
+
+
     private Map<String, String> parseXmlToMapSimple(String xml) {
         Map<String, String> map = new HashMap<>();
         String[] tags = xml.split("<");
@@ -803,9 +803,9 @@ public class PaymentServiceImpl implements PaymentService {
         return map;
     }
 
-       
-             
-       
+
+
+
     private DecorationConfig getDecorationConfig(String decorationId) {
         LambdaQueryWrapper<DecorationConfig> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(DecorationConfig::getDecorationId, decorationId)
@@ -813,12 +813,12 @@ public class PaymentServiceImpl implements PaymentService {
         return decorationConfigMapper.selectOne(wrapper);
     }
 
-       
-               
-                    
-                               
-                   
-       
+
+
+
+
+
+
     private boolean hasDecoration(Long userId, String decorationId) {
         LambdaQueryWrapper<UserDecoration> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserDecoration::getUserId, userId)
@@ -828,9 +828,9 @@ public class PaymentServiceImpl implements PaymentService {
         return count != null && count > 0;
     }
 
-       
-           
-       
+
+
+
     private PaymentOrder getOrderByNo(String orderNo) {
         LambdaQueryWrapper<PaymentOrder> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PaymentOrder::getOrderNo, orderNo)
@@ -838,9 +838,9 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentOrderMapper.selectOne(wrapper);
     }
 
-       
-             
-       
+
+
+
     private Map<String, Object> parseProductInfo(String productInfoJson) {
         try {
             if (productInfoJson == null || productInfoJson.isEmpty()) {

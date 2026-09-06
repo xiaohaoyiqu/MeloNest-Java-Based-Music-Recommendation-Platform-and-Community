@@ -1,5 +1,5 @@
 [CmdletBinding()]
-                     
+
 param(
     [string]$OutputDirectory = (Join-Path $PSScriptRoot '..\ee\current'),
     [string]$SshConfig = (Join-Path $PSScriptRoot 'ssh\config')

@@ -22,10 +22,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                              
-   
+
+
+
+
 @Slf4j
 @Service
 public class RFMAnalysisServiceImpl implements RFMAnalysisService {
@@ -41,14 +41,14 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
 
     private static final int RFM_BATCH_SIZE = 500;
 
-       
-                  
-       
+
+
+
     private static final Integer RFM_CACHE_HOURS = 6;
 
-       
-                
-       
+
+
+
     private static final Map<Integer, Integer> R_SCORE_STANDARD = new LinkedHashMap<Integer, Integer>() {{
         put(1, 7);             
         put(2, 14);             
@@ -57,9 +57,9 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         put(5, 999);             
     }};
 
-       
-                
-       
+
+
+
     private static final Map<Integer, Integer> F_SCORE_STANDARD = new LinkedHashMap<Integer, Integer>() {{
         put(20, 5);              
         put(10, 4);               
@@ -68,9 +68,9 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         put(0, 1);              
     }};
 
-       
-                
-       
+
+
+
     private static final Map<BigDecimal, Integer> M_SCORE_STANDARD = new LinkedHashMap<BigDecimal, Integer>() {{
         put(new BigDecimal("500"), 5);               
         put(new BigDecimal("200"), 4);                 
@@ -85,7 +85,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
             return null;
         }
 
-                  
+
         String cacheKey = "rfm:user:" + userId;
         RFMVO cached = (RFMVO) redisTemplate.opsForValue().get(cacheKey);
         if (ObjectUtils.isNotEmpty(cached)) {
@@ -99,7 +99,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
 
         RFMVO rfm = buildRfm(aggregates.get(0));
 
-               
+
         cacheRfm(rfm);
 
         log.info("用户RFM分析完成: userId={}, segment={}, score={}", userId, rfm.getSegmentType(), rfm.getTotalScore());
@@ -132,14 +132,14 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
     public Map<String, Integer> getSegmentStatistics() {
         Map<String, Integer> stats = new LinkedHashMap<>();
 
-                  
+
         String cacheKey = "rfm:stats:segments";
         Map<String, Integer> cached = (Map<String, Integer>) redisTemplate.opsForValue().get(cacheKey);
         if (ObjectUtils.isNotEmpty(cached)) {
             return cached;
         }
 
-                   
+
         for (RFMVO.UserSegment segment : RFMVO.UserSegment.values()) {
             stats.put(segment.getCode(), 0);
         }
@@ -161,7 +161,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
             lastUserId = userIds.get(userIds.size() - 1);
         }
 
-                    
+
         redisTemplate.opsForValue().set(cacheKey, stats, 1, TimeUnit.HOURS);
 
         return stats;
@@ -173,7 +173,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
             return new ArrayList<>();
         }
 
-                 
+
         int pageNum = ObjectUtils.isNotEmpty(page) ? Math.max(1, page) : 1;
         int pageSize = ObjectUtils.isNotEmpty(size) ? Math.min(Math.max(1, size), 100) : 20;
         long offset = (long) (pageNum - 1) * pageSize;
@@ -229,7 +229,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         distribution.put("total", total);
         distribution.put("segments", stats);
 
-                
+
         Map<String, BigDecimal> percentages = new LinkedHashMap<>();
         for (Map.Entry<String, Integer> entry : stats.entrySet()) {
             BigDecimal percentage = total > 0
@@ -249,9 +249,9 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
             return 50;         
         }
 
-                     
-                                
-                                
+
+
+
 
         Integer rScore = rfm.getRecencyScore();
         Integer baseProbability;
@@ -275,12 +275,12 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
                 baseProbability = 50;
                 break;
         }
-                                
+
         if (rfm.getFrequencyScore() >= 4) {
             baseProbability = baseProbability + 10;
         }
 
-                                
+
         if (rfm.getMonetaryScore() >= 4) {
             baseProbability = baseProbability - 10;
         }
@@ -311,7 +311,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         report.put("segmentStatistics", getSegmentStatistics());
         report.put("segmentDistribution", getSegmentDistribution());
 
-                                        
+
         Map<String, List<RFMVO>> segmentDetails = new LinkedHashMap<>();
         for (RFMVO.UserSegment segment : RFMVO.UserSegment.values()) {
             segmentDetails.put(segment.getCode(), new ArrayList<>());
@@ -357,7 +357,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         rfm.setInteractionRestricted(!UserAccountStatusUtil.canInteract(user));
         rfm.setPublicFlowRestricted(!UserAccountStatusUtil.canContributePublicStats(user));
 
-                   
+
         LocalDateTime lastActiveTime = null;
         if (aggregate.getLastVipTime() != null) {
             lastActiveTime = aggregate.getLastVipTime();
@@ -370,12 +370,12 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
 
         rfm.setLastActiveTime(lastActiveTime);
 
-                    
+
         if (lastActiveTime != null) {
             long days = ChronoUnit.DAYS.between(lastActiveTime, LocalDateTime.now());
             rfm.setRecency((int) days);
 
-                    
+
             int rScore = 5;
             for (Map.Entry<Integer, Integer> entry : R_SCORE_STANDARD.entrySet()) {
                 if (days <= entry.getValue()) {
@@ -389,8 +389,8 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
             rfm.setRecencyScore(1);
         }
 
-                                  
-                         
+
+
         int vipCount = aggregate.getVipCount() == null ? 0 : aggregate.getVipCount();
         int checkinCount = aggregate.getCheckinCount() == null ? 0 : aggregate.getCheckinCount();
         int totalFrequency = vipCount * 5 + checkinCount;
@@ -399,7 +399,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         rfm.setTotalActiveDays(checkinCount);
         rfm.setFrequency(totalFrequency);
 
-                
+
         int fScore = 1;
         for (Map.Entry<Integer, Integer> entry : F_SCORE_STANDARD.entrySet()) {
             if (totalFrequency >= entry.getKey()) {
@@ -414,7 +414,7 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         rfm.setTotalPurchaseAmount(totalAmount);
         rfm.setMonetary(totalAmount);
 
-                
+
         int mScore = 1;
         for (Map.Entry<BigDecimal, Integer> entry : M_SCORE_STANDARD.entrySet()) {
             if (totalAmount.compareTo(entry.getKey()) >= 0) {
@@ -435,11 +435,11 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         }
     }
 
-       
-             
-       
+
+
+
     private void determineSegment(RFMVO rfm) {
-                          
+
         int r = rfm.getRecencyScore();              
         int f = rfm.getFrequencyScore();              
         int m = rfm.getMonetaryScore();               
@@ -448,48 +448,48 @@ public class RFMAnalysisServiceImpl implements RFMAnalysisService {
         String segmentDescription;
         String operationalAdvice;
 
-                
+
         boolean highR = r >= 4;
         boolean highF = f >= 4;
         boolean highM = m >= 4;
 
         if (highR && highF && highM) {
-                     
+
             segmentType = RFMVO.UserSegment.IMPORTANT_VALUE.getCode();
             segmentDescription = RFMVO.UserSegment.IMPORTANT_VALUE.getName();
             operationalAdvice = RFMVO.UserSegment.IMPORTANT_VALUE.getAdvice();
         } else if (!highR && highF && highM) {
-                     
+
             segmentType = RFMVO.UserSegment.IMPORTANT_RETENTION.getCode();
             segmentDescription = RFMVO.UserSegment.IMPORTANT_RETENTION.getName();
             operationalAdvice = RFMVO.UserSegment.IMPORTANT_RETENTION.getAdvice();
         } else if (highR && !highF && highM) {
-                     
+
             segmentType = RFMVO.UserSegment.IMPORTANT_DEVELOPMENT.getCode();
             segmentDescription = RFMVO.UserSegment.IMPORTANT_DEVELOPMENT.getName();
             operationalAdvice = RFMVO.UserSegment.IMPORTANT_DEVELOPMENT.getAdvice();
         } else if (!highR && !highF && highM) {
-                     
+
             segmentType = RFMVO.UserSegment.IMPORTANT_WIN_BACK.getCode();
             segmentDescription = RFMVO.UserSegment.IMPORTANT_WIN_BACK.getName();
             operationalAdvice = RFMVO.UserSegment.IMPORTANT_WIN_BACK.getAdvice();
         } else if (highR && highF && !highM) {
-                     
+
             segmentType = RFMVO.UserSegment.GENERAL_VALUE.getCode();
             segmentDescription = RFMVO.UserSegment.GENERAL_VALUE.getName();
             operationalAdvice = RFMVO.UserSegment.GENERAL_VALUE.getAdvice();
         } else if (!highR && highF && !highM) {
-                     
+
             segmentType = RFMVO.UserSegment.GENERAL_RETENTION.getCode();
             segmentDescription = RFMVO.UserSegment.GENERAL_RETENTION.getName();
             operationalAdvice = RFMVO.UserSegment.GENERAL_RETENTION.getAdvice();
         } else if (highR && !highF && !highM) {
-                     
+
             segmentType = RFMVO.UserSegment.GENERAL_DEVELOPMENT.getCode();
             segmentDescription = RFMVO.UserSegment.GENERAL_DEVELOPMENT.getName();
             operationalAdvice = RFMVO.UserSegment.GENERAL_DEVELOPMENT.getAdvice();
         } else {
-                   
+
             segmentType = RFMVO.UserSegment.CHURNED.getCode();
             segmentDescription = RFMVO.UserSegment.CHURNED.getName();
             operationalAdvice = RFMVO.UserSegment.CHURNED.getAdvice();

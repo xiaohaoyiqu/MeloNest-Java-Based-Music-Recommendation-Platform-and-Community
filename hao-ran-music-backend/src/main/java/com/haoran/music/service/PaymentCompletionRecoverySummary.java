@@ -1,11 +1,11 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service;
 
-   
-                                      
-   
+
+
+
 public class PaymentCompletionRecoverySummary {
 
     private int candidates;

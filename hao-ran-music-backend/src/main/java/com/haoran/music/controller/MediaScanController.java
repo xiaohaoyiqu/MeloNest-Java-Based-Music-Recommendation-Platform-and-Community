@@ -11,10 +11,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @RestController
 @RequestMapping("/admin/media")
 @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -26,9 +26,9 @@ public class MediaScanController {
     @Resource
     private MediaScanService mediaScanService;
 
-       
-                
-       
+
+
+
     @ApiLog("扫描MV时长")
     @PostMapping("/scan/mv")
     public Result<Integer> scanMVDuration(@RequestParam(defaultValue = "50") int limit) {
@@ -36,9 +36,9 @@ public class MediaScanController {
         return Result.success(count);
     }
 
-       
-                
-       
+
+
+
     @ApiLog("扫描歌曲时长")
     @PostMapping("/scan/song")
     public Result<Integer> scanSongDuration(@RequestParam(defaultValue = "100") int limit) {
@@ -46,9 +46,9 @@ public class MediaScanController {
         return Result.success(count);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("扫描所有媒体")
     @PostMapping("/scan/all")
     public Result<String> scanAll() {
@@ -57,12 +57,12 @@ public class MediaScanController {
         return Result.success("MV更新" + mvCount + "个，歌曲更新" + songCount + "首");
     }
 
-       
-                
-      
-                           
-                   
-       
+
+
+
+
+
+
     @ApiLog("扫描指定MV时长")
     @PostMapping("/scan/mv/specific")
     public Result<Integer> scanSpecificMVs(@RequestBody List<Long> mvIds) {
@@ -70,12 +70,12 @@ public class MediaScanController {
         return Result.success(count);
     }
 
-       
-                
-      
-                             
-                   
-       
+
+
+
+
+
+
     @ApiLog("扫描指定歌曲时长")
     @PostMapping("/scan/song/specific")
     public Result<Integer> scanSpecificSongs(@RequestBody List<Long> songIds) {

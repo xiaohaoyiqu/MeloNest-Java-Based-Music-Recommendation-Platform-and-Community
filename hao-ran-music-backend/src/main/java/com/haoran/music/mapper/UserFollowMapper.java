@@ -9,10 +9,10 @@ import org.apache.ibatis.annotations.Select;
 import java.util.Collection;
 import java.util.List;
 
-   
-                      
-                            
-   
+
+
+
+
 @Mapper
 public interface UserFollowMapper extends BaseMapper<UserFollow> {
 

@@ -30,10 +30,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserStatisticsServiceImpl extends ServiceImpl<UserStatisticsMapper, UserStatistics>
@@ -93,12 +93,12 @@ public class UserStatisticsServiceImpl extends ServiceImpl<UserStatisticsMapper,
         }
     }
 
-       
-               
-      
-                         
-                           
-  
+
+
+
+
+
+
     @Override
     public void recordLogin(Long userId, String ip) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -130,11 +130,11 @@ public class UserStatisticsServiceImpl extends ServiceImpl<UserStatisticsMapper,
         log.debug("记录用户登录: userId={}, ip={}", userId, ip);
     }
 
-       
-               
-      
-                         
-  
+
+
+
+
+
     @Override
     public void recordSearch(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -153,13 +153,13 @@ public class UserStatisticsServiceImpl extends ServiceImpl<UserStatisticsMapper,
         log.debug("记录用户搜索: userId={}", userId);
     }
 
-       
-               
-      
-                            
-                                                            
-                           
-  
+
+
+
+
+
+
+
     @Override
     public void incrementInteraction(Long userId, String type, Integer increment) {
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(type)) {
@@ -214,13 +214,13 @@ public class UserStatisticsServiceImpl extends ServiceImpl<UserStatisticsMapper,
         saveOrUpdate(stats);
     }
 
-       
-                       
-      
-                         
-                       
-                                   
-  
+
+
+
+
+
+
+
     @Override
     public Boolean isBotUser(Long userId, Integer days) {
         LocalDate endDate = LocalDate.now();
@@ -273,10 +273,10 @@ public class UserStatisticsServiceImpl extends ServiceImpl<UserStatisticsMapper,
         log.info("批量创建/更新用户统计数据完成: statDate={}, savedCount={}", targetDate, savedCount);
     }
 
-       
-                                
-      
-  
+
+
+
+
     private void mergeListenHistoryStats(Map<Long, UserStatistics> mergedStats, LocalDate statDate) {
         LocalDateTime start = statDate.atStartOfDay();
         LocalDateTime end = start.plusDays(1);
@@ -295,10 +295,10 @@ public class UserStatisticsServiceImpl extends ServiceImpl<UserStatisticsMapper,
         }
     }
 
-       
-                                      
-      
-  
+
+
+
+
     private void mergeRedisStats(Map<Long, UserStatistics> mergedStats, LocalDate statDate) {
         String pattern = STATS_PREFIX + statDate + ":*";
         Set<String> keys = scanKeys(pattern);

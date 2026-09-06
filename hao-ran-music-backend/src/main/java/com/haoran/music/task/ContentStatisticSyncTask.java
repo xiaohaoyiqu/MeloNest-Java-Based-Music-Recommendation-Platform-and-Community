@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.task;
 
 import com.haoran.music.service.impl.ContentStatisticReconcileService;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.Map;
 
-   
-                                                             
-   
+
+
+
 @Slf4j
 @Component
 public class ContentStatisticSyncTask {

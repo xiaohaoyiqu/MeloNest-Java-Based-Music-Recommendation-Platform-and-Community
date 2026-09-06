@@ -18,13 +18,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-   
-                        
-  
-                                 
-  
-                      
-   
+
+
+
+
+
+
+
 @Service
 @RequiredArgsConstructor
 public class RankingSnapshotBuildService {
@@ -36,12 +36,12 @@ public class RankingSnapshotBuildService {
     private final RankingSnapshotMapper rankingSnapshotMapper;
     private final RankingSnapshotItemMapper rankingSnapshotItemMapper;
 
-       
-                            
-      
-                                          
-                         
-       
+
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public String buildHotSongSnapshot(LocalDateTime windowEnd) {
         LocalDateTime safeWindowEnd = ObjectUtils.isEmpty(windowEnd) ? LocalDateTime.now() : windowEnd;
@@ -91,12 +91,12 @@ public class RankingSnapshotBuildService {
         return snapshotId;
     }
 
-       
-                        
-      
-                           
-                             
-       
+
+
+
+
+
+
     private String checksum(List<RankingSnapshotItem> items) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

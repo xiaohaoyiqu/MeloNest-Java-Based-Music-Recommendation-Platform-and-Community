@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.vo.user;
 
 import com.haoran.music.entity.User;
@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-                                                                     
+
 @Data
 public class AdminUserDetailVO {
     private Long id;

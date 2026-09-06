@@ -23,10 +23,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserProfile> implements UserProfileService {
@@ -46,20 +46,20 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
     @Autowired
     private SongMapper songMapper;
 
-       
-           
-       
+
+
+
     private static final String PROFILE_CACHE_PREFIX = "user:profile:";
     private static final String PREFERENCE_TAGS_PREFIX = "user:tags:";
 
-       
-                         
-       
+
+
+
     private static final int PROFILE_CACHE_TTL = 3600;
 
-       
-                          
-       
+
+
+
     private static final int PREFERENCE_TAGS_CACHE_TTL = 1800;
     private static final int PROFILE_REFRESH_BATCH_SIZE = 200;
 
@@ -123,7 +123,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
             userProfileMapper.insert(profile);
         }
 
-               
+
         CacheHelper.delete(redisUtils, PROFILE_CACHE_PREFIX + userId);
         CacheHelper.delete(redisUtils, PREFERENCE_TAGS_PREFIX + userId);
 
@@ -145,19 +145,19 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
             profile = createNewProfile(userId, true);
         }
 
-                 
+
         refreshMusicPreferences(profile);
 
-                 
+
         refreshBehaviorFeatures(profile);
 
-                   
+
         refreshLifecycleData(profile);
 
-                 
+
         calculateUserSegment(profile);
 
-                 
+
         Integer churnProb = predictChurnProbability(userId);
         profile.setChurnProbability(churnProb);
 
@@ -169,7 +169,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
             userProfileMapper.insert(profile);
         }
 
-               
+
         CacheHelper.delete(redisUtils, PROFILE_CACHE_PREFIX + userId);
         CacheHelper.delete(redisUtils, PREFERENCE_TAGS_PREFIX + userId);
 
@@ -219,16 +219,16 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
                     UserProfileVO profile = getUserProfile(userId);
                     Map<String, Object> result = new HashMap<>();
 
-                           
+
                     result.put("preferredGenres", profile.getPreferredGenres());
                     result.put("preferredLanguages", profile.getPreferredLanguages());
                     result.put("preferredArtists", profile.getPreferredArtists());
 
-                           
+
                     result.put("peakActiveHour", profile.getPeakActiveHour());
                     result.put("avgDailyDuration", profile.getAvgDailyDurationHours());
 
-                           
+
                     result.put("userSegment", profile.getUserSegment());
                     result.put("lifecycleStage", profile.getLifecycleStage());
 
@@ -259,14 +259,14 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         LocalDate today = LocalDate.now();
         String behaviorKey = "user:behavior:" + today + ":" + userId;
 
-                                           
+
         redisUtils.hIncrBy(behaviorKey, normalizedAction + "_count", 1);
 
-                           
+
         String targetKey = behaviorKey + ":" + normalizedAction;
         redisUtils.sAdd(targetKey, String.valueOf(targetId));
 
-                   
+
         redisUtils.expire(behaviorKey, 7, TimeUnit.DAYS);
         redisUtils.expire(targetKey, 7, TimeUnit.DAYS);
 
@@ -319,7 +319,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
 
         int churnScore = 0;
 
-                            
+
         if (ObjectUtils.isNotEmpty(profile.getLastActiveDate())) {
             long daysSinceLastActive = LocalDate.now().toEpochDay() - profile.getLastActiveDate().toEpochDay();
             if (daysSinceLastActive > 30) {
@@ -331,9 +331,9 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
             }
         }
 
-                            
+
         if (ObjectUtils.isNotEmpty(profile.getTotalActiveDays())) {
-                         
+
             LocalDate weekAgo = LocalDate.now().minusDays(7);
             long recentActiveDays = listenHistoryMapper.selectList(
                     new LambdaQueryWrapper<ListenHistory>()
@@ -351,7 +351,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
             }
         }
 
-                            
+
         if (ObjectUtils.isNotEmpty(profile.getAvgDailyDuration())) {
             if (profile.getAvgDailyDuration() < 300) {         
                 churnScore += 30;
@@ -363,11 +363,11 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         return Math.min(churnScore, 100);
     }
 
-                                                     
 
-       
-              
-       
+
+
+
+
     private UserProfile createNewProfile(Long userId, boolean persist) {
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
@@ -418,9 +418,9 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         return values == null ? 0 : values.size();
     }
 
-       
-             
-       
+
+
+
     private void refreshMusicPreferences(UserProfile profile) {
         Long userId = profile.getUserId();
 
@@ -480,13 +480,13 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
             profile.setPreferredArtists(JSON.toJSONString(topArtists));
         }
     }
-       
-             
-       
+
+
+
     private void refreshBehaviorFeatures(UserProfile profile) {
         Long userId = profile.getUserId();
 
-                     
+
         LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
         List<ListenHistory> recentHistory = listenHistoryMapper.selectList(
                 new LambdaQueryWrapper<ListenHistory>()
@@ -500,7 +500,7 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
                     .sum();
             profile.setAvgDailyDuration(totalDuration / 30);
 
-                     
+
             Map<Integer, Integer> hourCount = new HashMap<>();
             for (ListenHistory history : recentHistory) {
                 int hour = history.getCreateTime().getHour();
@@ -516,9 +516,9 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         }
     }
 
-       
-               
-       
+
+
+
     private void refreshLifecycleData(UserProfile profile) {
         Long userId = profile.getUserId();
         User user = userMapper.selectById(userId);
@@ -582,9 +582,9 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
-       
-             
-       
+
+
+
     private void calculateUserSegment(UserProfile profile) {
         LocalDate now = LocalDate.now();
         long daysSinceRegister = 0;
@@ -597,29 +597,29 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
             daysSinceLastActive = now.toEpochDay() - profile.getLastActiveDate().toEpochDay();
         }
 
-                     
+
         if (daysSinceRegister <= 7) {
             profile.setUserSegment("NEW");
             profile.setLifecycleStage("AWARENESS");
         }
-                          
+
         else if (daysSinceLastActive > 30) {
             profile.setUserSegment("CHURN");
             profile.setLifecycleStage("CHURN");
             profile.setChurnDate(now);
         }
-                          
+
         else if (daysSinceLastActive <= 7 && profile.getTotalActiveDays() > 30) {
             profile.setUserSegment("RETENTION");
             profile.setLifecycleStage("RETENTION");
         }
-                       
+
         else {
             profile.setUserSegment("ACTIVE");
             profile.setLifecycleStage("CONSIDER");
         }
 
-                  
+
         int ltvScore = 10;
         if (profile.getTotalActiveDays() != null) {
             ltvScore += Math.min(profile.getTotalActiveDays(), 50);
@@ -630,19 +630,19 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         profile.setLtvScore(Math.min(ltvScore, 100));
     }
 
-       
-            
-       
+
+
+
     private UserProfileVO convertToVO(UserProfile profile) {
         UserProfileVO vo = new UserProfileVO();
         BeanUtils.copyProperties(profile, vo);
 
-                   
+
         vo.setPreferredGenres(parseJsonList(profile.getPreferredGenres()));
         vo.setPreferredLanguages(parseJsonList(profile.getPreferredLanguages()));
         vo.setPreferredArtists(parseJsonList(profile.getPreferredArtists()));
 
-                  
+
         if (profile.getAvgDailyDuration() != null) {
             vo.setAvgDailyDurationHours(profile.getAvgDailyDuration() / 3600.0);
         }
@@ -653,9 +653,9 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         return vo;
     }
 
-       
-                     
-       
+
+
+
     private List<String> parseJsonList(String jsonStr) {
         if (ObjectUtils.isEmpty(jsonStr)) {
             return new ArrayList<>();
@@ -667,11 +667,11 @@ public class UserProfileServiceImpl extends ServiceImpl<UserProfileMapper, UserP
         }
     }
 
-       
-             
-                    
-                   
-       
+
+
+
+
+
     private Song getSongById(Long songId) {
         if (ObjectUtils.isEmpty(songId)) {
             return null;

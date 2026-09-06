@@ -10,10 +10,10 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
-   
-                      
-                           
-   
+
+
+
+
 @Mapper
 public interface PlaylistCollaboratorMapper extends BaseMapper<PlaylistCollaborator> {
 
@@ -47,12 +47,12 @@ public interface PlaylistCollaboratorMapper extends BaseMapper<PlaylistCollabora
                           @Param("canEdit") Integer canEdit,
                           @Param("invitedBy") Long invitedBy);
 
-       
-                                          
-      
-                           
-                     
-  
+
+
+
+
+
+
     @Update("UPDATE playlist_collaborator SET role = 'owner', can_add = 1, can_remove = 1, can_edit = 1, status = 'accepted', joined_time = NOW(), invited_by = NULL, deleted = 0 WHERE id = #{id} AND role = 'owner' AND status = 'closed' AND deleted = 1")
     int restoreClosedOwner(@Param("id") Long id);
 

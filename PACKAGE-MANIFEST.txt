@@ -1,6 +1,6 @@
 HaoRanMusic delivery package
 Edition: source-no-comments-no-frontend-pages
-Generated: 2026-09-06 13:16:20 +08:00
+Generated: 2026-09-06 22:38:07 +08:00
 Secrets, private SSH material, dependencies, build output, logs, caches, uploads and database data: excluded
 
 Contains comment-free backend business source, frontend API/store/type/config source and the local media service.
@@ -1443,6 +1443,8 @@ hao-ran-music-frontend/vite.config.ts
 hao-ran-music-frontend/vitest.config.ts
 PROJECT-FILES.md
 README.md
+scripts/als_training_benchmark.py
+scripts/als_training_benchmark.scala
 scripts/audio_feature_scan.py
 scripts/cluster.sh
 scripts/config-sync.sh
@@ -1451,28 +1453,22 @@ scripts/dataset/import_spotify.sh
 scripts/dataset/import_spotify_dataset.py
 scripts/distribute-config.sh
 scripts/env.sh
-scripts/export-audio-feature-catalog-node1.sh
-scripts/force-stop-cluster.sh
 scripts/hadoop.sh
 scripts/hive.sh
-scripts/install-audio-analyzer-node3.sh
 scripts/kafka.sh
 scripts/log-cleaner.sh
 scripts/nginx.sh
 scripts/performance_test.py
 scripts/performance_test.sh
 scripts/prepare_spotify_recommendation_data.py
-scripts/promote-recommendation-model-node1.sh
 scripts/quick-restart.sh
 scripts/quick-start.sh
 scripts/recommendation_model_utils.py
 scripts/recommendation-training-preflight.sh
 scripts/redis.sh
 scripts/register_audio_features.py
-scripts/register-audio-features-node1.sh
 scripts/restart_backend.sh
 scripts/run-recommendation-training.sh
-scripts/scan-audio-features-node3.sh
 scripts/spark.sh
 scripts/ssh/config.example
 scripts/stop-all-services.sh
@@ -1486,4 +1482,5 @@ scripts/train_recommendation_model.py
 scripts/verify_recommendation_training.py
 scripts/zookeeper.sh
 sql/current-schema.sql
+sql/import-node3-media-assets.sql
 sql/README.md

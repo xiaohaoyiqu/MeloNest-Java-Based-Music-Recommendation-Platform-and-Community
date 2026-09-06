@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-   
-                      
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -22,9 +22,9 @@ public class NotificationDeliveryOutboxRetryTask {
     @Value("${schedule.task.notification-delivery-outbox-limit:50}")
     private int limit;
 
-       
-                        
-       
+
+
+
     @Scheduled(cron = "${schedule.task.notification-delivery-outbox-cron:0 */1 * * * ?}")
     public void retryDueEvents() {
         try {

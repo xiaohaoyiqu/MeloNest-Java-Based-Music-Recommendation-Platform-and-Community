@@ -14,38 +14,38 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.Arrays;
 
-   
-                      
-                                      
-   
+
+
+
+
 @Slf4j
 @Component
 public class AudioQualityDetector {
 
-       
-                                     
-       
+
+
+
     @Value("${audio.ffmpeg.path}")
     private String ffprobePath;
 
-       
-                                          
-       
+
+
+
     @Value("${audio.ffmpeg.enabled}")
     private boolean ffmpegEnabled;
 
-       
-                   
-       
+
+
+
     @Value("${audio.ffmpeg.detect-timeout}")
     private int detectTimeout;
 
     @Value("${audio.ffmpeg.version-check-timeout-seconds}")
     private int versionCheckTimeoutSeconds;
 
-       
-             
-       
+
+
+
     @Data
     public static class AudioInfo {
         private Integer qualityLevel;                   
@@ -66,7 +66,7 @@ public class AudioQualityDetector {
             this.detectedByFFmpeg = false;
         }
 
-                                    
+
         public Integer getQualityLevel() { return qualityLevel; }
         public void setQualityLevel(Integer qualityLevel) { this.qualityLevel = qualityLevel; }
         public String getQualityName() { return qualityName; }
@@ -91,21 +91,21 @@ public class AudioQualityDetector {
         public void setDetectedByFFmpeg(boolean detectedByFFmpeg) { this.detectedByFFmpeg = detectedByFFmpeg; }
     }
 
-       
-                             
-                               
-                          
-       
+
+
+
+
+
     public Integer detectQuality(String filePath) {
         AudioInfo info = detectAudioInfo(filePath);
         return info.getQualityLevel();
     }
 
-       
-                 
-                               
-                     
-       
+
+
+
+
+
     public AudioInfo detectAudioInfo(String filePath) {
         AudioInfo info = new AudioInfo();
 
@@ -114,11 +114,11 @@ public class AudioQualityDetector {
             return info;
         }
 
-                                
+
         String extension = CommonUtil.getFileExtension(filePath);
         info.setFormat(extension);
 
-                                        
+
         String localPath = CommonUtil.extractLocalPath(filePath);
 
         File file = null;
@@ -126,7 +126,7 @@ public class AudioQualityDetector {
             file = new File(localPath);
         }
 
-                                
+
         if (file != null && file.exists() && ffmpegEnabled) {
             try {
                 AudioInfo ffmpegInfo = detectWithFFmpeg(file.getAbsolutePath());
@@ -141,17 +141,17 @@ public class AudioQualityDetector {
             }
         }
 
-                       
+
         return detectByFormat(extension, info);
     }
 
-       
-                             
-                                  
-                     
-       
+
+
+
+
+
     public AudioInfo detectWithFFmpeg(String localFilePath) {
-                         
+
         if (!WorkProcessingUtil.isPathSafe(localFilePath)) {
             log.error("event=audio_quality_detection_rejected reason=PATH_INVALID");
             return null;
@@ -187,7 +187,7 @@ public class AudioQualityDetector {
                 return null;
             }
 
-                       
+
             return parseFFmpegOutput(result.getOutput(), info);
 
         } catch (Exception e) {
@@ -197,54 +197,54 @@ public class AudioQualityDetector {
         }
     }
 
-       
-                 
-       
+
+
+
     private AudioInfo parseFFmpegOutput(String jsonOutput, AudioInfo info) {
         try {
-                                                                      
+
             Integer bitrate = CommonUtil.extractInt(jsonOutput, "\"bit_rate\"\\s*:\\s*\"?(\\d+)");
             if (bitrate != null && bitrate > AudioQualityConstants.BITRATE_CONVERT_FACTOR) {
                 info.setBitrate(bitrate / AudioQualityConstants.BITRATE_CONVERT_FACTOR);           
             }
 
-                                           
+
             Integer sampleRate = CommonUtil.extractInt(jsonOutput, "\"sample_rate\"\\s*:\\s*\"?(\\d+)");
             if (sampleRate != null) {
                 info.setSampleRate(sampleRate);
             }
 
-                                            
+
             Integer bitDepth = CommonUtil.extractInt(jsonOutput, "\"bits_per_sample\"\\s*:\\s*\"?(\\d+)");
             if (bitDepth != null) {
                 info.setBitDepth(bitDepth);
             }
 
-                                       
+
             Double duration = CommonUtil.extractDouble(jsonOutput, "\"duration\"\\s*:\\s*(\\d+\\.?\\d*)");
             if (duration != null) {
                 info.setDuration(duration.intValue());
             }
 
-                                         
+
             String codec = CommonUtil.extractString(jsonOutput, "\"codec_name\"\\s*:\\s*\"([^\"]+)\"");
             if (codec != null) {
                 info.setCodec(codec);
             }
 
-                                          
+
             String format = CommonUtil.extractString(jsonOutput, "\"format_name\"\\s*:\\s*\"([^\"]+)\"");
             if (format != null) {
                 info.setFormat(format.split(",")[0]);          
             }
 
-                                    
+
             Integer channels = CommonUtil.extractInt(jsonOutput, "\"channels\"\\s*:\\s*\"?(\\d+)");
             if (channels != null) {
                 info.setChannels(channels);
             }
 
-                           
+
             determineQualityLevel(info);
 
             return info;
@@ -256,9 +256,9 @@ public class AudioQualityDetector {
         }
     }
 
-       
-                         
-       
+
+
+
     private void determineQualityLevel(AudioInfo info) {
         int sampleRate = info.getSampleRate() != null ? info.getSampleRate() : 0;
         int bitDepth = info.getBitDepth() != null ? info.getBitDepth() : 16;
@@ -266,62 +266,62 @@ public class AudioQualityDetector {
         String codec = info.getCodec() != null ? info.getCodec().toLowerCase() : "";
         String format = info.getFormat() != null ? info.getFormat().toLowerCase() : "";
 
-                              
+
         boolean isLosslessCodec = AudioQualityConstants.isLosslessCodec(codec);
 
-                                         
+
         if (sampleRate >= AudioQualityConstants.MASTER_MIN_SAMPLE_RATE && bitDepth >= AudioQualityConstants.MASTER_MIN_BIT_DEPTH) {
             info.setQualityLevel(AudioQualityConstants.QUALITY_MASTER);
             info.setQualityName(AudioQualityConstants.NAME_MASTER);
         }
-                                             
+
         else if (sampleRate >= AudioQualityConstants.HIRES_MIN_SAMPLE_RATE && bitDepth >= AudioQualityConstants.HIRES_MIN_BIT_DEPTH) {
             info.setQualityLevel(AudioQualityConstants.QUALITY_HIRES);
             info.setQualityName(AudioQualityConstants.NAME_HIRES);
         }
-                             
+
         else if (isLosslessCodec || format.contains(AudioQualityConstants.FORMAT_FLAC) ||
                  (format.contains(AudioQualityConstants.FORMAT_WAV) && bitDepth >= 16)) {
             info.setQualityLevel(AudioQualityConstants.QUALITY_LOSSLESS);
             info.setQualityName(AudioQualityConstants.NAME_LOSSLESS);
         }
-                              
+
         else if (bitrate >= AudioQualityConstants.HIGH_MIN_BITRATE) {
             info.setQualityLevel(AudioQualityConstants.QUALITY_HIGH);
             info.setQualityName(AudioQualityConstants.NAME_HIGH);
         }
-                    
+
         else {
             info.setQualityLevel(AudioQualityConstants.QUALITY_STANDARD);
             info.setQualityName(AudioQualityConstants.NAME_STANDARD);
         }
     }
 
-       
-                                   
-       
+
+
+
     private AudioInfo detectByFormat(String extension, AudioInfo info) {
         info.setDetectedByFFmpeg(false);
 
         if ("flac".equals(extension) || "wav".equals(extension)) {
-                                                   
+
             info.setQualityLevel(AudioQualityConstants.QUALITY_LOSSLESS);
             info.setQualityName("无损音质");
         } else if ("ape".equals(extension) || "wv".equals(extension)) {
-                             
+
             info.setQualityLevel(AudioQualityConstants.QUALITY_LOSSLESS);
             info.setQualityName("无损音质");
         } else if ("mp3".equals(extension)) {
-                                    
+
             info.setQualityLevel(AudioQualityConstants.QUALITY_HIGH);
             info.setQualityName("高品质音质");
         } else if ("m4a".equals(extension) || "aac".equals(extension) ||
                    "ogg".equals(extension) || "opus".equals(extension)) {
-                             
+
             info.setQualityLevel(AudioQualityConstants.QUALITY_HIGH);
             info.setQualityName("高品质音质");
         } else {
-                          
+
             info.setQualityLevel(AudioQualityConstants.QUALITY_STANDARD);
             info.setQualityName("标准音质");
         }
@@ -329,9 +329,9 @@ public class AudioQualityDetector {
         return info;
     }
 
-       
-               
-       
+
+
+
     public String getQualityName(Integer qualityCode) {
         switch (qualityCode) {
             case AudioQualityConstants.QUALITY_MASTER:
@@ -348,9 +348,9 @@ public class AudioQualityDetector {
         }
     }
 
-       
-                              
-       
+
+
+
     public SoundQuality getSoundQuality(Integer qualityCode) {
         switch (qualityCode) {
             case AudioQualityConstants.QUALITY_MASTER:
@@ -367,12 +367,12 @@ public class AudioQualityDetector {
         }
     }
 
-       
-                          
-                           
-                                          
-                     
-       
+
+
+
+
+
+
     public AudioInfo detectFromUrl(String fileUrl, String localDownloadPath) {
         String localPath = CommonUtil.extractLocalPath(fileUrl);
         if (localPath != null) {
@@ -382,15 +382,15 @@ public class AudioQualityDetector {
             }
         }
 
-                               
+
         return detectAudioInfo(fileUrl);
     }
 
-       
-                  
-                              
-                     
-       
+
+
+
+
+
     public java.util.List<AudioInfo> batchDetect(java.util.List<String> filePaths) {
         java.util.List<AudioInfo> results = new java.util.ArrayList<>();
         for (String path : filePaths) {
@@ -408,9 +408,9 @@ public class AudioQualityDetector {
         return results;
     }
 
-       
-                      
-       
+
+
+
     public boolean isFFmpegAvailable() {
         try {
             ProcessExecutionUtil.Result result = ProcessExecutionUtil.execute(

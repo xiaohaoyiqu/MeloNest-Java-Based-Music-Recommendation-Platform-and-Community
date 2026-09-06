@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -26,9 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class UserFollowServiceImpl implements UserFollowService {
@@ -228,7 +228,7 @@ public class UserFollowServiceImpl implements UserFollowService {
             return false;
         }
 
-                                        
+
         LambdaQueryWrapper<UserFollow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserFollow::getFollowerId, followerId)
                 .eq(UserFollow::getFolloweeId, userId)
@@ -247,22 +247,22 @@ public class UserFollowServiceImpl implements UserFollowService {
         return result > 0;
     }
 
-       
-                                
-      
-                                 
-                                 
-       
+
+
+
+
+
+
     private void syncTypedUserFollow(Long followerId, Long followeeId) {
         subjectFollowMapper.activate(followerId, "user", followeeId, true);
     }
 
-       
-                              
-      
-                                 
-                                 
-       
+
+
+
+
+
+
     private void cancelTypedUserFollow(Long followerId, Long followeeId) {
         subjectFollowMapper.cancelBySubject(followerId, "user", followeeId);
     }
@@ -271,11 +271,11 @@ public class UserFollowServiceImpl implements UserFollowService {
     public List<Object> getRecommendUsers(Long userId, Integer limit) {
         int safeLimit = normalizeRecommendLimit(limit);
 
-                       
+
         List<Long> followingIds = ObjectUtils.isEmpty(userId) ? Collections.emptyList() : getFollowingIds(userId);
         Set<Long> excludedIds = relationExcludedUserIds(userId, followingIds);
 
-                                
+
         LambdaQueryWrapper<User> wrapper = UserAccountStatusUtil.publicStatsUserQuery();
 
         if (!excludedIds.isEmpty()) {
@@ -295,7 +295,7 @@ public class UserFollowServiceImpl implements UserFollowService {
         Set<Long> vipUserIds = userVipService.getActiveVipExpirations(
                 users.stream().map(User::getId).collect(Collectors.toSet())).keySet();
 
-                
+
         return users.stream()
                 .filter(UserAccountStatusUtil::canAppearInRecommendations)
                 .filter(user -> !excludedIds.contains(user.getId()))
@@ -323,11 +323,11 @@ public class UserFollowServiceImpl implements UserFollowService {
     public List<Map<String, Object>> getPersonalizedRecommendUsers(Long userId, Integer limit) {
         int safeLimit = normalizeRecommendLimit(limit);
 
-                       
+
         List<Long> followingIds = ObjectUtils.isEmpty(userId) ? Collections.emptyList() : getFollowingIds(userId);
         Set<Long> excludedIds = relationExcludedUserIds(userId, followingIds);
 
-                                    
+
         LambdaQueryWrapper<User> wrapper = UserAccountStatusUtil.publicStatsUserQuery();
 
         if (!excludedIds.isEmpty()) {
@@ -338,7 +338,7 @@ public class UserFollowServiceImpl implements UserFollowService {
             wrapper.ne(User::getId, userId);         
         }
 
-                       
+
         int candidateLimit = Math.min(80, Math.max(safeLimit * 4, safeLimit + 10));
         wrapper.orderByDesc(User::getIsCreator)
                 .orderByDesc(User::getFansCount)
@@ -349,7 +349,7 @@ public class UserFollowServiceImpl implements UserFollowService {
         Set<Long> vipUserIds = userVipService.getActiveVipExpirations(
                 users.stream().map(User::getId).collect(Collectors.toSet())).keySet();
 
-                        
+
         List<Map<String, Object>> result = new ArrayList<>();
         for (User user : users) {
             if (result.size() >= safeLimit) break;
@@ -373,7 +373,7 @@ public class UserFollowServiceImpl implements UserFollowService {
             vo.put("isVip", isVip);
             vo.put("isFollowing", false);
 
-                     
+
             String recommendReason = generateRecommendReason(user, followingIds, isVip);
             vo.put("recommendReason", recommendReason);
 
@@ -415,38 +415,38 @@ public class UserFollowServiceImpl implements UserFollowService {
         return reverseBlocked == null ? Collections.emptySet() : new HashSet<>(reverseBlocked);
     }
 
-       
-             
-      
-                       
-                                                   
-                   
-       
+
+
+
+
+
+
+
     @SuppressWarnings("unused")
     private String generateRecommendReason(User user, List<Long> followingIds, boolean isVip) {
         List<String> reasons = new ArrayList<>();
 
-                
+
         if (user.getIsCreator() != null && user.getIsCreator() == 1) {
             reasons.add("优质创作者");
         }
 
-               
+
         if (user.getFansCount() != null && user.getFansCount() >= 1000) {
             reasons.add("热门用户");
         }
 
-                
+
         if (isVip) {
             reasons.add("VIP会员");
         }
 
-              
+
         if (!ObjectUtils.isEmpty(user.getIntroduction()) && user.getIntroduction().trim().length() > 0) {
             reasons.add("活跃用户");
         }
 
-                 
+
         if (reasons.isEmpty()) {
             return "推荐关注";
         } else if (reasons.size() == 1) {

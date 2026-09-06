@@ -8,10 +8,10 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.List;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 public class SearchResultVO implements Serializable {
 
@@ -29,7 +29,7 @@ public class SearchResultVO implements Serializable {
     private Long total;
     private Integer pages;
 
-                                
+
     public String getKeyword() { return keyword; }
     public void setKeyword(String keyword) { this.keyword = keyword; }
     public List<SongSimpleVO> getSongs() { return songs; }
@@ -52,9 +52,9 @@ public class SearchResultVO implements Serializable {
     public void setTotal(Long total) { this.total = total; }
     public Integer getPages() { return pages; }
     public void setPages(Integer pages) { this.pages = pages; }
-       
-             
-       
+
+
+
     @Getter
     @Setter
     public static class SongSimpleVO implements Serializable {
@@ -89,9 +89,9 @@ public class SearchResultVO implements Serializable {
         }
     }
 
-       
-             
-       
+
+
+
     @Getter
     @Setter
     public static class AlbumSimpleVO implements Serializable {
@@ -106,9 +106,9 @@ public class SearchResultVO implements Serializable {
         private String language;
     }
 
-       
-             
-       
+
+
+
     @Getter
     @Setter
     public static class ArtistSimpleVO implements Serializable {
@@ -121,9 +121,9 @@ public class SearchResultVO implements Serializable {
         private String avatar;
     }
 
-       
-             
-       
+
+
+
     @Getter
     @Setter
     public static class PlaylistSimpleVO implements Serializable {
@@ -137,9 +137,9 @@ public class SearchResultVO implements Serializable {
         private String cover;
     }
 
-       
-             
-       
+
+
+
     @Getter
     @Setter
     public static class MvSimpleVO implements Serializable {
@@ -155,9 +155,9 @@ public class SearchResultVO implements Serializable {
         private String songLanguage;
     }
 
-       
-             
-       
+
+
+
     @Getter
     @Setter
     public static class UserSimpleVO implements Serializable {

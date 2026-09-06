@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.annotation.RequireRole;
@@ -36,9 +36,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-   
-                                                                         
-   
+
+
+
 @RestController
 @RequestMapping("/user")
 public class UserManageController {
@@ -55,9 +55,9 @@ public class UserManageController {
     @Resource
     private UserMapper userMapper;
 
-       
-             
-       
+
+
+
     @ApiLog("获取用户类型")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/manage/type/{userId}")
@@ -66,9 +66,9 @@ public class UserManageController {
         return Result.successData(userType);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("更新用户类型")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/manage/type/update")
@@ -120,9 +120,9 @@ public class UserManageController {
         }
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取用户统计数据")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/manage/statistics/{userId}")
@@ -142,9 +142,9 @@ public class UserManageController {
         return Result.success(dtoList);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("手动执行用户分类")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/manage/classify/run")
@@ -153,9 +153,9 @@ public class UserManageController {
         return Result.success("用户分类任务已执行");
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("检查用户是否为机器人")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/manage/check-bot/{userId}")
@@ -164,9 +164,9 @@ public class UserManageController {
         return Result.success(isBot);
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("获取后台用户监控系统总览")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/manage/monitoring/overview")
@@ -175,9 +175,9 @@ public class UserManageController {
         return Result.success(userMonitoringService.getSystemMonitoringOverview(days, limit));
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("获取单个用户监控总览")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/manage/monitoring/overview/{userId}")
@@ -186,9 +186,9 @@ public class UserManageController {
         return Result.success(userMonitoringService.getUserMonitoringOverview(userId, days));
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("获取系统用户统计概览")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/manage/overview")

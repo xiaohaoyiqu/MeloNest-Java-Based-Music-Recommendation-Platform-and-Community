@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -37,9 +37,9 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class PaymentOrderServiceImpl implements PaymentOrderService {
@@ -132,7 +132,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     public Map<String, Object> createOrder(Long userId, String businessType, Long businessId,
                                            BigDecimal amount, Long payeeId, String userRemark,
                                            String idempotencyKey) {
-                                                      
+
         String normalizedBusinessType = normalizeBusinessType(businessType);
         String normalizedIdempotencyKey = normalizeIdempotencyKey(idempotencyKey);
         PaymentOrder replayOrder = findIdempotentOrder(userId, normalizedIdempotencyKey);
@@ -140,7 +140,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             return replayCreateOrder(replayOrder, null, normalizedBusinessType, businessId);
         }
 
-               
+
         boolean catalogPurchaseNeedsUserLock = "emoji_package".equals(normalizedBusinessType)
                 || "decoration".equals(normalizedBusinessType);
         User user = catalogPurchaseNeedsUserLock
@@ -151,7 +151,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         }
         UserAccountStatusUtil.requireCanInteract(user, "创建支付订单");
 
-                                              
+
         if (!isValidBusinessType(normalizedBusinessType)) {
             throw new BusinessException("不支持的业务类型");
         }
@@ -161,7 +161,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         Long authoritativePayeeId = productSnapshot.getPayeeId();
         String requestHash = calculateRequestHash(userId, productSnapshot);
 
-                             
+
         if (authoritativePayeeId != null) {
             User payee = userMapper.selectById(authoritativePayeeId);
             if (ObjectUtils.isEmpty(payee)) {
@@ -172,14 +172,14 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             }
         }
 
-                
+
         String orderNo = generateOrderNo();
 
-                 
+
         LocalDateTime expireTime = LocalDateTime.now()
                 .plusHours(paymentConfig.getOrderExpireHours());
 
-               
+
         PaymentOrder order = new PaymentOrder();
         order.setOrderNo(orderNo);
         order.setUserId(userId);
@@ -295,27 +295,27 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         ensureOrderOwner(order, userId);
         ensureOrderPartiesCanProceed(order, "获取付款码");
 
-                 
+
         if (!"pending".equals(order.getStatus())) {
             throw new BusinessException("订单状态不正确");
         }
 
-                 
+
         if (order.getExpireTime() != null && LocalDateTime.now().isAfter(order.getExpireTime())) {
             throw new BusinessException("订单已过期");
         }
 
-                                                         
+
         String paymentType = ObjectUtils.isNotEmpty(order.getPaymentType())
                 && !"qrcode".equals(order.getPaymentType()) ? order.getPaymentType() : "wechat";
         Long payeeId = order.getPayeeId();
 
         Map<String, Object> qrCodeInfo;
         if (payeeId == null) {
-                   
+
             qrCodeInfo = paymentCodeService.getPlatformPaymentCode(paymentType);
         } else {
-                    
+
             qrCodeInfo = paymentCodeService.getCreatorPaymentCode(payeeId, paymentType);
         }
 
@@ -326,7 +326,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         String expectedVerifyCode = paymentSecurityService.generateVerificationCode();
         String displayQrCodeUrl = String.valueOf(baseQrCodeUrl);
 
-                                          
+
         order.setPaymentType(paymentType);
         order.setQrCodeUrl(String.valueOf(baseQrCodeUrl));
         order.setVerifyCode(paymentSecurityService.hashOrderCode(order.getId(), expectedVerifyCode));
@@ -351,14 +351,14 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         return result;
     }
 
-       
-             
-      
-                          
-                              
-                                            
-                   
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class, noRollbackFor = BusinessException.class)
     public Map<String, Object> submitPayment(Long orderId, Long userId, String proofUrl, String verifyCode) {
@@ -371,7 +371,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             throw new BusinessException("订单已处理");
         }
 
-                 
+
         if (order.getExpireTime() != null && LocalDateTime.now().isAfter(order.getExpireTime())) {
             LambdaUpdateWrapper<PaymentOrder> expiration = new LambdaUpdateWrapper<>();
             expiration.eq(PaymentOrder::getId, orderId)
@@ -386,7 +386,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             throw new BusinessException("订单已过期");
         }
 
-                        
+
         if (ObjectUtils.isEmpty(verifyCode)) {
             throw new BusinessException("请输入验证码");
         }
@@ -401,12 +401,12 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             throw new BusinessException("验证码不匹配，请核对付款码下方的6位数字");
         }
 
-                                                      
+
         if (!isPrivateProofReference(order.getPaymentProof())) {
             throw new BusinessException("请上传付款凭证");
         }
 
-                                                                                   
+
         LambdaUpdateWrapper<PaymentOrder> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(PaymentOrder::getId, orderId)
                 .in(PaymentOrder::getStatus, Arrays.asList("pending", "rejected"))
@@ -535,7 +535,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             order.setReviewerId(reviewerId);
             order.setReviewTime(reviewTime);
             order.setReviewReason(normalizedReviewReason);
-                                                        
+
             boolean completionSucceeded = completeOrderAndRecordState(order);
 
             result.put("status", "paid");
@@ -648,7 +648,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         PaymentOrder order = findActiveOrder(orderId);
         ensureOrderOwner(order, userId);
 
-                         
+
         if (!"pending".equals(order.getStatus()) && !"submitted".equals(order.getStatus())) {
             throw new BusinessException("订单状态不允许取消");
         }
@@ -1028,9 +1028,9 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         }
     }
 
-       
-                                          
-       
+
+
+
     private Boolean completeOrderAtomically(PaymentOrder order) {
         if (order == null || order.getId() == null) {
             return false;
@@ -1049,27 +1049,27 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         if (isOrderCompletionRecorded(order)) {
             return true;
         }
-                                                                                     
-                                                                                   
-                                                                             
+
+
+
         ensurePaidOrderBuyerCanReceive(order);
         PaymentProductSnapshot productSnapshot = readProductSnapshot(order);
 
         switch (businessType) {
                 case "vip":
-                              
+
                     if (!completeVipOrder(userId, businessId, productSnapshot, order.getId())) {
                         return false;
                     }
                     break;
                 case "purchase":
-                             
+
                     if (!completePurchaseOrder(order, productSnapshot)) {
                         return false;
                     }
                     break;
                 case "reward":
-                           
+
                     if (productSnapshot != null) {
                         payeeId = productSnapshot.getPayeeId();
                         businessId = productSnapshot.getBusinessId();
@@ -1078,7 +1078,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
                     completeRewardOrder(userId, payeeId, businessId, amount, order.getId());
                     break;
                 case "subscribe":
-                           
+
                     if (!Boolean.TRUE.equals(subscribeService.completeSubscribeOrder(businessId, order.getId()))) {
                         return false;
                     }
@@ -1126,17 +1126,17 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
                 throw new BusinessException("VIP订单权益快照无效");
             }
         } else {
-                                          
+
             vipType = legacyVipType(businessId);
             days = getVipDays(vipType);
         }
 
-                      
+
         if (!Boolean.TRUE.equals(vipService.grantVip(userId, days, "支付订单充值完成", null))) {
             return false;
         }
 
-                    
+
         createVipPurchaseRecord(userId, vipType, days, orderId);
 
         log.info("event=vip_payment_completed userId={} orderId={}", userId, orderId);
@@ -1283,7 +1283,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             throw new BusinessException("打赏记录不存在");
         }
 
-                                       
+
         Boolean completed = rewardService.completeReward(rewardRecord.getId());
         if (!completed) {
             throw new BusinessException("打赏记录状态异常，无法完成");
@@ -1305,7 +1305,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
             throw new BusinessException("只能退款已支付的订单");
         }
 
-                                         
+
         refundService.applyRefund(order.getUserId(), orderId, order.getBusinessType(), reason, "订单退款");
 
         log.info("event=payment_order_refunded orderId={} operatorId={}", orderId, operatorId);
@@ -1568,7 +1568,7 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         } catch (Exception e) {
             throw new BusinessException("支付订单商品快照损坏");
         }
-                                                          
+
         if (snapshot == null || snapshot.getVersion() == null) {
             return null;
         }
@@ -1622,9 +1622,9 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
                 + (int)(Math.random() * 10000);
     }
 
-       
-                
-       
+
+
+
     private void createVipPurchaseRecord(Long userId, String vipType, Integer days, Long orderId) {
         VipPurchaseRecord record = new VipPurchaseRecord();
         record.setUserId(userId);
@@ -1638,9 +1638,9 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
         }
     }
 
-       
-                  
-       
+
+
+
     private Integer getVipDays(String vipType) {
         switch (vipType) {
             case "month": return 30;

@@ -1,14 +1,14 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.search;
 
 import com.haoran.music.vo.search.SearchResultVO;
 
-   
-                                                                                 
-                                                                          
-   
+
+
+
+
 public interface SearchEngineAdapter {
 
     String engineName();
@@ -17,9 +17,9 @@ public interface SearchEngineAdapter {
 
     SearchResultVO searchSongs(String keyword, Long userId, Integer page, Integer size);
 
-       
-                                                                                            
-       
+
+
+
     default SearchResultVO searchSongs(String keyword, Long userId, Integer page, Integer size, String field) {
         return searchSongs(keyword, userId, page, size);
     }

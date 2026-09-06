@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -29,9 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-          
-   
+
+
+
 @Slf4j
 @Service
 public class VipServiceImpl implements VipService {
@@ -43,7 +43,7 @@ public class VipServiceImpl implements VipService {
     private final com.haoran.music.common.util.RedisUtils redisUtils;
     private final CreatorVipApplyMapper creatorVipApplyMapper;
     private final UserMapper userMapper;
-                                               
+
     private final VipConfig vipConfig;
     private final CreatorConfig creatorConfig;
     private final VipPurchaseRecordMapper vipPurchaseRecordMapper;
@@ -76,23 +76,23 @@ public class VipServiceImpl implements VipService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> rechargeVip(Long userId, String vipType) {
-               
+
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
         }
         UserAccountStatusUtil.requireCanInteract(user, "充值VIP");
 
-                 
+
         VipConfig.VipPrice price = vipConfig.getPrice(vipType);
         if (price == null) {
             throw new BusinessException("不支持的VIP类型");
         }
 
-                
+
         String orderNo = "VIP" + System.currentTimeMillis() + (int)(Math.random() * 10000);
 
-                  
+
         VipOrder order = new VipOrder();
         order.setOrderNo(orderNo);
         order.setUserId(userId);
@@ -121,13 +121,13 @@ public class VipServiceImpl implements VipService {
     public Map<String, Object> creatorApplyVip(Long creatorId, Integer applyDays, String reason) {
         creatorEligibilityService.requireEligible(creatorId, "申请创作者VIP");
 
-                 
+
         Map<String, Object> condition = checkCreatorVipCondition(creatorId);
         if (!(Boolean) condition.get("eligible")) {
             throw new BusinessException((String) condition.get("reason"));
         }
 
-                 
+
         LambdaQueryWrapper<CreatorVipApply> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CreatorVipApply::getCreatorId, creatorId)
                 .orderByDesc(CreatorVipApply::getLastApplyTime)
@@ -141,7 +141,7 @@ public class VipServiceImpl implements VipService {
             }
         }
 
-               
+
         CreatorVipApply apply = new CreatorVipApply();
         apply.setCreatorId(creatorId);
         apply.setApplyDays(applyDays != null ? applyDays : creatorConfig.getVipApplyDays());
@@ -208,7 +208,7 @@ public class VipServiceImpl implements VipService {
                 throw new BusinessException(UserAccountStatusUtil.targetUnavailableMessage(creator) + "，无法通过VIP申请");
             }
 
-                    
+
             if (!grantVip(apply.getCreatorId(), apply.getApplyDays(),
                     "创作者VIP申请通过", reviewerId)) {
                 throw new BusinessException("VIP权益授予失败");
@@ -297,7 +297,7 @@ public class VipServiceImpl implements VipService {
         }
         LocalDateTime newExpireTime = currentVip.getVipExpireTime();
 
-                    
+
         createVipPurchaseRecord(userId, days, startTime, newExpireTime, reason, operatorId);
 
         log.info("event=vip_entitlement_granted userId={}", userId);
@@ -353,7 +353,7 @@ public class VipServiceImpl implements VipService {
         }
         result.put("eligible", true);
 
-                 
+
         LambdaQueryWrapper<PaidResource> resourceWrapper = new LambdaQueryWrapper<>();
         resourceWrapper.eq(PaidResource::getOwnerId, creatorId)
                 .eq(PaidResource::getStatus, "active")
@@ -362,7 +362,7 @@ public class VipServiceImpl implements VipService {
 
         result.put("paidResourceCount", resourceCount);
 
-               
+
         BigDecimal totalEarnings = creator != null && creator.getTotalEarnings() != null ?
                 creator.getTotalEarnings() : BigDecimal.ZERO;
 
@@ -439,27 +439,27 @@ public class VipServiceImpl implements VipService {
 
     @Override
     public Boolean canUseVipPrivilege(Long userId, String privilege) {
-                   
+
         Long remainingDays = getVipRemainingDays(userId);
         if (remainingDays <= 0) {
             return false;
         }
 
-                   
+
         return vipConfig.hasPrivilege(privilege);
     }
 
-                                                     
 
-       
-                
-                         
-                        
-                            
-                          
-                       
-                              
-       
+
+
+
+
+
+
+
+
+
+
     private void createVipPurchaseRecord(Long userId, Integer days,
                                         LocalDateTime startTime, LocalDateTime endTime,
                                         String reason, Long operatorId) {

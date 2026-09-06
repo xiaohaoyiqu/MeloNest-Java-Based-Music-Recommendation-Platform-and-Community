@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.config;
 
 import com.haoran.music.common.constant.CommonConstants;
@@ -18,13 +18,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
-   
-                                                                  
-  
-                                                                               
-                                                                              
-                                                                          
-   
+
+
+
+
+
+
+
 @Component
 public class WebSocketAuthHandshakeInterceptor implements HandshakeInterceptor {
 
@@ -88,7 +88,7 @@ public class WebSocketAuthHandshakeInterceptor implements HandshakeInterceptor {
                                ServerHttpResponse response,
                                WebSocketHandler wsHandler,
                                Exception exception) {
-                                                           
+
     }
 
     static String extractSubprotocolToken(String rawHeader) {

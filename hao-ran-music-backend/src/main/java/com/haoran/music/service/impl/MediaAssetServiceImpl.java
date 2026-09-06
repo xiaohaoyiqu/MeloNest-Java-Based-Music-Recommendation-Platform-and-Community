@@ -30,11 +30,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-   
-                 
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -239,13 +239,13 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         return StrUtil.isBlank(publicUrl) ? null : mediaAssetMapper.selectByPublicUrlForUpdate(publicUrl);
     }
 
-       
-                    
-      
-                          
-                             
-                           
-       
+
+
+
+
+
+
+
     private void retain(Long assetId, String targetType, Long targetId) {
         int inserted = mediaAssetReferenceMapper.retainActive(
                 assetId, targetType, targetId, REFERENCE_ROLE_ACTIVE);
@@ -255,12 +255,12 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                         
-      
-                        
-                            
-       
+
+
+
+
+
+
     private boolean deleteAsset(MediaAsset asset) {
         if (MediaAsset.STORAGE_NODE_MEDIA.equals(asset.getStorageNode())) {
             if (StrUtil.isBlank(asset.getStoragePath())) {
@@ -291,23 +291,23 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                
-      
-                        
-       
+
+
+
+
+
     private void markReclaimed(MediaAsset asset) {
         requireSingleWrite(mediaAssetMapper.markReclaimedAfterClaim(asset.getId()),
                 "媒体资产回收状态已变化");
         log.info("event=media_asset_reclaimed assetId={}", asset.getId());
     }
 
-       
-                            
-      
-                        
-                        
-       
+
+
+
+
+
+
     private void markReclaimFailed(MediaAsset asset, String error) {
         requireSingleWrite(mediaAssetMapper.markReclaimFailedAfterClaim(asset.getId(), error),
                 "媒体资产回收状态已变化");
@@ -326,9 +326,9 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                                         
-       
+
+
+
     private void requireSameOfficialSource(MediaAsset asset, String sourceType,
                                            Long sourceId, String assetRole) {
         boolean officialAsset = "official_derivative".equals(asset.getSourceType())
@@ -346,12 +346,12 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                           
-      
-                       
-                       
-       
+
+
+
+
+
+
     private String resolveSubmissionPath(String url) {
         if (StrUtil.isBlank(url) || StrUtil.isBlank(multiFilePath)) {
             return null;
@@ -367,13 +367,13 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         return resolveWithinRoot(localPath, multiFilePath);
     }
 
-       
-                      
-      
-                       
-                            
-                   
-       
+
+
+
+
+
+
+
     private String resolveFromPrefix(String url, String prefix) {
         if (StrUtil.isBlank(url) || StrUtil.isBlank(prefix)) {
             return null;
@@ -393,24 +393,24 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                               
-      
-                       
-                        
-       
+
+
+
+
+
+
     private String resolveAnyManagedLocalPath(String path) {
         String resolved = resolveWithinRoot(path, multiFilePath);
         return StrUtil.isNotBlank(resolved) ? resolved : resolveWithinRoot(path, privateAttachmentPath);
     }
 
-       
-                        
-      
-                       
-                                  
-                        
-       
+
+
+
+
+
+
+
     private String resolveWithinRoot(String path, String configuredRoot) {
         if (StrUtil.isBlank(path) || StrUtil.isBlank(configuredRoot) || !WorkProcessingUtil.isPathSafe(path)) {
             return null;
@@ -434,12 +434,12 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                            
-      
-                               
-                       
-       
+
+
+
+
+
+
     private void collectUrls(String rawUrls, Set<String> urls) {
         if (StrUtil.isBlank(rawUrls)) {
             return;
@@ -453,12 +453,12 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                       
-      
-                         
-                       
-       
+
+
+
+
+
+
     private void collectUrls(JsonNode node, Set<String> urls) {
         if (ObjectUtils.isEmpty(node) || node.isNull()) {
             return;
@@ -479,13 +479,13 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         }
     }
 
-       
-                       
-      
-                         
-                        
-                  
-       
+
+
+
+
+
+
+
     private String firstText(JsonNode node, String... fields) {
         for (String field : fields) {
             JsonNode child = node.get(field);
@@ -496,24 +496,24 @@ public class MediaAssetServiceImpl implements MediaAssetService {
         return null;
     }
 
-       
-                 
-      
-                       
-                     
-       
+
+
+
+
+
+
     private void addUrl(Set<String> urls, String url) {
         if (StrUtil.isNotBlank(url)) {
             urls.add(url.trim());
         }
     }
 
-       
-                    
-      
-                         
-                      
-       
+
+
+
+
+
+
     private String trimTrailingSlash(String value) {
         String result = value.trim();
         while (result.endsWith("/")) {

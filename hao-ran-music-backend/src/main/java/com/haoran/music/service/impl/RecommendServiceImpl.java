@@ -21,10 +21,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                              
-   
+
+
+
+
 @Slf4j
 @Service
 public class RecommendServiceImpl implements RecommendService {
@@ -95,27 +95,27 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<RecommendVO.SongSimpleVO> recommendations = new ArrayList<>();
 
-                              
+
         recommendations.addAll(getPersonalizedSongs(userId, 6));
 
-                                 
+
         recommendations.addAll(getNewSongs(5));
 
-                        
+
         recommendations.addAll(getHotSongs(4));
 
-                        
+
         recommendations.addAll(getRandomSongs(1));
 
-                  
+
         List<RecommendVO.SongSimpleVO> uniqueSongs = removeDuplicates(recommendations, DEFAULT_RECOMMEND_COUNT);
 
-                 
+
         fillFavoriteStatus(userId, uniqueSongs);
 
         result.setSongs(uniqueSongs);
 
-                
+
         redisTemplate.opsForValue().set(cacheKey, result, 6, TimeUnit.HOURS);
 
         return result;
@@ -136,24 +136,24 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<RecommendVO.SongSimpleVO> recommendations = new ArrayList<>();
 
-                   
+
         List<String> preferredTypes = getUserPreferredTypes(userId);
         List<Long> listenedSongIds = getUserListenedSongIds(userId);
 
-                   
+
         if (!listenedSongIds.isEmpty()) {
             recommendations.addAll(getSimilarSongsByTypes(listenedSongIds, preferredTypes, (int) (limit * 0.5)));
         }
 
-                          
+
         if (!preferredTypes.isEmpty()) {
             recommendations.addAll(getHotSongsByTypes(preferredTypes, (int) (limit * 0.25)));
         }
 
-                            
+
         recommendations.addAll(getNewSongs((int) (limit * 0.15)));
 
-                   
+
         recommendations.addAll(getRandomSongs((int) (limit * 0.1)));
 
         List<RecommendVO.SongSimpleVO> uniqueSongs = removeDuplicates(recommendations, limit);
@@ -178,16 +178,16 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<RecommendVO.SongSimpleVO> recommendations = new ArrayList<>();
 
-                 
+
         recommendations.addAll(getNewSongs((int) (limit * 0.4)));
 
-                   
+
         recommendations.addAll(getHiddenGems((int) (limit * 0.3)));
 
-                    
+
         recommendations.addAll(getCrossGenreRecommend(userId, (int) (limit * 0.2)));
 
-                   
+
         recommendations.addAll(getRandomSongs((int) (limit * 0.1)));
 
         List<RecommendVO.SongSimpleVO> uniqueSongs = removeDuplicates(recommendations, limit);
@@ -253,10 +253,10 @@ public class RecommendServiceImpl implements RecommendService {
             limit = DEFAULT_RECOMMEND_COUNT;
         }
 
-                   
+
         RecommendVO result = socialRecommendService.getSocialBasedRecommend(userId, limit);
-        
-                 
+
+
         if (result.getSongs() != null && !result.getSongs().isEmpty()) {
             fillFavoriteStatus(userId, result.getSongs());
         }
@@ -274,7 +274,7 @@ public class RecommendServiceImpl implements RecommendService {
 
         deleteCurrentRecommendUserCache(userId);
 
-                   
+
         rebuildUserProfile(userId);
     }
 
@@ -291,11 +291,11 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<String> tags = new ArrayList<>();
 
-                      
+
         List<String> preferredTypes = getUserPreferredTypes(userId);
         tags.addAll(preferredTypes);
 
-                            
+
         List<Long> topArtistIds = getTopPreferredArtists(userId, 3);
         if (!topArtistIds.isEmpty()) {
             LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
@@ -322,7 +322,7 @@ public class RecommendServiceImpl implements RecommendService {
             return;
         }
 
-                     
+
         updateUserProfileAsync(userId, actionType, targetId, targetType);
     }
 
@@ -362,7 +362,7 @@ public class RecommendServiceImpl implements RecommendService {
         RecommendVO vo = getSimilarSongs(userId, songId, limit);
         List<RecommendedSongVO> result = convertToRecommendedSongVO(vo.getSongs(), "similar");
 
-                   
+
         Song refSong = songMapper.selectById(songId);
         if (refSong != null) {
             RecommendedSongVO.RelatedSongInfo relatedInfo = new RecommendedSongVO.RelatedSongInfo();
@@ -383,13 +383,13 @@ public class RecommendServiceImpl implements RecommendService {
             limit = 10;
         }
 
-                      
+
         List<String> preferredTypes = getUserPreferredTypes(userId);
         List<Long> playlistIds = new ArrayList<>();
 
         if (!preferredTypes.isEmpty()) {
-                           
-                            
+
+
             LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Playlist::getIsPublic, 1)
                    .eq(Playlist::getDeleted, 0)
@@ -400,13 +400,13 @@ public class RecommendServiceImpl implements RecommendService {
 
             List<Playlist> playlists = filterPublicCreatorPlaylists(PlaylistMapper.selectList(wrapper));
 
-                                 
+
             if (!playlists.isEmpty()) {
                 List<Long> allPlaylistIds = playlists.stream()
                         .map(Playlist::getId)
                         .collect(Collectors.toList());
 
-                             
+
                 LambdaQueryWrapper<PlaylistSong> psWrapper = new LambdaQueryWrapper<>();
                 psWrapper.in(PlaylistSong::getPlaylistId, allPlaylistIds)
                           .eq(PlaylistSong::getDeleted, 0)
@@ -414,21 +414,21 @@ public class RecommendServiceImpl implements RecommendService {
 
                 List<PlaylistSong> playlistSongs = playlistSongMapper.selectList(psWrapper);
 
-                          
+
                 Map<Long, List<Long>> playlistSongMap = playlistSongs.stream()
                         .collect(Collectors.groupingBy(
                                 PlaylistSong::getPlaylistId,
                                 Collectors.mapping(PlaylistSong::getSongId, Collectors.toList())
                         ));
 
-                                   
+
                 if (!playlistSongMap.isEmpty()) {
                     List<Long> allSongIds = playlistSongMap.values().stream()
                             .flatMap(List::stream)
                             .distinct()
                             .collect(Collectors.toList());
 
-                                      
+
                     Map<Long, Song> songMap = new HashMap<>();
                     if (!allSongIds.isEmpty()) {
                         LambdaQueryWrapper<Song> songWrapper = new LambdaQueryWrapper<>();
@@ -439,7 +439,7 @@ public class RecommendServiceImpl implements RecommendService {
                         songMap = songs.stream().collect(Collectors.toMap(Song::getId, s -> s));
                     }
 
-                                  
+
                     Map<Long, Integer> playlistScoreMap = new HashMap<>();
                     for (Map.Entry<Long, List<Long>> entry : playlistSongMap.entrySet()) {
                         Long playlistId = entry.getKey();
@@ -458,7 +458,7 @@ public class RecommendServiceImpl implements RecommendService {
                         }
                     }
 
-                                       
+
                     playlistIds = playlistScoreMap.entrySet().stream()
                             .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
                             .limit(limit)
@@ -468,7 +468,7 @@ public class RecommendServiceImpl implements RecommendService {
             }
         }
 
-                          
+
         if (playlistIds.isEmpty()) {
             LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Playlist::getIsPublic, 1)
@@ -494,7 +494,7 @@ public class RecommendServiceImpl implements RecommendService {
             limit = 5;
         }
 
-                     
+
         List<String> preferredTypes = getUserPreferredTypes(userId);
         List<Long> albumIds = new ArrayList<>();
 
@@ -521,7 +521,7 @@ public class RecommendServiceImpl implements RecommendService {
             limit = 10;
         }
 
-                     
+
         List<String> preferredTypes = getUserPreferredTypes(userId);
         List<Long> preferredArtistIds = getTopPreferredArtists(userId, 5);
 
@@ -529,14 +529,14 @@ public class RecommendServiceImpl implements RecommendService {
         wrapper.eq(com.haoran.music.entity.MV::getStatus, 1)
                .eq(com.haoran.music.entity.MV::getDeleted, 0);
 
-                                     
+
         if (!preferredTypes.isEmpty()) {
-                                     
+
             wrapper.apply("CONCAT(',', IFNULL(tags, ''), ',') LIKE CONCAT('%%', {0}, '%%')",
                     String.join("%' OR tags LIKE '%", preferredTypes));
         }
 
-                      
+
         if (!preferredArtistIds.isEmpty()) {
             wrapper.or(w -> w.in(com.haoran.music.entity.MV::getArtistId, preferredArtistIds));
         }
@@ -546,18 +546,18 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<com.haoran.music.entity.MV> mvs = filterPublicMvs(MVMapper.selectList(wrapper));
 
-                   
+
         Collections.shuffle(mvs);
         return mvs.stream()
                 .limit(limit)
                 .map(com.haoran.music.entity.MV::getId)
                 .collect(Collectors.toList());
     }
-                                                       
 
-       
-                      
-       
+
+
+
+
     private List<RecommendVO.SongSimpleVO> getPersonalizedSongs(Long userId, Integer count) {
         List<String> preferredTypes = getUserPreferredTypes(userId);
         if (preferredTypes.isEmpty()) {
@@ -567,9 +567,9 @@ public class RecommendServiceImpl implements RecommendService {
         return getHotSongsByTypes(preferredTypes, count);
     }
 
-       
-                  
-       
+
+
+
     private List<String> getUserPreferredTypes(Long userId) {
         String cacheKey = USER_PROFILE_PREFIX + musicIntelligenceCacheService.recommendVersionSegment()
                 + "types:" + userId;
@@ -578,7 +578,7 @@ public class RecommendServiceImpl implements RecommendService {
             return cached;
         }
 
-                     
+
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ListenHistory::getUserId, userId)
                .orderByDesc(ListenHistory::getCreateTime)
@@ -586,7 +586,7 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<ListenHistory> histories = listenHistoryMapper.selectList(wrapper);
 
-                          
+
         List<Long> songIds = histories.stream()
                 .map(ListenHistory::getSongId)
                 .filter(Objects::nonNull)
@@ -612,7 +612,7 @@ public class RecommendServiceImpl implements RecommendService {
             }
         }
 
-                   
+
         List<String> preferredTypes = typeCount.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .limit(3)
@@ -626,9 +626,9 @@ public class RecommendServiceImpl implements RecommendService {
         return preferredTypes;
     }
 
-       
-                   
-       
+
+
+
     private List<Long> getUserListenedSongIds(Long userId) {
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ListenHistory::getUserId, userId)
@@ -644,9 +644,9 @@ public class RecommendServiceImpl implements RecommendService {
                 .collect(Collectors.toList());
     }
 
-       
-                
-       
+
+
+
     private List<Long> getTopPreferredArtists(Long userId, Integer count) {
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
@@ -657,7 +657,7 @@ public class RecommendServiceImpl implements RecommendService {
 
         List<SongLike> likes = songLikeMapper.selectList(wrapper);
 
-                             
+
         List<Long> songIds = likes.stream()
                 .map(SongLike::getSongId)
                 .filter(Objects::nonNull)
@@ -682,9 +682,9 @@ public class RecommendServiceImpl implements RecommendService {
                 .collect(Collectors.toList());
     }
 
-       
-             
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getHotSongs(Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -699,9 +699,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-                
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getHotSongsByTypes(List<String> types, Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -720,9 +720,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-           
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getNewSongs(Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -737,19 +737,19 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-                                  
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getRandomSongs(Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
         }
-                               
+
         String randomKey = "recommend:random:songs";
         List<Long> randomIds = (List<Long>) redisTemplate.opsForValue().get(randomKey);
 
         if (randomIds == null || randomIds.isEmpty()) {
-                                 
+
             LambdaQueryWrapper<Song> countWrapper = new LambdaQueryWrapper<>();
             countWrapper.eq(Song::getStatus, 1).eq(Song::getDeleted, 0);
             Long total = songMapper.selectCount(countWrapper);
@@ -764,17 +764,17 @@ public class RecommendServiceImpl implements RecommendService {
                 randomIds.add((long) rand.nextInt(total.intValue()) + 1);
             }
 
-                    
+
             redisTemplate.opsForValue().set(randomKey, randomIds, 1, TimeUnit.HOURS);
         }
 
-                     
+
         int queryLimit = candidateLimit(count);
         List<Long> targetIds = randomIds.stream()
                 .limit(queryLimit)
                 .collect(Collectors.toList());
 
-               
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Song::getId, targetIds)
                 .eq(Song::getStatus, 1)
@@ -785,9 +785,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songs).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-             
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getHiddenGems(Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -804,9 +804,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-            
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getCrossGenreRecommend(Long userId, Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -827,9 +827,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-                   
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getSimilarSongsByTypes(List<Long> songIds, List<String> preferredTypes, Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -838,7 +838,7 @@ public class RecommendServiceImpl implements RecommendService {
             return getHotSongsByTypes(preferredTypes, count);
         }
 
-                            
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, 1)
                .eq(Song::getDeleted, 0)
@@ -854,9 +854,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-                 
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getSimilarSongsBySong(Song song, Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -874,9 +874,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-              
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getSongsByArtist(Long artistId, Integer count) {
         if (count == null || count <= 0) {
             return Collections.emptyList();
@@ -903,9 +903,9 @@ public class RecommendServiceImpl implements RecommendService {
         return convertToSimpleVO(songMapper.selectList(wrapper)).stream().limit(count).collect(Collectors.toList());
     }
 
-       
-             
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> removeDuplicates(List<RecommendVO.SongSimpleVO> songs, Integer limit) {
         Set<Long> seen = new HashSet<>();
         List<RecommendVO.SongSimpleVO> result = new ArrayList<>();
@@ -923,9 +923,9 @@ public class RecommendServiceImpl implements RecommendService {
         return result;
     }
 
-       
-             
-       
+
+
+
     private void fillFavoriteStatus(Long userId, List<RecommendVO.SongSimpleVO> songs) {
         if (userId == null || songs == null || songs.isEmpty()) {
             return;
@@ -955,9 +955,9 @@ public class RecommendServiceImpl implements RecommendService {
         songs.forEach(song -> song.setIsFavorite(likedSongIds.contains(song.getId())));
     }
 
-       
-              
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> convertToSimpleVO(List<Song> songs) {
         if (songs == null || songs.isEmpty()) {
             return Collections.emptyList();
@@ -1063,9 +1063,9 @@ public class RecommendServiceImpl implements RecommendService {
                 .collect(Collectors.toList());
     }
 
-       
-              
-       
+
+
+
     private RecommendVO.SongSimpleVO songToSimpleVO(Song song) {
         RecommendVO.SongSimpleVO vo = new RecommendVO.SongSimpleVO();
         vo.setId(song.getId());
@@ -1094,9 +1094,9 @@ public class RecommendServiceImpl implements RecommendService {
         return vo;
     }
 
-       
-                     
-       
+
+
+
     private List<RecommendedSongVO> convertToRecommendedSongVO(List<RecommendVO.SongSimpleVO> songs, String source) {
         if (songs == null || songs.isEmpty()) {
             return Collections.emptyList();
@@ -1112,7 +1112,7 @@ public class RecommendServiceImpl implements RecommendService {
 
         return songs.stream().map(song -> {
             RecommendedSongVO vo = new RecommendedSongVO();
-                     
+
             vo.setId(song.getId());
             vo.setName(song.getName());
             vo.setArtistNames(song.getArtistNames());
@@ -1136,7 +1136,7 @@ public class RecommendServiceImpl implements RecommendService {
             vo.setVersionName(song.getVersionName());
             vo.setIsFavorite(song.getIsFavorite());
 
-                     
+
             vo.setSource(source);
             vo.setSourceName(sourceNames.getOrDefault(source, "推荐"));
             vo.setConfidence(80 + (int) (Math.random() * 20));               
@@ -1146,18 +1146,18 @@ public class RecommendServiceImpl implements RecommendService {
         }).collect(Collectors.toList());
     }
 
-       
-               
-       
+
+
+
     private void updateUserProfileAsync(Long userId, String actionType, Long targetId, Integer targetType) {
         deleteCurrentRecommendUserCache(userId);
     }
 
-       
-                             
-       
+
+
+
     private List<Long> getSimilarSongIdsByArtist(Long songId) {
-                       
+
         LambdaQueryWrapper<SongArtist> artistWrapper = new LambdaQueryWrapper<>();
         artistWrapper.eq(SongArtist::getSongId, songId);
         List<SongArtist> currentArtists = songArtistMapper.selectList(artistWrapper);
@@ -1166,7 +1166,7 @@ public class RecommendServiceImpl implements RecommendService {
             return Collections.emptyList();
         }
 
-                         
+
         List<Long> artistIds = currentArtists.stream()
                 .map(SongArtist::getArtistId)
                 .collect(Collectors.toList());
@@ -1182,12 +1182,12 @@ public class RecommendServiceImpl implements RecommendService {
                 .collect(Collectors.toList());
     }
 
-       
-             
-       
+
+
+
     private void rebuildUserProfile(Long userId) {
-                     
-               
+
+
         getUserPreferredTypes(userId);
         getTopPreferredArtists(userId, 5);
     }

@@ -1,93 +1,93 @@
-   
-                      
-                      
-  
-          
-                
-                     
-   
+
+
+
+
+
+
+
+
 
 package com.haoran.music.service;
 
 import java.util.Map;
 
-   
-         
-   
+
+
+
 public interface PaymentService {
 
-       
-                
-      
-                         
-                               
-                                             
-                                 
-       
+
+
+
+
+
+
+
+
     Map<String, Object> createVipOrder(Long userId, Integer months, String paymentType);
 
-       
-               
-      
-                         
-                               
-                                             
-                   
-       
+
+
+
+
+
+
+
+
     Map<String, Object> createDecorationOrder(Long userId, String decorationId, String paymentType);
 
-       
-              
-      
-                            
-                   
-       
+
+
+
+
+
+
     String handleAlipayNotify(Map<String, String> params);
 
-       
-             
-      
-                               
-                      
-       
+
+
+
+
+
+
     String handleWechatNotify(String xmlData);
 
-       
-             
-      
-                         
-                   
-       
+
+
+
+
+
+
     Map<String, Object> queryOrderStatus(String orderNo);
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     Boolean cancelOrder(String orderNo);
 
-       
-           
-      
-                       
-                     
-                              
-                     
-       
+
+
+
+
+
+
+
+
     Boolean verifySign(Map<String, String> params, String sign, String paymentType);
 
-       
-                
-      
-                               
-       
+
+
+
+
+
     Map<Integer, VipPriceInfo> getVipPriceConfig();
 
-       
-              
-       
+
+
+
     class VipPriceInfo {
         private Integer level;               
         private String name;               

@@ -5,7 +5,7 @@ import com.haoran.music.vo.favorite.FavoriteGroupVO;
 
 import java.util.List;
 
-                            
+
 public interface FavoriteCollectionService {
     FavoriteGroupStateVO getState(Long userId);
     FavoriteGroupVO createGroup(Long userId, String name);

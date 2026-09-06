@@ -32,10 +32,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                             
-   
+
+
+
+
 @Slf4j
 @Service
 public class MusicTagServiceImpl implements MusicTagService {
@@ -55,9 +55,9 @@ public class MusicTagServiceImpl implements MusicTagService {
     @Resource
     private UserMapper userMapper;
 
-       
-               
-       
+
+
+
     private static final Map<String, String> CATEGORY_NAME_MAP = new HashMap<>();
 
     static {
@@ -102,8 +102,8 @@ public class MusicTagServiceImpl implements MusicTagService {
                 .collect(Collectors.toList());
     }
 
-       
-       
+
+
     @Override
     public PageResult<SongVO> searchSongsByTags(List<Long> tagIds, Integer page, Integer size) {
         if (ObjectUtils.isEmpty(tagIds)) {
@@ -116,7 +116,7 @@ public class MusicTagServiceImpl implements MusicTagService {
             return result;
         }
 
-                        
+
         List<SongTagRelation> relations = songTagRelationMapper.selectList(
                 new LambdaQueryWrapper<SongTagRelation>()
                         .in(SongTagRelation::getTagId, tagIds)
@@ -132,18 +132,18 @@ public class MusicTagServiceImpl implements MusicTagService {
             return result;
         }
 
-                        
+
         Map<Long, Integer> songTagCount = new HashMap<>();
         for (SongTagRelation relation : relations) {
             Long songId = relation.getSongId();
             songTagCount.put(songId, songTagCount.getOrDefault(songId, 0) + 1);
         }
 
-                    
+
         List<Long> songIds = new ArrayList<>(songTagCount.keySet());
         songIds.sort((a, b) -> songTagCount.get(b).compareTo(songTagCount.get(a)));
 
-             
+
         int total = songIds.size();
         int start = (page - 1) * size;
         int end = Math.min(start + size, total);
@@ -159,10 +159,10 @@ public class MusicTagServiceImpl implements MusicTagService {
             return result;
         }
 
-                 
+
         List<Song> songs = filterPublicSongs(songMapper.selectBatchIds(pagedSongIds));
 
-                          
+
         List<SongVO> records = new ArrayList<>();
         Map<Long, Song> songMap = songs.stream().collect(Collectors.toMap(Song::getId, s -> s));
         for (Long songId : pagedSongIds) {
@@ -210,7 +210,7 @@ public class MusicTagServiceImpl implements MusicTagService {
     public void addSongTag(Long songId, Long tagId) {
         validateTagMutationTargets(songId, tagId);
 
-                  
+
         Long count = songTagRelationMapper.selectCount(
                 new LambdaQueryWrapper<SongTagRelation>()
                         .eq(SongTagRelation::getSongId, songId)
@@ -227,7 +227,7 @@ public class MusicTagServiceImpl implements MusicTagService {
         relation.setSource("admin");
         requireSingleWrite(songTagRelationMapper.insert(relation), "歌曲标签关联新增失败");
 
-                            
+
         LambdaUpdateWrapper<MusicTag> counterWrapper = new LambdaUpdateWrapper<>();
         counterWrapper.eq(MusicTag::getId, tagId)
                 .eq(MusicTag::getDeleted, 0)
@@ -257,8 +257,8 @@ public class MusicTagServiceImpl implements MusicTagService {
         log.info("[MusicTag] action=remove songId={} tagId={}", songId, tagId);
     }
 
-       
-       
+
+
     @Override
     public List<MusicTagVO> getUserTagPreference() {
         Long userId = UserContext.getCurrentUserId();
@@ -289,15 +289,15 @@ public class MusicTagServiceImpl implements MusicTagService {
                 .collect(Collectors.toList());
     }
 
-       
-       
+
+
     @Override
     public List<SongVO> recommendByTags(Integer limit) {
         int actualLimit = limit != null && limit > 0 ? limit : 20;
         Long userId = UserContext.getCurrentUserId();
         if (userId == null) {
             log.warn("[MusicTagService] 用户未登录，返回热门歌曲作为推荐");
-                     
+
             List<Song> hotSongs = songMapper.selectList(
                     new LambdaQueryWrapper<Song>()
                             .eq(Song::getStatus, 1)
@@ -311,7 +311,7 @@ public class MusicTagServiceImpl implements MusicTagService {
                     .collect(Collectors.toList());
         }
 
-                    
+
         List<UserTagPreference> preferences = userTagPreferenceMapper.selectList(
                 new LambdaQueryWrapper<UserTagPreference>()
                         .eq(UserTagPreference::getUserId, userId)
@@ -320,7 +320,7 @@ public class MusicTagServiceImpl implements MusicTagService {
         );
 
         if (ObjectUtils.isEmpty(preferences)) {
-                            
+
             List<Song> hotSongs = songMapper.selectList(
                     new LambdaQueryWrapper<Song>()
                             .eq(Song::getStatus, 1)
@@ -334,7 +334,7 @@ public class MusicTagServiceImpl implements MusicTagService {
                     .collect(Collectors.toList());
         }
 
-                      
+
         List<Long> preferredTagIds = preferences.stream()
                 .map(UserTagPreference::getTagId)
                 .collect(Collectors.toList());
@@ -348,7 +348,7 @@ public class MusicTagServiceImpl implements MusicTagService {
             return new ArrayList<>();
         }
 
-                           
+
         Map<Long, Double> songScore = new HashMap<>();
         for (SongTagRelation relation : relations) {
             Long songId = relation.getSongId();
@@ -361,17 +361,17 @@ public class MusicTagServiceImpl implements MusicTagService {
             songScore.put(songId, songScore.getOrDefault(songId, 0.0) + score);
         }
 
-                         
+
         List<Long> recommendedSongIds = songScore.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(candidateLimit(actualLimit))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-                 
+
         List<Song> songs = filterPublicSongs(songMapper.selectBatchIds(recommendedSongIds));
 
-               
+
         Map<Long, Song> songMap = songs.stream().collect(Collectors.toMap(Song::getId, s -> s));
         List<SongVO> result = new ArrayList<>();
         for (Long songId : recommendedSongIds) {
@@ -392,7 +392,7 @@ public class MusicTagServiceImpl implements MusicTagService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUserTagPreference(Long userId, Long songId) {
-                  
+
         List<SongTagRelation> relations = songTagRelationMapper.selectList(
                 new LambdaQueryWrapper<SongTagRelation>()
                         .eq(SongTagRelation::getSongId, songId)
@@ -420,7 +420,7 @@ public class MusicTagServiceImpl implements MusicTagService {
                 preference.setLastPlayTime(LocalDateTime.now());
                 userTagPreferenceMapper.insert(preference);
             } else {
-                              
+
                 BigDecimal newScore = preference.getScore().add(BigDecimal.valueOf(0.1));
                 preference.setScore(newScore);
                 preference.setPlayCount(preference.getPlayCount() + 1);
@@ -430,9 +430,9 @@ public class MusicTagServiceImpl implements MusicTagService {
         }
     }
 
-       
-            
-       
+
+
+
     private MusicTagVO convertToVO(MusicTag entity) {
         MusicTagVO vo = new MusicTagVO();
         BeanUtils.copyProperties(entity, vo);
@@ -441,9 +441,9 @@ public class MusicTagServiceImpl implements MusicTagService {
         return vo;
     }
 
-       
-                
-       
+
+
+
     private SongVO convertToSongVO(Song song) {
         SongVO vo = new SongVO();
         BeanUtils.copyProperties(song, vo);

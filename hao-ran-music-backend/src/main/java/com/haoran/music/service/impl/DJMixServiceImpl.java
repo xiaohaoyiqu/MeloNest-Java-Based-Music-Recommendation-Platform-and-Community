@@ -22,11 +22,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class DJMixServiceImpl implements DJMixService {
@@ -49,32 +49,32 @@ public class DJMixServiceImpl implements DJMixService {
     private static final int MAX_DURATION_MINUTES = 180;
     private static final int MAX_MANUAL_SONGS = 29;
 
-                                
-                              
+
+
     private static final int[][] COMPATIBLE_KEYS = {
-                                             
+
             {0, 5, 7},
-                                                    
+
             {1, 6, 8},
-                                             
+
             {2, 7, 9},
-                                                    
+
             {3, 8, 10},
-                                             
+
             {4, 9, 11},
-                                              
+
             {5, 10, 0},
-                                                    
+
             {6, 11, 1},
-                                             
+
             {7, 0, 2},
-                                                    
+
             {8, 1, 3},
-                                             
+
             {9, 2, 4},
-                                                   
+
             {10, 3, 5},
-                                               
+
             {11, 4, 6}
     };
 
@@ -134,7 +134,7 @@ public class DJMixServiceImpl implements DJMixService {
             return generateManualMixPlaylist(startSongId, safeDuration, manualIds);
         }
 
-                   
+
         int targetCount = Math.min((safeDuration / 4) + 1, 46);
 
         List<Map<String, Object>> mixPlaylist = new ArrayList<>();
@@ -146,10 +146,10 @@ public class DJMixServiceImpl implements DJMixService {
             return Collections.emptyMap();
         }
 
-                 
+
         mixPlaylist.add(createMixEntry(currentSong, 0, 0.0));
 
-                   
+
         for (int i = 1; i < targetCount; i++) {
             List<Song> availableSongs = getMixableSongCandidates(currentSong, 10, 50).stream()
                     .filter(song -> !usedIds.contains(song.getId()))
@@ -159,7 +159,7 @@ public class DJMixServiceImpl implements DJMixService {
                 break;
             }
 
-                     
+
             Song selectedSong = availableSongs.get(ThreadLocalRandom.current().nextInt(availableSongs.size()));
             mixPlaylist.add(createMixEntry(selectedSong, i, calculateBpmDiff(currentSong, selectedSong)));
             usedIds.add(selectedSong.getId());
@@ -306,7 +306,7 @@ public class DJMixServiceImpl implements DJMixService {
 
         Map<String, Object> result = new HashMap<>();
 
-                   
+
         boolean bpmCompatible = false;
         if (bpm1 != null && bpm2 != null) {
             double bpmDiff = Math.abs(bpm1 - bpm2);
@@ -315,7 +315,7 @@ public class DJMixServiceImpl implements DJMixService {
             result.put("bpmCompatible", bpmCompatible);
         }
 
-                  
+
         boolean keyCompatible = false;
         if (key1 != null && key2 != null) {
             List<Integer> compatibleKeys = getCompatibleKeyList(key1, mode1 != null ? mode1 : 1);
@@ -323,7 +323,7 @@ public class DJMixServiceImpl implements DJMixService {
             result.put("keyCompatible", keyCompatible);
         }
 
-               
+
         boolean mixable = (bpm1 == null || bpm2 == null || bpmCompatible) && keyCompatible;
         result.put("mixable", mixable);
 
@@ -361,7 +361,7 @@ public class DJMixServiceImpl implements DJMixService {
         info.put("featureReady", hasRequiredMixFeatures(song));
         info.put("featureStatus", hasRequiredMixFeatures(song) ? "ready" : "missing_audio_features");
 
-               
+
         if (song.getAudioKey() != null) {
             info.put("compatibleKeys", getCompatibleKeys(song.getAudioKey(), song.getMode()));
         }
@@ -412,7 +412,7 @@ public class DJMixServiceImpl implements DJMixService {
         result.put("ratio", ratio);
         result.put("percentage", (ratio - 1) * 100);
 
-                   
+
         if (Math.abs(ratio - 1.0) <= 0.05) {
             result.put("recommendation", "无需调整，BPM已匹配");
         } else if (ratio >= 0.95 && ratio <= 1.05) {
@@ -426,7 +426,7 @@ public class DJMixServiceImpl implements DJMixService {
         return result;
     }
 
-                                                       
+
 
     private List<Integer> getCompatibleKeyList(Integer key, Integer mode) {
         if (key == null) {
@@ -447,7 +447,7 @@ public class DJMixServiceImpl implements DJMixService {
             return false;
         }
         double ratio = bpm1 / bpm2;
-                        
+
         return Math.abs(ratio - 2.0) < 0.05 || Math.abs(ratio - 0.5) < 0.05;
     }
 

@@ -32,10 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> implements ArtistService {
@@ -102,7 +102,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
             throw new BusinessException(ResultCode.NOT_FOUND, "歌手不存在");
         }
 
-                 
+
         if (!CommonConstants.STATUS_NORMAL.equals(artist.getStatus())) {
             throw new BusinessException(ResultCode.FORBIDDEN, "歌手已禁用");
         }
@@ -110,7 +110,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         ArtistVO vo = convertToVO(artist);
         enrichProfileIdentity(vo, artist);
 
-                    
+
         List<Song> hotSongs = getHotSongsByArtistId(artistId, 5);
         List<AlbumVO.SongSimpleVO> songSimpleList = ConvertHelper.toVOList(hotSongs, song -> {
             AlbumVO.SongSimpleVO simpleVO = new AlbumVO.SongSimpleVO();
@@ -124,7 +124,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
             simpleVO.setUrlHigh(UrlHelper.buildRelativeAudioUrl(song.getUrlHigh()));
             simpleVO.setUrlLossless(UrlHelper.buildRelativeAudioUrl(song.getUrlLossless()));
 
-                      
+
             String albumName = song.getAlbumName();
             if (song.getIsSingle() != null && song.getIsSingle() == 1) {
                 if (StrUtil.isBlank(albumName) || albumName.contains("Singles")) {
@@ -133,22 +133,22 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
             }
             simpleVO.setAlbumName(albumName);
 
-                     
+
             simpleVO.setArtistIds(song.getArtistIds());
             simpleVO.setArtistNames(song.getArtistNames());
 
-                     
+
             simpleVO.setVersionType(song.getVersionType());
             simpleVO.setVersionName(song.getVersionName());
 
-                   
+
             simpleVO.setLanguage(song.getLanguage());
 
             return simpleVO;
         });
         vo.setHotSongs(songSimpleList);
 
-                  
+
         LambdaQueryWrapper<Album> albumWrapper = new LambdaQueryWrapper<>();
         albumWrapper.apply("FIND_IN_SET({0}, artist_ids) > 0", artistId)
                 .eq(Album::getStatus, CommonConstants.STATUS_NORMAL)
@@ -169,7 +169,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         });
         vo.setAlbums(albumSimpleList);
 
-                 
+
         if (ObjectUtils.isNotEmpty(userId)) {
             vo.setIsFollow(checkIsFollow(userId, artistId));
         }
@@ -177,17 +177,17 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         return vo;
     }
 
-       
-                     
-      
-                            
-                       
-                           
-                           
-                         
-                         
-                     
-       
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public IPage<ArtistVO> pageArtists(PageQuery pageQuery, String area, String keyword, String initial, String sortBy, Long userId) {
         Page<Artist> page = new Page<>(pageQuery.getPage(), pageQuery.getSize());
@@ -197,7 +197,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         wrapper.eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Artist::getDeleted, CommonConstants.NOT_DELETED);
 
-               
+
         if (StrUtil.isNotBlank(area)) {
             String normalizedArea = normalizeArtistArea(area);
             if ("内地".equals(normalizedArea)) {
@@ -211,40 +211,40 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
             }
         }
 
-                
+
         if (StrUtil.isNotBlank(safeKeyword)) {
             wrapper.and(w -> w.like(Artist::getName, safeKeyword)
                     .or()
                     .like(Artist::getFirstLetter, safeKeyword));
         }
 
-                
+
         if (StrUtil.isNotBlank(initial) && !"热门".equals(initial)) {
             if ("*".equals(initial)) {
-                                    
+
                 wrapper.apply("(first_letter IS NULL OR first_letter = '' OR UPPER(first_letter) NOT REGEXP '^[A-Z]$')");
             } else {
                 wrapper.eq(Artist::getFirstLetter, initial.toUpperCase());
             }
         }
 
-                            
+
         if (StrUtil.isNotBlank(sortBy)) {
             handleSortByParam(wrapper, sortBy);
         } else {
-                       
+
             handleSort(wrapper, pageQuery.getSortField(), pageQuery.getSortOrder());
         }
 
         IPage<Artist> artistPage = page(page, wrapper);
 
-                   
+
         Set<Long> followedArtistIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !artistPage.getRecords().isEmpty()) {
             followedArtistIds = getFollowedArtistIds(userId, artistPage.getRecords());
         }
 
-                                     
+
         IPage<ArtistVO> voPage = ConvertHelper.toVOPage(artistPage, this::convertToVO);
         ConvertHelper.setFieldFromSet(voPage.getRecords(), ArtistVO::getId, followedArtistIds, ArtistVO::setIsFollow);
 
@@ -269,7 +269,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         if (StrUtil.isNotBlank(letter) && !"*".equals(letter)) {
             wrapper.eq(Artist::getFirstLetter, letter.toUpperCase());
         } else if ("*".equals(letter)) {
-                                
+
             wrapper.apply("(first_letter IS NULL OR first_letter = '' OR UPPER(first_letter) NOT REGEXP '^[A-Z]$')");
         }
 
@@ -277,13 +277,13 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
 
         List<Artist> artists = list(wrapper);
 
-                   
+
         Set<Long> followedArtistIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !artists.isEmpty()) {
             followedArtistIds = getFollowedArtistIds(userId, artists);
         }
 
-                                     
+
         List<ArtistVO> voList = ConvertHelper.toVOList(artists, this::convertToVO);
         ConvertHelper.setFieldFromSet(voList, ArtistVO::getId, followedArtistIds, ArtistVO::setIsFollow);
 
@@ -300,13 +300,13 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
 
         List<Artist> artists = list(wrapper);
 
-                   
+
         Set<Long> followedArtistIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !artists.isEmpty()) {
             followedArtistIds = getFollowedArtistIds(userId, artists);
         }
 
-                                     
+
         List<ArtistVO> voList = ConvertHelper.toVOList(artists, this::convertToVO);
         ConvertHelper.setFieldFromSet(voList, ArtistVO::getId, followedArtistIds, ArtistVO::setIsFollow);
 
@@ -332,13 +332,13 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
 
         IPage<Artist> artistPage = page(page, wrapper);
 
-                   
+
         Set<Long> followedArtistIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !artistPage.getRecords().isEmpty()) {
             followedArtistIds = getFollowedArtistIds(userId, artistPage.getRecords());
         }
 
-                                     
+
         IPage<ArtistVO> voPage = ConvertHelper.toVOPage(artistPage, this::convertToVO);
         ConvertHelper.setFieldFromSet(voPage.getRecords(), ArtistVO::getId, followedArtistIds, ArtistVO::setIsFollow);
 
@@ -354,7 +354,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         User user = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(user, "关注歌手");
 
-                         
+
         Artist artist = getById(artistId);
         if (ObjectUtils.isEmpty(artist)
                 || !CommonConstants.STATUS_NORMAL.equals(artist.getStatus())
@@ -409,11 +409,11 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
     @Override
     public List<String> getArtistLetters() {
         List<String> letters = new ArrayList<>();
-                
+
         for (char c = 'A'; c <= 'Z'; c++) {
             letters.add(String.valueOf(c));
         }
-                   
+
         letters.add("*");
         return letters;
     }
@@ -424,7 +424,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
             return new ArrayList<>();
         }
 
-                                               
+
         int actualLimit = limit != null ? limit : 10;
         List<Song> songs = filterPublicUploaderSongs(
                 songMapper.selectHotSongsByArtistId(artistId, expandedPublicQueryLimit(actualLimit))
@@ -432,22 +432,22 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
                 .limit(actualLimit)
                 .collect(Collectors.toList());
 
-                    
+
         for (Song song : songs) {
             if (song.getIsSingle() != null && song.getIsSingle() == 1) {
                 if (StrUtil.isNotBlank(song.getAlbumName()) &&
                     !song.getAlbumName().contains("Singles")) {
-                                     
-                             
+
+
                 } else {
-                                  
+
                     song.setAlbumName("单曲");
                 }
             }
-                               
+
         }
 
-                                
+
         return ConvertHelper.toVOList(songs, song -> {
             AlbumVO.SongSimpleVO vo = BeanUtil.copyProperties(song, AlbumVO.SongSimpleVO.class);
             vo.setCover(UrlHelper.buildRelativeCoverUrl(song.getCover()));
@@ -458,81 +458,81 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         });
     }
 
-       
-                   
-      
-                                                             
-                             
-                   
-       
+
+
+
+
+
+
+
     @Override
     public List<ArtistVO> getArtistList(String area, Long userId) {
         LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Artist::getDeleted, CommonConstants.NOT_DELETED);
 
-                         
+
         if (StrUtil.isNotBlank(area)) {
             wrapper.eq(Artist::getArea, area);
         }
 
-                    
+
         wrapper.orderByDesc(Artist::getFansCount)
                 .orderByAsc(Artist::getName);
 
         List<Artist> artists = list(wrapper);
 
-                   
+
         Set<Long> followedArtistIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !artists.isEmpty()) {
             followedArtistIds = getFollowedArtistIds(userId, artists);
         }
 
-                                     
+
         List<ArtistVO> voList = ConvertHelper.toVOList(artists, this::convertToVO);
         ConvertHelper.setFieldFromSet(voList, ArtistVO::getId, followedArtistIds, ArtistVO::setIsFollow);
 
         return voList;
     }
 
-       
-                      
-      
-                         
-                          
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFollowedArtistIds(Long userId, List<Artist> artists) {
         if (artists.isEmpty()) {
             return Collections.emptySet();
         }
 
-                              
+
         List<Long> artistIds = ConvertHelper.extractIds(artists, Artist::getId);
 
         return new HashSet<>(subjectFollowMapper.selectActiveTargetIds(
                 userId, "artist_profile", artistIds));
     }
 
-       
-                           
-      
-                           
-                           
-                                 
-       
+
+
+
+
+
+
+
     private Boolean checkIsFollow(Long userId, Long artistId) {
         return !subjectFollowMapper.selectActiveTargetIds(
                 userId, "artist_profile", Collections.singletonList(artistId)).isEmpty();
     }
 
-       
-           
-      
-                            
-                            
-                            
-       
+
+
+
+
+
+
+
     private void handleSort(LambdaQueryWrapper<Artist> wrapper, String sortField, String sortOrder) {
         if (StrUtil.isBlank(sortField)) {
             wrapper.orderByDesc(Artist::getFansCount);
@@ -557,12 +557,12 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         }
     }
 
-       
-                   
-      
-                          
-                                        
-       
+
+
+
+
+
+
     private void handleSortByParam(LambdaQueryWrapper<Artist> wrapper, String sortBy) {
         if (StrUtil.isBlank(sortBy) || "hot".equals(sortBy)) {
             wrapper.orderByDesc(Artist::getFansCount);
@@ -575,20 +575,20 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         }
     }
 
-       
-            
-      
-                         
-                   
-       
+
+
+
+
+
+
     private ArtistVO convertToVO(Artist artist) {
         ArtistVO vo = BeanUtil.copyProperties(artist, ArtistVO.class);
         String artistKind = resolveArtistKind(artist);
         vo.setArtistKind(artistKind);
         vo.setArtistKindName("group".equals(artistKind) ? "乐队 / 组合"
                 : "person".equals(artistKind) ? "个人音乐人" : "类型待补充");
-                                       
-                     
+
+
         if (ObjectUtils.isNotEmpty(vo.getAvatar())) {
             vo.setAvatar(UrlHelper.buildRelativeCoverUrl(vo.getAvatar()));
         } else {
@@ -599,8 +599,8 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         } else {
             vo.setCover("/default-cover.png");
         }
-                          
-           
+
+
         vo.setGender(artist.getGender());
         return vo;
     }
@@ -632,13 +632,13 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         return "unknown";
     }
 
-       
-                
-      
-                           
-                           
-                   
-       
+
+
+
+
+
+
+
     private List<Song> getHotSongsByArtistId(Long artistId, Integer limit) {
         int actualLimit = limit != null && limit > 0 ? limit : 10;
         List<Song> songs = filterPublicUploaderSongs(
@@ -647,30 +647,30 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
                 .limit(actualLimit)
                 .collect(Collectors.toList());
 
-                     
-                                                 
-                                                  
-                                 
+
+
+
+
         for (Song song : songs) {
             if (song.getIsSingle() != null && song.getIsSingle() == 1) {
-                      
+
                 if (StrUtil.isNotBlank(song.getAlbumName()) &&
                     !song.getAlbumName().contains("Singles")) {
-                                     
-                             
+
+
                 } else {
-                                  
+
                     song.setAlbumName("单曲");
                 }
             }
-                               
+
         }
         return songs;
     }
 
-       
-                                                                       
-       
+
+
+
     @Override
     public void updateArtistCount(Long artistId) {
         if (ObjectUtils.isEmpty(artistId)) {
@@ -698,18 +698,18 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         int updated = songArtistMapper.syncAllArtistSongAlbumCounts();
         log.info("event=artist_counts_reconciled updatedCount={}", updated);
     }
-       
-                         
-      
-                              
-       
+
+
+
+
+
     @Override
     public void batchUpdateArtistCount(List<Long> artistIds) {
         if (CollUtil.isEmpty(artistIds)) {
             return;
         }
 
-             
+
         List<Long> uniqueIds = artistIds.stream().distinct().collect(Collectors.toList());
 
         for (Long artistId : uniqueIds) {
@@ -724,22 +724,22 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         log.info("event=artist_count_batch_completed artistCount={}", uniqueIds.size());
     }
 
-       
-                
-      
-                                                                    
-                        
-                   
-       
+
+
+
+
+
+
+
     @Override
     public List<ArtistVO> getArtistsByCategory(String category, Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Artist::getDeleted, CommonConstants.NOT_DELETED);
-        
-                 
+
+
         if (StrUtil.isNotBlank(category)) {
             switch (category) {
                 case "chinese_male":
@@ -757,77 +757,77 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
                     wrapper.in(Artist::getArea, Arrays.asList("jp", "kr", "th", "other"));
                     break;
                 default:
-                                
+
                     break;
             }
         }
-        
+
         wrapper.orderByDesc(Artist::getHotScore, Artist::getSongCount)
                 .last("LIMIT " + actualLimit);
-        
+
         List<Artist> artists = list(wrapper);
         return ConvertHelper.toVOList(artists, this::convertToVO);
     }
 
-       
-                 
-                
-      
-                        
-                             
-                    
-       
 
-       
-                 
-                
-      
-                        
-                             
-                    
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public List<ArtistVO> getHotCreators(Integer limit, Long userId) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Artist::getDeleted, CommonConstants.NOT_DELETED)
                 .orderByDesc(Artist::getPlayCount)
                 .last("LIMIT " + actualLimit);
-        
+
         List<Artist> artists = list(wrapper);
         return ConvertHelper.toVOList(artists, this::convertToVO);
     }
 
-       
-                 
-                         
-      
-                        
-                    
-       
+
+
+
+
+
+
+
     @Override
     public List<ArtistVO> getNewCreators(Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Artist::getDeleted, CommonConstants.NOT_DELETED)
                 .orderByDesc(Artist::getCreateTime)
                 .last("LIMIT " + actualLimit);
-        
+
         List<Artist> artists = list(wrapper);
         return ConvertHelper.toVOList(artists, this::convertToVO);
     }
 
-       
-                 
-              
-      
-                        
-                    
-       
+
+
+
+
+
+
+
     @Override
     public List<ArtistVO> getActiveCreators(Integer limit) {
         int actualLimit = limit != null ? limit : 50;
@@ -843,14 +843,14 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
         return ConvertHelper.toVOList(artists, this::convertToVO);
     }
 
-       
-               
-                       
-      
-                           
-                           
-                     
-       
+
+
+
+
+
+
+
+
     @Override
     public List<ArtistVO> getSimilarArtists(Long artistId, Integer limit) {
         if (ObjectUtils.isEmpty(artistId)) {
@@ -859,7 +859,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
 
         int actualLimit = limit != null && limit > 0 ? limit : 10;
 
-                  
+
         Artist originalArtist = getById(artistId);
         if (originalArtist == null) {
             return new ArrayList<>();
@@ -867,7 +867,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
 
         Set<Long> artistIds = new LinkedHashSet<>();
 
-                            
+
         if (StrUtil.isNotBlank(originalArtist.getArea()) && artistIds.size() < actualLimit) {
             LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)
@@ -883,7 +883,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
             }
         }
 
-                            
+
         if (originalArtist.getType() != null && artistIds.size() < actualLimit) {
             LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)
@@ -904,7 +904,7 @@ public class ArtistServiceImpl extends ServiceImpl<ArtistMapper, Artist> impleme
             return new ArrayList<>();
         }
 
-                 
+
         LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Artist::getId, artistIds)
                 .eq(Artist::getStatus, CommonConstants.STATUS_NORMAL)

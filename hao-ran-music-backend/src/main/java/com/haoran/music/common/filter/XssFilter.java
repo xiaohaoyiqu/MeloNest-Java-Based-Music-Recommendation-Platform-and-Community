@@ -12,10 +12,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-   
-                      
-                                    
-   
+
+
+
+
 @Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = "security.xss", name = "enabled", havingValue = "true", matchIfMissing = true)
@@ -32,9 +32,9 @@ class XssFilterConfig {
     }
 }
 
-   
-            
-   
+
+
+
 @Slf4j
 @WebFilter(filterName = "xssFilter", urlPatterns = "/*")
 class XssFilter implements Filter {

@@ -23,12 +23,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-   
-             
-                        
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
@@ -155,13 +155,13 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         diaryStats.setMaxValence(((Number) stats.getOrDefault("max_valence", 0.5)).doubleValue());
         diaryStats.setMinValence(((Number) stats.getOrDefault("min_valence", 0.5)).doubleValue());
 
-                 
+
         diaryStats.setMoodDistribution(calculateMoodDistribution(userId, startDate, endDate));
 
-                  
+
         diaryStats.setTopSongs(getTopSongsInPeriod(userId, startDate, endDate, 5));
 
-                 
+
         diaryStats.setDominantMood(getMoodLabel(diaryStats.getAvgValence()));
 
         return diaryStats;
@@ -191,7 +191,7 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         List<Map<String, Object>> curveData = jdbcTemplate.queryForList(sql, userId,
                 startOfDay(startDate), endExclusive(endDate));
 
-                 
+
         Map<LocalDate, Map<String, Object>> curveMap = new LinkedHashMap<>();
         for (Map<String, Object> row : curveData) {
             curveMap.put(toLocalDate(row.get("date")), row);
@@ -207,7 +207,7 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
                 point.put("energy", data.get("energy"));
                 result.add(point);
             } else {
-                                  
+
                 Map<String, Object> point = new HashMap<>();
                 point.put("date", d.toString());
                 point.put("valence", 0.5);
@@ -228,7 +228,7 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
     private Map<String, Object> loadMoodTrend(Long userId) {
         LocalDate now = LocalDate.now();
 
-                          
+
         List<MoodDiaryEntry> recentWeek = getMoodDiaryTimeline(userId, now.minusDays(7), now);
         List<MoodDiaryEntry> previousWeek = getMoodDiaryTimeline(userId, now.minusDays(14), now.minusDays(8));
 
@@ -273,7 +273,7 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
     }
 
     private List<Long> loadMoodBasedRecommendation(Long userId, int safeLimit) {
-                       
+
         LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
         String sql = "SELECT AVG(s.valence) as avg_valence, AVG(s.energy) as avg_energy, " +
                 "AVG(s.danceability) as avg_danceability, " +
@@ -289,7 +289,7 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         List<Map<String, Object>> preferences = jdbcTemplate.queryForList(sql, userId, startOfDay(sevenDaysAgo));
 
         if (ObjectUtils.isEmpty(preferences)) {
-                         
+
             return getHotSongs(safeLimit);
         }
 
@@ -298,7 +298,7 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         double avgEnergy = ((Number) pref.getOrDefault("avg_energy", 0.5)).doubleValue();
         String favoriteGenre = (String) pref.get("main_genre");
 
-                             
+
         String recommendSql = "SELECT DISTINCT s.id, s.uploader_id " +
                 "FROM song s " +
                 "WHERE s.status = 1 AND s.deleted = 0 " +
@@ -385,15 +385,15 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         }
     }
 
-       
-                
-       
+
+
+
     private MoodDiaryEntry analyzeMoodFromRecords(LocalDate date, List<Map<String, Object>> records) {
         MoodDiaryEntry entry = new MoodDiaryEntry();
         entry.setDate(date);
         entry.setPlayCount(records.size());
 
-                  
+
         double sumValence = 0, sumEnergy = 0, sumDanceability = 0;
         Set<Long> uniqueSongs = new HashSet<>();
         String topSongName = null;
@@ -412,7 +412,7 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
             if (energy != null) sumEnergy += energy.doubleValue();
             if (danceability != null) sumDanceability += danceability.doubleValue();
 
-                      
+
             String songName = (String) record.get("song_name");
             if (songName != null) {
                 songCounts.merge(songName, 1, Integer::sum);
@@ -433,9 +433,9 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         return entry;
     }
 
-       
-                     
-       
+
+
+
     private MoodDiaryEntry createEmptyDiary(LocalDate date) {
         MoodDiaryEntry entry = new MoodDiaryEntry();
         entry.setDate(date);
@@ -447,9 +447,9 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         return entry;
     }
 
-       
-             
-       
+
+
+
     private Map<String, Integer> calculateMoodDistribution(Long userId, LocalDate start, LocalDate end) {
         String sql = "SELECT " +
                 "SUM(CASE WHEN s.valence >= 0.7 THEN 1 ELSE 0 END) as happy, " +
@@ -473,9 +473,9 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         return distribution;
     }
 
-       
-                 
-       
+
+
+
     private List<Map<String, Object>> getTopSongsInPeriod(Long userId, LocalDate start, LocalDate end, int limit) {
         String sql = "SELECT s.id, s.name, s.artist_names, s.cover, COUNT(*) as play_count " +
                 "FROM listen_history lh " +
@@ -488,9 +488,9 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         return jdbcTemplate.queryForList(sql, userId, startOfDay(start), endExclusive(end), limit);
     }
 
-       
-             
-       
+
+
+
     private List<Long> getHotSongs(Integer limit) {
         int safeLimit = safeLimit(limit);
         if (safeLimit <= 0) {
@@ -567,9 +567,9 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         return LocalDate.now();
     }
 
-       
-             
-       
+
+
+
     private String getMoodLabel(double valence) {
         if (valence >= 0.8) return "非常开心";
         if (valence >= 0.6) return "开心";
@@ -578,18 +578,18 @@ public class UserMoodDiaryServiceImpl implements UserMoodDiaryService {
         return "低落";
     }
 
-       
-             
-       
+
+
+
     private String getEnergyLabel(double energy) {
         if (energy >= 0.7) return "高能量";
         if (energy >= 0.4) return "中等";
         return "低能量";
     }
 
-       
-             
-       
+
+
+
     private String generateMoodRecommendation(double valence, double energy) {
         if (valence < 0.3 && energy < 0.3) {
             return "心情低落，听听欢快的歌曲提升心情吧";

@@ -1,13 +1,13 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import cn.hutool.core.util.StrUtil;
 
-   
-                                                                   
-   
+
+
+
 public final class MediaPlaybackUrlUtil {
 
     private static final String API_PREFIX = "/api";

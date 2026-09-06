@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface ModerationRecordMapper extends BaseMapper<ModerationRecord> {
 

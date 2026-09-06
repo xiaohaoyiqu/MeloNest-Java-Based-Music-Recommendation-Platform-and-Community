@@ -1,7 +1,7 @@
-   
-                      
-                                        
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -21,10 +21,10 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                            
-                                                                                            
-   
+
+
+
+
 @RestController
 @RequestMapping("/paid-resource")
 public class PaidResourceController {
@@ -35,17 +35,17 @@ public class PaidResourceController {
         this.paidResourceService = paidResourceService;
     }
 
-       
-                                            
-      
-                                        
-                                    
-                                  
-                                                 
-                                    
-                                        
-                                            
-  
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("Set paid resource")
     @PostMapping("/set")
     public Result<Map<String, Object>> setPaidResource(@RequestParam String resourceType,
@@ -60,14 +60,14 @@ public class PaidResourceController {
         return Result.success(result);
     }
 
-       
-                                      
-      
-                                                                
-                                        
-                                    
-                               
-  
+
+
+
+
+
+
+
+
     @ApiLog("Cancel paid resource")
     @DeleteMapping("/{id}")
     public Result<Boolean> cancelPaidResource(@PathVariable Long id,
@@ -78,13 +78,13 @@ public class PaidResourceController {
         return Result.success(result);
     }
 
-       
-                                          
-      
-                              
-                            
-                                 
-  
+
+
+
+
+
+
+
     @ApiLog("Get my paid resources")
     @GetMapping("/my")
     public Result<Map<String, Object>> getMyPaidResources(@RequestParam(defaultValue = "1") Integer page,
@@ -94,13 +94,13 @@ public class PaidResourceController {
         return Result.success(normalizePageResult(result, page, size));
     }
 
-       
-                                
-      
-                                        
-                                    
-                                   
-  
+
+
+
+
+
+
+
     @ApiLog("Get paid resource detail")
     @GetMapping("/detail")
     public Result<Map<String, Object>> getPaidResourceDetail(@RequestParam String resourceType,
@@ -108,13 +108,13 @@ public class PaidResourceController {
         return Result.success(paidResourceService.getPaidResourceDetail(resourceType, resourceId));
     }
 
-       
-                                                           
-      
-                                        
-                                    
-                                
-  
+
+
+
+
+
+
+
     @ApiLog("Check resource purchase")
     @GetMapping("/check")
     public Result<Boolean> checkPurchased(@RequestParam String resourceType,
@@ -123,14 +123,14 @@ public class PaidResourceController {
         return Result.success(paidResourceService.checkPurchased(userId, resourceType, resourceId));
     }
 
-       
-                                         
-      
-                               
-                             
-                                       
-                        
-       
+
+
+
+
+
+
+
+
     @ApiLog("Buy paid resource")
     @PostMapping("/buy")
     public Result<Map<String, Object>> purchaseResource(@RequestParam String resourceType,
@@ -141,14 +141,14 @@ public class PaidResourceController {
                 userId, resourceType, resourceId, idempotencyKey));
     }
 
-       
-                                     
-      
-                                               
-                              
-                            
-                                 
-  
+
+
+
+
+
+
+
+
     @ApiLog("Get paid resource list")
     @GetMapping("/list")
     public Result<Map<String, Object>> getPaidResourceList(@RequestParam(required = false) String resourceType,
@@ -158,14 +158,14 @@ public class PaidResourceController {
         return Result.success(normalizePageResult(result, page, size));
     }
 
-       
-                                              
-      
-                                        
-                                       
-                                        
-                            
-  
+
+
+
+
+
+
+
+
     @ApiLog("Review paid resource")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/review/{id}")
@@ -176,13 +176,13 @@ public class PaidResourceController {
         return Result.success(paidResourceService.reviewPaidResource(id, reviewerId, approved, reviewReason));
     }
 
-       
-                                  
-      
-                              
-                            
-                                         
-  
+
+
+
+
+
+
+
     @ApiLog("Get pending paid resources")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending")
@@ -192,14 +192,14 @@ public class PaidResourceController {
         return Result.success(normalizePageResult(result, page, size));
     }
 
-       
-                                              
-      
-                                               
-                              
-                            
-                                      
-  
+
+
+
+
+
+
+
+
     @ApiLog("Get purchased paid resources")
     @GetMapping("/purchased")
     public Result<Map<String, Object>> getUserPurchasedResources(@RequestParam(required = false) String resourceType,
@@ -210,12 +210,12 @@ public class PaidResourceController {
         return Result.success(normalizePageResult(result, page, size));
     }
 
-       
-                                                     
-      
-                                        
-                                          
-  
+
+
+
+
+
+
     @ApiLog("Get paid resource price range")
     @GetMapping("/price-range/{resourceType}")
     public Result<Map<String, BigDecimal>> getPriceRange(@PathVariable String resourceType) {
@@ -232,11 +232,11 @@ public class PaidResourceController {
         return Result.success(result);
     }
 
-       
-                                         
-      
-                              
-  
+
+
+
+
+
     private Long getRequiredUserId() {
         Long userId = UserContext.getCurrentUserId();
         if (ObjectUtils.isEmpty(userId)) {
@@ -245,14 +245,14 @@ public class PaidResourceController {
         return userId;
     }
 
-       
-                                                                                    
-      
-                                       
-                              
-                            
-                                             
-  
+
+
+
+
+
+
+
+
     private Map<String, Object> normalizePageResult(Map<String, Object> source, Integer page, Integer size) {
         Map<String, Object> result = new HashMap<>(source);
         Object records = result.containsKey("records") ? result.get("records") : result.get("list");

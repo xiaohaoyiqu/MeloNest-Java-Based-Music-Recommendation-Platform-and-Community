@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -26,9 +26,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class DecorationServiceImpl implements DecorationService {
@@ -87,22 +87,22 @@ public class DecorationServiceImpl implements DecorationService {
     public boolean equipDecoration(Long userId, String decorationId) {
         UserAccountStatusUtil.requireCanInteract(userMapper.selectById(userId), "装备装饰");
 
-                    
+
         UserDecoration userDecoration = getUserDecoration(userId, decorationId);
         if (userDecoration == null) {
             throw new BusinessException("未拥有该装饰");
         }
 
-                 
+
         if (userDecoration.getExpireTime() != null &&
             userDecoration.getExpireTime().isBefore(LocalDateTime.now())) {
             throw new BusinessException("装饰已过期");
         }
 
-                     
+
         unequipDecoration(userId, userDecoration.getDecorationType());
 
-                
+
         userDecoration.setIsEquipped(1);
         userDecorationMapper.updateById(userDecoration);
 
@@ -136,19 +136,19 @@ public class DecorationServiceImpl implements DecorationService {
             throw new BusinessException("用户不存在");
         }
 
-                  
+
         if (hasDecoration(userId, decorationId)) {
             log.info("用户 {} 已拥有装饰: {}", userId, decorationId);
             return true;
         }
 
-                 
+
         DecorationConfig config = getDecorationConfig(decorationId);
         if (config == null) {
             throw new BusinessException("装饰不存在");
         }
 
-                 
+
         UserDecoration userDecoration = new UserDecoration();
         userDecoration.setUserId(userId);
         userDecoration.setDecorationType(config.getDecorationType());
@@ -159,7 +159,7 @@ public class DecorationServiceImpl implements DecorationService {
         userDecoration.setSource(source);
         userDecoration.setRarity(config.getRarity());
 
-                       
+
         if (config.getIsPermanent() == 0 && config.getDurationDays() != null) {
             userDecoration.setExpireTime(LocalDateTime.now().plusDays(config.getDurationDays()));
         }
@@ -177,7 +177,7 @@ public class DecorationServiceImpl implements DecorationService {
         User user = userMapper.selectByIdForUpdate(userId);
         UserAccountStatusUtil.requireCanInteract(user, "兑换装饰");
 
-                 
+
         DecorationConfig config = getDecorationConfig(decorationId);
         if (config == null) {
             throw new BusinessException("装饰不存在");
@@ -188,23 +188,23 @@ public class DecorationServiceImpl implements DecorationService {
             throw new BusinessException("不能兑换自己的装饰");
         }
 
-                  
+
         if (!"points".equals(config.getObtainType()) || config.getPointsCost() == null) {
             throw new BusinessException("该装饰不可兑换");
         }
 
-                  
+
         if (hasDecoration(userId, decorationId)) {
             throw new BusinessException("已拥有该装饰");
         }
 
-                    
+
         Integer currentPoints = activityPointsService.getUserTotalPoints(userId);
         if (currentPoints < config.getPointsCost()) {
             throw new BusinessException("活跃值不足，需要" + config.getPointsCost() + "活跃值");
         }
 
-                
+
         Integer newBalance = activityPointsService.consumePoints(
                 userId,
                 config.getPointsCost(),
@@ -216,7 +216,7 @@ public class DecorationServiceImpl implements DecorationService {
             throw new BusinessException("活跃值不足");
         }
 
-               
+
         return grantDecoration(userId, decorationId, "points");
     }
 
@@ -241,9 +241,9 @@ public class DecorationServiceImpl implements DecorationService {
         return getUserDecoration(userId, decorationId) != null;
     }
 
-       
-                
-       
+
+
+
     private UserDecoration getUserDecoration(Long userId, String decorationId) {
         LambdaQueryWrapper<UserDecoration> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserDecoration::getUserId, userId)
@@ -252,9 +252,9 @@ public class DecorationServiceImpl implements DecorationService {
         return userDecorationMapper.selectOne(wrapper);
     }
 
-       
-             
-       
+
+
+
     private DecorationConfig getDecorationConfig(String decorationId) {
         LambdaQueryWrapper<DecorationConfig> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(DecorationConfig::getDecorationId, decorationId)

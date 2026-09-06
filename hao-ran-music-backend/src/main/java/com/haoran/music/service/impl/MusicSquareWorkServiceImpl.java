@@ -41,10 +41,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.haoran.music.common.dto.PageQuery;
 
-   
-                      
-                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMapper, MusicSquareWork>
@@ -111,15 +111,15 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
     @Autowired
     private com.haoran.music.service.ArtistProfileService artistProfileService;
 
-       
-                          
-       
+
+
+
     @Value("${audio.ffmpeg.path}")
     private String ffprobePath;
 
-       
-                 
-       
+
+
+
     @Value("${audio.ffmpeg.detect-timeout}")
     private int detectTimeout;
 
@@ -128,24 +128,24 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
     public Long submitWork(Long userId, MusicSquareWorkDTO dto) {
         UserAccountStatusUtil.requireCanInteract(userId, userMapper::selectById, "提交投稿");
 
-                 
+
         if (!canSubmit(userId)) {
             throw new BusinessException(ResultCode.ERROR,
                     "music square daily submit limit reached: " + workSubmissionConfig.getMusicSquareDailyLimit());
         }
 
-                                     
+
         checkXSS(dto);
 
         MusicSquareWork work = new MusicSquareWork();
         work.setUserId(userId);
 
-                
-                   
+
+
         UserExtension userExt = userExtensionMapper.selectOne(
             new LambdaQueryWrapper<UserExtension>().eq(UserExtension::getUserId, userId)
         );
-                      
+
         User userInfo = userMapper.selectById(userId);
         work.setUserName(userInfo != null && StrUtil.isNotBlank(userInfo.getNickname()) ? userInfo.getNickname() : "未知用户");
 
@@ -162,11 +162,11 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         work.setCommentCount(0);
         work.setShareCount(0);
 
-               
+
         if (dto.getAudioUrl() != null) {
             File audioFile = submissionFileSecurityService.resolveSubmissionFile(userId, dto.getAudioUrl());
             work.setAudioUrl(dto.getAudioUrl());
-                   
+
             try {
                 AudioQualityDetector.AudioInfo audioInfo = audioQualityDetector.detectAudioInfo(audioFile.getAbsolutePath());
                 work.setAudioQuality(audioInfo.getQualityLevel());
@@ -180,17 +180,17 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                 log.warn("[MusicSquare] 音质检测失败: {}", e.getClass().getSimpleName());
             }
 
-                   
+
             if (!scanFile(audioFile)) {
                 throw new BusinessException(ResultCode.ERROR, "音频文件安全检测未通过");
             }
         }
 
-               
+
         if (dto.getVideoUrl() != null) {
             File videoFile = submissionFileSecurityService.resolveSubmissionFile(userId, dto.getVideoUrl());
             work.setVideoUrl(dto.getVideoUrl());
-                     
+
             try {
                 VideoInfo videoInfo = detectVideoFile(videoFile);
                 work.setVideoSize(videoInfo.getFileSize());
@@ -203,13 +203,13 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                 log.warn("[MusicSquare] 视频检测失败: {}", e.getClass().getSimpleName());
             }
 
-                   
+
             if (!scanFile(videoFile)) {
                 throw new BusinessException(ResultCode.ERROR, "视频文件安全检测未通过");
             }
         }
 
-               
+
         if (StrUtil.isNotBlank(dto.getLyricContent())) {
             work.setLyricContent(SecurityCheckUtil.escapeHtml(dto.getLyricContent()));
         } else if (StrUtil.isNotBlank(dto.getLyricFileUrl())) {
@@ -218,16 +218,16 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         work.setHasTranslation(StrUtil.isNotBlank(dto.getLyricContent()) ||
                                StrUtil.isNotBlank(dto.getLyricFileUrl()) ? 1 : 0);
 
-                  
-                                                                                        
-                                                              
-        
+
+
+
+
         musicSquareWorkMapper.insert(work);
         registerMediaAssets(work);
         moderationIntegrationService.submitForModeration(
                 "music_square_work", work.getId(), userId, "user");
 
-                 
+
         String submitKey = workSubmissionConfig.getMusicSquarePrefix() + userId;
         Long count = redisTemplate.opsForValue().increment(submitKey);
         if (count != null && count == 1) {
@@ -255,13 +255,13 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             throw new BusinessException(409, "投稿已被其他审核人处理");
         }
 
-                 
+
         if (status.equals(STATUS_PUBLISHED)) {
             work.setPublishTime(LocalDateTime.now());
 
-                             
+
             if (work.getWorkType() == 1 || work.getWorkType() == 3) {
-                              
+
                 if (StrUtil.isNotBlank(work.getAudioUrl())) {
                     Long songId = createSongFromWork(work);
                     if (songId != null) {
@@ -269,7 +269,7 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                     }
                 }
             } else if (work.getWorkType() == 2) {
-                              
+
                 if (StrUtil.isNotBlank(work.getVideoUrl())) {
                     Long mvId = createMVFromWork(work);
                     if (mvId != null) {
@@ -278,7 +278,7 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                 }
             }
 
-                           
+
             if (StrUtil.isNotBlank(work.getLyricContent()) && work.getRelatedSongId() != null) {
                 saveLyric(work.getRelatedSongId(), work.getLyricContent());
             }
@@ -295,25 +295,25 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             workId, status, work.getRelatedSongId(), work.getRelatedMvId());
     }
 
-       
-                
-       
+
+
+
     private Long createSongFromWork(MusicSquareWork work) {
         try {
-                   
+
             Song song = new Song();
             song.setName(work.getName());
             song.setCover(StrUtil.isNotBlank(work.getCoverUrl()) ? work.getCoverUrl() : "/default-cover.png");
 
-                                         
+
             Integer quality = work.getAudioQuality() != null ? work.getAudioQuality() : 2;
             WorkProcessingUtil.setSongQualityField(song, quality, work.getAudioUrl(),
                 work.getAudioSize());
 
             song.setDuration(work.getAudioDuration() != null ? work.getAudioDuration() : 0);
-                                                             
+
             song.setArtistNames(work.getTags());
-                                                    
+
             song.setCreateTime(LocalDateTime.now());
             song.setUpdateTime(LocalDateTime.now());
 
@@ -321,7 +321,7 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             officialMediaDerivativeService.submitSongDerivativeJob(song.getId(), work.getAudioUrl(),
                     work.getAudioSize(), work.getAudioQuality());
 
-                                         
+
             Artist artist = artistProfileService.resolveOwnedProfile(
                     work.getUserId(), work.getUserName(), "music_square_work");
             workProcessingUtil.createSongArtistRelation(song.getId(), artist.getId(), artist.getName());
@@ -335,12 +335,12 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         }
     }
 
-       
-                
-       
+
+
+
     private Long createMVFromWork(MusicSquareWork work) {
         try {
-                      
+
             LambdaQueryWrapper<MV> wrapper = new LambdaQueryWrapper<MV>()
                 .eq(MV::getName, work.getName());
             MV existingMV = mvMapper.selectOne(wrapper);
@@ -348,12 +348,12 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                 return existingMV.getId();
             }
 
-                   
+
             MV mv = new MV();
             mv.setName(work.getName());
             mv.setCover(StrUtil.isNotBlank(work.getCoverUrl()) ? work.getCoverUrl() : "/default-cover.png");
 
-                                            
+
             String quality = work.getVideoQuality() != null ? work.getVideoQuality() : "720p";
             setMVField(mv, quality, work.getVideoUrl());
 
@@ -361,7 +361,7 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             mv.setDescription(work.getDescription());
             mv.setArtistNames(work.getTags());
             mv.setPublishDate(LocalDateTime.now().toLocalDate());
-                                                    
+
             mv.setCreateTime(LocalDateTime.now());
             mv.setUpdateTime(LocalDateTime.now());
 
@@ -377,9 +377,9 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         }
     }
 
-       
-                 
-       
+
+
+
     private void setMVField(MV mv, String quality, String value) {
         try {
             String fieldName = WorkProcessingUtil.getVideoQualityField(quality);
@@ -391,16 +391,16 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         }
     }
 
-       
-           
-       
+
+
+
     private void saveLyric(Long songId, String content) {
         Lyric lyric = new Lyric();
         lyric.setSongId(songId);
         lyric.setContent(content);
         lyric.setLanguage("zh-CN");
         lyric.setLyricType(1);
-                                                
+
         lyric.setCreateTime(LocalDateTime.now());
         lyricMapper.insert(lyric);
     }
@@ -541,7 +541,7 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             throw new BusinessException(ResultCode.ERROR, "无权删除他人投稿");
         }
 
-                         
+
         if (work.getStatus() == STATUS_PUBLISHED) {
             throw new BusinessException(ResultCode.ERROR, "已发布的投稿不能删除");
         }
@@ -550,8 +550,8 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         mediaAssetService.releaseTargetReferences("music_square_work", workId);
     }
 
-       
-       
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateWork(Long workId, Long userId, MusicSquareWorkDTO dto) {
@@ -565,12 +565,12 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             throw new BusinessException(ResultCode.ERROR, "无权编辑他人投稿");
         }
 
-                      
+
         if (work.getStatus() != STATUS_PENDING) {
             throw new BusinessException(ResultCode.ERROR, "只有待审核状态的投稿可以编辑");
         }
 
-                                     
+
         checkXSS(dto);
 
         boolean audioChanged = StrUtil.isNotBlank(dto.getAudioUrl())
@@ -582,7 +582,7 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         boolean mediaChanged = audioChanged || videoChanged || lyricFileChanged
                 || StrUtil.isNotBlank(dto.getCoverUrl());
 
-                 
+
         if (StrUtil.isNotBlank(dto.getTitle())) {
             work.setTitle(dto.getTitle());
             work.setName(dto.getTitle());
@@ -597,11 +597,11 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             work.setArtistNames(dto.getTags());
         }
 
-                 
+
         if (StrUtil.isNotBlank(dto.getAudioUrl()) && !dto.getAudioUrl().equals(work.getAudioUrl())) {
             File audioFile = submissionFileSecurityService.resolveSubmissionFile(userId, dto.getAudioUrl());
             work.setAudioUrl(dto.getAudioUrl());
-                     
+
             try {
                 AudioQualityDetector.AudioInfo audioInfo = audioQualityDetector.detectAudioInfo(audioFile.getAbsolutePath());
                 work.setAudioQuality(audioInfo.getQualityLevel());
@@ -615,17 +615,17 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                 log.warn("[MusicSquare] 音质检测失败: {}", e.getClass().getSimpleName());
             }
 
-                   
+
             if (!scanFile(audioFile)) {
                 throw new BusinessException(ResultCode.ERROR, "音频文件安全检测未通过");
             }
         }
 
-                 
+
         if (StrUtil.isNotBlank(dto.getVideoUrl()) && !dto.getVideoUrl().equals(work.getVideoUrl())) {
             File videoFile = submissionFileSecurityService.resolveSubmissionFile(userId, dto.getVideoUrl());
             work.setVideoUrl(dto.getVideoUrl());
-                     
+
             try {
                 VideoInfo videoInfo = detectVideoFile(videoFile);
                 work.setVideoSize(videoInfo.getFileSize());
@@ -638,13 +638,13 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                 log.warn("[MusicSquare] 视频检测失败: {}", e.getClass().getSimpleName());
             }
 
-                   
+
             if (!scanFile(videoFile)) {
                 throw new BusinessException(ResultCode.ERROR, "视频文件安全检测未通过");
             }
         }
 
-               
+
         if (StrUtil.isNotBlank(dto.getLyricContent())) {
             work.setLyricContent(SecurityCheckUtil.escapeHtml(dto.getLyricContent()));
             work.setHasTranslation(1);
@@ -714,7 +714,7 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
                 return info;
             }
 
-                   
+
             if (processResult.getExitCode() == 0) {
                 parseVideoInfo(processResult.getOutput(), info);
             }
@@ -726,17 +726,17 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         return info;
     }
 
-       
-             
-       
+
+
+
     private void parseVideoInfo(String jsonOutput, VideoInfo info) {
-               
+
         Double duration = extractDouble(jsonOutput, "\"duration\"\\s*:\\s*(\\d+\\.?\\d*)");
         if (duration != null) {
             info.setDuration(duration.intValue());
         }
 
-                  
+
         Integer width = extractInt(jsonOutput, "\"width\"\\s*:\\s*(\\d+)");
         Integer height = extractInt(jsonOutput, "\"height\"\\s*:\\s*(\\d+)");
 
@@ -746,16 +746,16 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
             info.setQuality(determineVideoQuality(width, height));
         }
 
-                 
+
         String codec = extractString(jsonOutput, "\"codec_name\"\\s*:\\s*\"([^\"]+)\"");
         if (codec != null) {
             info.setFormat(codec);
         }
     }
 
-       
-                   
-       
+
+
+
     private String determineVideoQuality(Integer width, Integer height) {
         int minDim = Math.min(width, height);
         if (minDim >= 2160) return "4k";
@@ -830,9 +830,9 @@ public class MusicSquareWorkServiceImpl extends ServiceImpl<MusicSquareWorkMappe
         return PublicStatsSql.USER_EXISTS_PREFIX + userIdColumn + PublicStatsSql.RETAINED_PUBLIC_CONTENT_FILTER;
     }
 
-       
-                                 
-       
+
+
+
     private void checkXSS(MusicSquareWorkDTO dto) {
         if (SecurityCheckUtil.containsXSS(dto.getTitle()) ||
             SecurityCheckUtil.containsXSS(dto.getDescription()) ||

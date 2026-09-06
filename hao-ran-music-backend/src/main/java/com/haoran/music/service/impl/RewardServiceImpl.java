@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -35,9 +35,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-   
-         
-   
+
+
+
 @Slf4j
 @Service
 public class RewardServiceImpl implements RewardService {
@@ -112,30 +112,30 @@ public class RewardServiceImpl implements RewardService {
             throw new BusinessException(ResultCode.PARAM_ERROR, "打赏留言不能超过500字");
         }
 
-                 
+
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
         }
 
-                
+
         creatorEligibilityService.requireEligible(creatorId, "接收打赏");
         User creator = userMapper.selectById(creatorId);
 
         String normalizedResourceType = normalizeResourceType(resourceId, resourceType);
         validateRewardResource(resourceId, normalizedResourceType, creatorId);
 
-                 
+
         if (amount.compareTo(rewardRulesConfig.getMinAmount()) < 0 || amount.compareTo(rewardRulesConfig.getMaxAmount()) > 0) {
             throw new BusinessException("单次打赏金额为" + rewardRulesConfig.getMinAmount() + "-" + rewardRulesConfig.getMaxAmount() + "元");
         }
 
-                 
+
         if (!checkUserStatus(user)) {
             throw new BusinessException(UserAccountStatusUtil.currentUnavailableMessage(user) + "，无法打赏");
         }
 
-                    
+
         if (!UserAccountStatusUtil.canInteract(creator)) {
             throw new BusinessException(UserAccountStatusUtil.targetUnavailableMessage(creator) + "，无法收款");
         }
@@ -143,13 +143,13 @@ public class RewardServiceImpl implements RewardService {
             throw new BusinessException("创作者当前无法收款");
         }
 
-                                            
+
         reserveDailyLimit(userId, amount);
 
-                
+
         String orderNo = "RWD" + UUID.randomUUID().toString().replace("-", "");
 
-                 
+
         RewardRecord reward = new RewardRecord();
         reward.setOrderNo(orderNo);
         reward.setUserId(userId);
@@ -165,7 +165,7 @@ public class RewardServiceImpl implements RewardService {
             throw new BusinessException("打赏记录创建失败");
         }
 
-                 
+
         Map<String, Object> orderResult = paymentOrderService.createOrder(
                 userId,
                 "reward",
@@ -176,7 +176,7 @@ public class RewardServiceImpl implements RewardService {
                 "reward:" + reward.getId()
         );
 
-                                       
+
         Object orderIdValue = orderResult == null ? null : orderResult.get("orderId");
         if (!(orderIdValue instanceof Number)) {
             throw new BusinessException("打赏支付订单创建失败");
@@ -345,34 +345,34 @@ public class RewardServiceImpl implements RewardService {
             return false;
         }
 
-                               
+
         if (rewardRecordMapper.markPaidIfPending(rewardId) != 1) {
             RewardRecord current = rewardRecordMapper.selectById(rewardId);
             return current != null && "paid".equals(current.getStatus());
         }
 
-                  
+
         BigDecimal platformFee = paymentConfig.calculatePlatformFee(reward.getAmount());
         BigDecimal creatorEarnings = paymentConfig.calculateCreatorEarnings(reward.getAmount());
         log.debug("event=reward_platform_fee_recorded rewardId={}", rewardId);
 
-              
+
         CreatorEarnings earnings = new CreatorEarnings();
         earnings.setUserId(reward.getCreatorId());
-                                                        
+
         earnings.setWorkId(rewardId);
         earnings.setWorkType("reward");
         earnings.setEarningsType("reward");
-                                  
+
         earnings.setEarningsAmount(creatorEarnings.multiply(new BigDecimal("100")).longValue());
         earnings.setCreateTime(LocalDateTime.now());
         if (creatorEarningsMapper.insert(earnings) != 1) {
             throw new BusinessException("打赏收益明细写入失败");
         }
-        
+
         log.debug("event=reward_creator_earnings_recorded rewardId={}", rewardId);
 
-                                    
+
         if (userMapper.incrementRewardEarnings(reward.getCreatorId(), creatorEarnings) != 1) {
             throw new BusinessException("创作者收益汇总更新失败");
         }
@@ -387,7 +387,7 @@ public class RewardServiceImpl implements RewardService {
                 payerName, payer == null ? null : payer.getAvatar(), reward.getAmount(),
                 reward.getResourceId(), reward.getResourceType());
 
-                      
+
         checkAndCreateHighAmountAlert(reward.getUserId(), reward.getCreatorId());
 
         log.info("event=reward_completed rewardId={}", rewardId);
@@ -414,7 +414,7 @@ public class RewardServiceImpl implements RewardService {
             throw new BusinessException("打赏状态已变化，请刷新后重试");
         }
 
-                   
+
         LocalDate reservationDate = reward.getCreateTime() == null
                 ? LocalDate.now() : reward.getCreateTime().toLocalDate();
         releaseDailyLimit(userId, reservationDate, reward.getAmount());
@@ -425,13 +425,13 @@ public class RewardServiceImpl implements RewardService {
 
     @Override
     public Boolean checkRewardPermission(Long userId, BigDecimal amount) {
-                 
+
         User user = userMapper.selectById(userId);
         if (!UserAccountStatusUtil.canInteract(user)) {
             return false;
         }
 
-                            
+
         if (amount.compareTo(rewardRulesConfig.getMinAmount()) < 0 || amount.compareTo(rewardRulesConfig.getMaxAmount()) > 0) {
             return false;
         }
@@ -444,13 +444,13 @@ public class RewardServiceImpl implements RewardService {
         return creatorEligibilityService.isEligible(creatorId);
     }
 
-                                                     
 
-       
-                 
-                       
-                                   
-       
+
+
+
+
+
+
     private boolean checkUserStatus(User user) {
         return UserAccountStatusUtil.canInteract(user);
     }
@@ -480,7 +480,7 @@ public class RewardServiceImpl implements RewardService {
         try {
             redisTemplate.delete(Arrays.asList("reward:count:" + suffix, "reward:amount:" + suffix));
         } catch (RuntimeException exception) {
-                                           
+
             log.warn("event=reward_limit_cache_cleanup_failed userId={}", userId);
         }
     }
@@ -572,18 +572,18 @@ public class RewardServiceImpl implements RewardService {
         return Math.min(size, 100);
     }
 
-       
-                  
-                         
-                           
-       
-       
-                  
-                         
-                             
-       
+
+
+
+
+
+
+
+
+
+
     private void checkAndCreateHighAmountAlert(Long userId, Long creatorId) {
-                                    
+
         LambdaQueryWrapper<RewardRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(RewardRecord::getUserId, userId)
                 .eq(RewardRecord::getCreatorId, creatorId)
@@ -596,9 +596,9 @@ public class RewardServiceImpl implements RewardService {
             totalAmount = totalAmount.add(record.getAmount());
         }
 
-                                
+
         if (totalAmount.compareTo(rewardRulesConfig.getAlertAmountThreshold()) >= 0) {
-                                       
+
             LambdaQueryWrapper<RewardAlert> alertWrapper = new LambdaQueryWrapper<>();
             alertWrapper.eq(RewardAlert::getUserId, userId)
                     .eq(RewardAlert::getCreatorId, creatorId)
@@ -610,7 +610,7 @@ public class RewardServiceImpl implements RewardService {
             RewardAlert existingAlert = rewardAlertMapper.selectOne(alertWrapper);
 
             if (existingAlert == null) {
-                                             
+
                 RewardAlert alert = new RewardAlert();
                 alert.setUserId(userId);
                 alert.setCreatorId(creatorId);
@@ -628,8 +628,8 @@ public class RewardServiceImpl implements RewardService {
             }
         }
     }
-       
-               
-                          
-       
+
+
+
+
 }

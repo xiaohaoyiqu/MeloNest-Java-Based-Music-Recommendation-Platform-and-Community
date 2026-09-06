@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.task;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -29,13 +29,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-   
-             
-  
-                                             
-                                       
-                         
-   
+
+
+
+
+
+
+
 @Slf4j
 @Component
 public class NewsFeedRefreshTask {
@@ -71,9 +71,9 @@ public class NewsFeedRefreshTask {
         refreshNewsFeed("scheduled");
     }
 
-       
-                                 
-       
+
+
+
     public void refreshNow() {
         refreshNewsFeed("manual");
     }

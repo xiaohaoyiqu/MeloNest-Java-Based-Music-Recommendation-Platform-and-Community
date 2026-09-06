@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-          
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/playlist-square")
@@ -33,12 +33,12 @@ public class PlaylistSquareController {
         this.playlistService = playlistService;
     }
 
-       
-             
-      
-                        
-                     
-       
+
+
+
+
+
+
     @GetMapping("/featured")
     @ApiLog("获取精选歌单")
     public Result<List<PlaylistVO>> getFeaturedPlaylists(@RequestParam(defaultValue = "10") Integer limit) {
@@ -46,12 +46,12 @@ public class PlaylistSquareController {
         return Result.success(playlists);
     }
 
-       
-             
-      
-                        
-                     
-       
+
+
+
+
+
+
     @GetMapping("/hot")
     @ApiLog("获取热门歌单")
     public Result<List<PlaylistVO>> getHotPlaylists(@RequestParam(defaultValue = "20") Integer limit) {
@@ -59,13 +59,13 @@ public class PlaylistSquareController {
         return Result.success(playlists);
     }
 
-       
-              
-      
-                           
-                           
-                   
-       
+
+
+
+
+
+
+
     @GetMapping("/category/{category}")
     @ApiLog("按分类获取歌单")
     public Result<List<PlaylistVO>> getPlaylistsByCategory(@PathVariable String category,
@@ -74,11 +74,11 @@ public class PlaylistSquareController {
         return Result.success(playlists);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @GetMapping("/categories")
     @ApiLog("获取歌单分类")
     public Result<List<String>> getPlaylistCategories() {
@@ -86,14 +86,14 @@ public class PlaylistSquareController {
         return Result.success(categories);
     }
 
-       
-           
-      
-                         
-                        
-                          
-                     
-       
+
+
+
+
+
+
+
+
     @GetMapping("/search")
     @ApiLog("搜索歌单")
     public Result<IPage<PlaylistVO>> searchPlaylists(@RequestParam String keyword,
@@ -104,37 +104,37 @@ public class PlaylistSquareController {
         return Result.success(result);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @GetMapping("/overview")
     @ApiLog("获取歌单广场概览")
     public Result<Map<String, Object>> getSquareOverview() {
         Map<String, Object> overview = new HashMap<>();
 
-               
+
         overview.put("featured", playlistService.getFeaturedPlaylists(6));
 
-               
+
         overview.put("hot", playlistService.getHotPlaylists("all", 6, null));
 
-               
+
         overview.put("latest", playlistService.getLatestPlaylists(6));
 
-               
+
         overview.put("categories", playlistService.getPlaylistCategories());
 
         return Result.success(overview);
     }
 
-       
-                  
-      
-                        
-                   
-       
+
+
+
+
+
+
     @GetMapping("/user-created")
     @ApiLog("获取用户优秀歌单")
     public Result<List<PlaylistVO>> getUserCreatedPlaylists(@RequestParam(defaultValue = "20") Integer limit) {

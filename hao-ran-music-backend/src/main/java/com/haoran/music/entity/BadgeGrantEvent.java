@@ -7,11 +7,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                   
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("badge_grant_event")
 public class BadgeGrantEvent {

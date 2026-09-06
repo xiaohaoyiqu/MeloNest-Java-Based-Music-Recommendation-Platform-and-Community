@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class ModerationServiceImpl extends ServiceImpl<ModerationMapper, Moderation> implements ModerationService {
@@ -111,7 +111,7 @@ public class ModerationServiceImpl extends ServiceImpl<ModerationMapper, Moderat
         log.info("审核拒绝: moderationId={}, contentId={}, reason={}",
                 moderationId, moderation.getContentId(), reason);
 
-                  
+
         try {
             rejectionPostProcessService.processRejection(moderationId, reason);
         } catch (Exception e) {

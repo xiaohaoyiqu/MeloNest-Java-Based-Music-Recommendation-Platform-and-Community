@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 
 @RestController
 @RequestMapping("/artist")
@@ -25,12 +25,12 @@ public class ArtistController {
     @Resource
     private ArtistService artistService;
 
-       
-             
-      
-                     
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取歌手详情")
 
     @GetMapping("/info/{id}")
@@ -40,17 +40,17 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-               
-      
-                            
-                           
-                               
-                               
-                                           
-                             
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("查询歌手列表")
     @DetectCrawler(operation = "查询歌手列表", checkReferer = true)
 
@@ -65,12 +65,12 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                        
-                   
-       
+
+
+
+
+
+
     @ApiLog("按首字母查询歌手")
 
     @GetMapping("/letter/{letter}")
@@ -80,12 +80,12 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-             
-      
-                        
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取热门歌手")
 
     @GetMapping("/hot")
@@ -95,12 +95,12 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-                   
-      
-                                                             
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取歌手列表")
 
     @GetMapping("/list")
@@ -111,13 +111,13 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-           
-      
-                           
-                            
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("搜索歌手")
 
     @GetMapping("/search")
@@ -128,11 +128,11 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-                
-      
-                    
-       
+
+
+
+
+
     @ApiLog("获取首字母列表")
 
     @GetMapping("/letters")
@@ -141,12 +141,12 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-           
-      
-                           
-                 
-       
+
+
+
+
+
+
     @ApiLog("关注歌手")
 
     @PostMapping("/follow/{artistId}")
@@ -159,12 +159,12 @@ public class ArtistController {
         return Result.success();
     }
 
-       
-             
-      
-                           
-                 
-       
+
+
+
+
+
+
     @ApiLog("取消关注歌手")
 
     @DeleteMapping("/follow/{artistId}")
@@ -177,13 +177,13 @@ public class ArtistController {
         return Result.success();
     }
 
-       
-                
-      
-                           
-                            
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取歌手热门歌曲")
 
     @GetMapping("/{artistId}/songs")
@@ -193,13 +193,13 @@ public class ArtistController {
         return Result.success(result);
     }
 
-       
-               
-      
-                           
-                           
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("获取相似歌手推荐")
     @GetMapping("/{artistId}/similar")
     public Result<List<ArtistVO>> getSimilarArtists(@PathVariable("artistId") Long artistId,

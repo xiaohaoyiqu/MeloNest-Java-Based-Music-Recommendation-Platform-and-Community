@@ -12,24 +12,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                                                                                        
-  
-                      
-   
+
+
+
+
+
 @Data
 @Component
 @ConfigurationProperties(prefix = "music.storage")
 public class MusicStorageConfig {
 
-       
-                                                                                    
-       
+
+
+
     private List<UrlMapping> urlMappings = new ArrayList<>();
 
-       
-                                                                           
-       
+
+
+
     private List<String> localProxyPackagePaths = new ArrayList<>();
 
     @PostConstruct

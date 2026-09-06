@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -18,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-   
-             
-                     
-   
+
+
+
+
 @Service
 public class UserPrivateServiceImpl implements UserPrivateService {
 
@@ -48,7 +48,7 @@ public class UserPrivateServiceImpl implements UserPrivateService {
             return new UserPrivateService.UserPrivateDTO();
         }
 
-                      
+
         UserPrivateService.UserPrivateDTO dto = new UserPrivateService.UserPrivateDTO();
         dto.setRealName(decryptBytes(userPrivate.getRealName()));
         dto.setIdCard(decryptBytes(userPrivate.getIdCard()));
@@ -71,7 +71,7 @@ public class UserPrivateServiceImpl implements UserPrivateService {
             throw new IllegalArgumentException("用户ID和DTO不能为空");
         }
 
-                   
+
         UserPrivate existing = userPrivateMapper.selectOne(
                 new LambdaQueryWrapper<UserPrivate>()
                         .eq(UserPrivate::getUserId, userId)
@@ -85,7 +85,7 @@ public class UserPrivateServiceImpl implements UserPrivateService {
             userPrivate.setUserId(userId);
         }
 
-                  
+
         if (dto.getRealName() != null) {
             userPrivate.setRealName(encryptAES(dto.getRealName()));
         }
@@ -108,7 +108,7 @@ public class UserPrivateServiceImpl implements UserPrivateService {
             userPrivate.setBankAccount(encryptAES(dto.getBankAccount()));
         }
 
-                   
+
         userPrivate.setProvinceCode(dto.getProvinceCode());
         userPrivate.setCityCode(dto.getCityCode());
         userPrivate.setDistrictCode(dto.getDistrictCode());
@@ -137,7 +137,7 @@ public class UserPrivateServiceImpl implements UserPrivateService {
             throw new IllegalArgumentException("用户ID和身份证号不能为空");
         }
 
-                   
+
         if (!isValidIdCard(idCard)) {
             throw new IllegalArgumentException("身份证号格式不正确");
         }
@@ -151,7 +151,7 @@ public class UserPrivateServiceImpl implements UserPrivateService {
             throw new IllegalArgumentException("用户ID和手机号不能为空");
         }
 
-                  
+
         if (!isValidPhone(phone)) {
             throw new IllegalArgumentException("手机号格式不正确");
         }
@@ -197,7 +197,7 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         boolean idCardMatch = idCard.equals(stored.getIdCard());
 
         if (nameMatch && idCardMatch) {
-                          
+
             setRealNameVerified(userId, true, "idcard");
             return true;
         }
@@ -247,9 +247,9 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         userPrivateMapper.deletePrivacySettingsByUserId(userId);
     }
 
-       
-               
-       
+
+
+
     private UserPrivate getUserPrivate(Long userId) {
         if (userId == null) {
             return null;
@@ -261,9 +261,9 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         );
     }
 
-       
-                
-       
+
+
+
     private void saveOrUpdateField(Long userId, String fieldName, byte[] encryptedValue) {
         UserPrivate userPrivate = getUserPrivate(userId);
         boolean isNew = false;
@@ -295,9 +295,9 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         }
     }
 
-       
-            
-       
+
+
+
     private byte[] encryptAES(String plainText) {
         if (plainText == null || plainText.isEmpty()) {
             return null;
@@ -306,9 +306,9 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         return encrypted.getBytes(StandardCharsets.UTF_8);
     }
 
-       
-            
-       
+
+
+
     private String decryptAES(byte[] encrypted) {
         if (encrypted == null || encrypted.length == 0) {
             return null;
@@ -317,9 +317,9 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         return DataEncryptionUtil.decryptAES(cipherText);
     }
 
-       
-            
-       
+
+
+
     private byte[] encryptSM4(String plainText) {
         if (plainText == null || plainText.isEmpty()) {
             return null;
@@ -328,9 +328,9 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         return encrypted.getBytes(StandardCharsets.UTF_8);
     }
 
-       
-            
-       
+
+
+
     private String decryptSM4(byte[] encrypted) {
         if (encrypted == null || encrypted.length == 0) {
             return null;
@@ -339,9 +339,9 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         return DataEncryptionUtil.decryptAES(cipherText);
     }
 
-       
-              
-       
+
+
+
     private boolean isValidPhone(String phone) {
         if (phone == null || phone.isEmpty()) {
             return false;
@@ -349,21 +349,21 @@ public class UserPrivateServiceImpl implements UserPrivateService {
         return phone.matches("^1[3-9]\\d{9}$");
     }
 
-       
-               
-       
+
+
+
     private boolean isValidIdCard(String idCard) {
         if (idCard == null || idCard.isEmpty()) {
             return false;
         }
-                        
+
         return idCard.matches("^[1-9]\\d{5}(18|19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]$") ||
                 idCard.matches("^[1-9]\\d{5}\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}$");
     }
 
-       
-             
-       
+
+
+
     private String decryptBytes(byte[] data) {
         if (data == null || data.length == 0) {
             return null;

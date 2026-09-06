@@ -22,10 +22,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-   
-                      
-                                                                     
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserPasswordServiceImpl extends ServiceImpl<UserPasswordMapper, UserPassword> implements UserPasswordService {
@@ -91,12 +91,12 @@ public class UserPasswordServiceImpl extends ServiceImpl<UserPasswordMapper, Use
             wrapper.like(UserPassword::getUsername, dto.getUsername());
         }
 
-                  
+
         wrapper.orderByDesc(UserPassword::getCreateTime);
 
         IPage<UserPassword> userPasswordPage = userPasswordMapper.selectPage(page, wrapper);
 
-                
+
         return userPasswordPage.convert(this::convertToVO);
     }
 
@@ -112,12 +112,12 @@ public class UserPasswordServiceImpl extends ServiceImpl<UserPasswordMapper, Use
         return userPasswordMapper.delete(wrapper) > 0;
     }
 
-       
-                          
-      
-                                 
-                     
-       
+
+
+
+
+
+
     private UserPasswordVO convertToVO(UserPassword userPassword) {
         return BeanUtil.copyProperties(userPassword, UserPasswordVO.class);
     }

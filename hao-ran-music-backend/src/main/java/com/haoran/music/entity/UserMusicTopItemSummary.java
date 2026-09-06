@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -14,9 +14,9 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-   
-                 
-   
+
+
+
 @Data
 @TableName("user_music_top_item_summary")
 public class UserMusicTopItemSummary {

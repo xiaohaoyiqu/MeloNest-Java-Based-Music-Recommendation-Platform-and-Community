@@ -24,11 +24,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-   
-               
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class SmartPlaylistServiceImpl implements SmartPlaylistService {
@@ -61,11 +61,11 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
     private static final int MAX_PLAYLIST_DESCRIPTION_LENGTH = 200;
     private static final int MAX_SAVED_DURATION_SECONDS = 240 * 60;
 
-                    
+
     private static final Map<String, Map<String, double[]>> ACTIVITY_PROFILES = new HashMap<>();
 
     static {
-                      
+
         Map<String, double[]> running = new HashMap<>();
         running.put("energy", new double[]{0.7, 1.0});
         running.put("danceability", new double[]{0.6, 1.0});
@@ -78,28 +78,28 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
         workingOut.put("tempo", new double[]{100, 160});
         ACTIVITY_PROFILES.put("working_out", workingOut);
 
-                              
+
         Map<String, double[]> studying = new HashMap<>();
         studying.put("energy", new double[]{0.1, 0.5});
         studying.put("valence", new double[]{0.3, 0.7});
         studying.put("tempo", new double[]{60, 100});
         ACTIVITY_PROFILES.put("studying", studying);
 
-                  
+
         Map<String, double[]> sleeping = new HashMap<>();
         sleeping.put("energy", new double[]{0.0, 0.3});
         sleeping.put("danceability", new double[]{0.0, 0.4});
         sleeping.put("tempo", new double[]{40, 80});
         ACTIVITY_PROFILES.put("sleeping", sleeping);
 
-                               
+
         Map<String, double[]> party = new HashMap<>();
         party.put("energy", new double[]{0.7, 1.0});
         party.put("valence", new double[]{0.6, 1.0});
         party.put("danceability", new double[]{0.7, 1.0});
         ACTIVITY_PROFILES.put("party", party);
 
-                  
+
         Map<String, double[]> commuting = new HashMap<>();
         commuting.put("energy", new double[]{0.4, 0.8});
         commuting.put("valence", new double[]{0.4, 0.9});
@@ -111,14 +111,14 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
     public Map<String, Object> generatePlaylistByPrompt(Long userId, String prompt, Integer durationMinutes) {
         log.debug("根据提示生成播放列表: userId={}, prompt={}", userId, prompt);
 
-                  
+
         String activity = inferActivityFromPrompt(prompt);
 
         if (activity != null) {
             return generatePlaylistByActivity(userId, activity, durationMinutes);
         }
 
-                   
+
         return getDefaultPlaylist(userId, durationMinutes);
     }
 
@@ -133,13 +133,13 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
 
         int targetCount = calculateSongCount(durationMinutes);
 
-                 
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, 1)
                 .eq(Song::getDeleted, 0)
                 .isNotNull(Song::getEnergy);
 
-                   
+
         applyAudioFilters(wrapper, profile);
 
         List<Song> songs = selectRandomPublicCandidates("activity:" + activity + ":" + targetCount,
@@ -156,7 +156,7 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
             return getDefaultPlaylist(userId, durationMinutes);
         }
 
-                      
+
         List<Song> seedSongs = filterPublicSongs(songMapper.selectBatchIds(seedSongIds));
         if (seedSongs.isEmpty()) {
             return getDefaultPlaylist(userId, durationMinutes);
@@ -169,14 +169,14 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-                    
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, 1)
                 .eq(Song::getDeleted, 0)
                 .isNotNull(Song::getEnergy)
                 .notIn(Song::getId, publicSeedSongIds);
 
-                       
+
         applyFeatureRange(wrapper, avgFeatures, 0.2);
 
         List<Song> songs = selectRandomPublicCandidates(wrapper, targetCount);
@@ -201,16 +201,16 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
             double targetEnergy = startEnergy + (energyStep * i);
             targetEnergy = Math.max(0, Math.min(1, targetEnergy));
 
-                          
+
             LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Song::getStatus, 1)
                     .eq(Song::getDeleted, 0)
                     .isNotNull(Song::getEnergy);
 
-                        
+
             wrapper.between(Song::getEnergy, targetEnergy - 0.1, targetEnergy + 0.1);
 
-                     
+
             if (!result.isEmpty()) {
                 List<Long> excludeIds = result.stream().map(Song::getId).collect(Collectors.toList());
                 wrapper.notIn(Song::getId, excludeIds);
@@ -276,7 +276,7 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
             throw new IllegalArgumentException("智能歌单总时长不能超过240分钟");
         }
 
-               
+
         Playlist playlist = new Playlist();
         playlist.setUserId(userId);
         playlist.setName(nameCheck.getCleanedValue());
@@ -365,7 +365,7 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
         return suggestions;
     }
 
-                                                       
+
 
     private String inferActivityFromPrompt(String prompt) {
         if (prompt == null) return null;
@@ -393,7 +393,7 @@ public class SmartPlaylistServiceImpl implements SmartPlaylistService {
         if (durationMinutes == null || durationMinutes <= 0) {
             return 20;
         }
-                   
+
         return (durationMinutes / 4) + 1;
     }
 

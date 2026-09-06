@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                                                                              
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/history")
@@ -38,11 +38,11 @@ public class HistoryController {
     @Resource
     private KafkaProducerService kafkaProducerService;
 
-                                                     
 
-       
-             
-       
+
+
+
+
     @ApiLog("添加播放记录")
     @PostMapping("/listen/add")
     public Result<Void> addListenRecord(
@@ -74,9 +74,9 @@ public class HistoryController {
         return Result.success();
     }
 
-       
-                                         
-       
+
+
+
     @ApiLog("更新播放进度")
     @PutMapping("/listen/progress")
     public Result<Boolean> updateListenProgress(
@@ -92,9 +92,9 @@ public class HistoryController {
                 userId, songId, progress, quality, isLocal));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取最近播放")
     @GetMapping("/listen/recent")
     public Result<List<SongVO>> getRecentSongs(
@@ -108,9 +108,9 @@ public class HistoryController {
         return Result.success(songs);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取播放历史")
     @GetMapping("/listen/list")
     public Result<Map<String, Object>> getListenHistory(
@@ -136,9 +136,9 @@ public class HistoryController {
         return Result.success(result);
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("获取播放历史总数")
     @GetMapping("/listen/count")
     public Result<Map<String, Object>> getListenHistoryCount(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -152,9 +152,9 @@ public class HistoryController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("清空播放历史")
     @DeleteMapping("/listen/clear")
     public Result<Void> clearListenHistory(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -165,9 +165,9 @@ public class HistoryController {
         return Result.success();
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("删除播放历史记录")
     @DeleteMapping("/listen/{historyId}")
     public Result<Void> deleteListenHistory(
@@ -183,9 +183,9 @@ public class HistoryController {
         return Result.success();
     }
 
-       
-               
-       
+
+
+
     @ApiLog("批量导入播放历史")
     @PostMapping("/listen/import")
     public Result<Integer> importListenHistory(
@@ -201,11 +201,11 @@ public class HistoryController {
         return Result.success(count);
     }
 
-                                                     
 
-       
-             
-       
+
+
+
+
     @ApiLog("获取收藏历史")
     @GetMapping({"/favorite/list", "/favorite/history"})
     public Result<IPage<FavoriteHistory>> getFavoriteHistory(PageQuery pageQuery,
@@ -217,9 +217,9 @@ public class HistoryController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取收藏统计")
     @GetMapping({"/favorite/statistics", "/favorite/history/statistics"})
     public Result<Map<String, Object>> getFavoriteStatistics(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -230,9 +230,9 @@ public class HistoryController {
         return Result.success(stats);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("清空收藏历史")
     @DeleteMapping({"/favorite/clear", "/favorite/history/clear"})
     public Result<Boolean> clearFavoriteHistory(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -243,9 +243,9 @@ public class HistoryController {
         return Result.success(result);
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("删除收藏历史记录")
     @DeleteMapping({"/favorite/{id}", "/favorite/history/{id}"})
     public Result<Boolean> deleteFavoriteHistory(@PathVariable("id") Long id,

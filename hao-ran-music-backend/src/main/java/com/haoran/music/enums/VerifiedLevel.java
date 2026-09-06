@@ -1,9 +1,9 @@
 package com.haoran.music.enums;
 
-   
-                      
-                      
-   
+
+
+
+
 public enum VerifiedLevel {
 
     NORMAL("normal", "普通认证", 1, "#909399"),
@@ -38,9 +38,9 @@ public enum VerifiedLevel {
         return color;
     }
 
-       
-                 
-       
+
+
+
     public static VerifiedLevel fromCode(String code) {
         if (code == null) {
             return null;

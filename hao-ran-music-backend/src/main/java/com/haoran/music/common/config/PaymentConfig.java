@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.common.config;
 
@@ -13,209 +13,209 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-          
-                       
-  
-                                                      
-                    
-                            
-                         
-                       
-                                                               
-   
+
+
+
+
+
+
+
+
+
+
+
 @Component
 @ConfigurationProperties(prefix = "payment")
 @Data
 public class PaymentConfig {
 
-       
-                   
-      
-                          
-                                 
-                                                            
-       
+
+
+
+
+
+
+
     private BigDecimal platformFeeRate = new BigDecimal("0.02");
 
-       
-                   
-      
-                                                
-       
+
+
+
+
+
     private String currency = "CNY";
 
-       
-                       
-       
+
+
+
     private Integer orderExpireHours = 1;
 
-       
-                                                
-       
+
+
+
     private Integer orderExpireMinutes = 30;
 
-       
-                                                                  
-       
+
+
+
     private Integer orderRetentionDays = 30;
 
-       
-                      
-       
+
+
+
     private BigDecimal withdrawMinAmount = new BigDecimal("50");
 
-       
-              
-       
+
+
+
     private String scanPath;
 
-       
-              
-       
+
+
+
     private String platformPath;
 
-       
-               
-       
+
+
+
     private String creatorPath;
 
-       
-               
-       
+
+
+
     private Integer scanIntervalHours = 3;
 
-       
-            
-       
+
+
+
     private Integer verifyCodeLength = 6;
 
-       
-                                                                      
-                                                                                      
-       
+
+
+
+
     private String verificationHmacSecret = "";
 
-       
-                                                                                 
-                                                                             
-       
+
+
+
+
     private String previousVerificationHmacSecret = "";
 
-       
-            
-       
+
+
+
     private String orderNoPrefix = "HR";
 
-       
-                        
-       
+
+
+
     private String scanCron = "0 0 */3 * * ?";
 
-       
-                     
-       
+
+
+
     private String orderTimeoutCron = "0 */10 * * * ?";
 
-       
-               
-       
+
+
+
     private Boolean schedulerEnabled = true;
 
-       
-               
-       
+
+
+
     private String proofPath;
 
-       
-                 
-                                            
-       
+
+
+
+
     private String urlPrefix;
 
-       
-                  
-       
+
+
+
     private Integer tempFileRetentionDays = 7;
 
-       
-                                           
-       
+
+
+
     private Vip vip = new Vip();
 
-       
-                                     
-       
+
+
+
     private Alipay alipay = new Alipay();
 
-       
-                                         
-       
+
+
+
     private Wechat wechat = new Wechat();
 
-       
-                                              
-       
+
+
+
     private Ssh ssh = new Ssh();
 
-       
-                                            
-       
+
+
+
     private Code code = new Code();
 
-       
-                        
-       
+
+
+
     private CompletionRecovery completionRecovery = new CompletionRecovery();
 
-       
-                    
-       
+
+
+
     public int getPlatformFeePercent() {
         return platformFeeRate.multiply(new BigDecimal("100")).intValue();
     }
-       
-              
-       
+
+
+
     public BigDecimal getPlatformFeeRate() {
         return platformFeeRate;
     }
 
-       
-              
-      
-                         
-                    
-       
+
+
+
+
+
+
     public BigDecimal calculatePlatformFee(BigDecimal amount) {
         return amount.multiply(platformFeeRate)
                 .setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-       
-              
-      
-                         
-                    
-       
+
+
+
+
+
+
     public BigDecimal calculateCreatorEarnings(BigDecimal amount) {
         return amount.subtract(calculatePlatformFee(amount))
                 .setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-       
-                 
-      
-                         
-                   
-       
+
+
+
+
+
+
     public boolean checkWithdrawThreshold(BigDecimal amount) {
         return amount.compareTo(withdrawMinAmount) >= 0;
     }
 
-       
-                   
-       
+
+
+
     public Integer getOrderExpireMinutes() {
         return orderExpireMinutes;
     }
@@ -262,9 +262,9 @@ public class PaymentConfig {
         private String scanBasePath;
     }
 
-       
-                                          
-       
+
+
+
     @Data
     public static class CompletionRecovery {
         private Boolean enabled = false;

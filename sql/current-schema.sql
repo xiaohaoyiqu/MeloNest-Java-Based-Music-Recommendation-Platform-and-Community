@@ -1,8 +1,8 @@
-                                         
-                                                                  
-                                      
-                                                                                       
-                                                       
+
+
+
+
+
 
 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT ;
 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS ;
@@ -14,7 +14,7 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 ;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 ;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' ;
 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 ;
-                                                                                
+
 
 CREATE DATABASE IF NOT EXISTS `haoranmusic_bus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ;
 
@@ -5208,17 +5208,17 @@ DELIMITER ;;
 CREATE DEFINER=CURRENT_USER FUNCTION `match_tag`(tags VARCHAR(500), target VARCHAR(50)) RETURNS int(11)
     DETERMINISTIC
 BEGIN
-    
+
     IF tags LIKE '[%]' THEN
         RETURN IF(tags LIKE CONCAT('%"', target, '"%'), 1, 0);
     END IF;
 
-    
+
     IF tags LIKE '%,%' THEN
         RETURN IF(FIND_IN_SET(target, tags) > 0, 1, 0);
     END IF;
 
-    
+
     RETURN IF(tags = target, 1, 0);
 END ;;
 DELIMITER ;

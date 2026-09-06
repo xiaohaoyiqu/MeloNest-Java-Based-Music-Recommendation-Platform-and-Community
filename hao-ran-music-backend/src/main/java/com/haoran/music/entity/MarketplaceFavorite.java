@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.entity;
 
@@ -14,45 +14,45 @@ import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
-   
-         
-                  
-   
+
+
+
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("marketplace_favorite")
 public class MarketplaceFavorite {
 
-       
-           
-       
+
+
+
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-       
-           
-       
+
+
+
     private Long itemId;
 
-       
-           
-       
+
+
+
     private Long userId;
 
-       
-           
-       
+
+
+
     private LocalDateTime createTime;
 
-       
-                        
-                            
-       
+
+
+
+
     @TableLogic
     private Integer deleted;
 
-       
-           
-       
+
+
+
     private LocalDateTime updateTime;
 }

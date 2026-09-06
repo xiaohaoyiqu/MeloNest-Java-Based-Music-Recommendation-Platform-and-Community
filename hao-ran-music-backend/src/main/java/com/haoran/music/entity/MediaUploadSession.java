@@ -8,11 +8,11 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-            
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("media_upload_session")
 public class MediaUploadSession implements Serializable {
@@ -24,64 +24,64 @@ public class MediaUploadSession implements Serializable {
     public static final String STATUS_CANCELLED = "CANCELLED";
     public static final String STATUS_EXPIRED = "EXPIRED";
 
-       
-            
-       
+
+
+
     @TableId(type = IdType.AUTO)
     private Long id;
 
-       
-                   
-       
+
+
+
     private String sessionToken;
 
-       
-              
-       
+
+
+
     private Long ownerId;
 
-       
-            
-       
+
+
+
     private String purpose;
 
-       
-            
-       
+
+
+
     private String status;
 
-       
-             
-       
+
+
+
     private Integer maxFiles;
 
-       
-                
-       
+
+
+
     private Integer uploadedCount;
 
-       
-                    
-       
+
+
+
     private String targetType;
 
-       
-                    
-       
+
+
+
     private Long targetId;
 
-       
-              
-       
+
+
+
     private LocalDateTime expiresAt;
 
-       
-            
-       
+
+
+
     private LocalDateTime createTime;
 
-       
-            
-       
+
+
+
     private LocalDateTime updateTime;
 }

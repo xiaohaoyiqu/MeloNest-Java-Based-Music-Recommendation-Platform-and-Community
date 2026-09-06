@@ -5,19 +5,19 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-   
-                    
-  
-                      
-   
+
+
+
+
+
 @Mapper
 public interface QualifiedPlayFactMapper {
-       
-                       
-      
-                       
-                        
-       
+
+
+
+
+
+
     @Insert("INSERT IGNORE INTO qualified_play_fact "
             + "(event_id, user_id, song_id, progress_seconds, duration_seconds, policy_version, "
             + "fact_status, occurred_at, create_time) VALUES "

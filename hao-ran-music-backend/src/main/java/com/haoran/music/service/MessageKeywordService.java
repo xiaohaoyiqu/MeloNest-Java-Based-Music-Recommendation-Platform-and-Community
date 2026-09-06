@@ -1,133 +1,133 @@
-   
-                      
-                                     
-  
-          
-                    
-                
-             
-              
-            
-   
+
+
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.service;
 
 import java.util.List;
 import java.util.Map;
 
-   
-              
-                           
-   
+
+
+
+
 public interface MessageKeywordService {
 
-       
-                    
-                         
-      
-                          
-                         
-                            
-       
+
+
+
+
+
+
+
+
     List<KeywordExtractResult> extractMusicKeywords(String message, Long userId);
 
-       
-                      
-      
-                           
-                         
-                       
-       
+
+
+
+
+
+
+
     Map<String, Integer> extractAndAggregateKeywords(List<String> messages, Long userId);
 
-       
-                
-      
-                         
-                               
-                          
-                       
-       
+
+
+
+
+
+
+
+
     List<Long> recommendByKeywords(Long userId, List<String> keywordList, int limit);
 
-       
-                    
-      
-                         
-                   
-       
+
+
+
+
+
+
     boolean isSocialRecommendEnabled(Long userId);
 
-       
-                 
-      
-                         
-                          
-       
+
+
+
+
+
+
     void setSocialRecommendEnabled(Long userId, boolean enabled);
 
-       
-              
-             
-      
-                       
-       
+
+
+
+
+
+
     void clearExpiredKeywords(int days);
 
-       
-                   
-      
-                         
-                             
-       
+
+
+
+
+
+
     void saveUserPreference(Long userId, SocialRecommendPreference preference);
 
-       
-                 
-      
-                         
-       
+
+
+
+
+
     void clearUserKeywords(Long userId);
 
-       
-                          
-      
-                         
-                        
-                          
-       
+
+
+
+
+
+
+
     Map<String, Object> comprehensiveSocialRecommend(Long userId, int limit);
 
-       
-                         
-      
-                         
-                     
-       
+
+
+
+
+
+
     SocialRecommendPreference getUserPreference(Long userId);
 
-       
-              
-       
+
+
+
     class KeywordExtractResult {
-           
-                                         
-           
+
+
+
         private String type;
 
-           
-                          
-           
+
+
+
         private String hashedKeyword;
 
-           
-                        
-           
+
+
+
         private Double confidence;
 
-           
-                
-           
+
+
+
         private Long timestamp;
 
         public KeywordExtractResult() {}
@@ -152,28 +152,28 @@ public interface MessageKeywordService {
         public void setTimestamp(Long timestamp) { this.timestamp = timestamp; }
     }
 
-       
-               
-       
+
+
+
     class SocialRecommendPreference {
-           
-                   
-           
+
+
+
         private Boolean enabled;
 
-           
-                   
-           
+
+
+
         private Boolean showSource;
 
-           
-                             
-           
+
+
+
         private Boolean allowShared;
 
-           
-                  
-           
+
+
+
         private Integer keywordRetentionDays;
 
         public SocialRecommendPreference() {

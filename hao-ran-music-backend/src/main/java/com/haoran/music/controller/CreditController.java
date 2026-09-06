@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-   
-         
-                  
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/credit")
@@ -30,9 +30,9 @@ public class CreditController {
         this.creditService = creditService;
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取信用分")
     @GetMapping("/my")
     public Result<Integer> getUserCredit(HttpServletRequest request) {
@@ -41,17 +41,17 @@ public class CreditController {
         return Result.success(creditScore);
     }
 
-       
-              
-       
+
+
+
     @GetMapping("/level/{score}")
     public Result getCreditLevel(@PathVariable Integer score) {
         return Result.success(creditService.getCreditLevel(score));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("检查信用分阈值")
     @GetMapping("/check-threshold")
     public Result isBelowThreshold(HttpServletRequest request) {
@@ -59,9 +59,9 @@ public class CreditController {
         return Result.success(creditService.isBelowThreshold(userId));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取信用分记录")
     @GetMapping("/records")
     public Result getCreditRecords(HttpServletRequest request,
@@ -72,27 +72,27 @@ public class CreditController {
         return Result.success(creditService.getCreditRecords(userId, creditType, page, size));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取信用周期")
     @GetMapping("/period")
     public Result getCurrentPeriod() {
         return Result.success(creditService.getCurrentPeriod());
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取重置时间")
     @GetMapping("/next-reset")
     public Result getNextResetTime() {
         return Result.success(creditService.getNextResetTime());
     }
 
-       
-               
-       
+
+
+
     @ApiLog("管理员调整信用分")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/adjust")
@@ -108,9 +108,9 @@ public class CreditController {
                 score, reason, operatorId));
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取信用分统计")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/statistics")
@@ -118,9 +118,9 @@ public class CreditController {
         return Result.success(creditService.getCreditStatistics());
     }
 
-       
-                      
-       
+
+
+
     @ApiLog("重置信用分")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/reset")

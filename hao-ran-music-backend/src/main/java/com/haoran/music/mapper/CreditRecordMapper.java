@@ -1,7 +1,7 @@
-   
-                      
-                             
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -16,20 +16,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-   
-                
-   
+
+
+
 @Mapper
 public interface CreditRecordMapper extends BaseMapper<CreditRecord> {
 
-       
-                     
-      
-                         
-                              
-                            
-                  
-       
+
+
+
+
+
+
+
+
     @Select("SELECT COUNT(*) FROM credit_record " +
             "WHERE user_id = #{userId} " +
             "AND credit_type = #{creditType} " +
@@ -39,14 +39,14 @@ public interface CreditRecordMapper extends BaseMapper<CreditRecord> {
                               @Param("creditType") String creditType,
                               @Param("startTime") LocalDateTime startTime);
 
-       
-                      
-      
-                         
-                              
-                     
-                  
-       
+
+
+
+
+
+
+
+
     @Select("SELECT COUNT(*) FROM credit_record " +
             "WHERE user_id = #{userId} " +
             "AND credit_type = #{creditType} " +
@@ -57,12 +57,12 @@ public interface CreditRecordMapper extends BaseMapper<CreditRecord> {
                                        @Param("creditType") String creditType,
                                        @Param("days") Integer days);
 
-       
-                  
-      
-                         
-                   
-       
+
+
+
+
+
+
     @Select("SELECT " +
             "credit_type, " +
             "COUNT(*) as count, " +

@@ -24,10 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                                                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class FavoriteHistoryServiceImpl extends ServiceImpl<FavoriteHistoryMapper, FavoriteHistory> implements FavoriteHistoryService {
@@ -47,14 +47,14 @@ public class FavoriteHistoryServiceImpl extends ServiceImpl<FavoriteHistoryMappe
         }
 
         try {
-                                         
+
             Song song = songMapper.selectById(songId);
             if (ObjectUtils.isEmpty(song)) {
                 log.warn("recordFavoriteAction: Song not found, songId={}", songId);
                 return false;
             }
 
-                                    
+
             FavoriteHistory history = new FavoriteHistory();
             history.setUserId(userId);
             history.setSongId(songId);
@@ -140,7 +140,7 @@ public class FavoriteHistoryServiceImpl extends ServiceImpl<FavoriteHistoryMappe
             throw new BusinessException(ResultCode.PARAM_ERROR, "User ID and record ID cannot be empty");
         }
 
-                           
+
         FavoriteHistory history = getById(id);
         if (ObjectUtils.isEmpty(history)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "History record not found");

@@ -20,14 +20,14 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                             
-  
-        
-                           
-                               
-   
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class UserActivityQuickServiceImpl implements UserActivityQuickService {
@@ -93,7 +93,7 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
             return false;
         }
 
-                               
+
         int activityScore = getActivityScore(userId);
         return activityScore >= userGrowthConfig.getActivity().getActiveMinScore();
     }
@@ -111,25 +111,25 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         User user = userId == null ? null : userMapper.selectById(userId);
         boolean canInteract = UserAccountStatusUtil.canInteract(user);
 
-               
+
         int monthCheckinCount = getMonthCheckinCount(userId);
         int continuousDays = getContinuousDays(userId);
         int totalCheckinCount = getTotalCheckinCount(userId);
         boolean checkedToday = hasCheckedInToday(userId);
 
-                
+
         int totalPoints = getUserTotalPoints(userId);
 
-                   
+
         int baseActivityScore = canInteract ? calculateBaseActivityScore(userId) : 0;
         int socialScore = canInteract ? calculateSocialActivityScore(userId) : 0;
         int activityScore = canInteract ? calculateCombinedActivityScore(baseActivityScore, socialScore) : 0;
         String activityLevel = resolveActivityLevel(activityScore);
         boolean isActive = activityScore >= userGrowthConfig.getActivity().getActiveMinScore();
-                 
+
         String username = user != null ? (user.getNickname() != null ? user.getNickname() : user.getUsername()) : "未知";
 
-                   
+
         List<LocalDate> monthCheckinDates = getMonthCheckinDates(userId);
 
         detail.put("userId", userId);
@@ -199,18 +199,18 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         User user = userId == null ? null : userMapper.selectById(userId);
         boolean canInteract = UserAccountStatusUtil.canInteract(user);
 
-                 
+
         int monthCheckinCount = getMonthCheckinCount(userId);
         int continuousDays = getContinuousDays(userId);
         boolean checkedToday = hasCheckedInToday(userId);
         int totalCheckinCount = getTotalCheckinCount(userId);
 
-                
+
         int daysInMonth = LocalDate.now().lengthOfMonth();
         int daysPassed = LocalDate.now().getDayOfMonth();
         double checkinRate = daysPassed > 0 ? (double) monthCheckinCount / daysPassed : 0;
 
-                 
+
         int weekCheckinCount = getWeekCheckinCount(userId);
 
         stats.put("monthCheckinCount", monthCheckinCount);
@@ -236,23 +236,23 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         User user = userId == null ? null : userMapper.selectById(userId);
         boolean canInteract = UserAccountStatusUtil.canInteract(user);
 
-                  
+
         long followingCount = getUserFollowingCount(userId);
         long followerCount = getUserFollowerCount(userId);
 
-                        
+
         int monthCommentCount = getMonthCommentCount(userId);
         int totalCommentCount = getTotalCommentCount(userId);
 
-                  
+
         int monthLikeCount = getMonthLikeCount(userId);
         int totalLikeCount = getTotalLikeCount(userId);
 
-                        
+
         int monthShareCount = getMonthShareCount(userId);
         int totalShareCount = getTotalShareCount(userId);
 
-                            
+
         int socialScore = calculateSocialScore(followingCount, followerCount,
                 monthCommentCount, monthLikeCount, monthShareCount);
 
@@ -282,11 +282,11 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         }
 
         try {
-                   
+
             String cacheKey = userGrowthConfig.getActivity().getCacheKeyPrefix() + userId;
             redisTemplate.delete(cacheKey);
 
-                      
+
             int score = getActivityScore(userId);
 
             log.info("刷新用户活跃度缓存: userId={}, score={}", userId, score);
@@ -378,11 +378,11 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
             return null;
         }
     }
-                                                       
 
-       
-               
-       
+
+
+
+
     private int getMonthCheckinCount(Long userId) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
 
@@ -393,9 +393,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(userCheckinMapper.selectCount(wrapper));
     }
 
-       
-               
-       
+
+
+
     private int getWeekCheckinCount(Long userId) {
         LocalDate weekStart = LocalDate.now().minusDays(LocalDate.now().getDayOfWeek().getValue() - 1);
 
@@ -406,9 +406,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(userCheckinMapper.selectCount(wrapper));
     }
 
-       
-               
-       
+
+
+
     private int getContinuousDays(Long userId) {
         LocalDate today = LocalDate.now();
 
@@ -422,7 +422,7 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
             return 0;
         }
 
-                                 
+
         LocalDate lastDate = lastCheckin.getCheckinDate();
         long daysBetween = ChronoUnit.DAYS.between(lastDate, today);
         if (daysBetween > 1) {
@@ -432,9 +432,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return lastCheckin.getContinuousDays() != null ? lastCheckin.getContinuousDays() : 0;
     }
 
-       
-              
-       
+
+
+
     private int getTotalCheckinCount(Long userId) {
         LambdaQueryWrapper<UserCheckin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserCheckin::getUserId, userId);
@@ -442,9 +442,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(userCheckinMapper.selectCount(wrapper));
     }
 
-       
-              
-       
+
+
+
     private boolean hasCheckedInToday(Long userId) {
         LocalDate today = LocalDate.now();
 
@@ -455,17 +455,17 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return userCheckinMapper.selectCount(wrapper) > 0;
     }
 
-       
-                                               
-       
+
+
+
     private int getUserTotalPoints(Long userId) {
         Integer points = userActivityPointsMapper.getUserTotalPoints(userId);
         return points == null ? 0 : points;
     }
 
-       
-                 
-       
+
+
+
     private List<LocalDate> getMonthCheckinDates(Long userId) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate monthEnd = monthStart.plusMonths(1).minusDays(1);
@@ -480,27 +480,27 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
                 .collect(Collectors.toList());
     }
 
-       
-              
-       
+
+
+
     private long getUserFollowingCount(Long userId) {
         LambdaQueryWrapper<com.haoran.music.entity.UserFollow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.UserFollow::getFollowerId, userId);
         return userFollowMapper.selectCount(wrapper);
     }
 
-       
-              
-       
+
+
+
     private long getUserFollowerCount(Long userId) {
         LambdaQueryWrapper<com.haoran.music.entity.UserFollow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.UserFollow::getFolloweeId, userId);
         return userFollowMapper.selectCount(wrapper);
     }
 
-       
-              
-       
+
+
+
     private int getMonthCommentCount(Long userId) {
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
@@ -511,9 +511,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(commentMapper.selectCount(wrapper));
     }
 
-       
-             
-       
+
+
+
     private int getTotalCommentCount(Long userId) {
         LambdaQueryWrapper<com.haoran.music.entity.Comment> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.Comment::getUserId, userId);
@@ -521,9 +521,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(commentMapper.selectCount(wrapper));
     }
 
-       
-              
-       
+
+
+
     private int getMonthLikeCount(Long userId) {
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
@@ -535,9 +535,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(songLikeMapper.selectCount(wrapper));
     }
 
-       
-             
-       
+
+
+
     private int getTotalLikeCount(Long userId) {
         LambdaQueryWrapper<com.haoran.music.entity.SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.SongLike::getUserId, userId)
@@ -546,9 +546,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(songLikeMapper.selectCount(wrapper));
     }
 
-       
-              
-       
+
+
+
     private int getMonthShareCount(Long userId) {
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
@@ -559,9 +559,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(shareRecordMapper.selectCount(wrapper));
     }
 
-       
-             
-       
+
+
+
     private int getTotalShareCount(Long userId) {
         LambdaQueryWrapper<com.haoran.music.entity.ShareRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.ShareRecord::getUserId, userId);
@@ -569,9 +569,9 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.toIntExact(shareRecordMapper.selectCount(wrapper));
     }
 
-       
-                       
-       
+
+
+
     private int calculateSocialScore(long followingCount, long followerCount,
                                      int monthCommentCount, int monthLikeCount, int monthShareCount) {
         int score = 0;
@@ -599,10 +599,10 @@ public class UserActivityQuickServiceImpl implements UserActivityQuickService {
         return Math.min(score, positive(activityConfig.getSocialScoreMax(), 100));
     }
 
-       
-                                                                                           
-      
-  
+
+
+
+
     private int positive(Integer value, int fallback) {
         return ObjectUtils.isEmpty(value) || value <= 0 ? fallback : value;
     }

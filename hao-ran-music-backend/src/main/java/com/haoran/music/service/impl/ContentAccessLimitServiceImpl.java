@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -18,12 +18,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-   
-                          
-  
-                                                                                                              
-                                                                                   
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class ContentAccessLimitServiceImpl implements ContentAccessLimitService {
@@ -287,9 +287,9 @@ public class ContentAccessLimitServiceImpl implements ContentAccessLimitService 
         }
     }
 
-       
-                                                                           
-       
+
+
+
     private long getSecondsUntilEndOfDay() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endOfDay = now.toLocalDate().atTime(23, 59, 59);

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-                                                                          
+
 @Mapper
 public interface StoreProductQueryMapper {
 

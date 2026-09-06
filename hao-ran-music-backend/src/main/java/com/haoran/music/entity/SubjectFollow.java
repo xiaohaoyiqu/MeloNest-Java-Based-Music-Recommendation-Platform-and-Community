@@ -7,11 +7,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-              
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("subject_follow")
 public class SubjectFollow {

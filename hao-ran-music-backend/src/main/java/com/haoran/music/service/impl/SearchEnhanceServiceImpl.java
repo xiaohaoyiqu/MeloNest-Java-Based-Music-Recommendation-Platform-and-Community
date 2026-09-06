@@ -32,10 +32,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                             
-   
+
+
+
+
 @Slf4j
 @Service
 public class SearchEnhanceServiceImpl implements SearchEnhanceService {
@@ -72,17 +72,17 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
     private static final long MIN_HOT_SEARCH_COUNT = 2L;
     private static final DateTimeFormatter HOT_SEARCH_DAY_FORMAT = DateTimeFormatter.BASIC_ISO_DATE;
 
-       
-                           
-                                    
-       
+
+
+
+
     private static final List<String> DEFAULT_HOT_SEARCH = Arrays.asList(
             "周杰伦", "邓紫棋", "稻香", "晴天", "七里香",
             "告白气球", "演员", "薛之谦", "陈奕迅", "十年"
     );
 
-       
-       
+
+
     @Override
     public SearchSuggestVO getSuggest(String keyword, Integer limit) {
         if (ObjectUtils.isEmpty(keyword) || keyword.trim().length() == 0) {
@@ -97,22 +97,22 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         SearchSuggestVO result = new SearchSuggestVO();
 
         try {
-                       
+
             Long userId = UserContext.getCurrentUserId();
 
-                      
+
             List<String> keywords = getKeywordSuggestions(keyword, 5);
             result.setKeywords(keywords);
 
-                             
+
             List<SearchSuggestVO.SimpleSongVO> songs = searchSongsWithPersonalization(keyword, resultLimit, userId);
             result.setSongs(songs);
 
-                             
+
             List<SearchSuggestVO.SimpleArtistVO> artists = searchArtistsWithPersonalization(keyword, resultLimit, userId);
             result.setArtists(artists);
 
-                             
+
             List<SearchSuggestVO.SimpleAlbumVO> albums = searchAlbumsWithPersonalization(keyword, resultLimit, userId);
             result.setAlbums(albums);
 
@@ -133,9 +133,9 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return result;
     }
 
-       
-                     
-       
+
+
+
     private List<SearchSuggestVO.SimpleSongVO> searchSongsWithPersonalization(String keyword, Integer limit, Long userId) {
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, 1)
@@ -148,12 +148,12 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
 
         List<Song> songs = filterPublicSongs(songMapper.selectList(wrapper));
 
-                          
+
         if (userId != null && !songs.isEmpty()) {
             songs = sortSongsByUserPreference(songs, userId);
         }
 
-                 
+
         songs = songs.stream().limit(limit).collect(Collectors.toList());
 
         List<SearchSuggestVO.SimpleSongVO> result = new ArrayList<>();
@@ -169,9 +169,9 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return result;
     }
 
-       
-                     
-       
+
+
+
     private List<SearchSuggestVO.SimpleArtistVO> searchArtistsWithPersonalization(String keyword, Integer limit, Long userId) {
         LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Artist::getStatus, 1)
@@ -187,7 +187,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
             SearchSuggestVO.SimpleArtistVO vo = new SearchSuggestVO.SimpleArtistVO();
             vo.setId(artist.getId());
             vo.setName(artist.getName());
-                                     
+
             vo.setAvatar(artist.getAvatar() != null ? artist.getAvatar() : artist.getCover());
             result.add(vo);
         }
@@ -195,9 +195,9 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return result;
     }
 
-       
-                     
-       
+
+
+
     private List<SearchSuggestVO.SimpleAlbumVO> searchAlbumsWithPersonalization(String keyword, Integer limit, Long userId) {
         LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Album::getStatus, 1)
@@ -210,12 +210,12 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
 
         List<Album> albums = filterAlbumsWithPublicSongs(albumMapper.selectList(wrapper));
 
-                          
+
         if (userId != null && !albums.isEmpty()) {
             albums = sortAlbumsByUserPreference(albums, userId);
         }
 
-                 
+
         albums = albums.stream().limit(limit).collect(Collectors.toList());
 
         List<SearchSuggestVO.SimpleAlbumVO> result = new ArrayList<>();
@@ -231,16 +231,16 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return result;
     }
 
-       
-                    
-      
-                        
-                         
-                       
-       
+
+
+
+
+
+
+
     private List<Song> sortSongsByUserPreference(List<Song> songs, Long userId) {
         try {
-                       
+
             Map<String, Object> preference = userPortraitService.getUserMusicPreference(userId);
 
             @SuppressWarnings("unchecked")
@@ -249,25 +249,25 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
             @SuppressWarnings("unchecked")
             List<String> favoriteLanguages = getStringList(preference, "favoriteLanguages", Collections.emptyList());
 
-                          
+
             Map<Song, Integer> scoreMap = new HashMap<>();
 
             for (Song song : songs) {
                 int score = 0;
 
-                         
+
                 if (song.getMainType() != null && favoriteGenres.contains(song.getMainType())) {
                     int index = favoriteGenres.indexOf(song.getMainType());
                     score += (100 - index * 20);           
                 }
 
-                         
+
                 if (song.getLanguage() != null && favoriteLanguages.contains(song.getLanguage())) {
                     int index = favoriteLanguages.indexOf(song.getLanguage());
                     score += (50 - index * 15);          
                 }
 
-                             
+
                 if (song.getPlayCount() != null) {
                     score += Math.min(song.getPlayCount() / 100, 20);
                 }
@@ -275,7 +275,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 scoreMap.put(song, score);
             }
 
-                      
+
             return songs.stream()
                     .sorted((s1, s2) -> scoreMap.getOrDefault(s2, 0).compareTo(scoreMap.getOrDefault(s1, 0)))
                     .collect(Collectors.toList());
@@ -286,16 +286,16 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         }
     }
 
-       
-                    
-      
-                         
-                         
-                       
-       
+
+
+
+
+
+
+
     private List<Album> sortAlbumsByUserPreference(List<Album> albums, Long userId) {
         try {
-                       
+
             Map<String, Object> preference = userPortraitService.getUserMusicPreference(userId);
 
             @SuppressWarnings("unchecked")
@@ -304,25 +304,25 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
             @SuppressWarnings("unchecked")
             List<String> favoriteLanguages = getStringList(preference, "favoriteLanguages", Collections.emptyList());
 
-                          
+
             Map<Album, Integer> scoreMap = new HashMap<>();
 
             for (Album album : albums) {
                 int score = 0;
 
-                         
+
                 if (album.getType() != null && favoriteGenres.contains(album.getType())) {
                     int index = favoriteGenres.indexOf(album.getType());
                     score += (100 - index * 20);
                 }
 
-                         
+
                 if (album.getLanguage() != null && favoriteLanguages.contains(album.getLanguage())) {
                     int index = favoriteLanguages.indexOf(album.getLanguage());
                     score += (50 - index * 15);
                 }
 
-                        
+
                 if (album.getPlayCount() != null) {
                     score += Math.min(album.getPlayCount() / 100, 20);
                 }
@@ -330,7 +330,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 scoreMap.put(album, score);
             }
 
-                      
+
             return albums.stream()
                     .sorted((a1, a2) -> scoreMap.getOrDefault(a2, 0).compareTo(scoreMap.getOrDefault(a1, 0)))
                     .collect(Collectors.toList());
@@ -341,28 +341,28 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         }
     }
 
-       
-                                      
-                        
-       
+
+
+
+
     @Override
     public List<HotSearchVO> getHotSearch(Integer limit) {
         int resultLimit = SearchLimitUtil.normalize(limit);
         List<HotSearchVO> result = new ArrayList<>();
 
-                                                  
+
         Map<String, Long> searchCountMap = getRollingHotSearchCounts(resultLimit);
         if (ObjectUtils.isEmpty(searchCountMap)) {
-                       
+
             return createDefaultHotSearch(resultLimit);
         }
 
-                
+
         List<Map.Entry<String, Long>> sortedList = new ArrayList<>(searchCountMap.entrySet());
         sortedList.sort(Map.Entry.<String, Long>comparingByValue().reversed()
                 .thenComparing(Map.Entry.comparingByKey()));
 
-                 
+
         int rank = 1;
         for (Map.Entry<String, Long> entry : sortedList) {
             if (rank > resultLimit) break;
@@ -372,13 +372,13 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
             vo.setHeat(entry.getValue());
             vo.setRank(rank++);
 
-                                   
+
             vo.setTrend(null);
 
             result.add(vo);
         }
 
-                          
+
         if (result.size() < resultLimit) {
             Set<String> existingKeywords = result.stream()
                     .map(HotSearchVO::getKeyword)
@@ -395,18 +395,18 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return result;
     }
 
-       
-                
-      
-                         
-                        
-                        
-       
+
+
+
+
+
+
+
     private List<HotSearchVO> getPersonalizedHotSearch(Long userId, Integer limit) {
         List<HotSearchVO> result = new ArrayList<>();
 
         try {
-                       
+
             Map<String, Object> preference = userPortraitService.getUserMusicPreference(userId);
 
             @SuppressWarnings("unchecked")
@@ -416,12 +416,12 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 return result;
             }
 
-                                
+
             int rank = 1;
             for (String genre : favoriteGenres) {
                 if (rank > limit) break;
 
-                             
+
                 List<Artist> topArtists = getTopArtistsByGenre(genre, 2);
 
                 for (Artist artist : topArtists) {
@@ -436,7 +436,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 }
             }
 
-                                
+
             if (result.size() < limit) {
                 @SuppressWarnings("unchecked")
                 List<String> favoriteLanguages = getStringList(preference, "favoriteLanguages", Collections.emptyList());
@@ -463,12 +463,12 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return result;
     }
 
-       
-                 
-       
+
+
+
     private List<Artist> getTopArtistsByGenre(String genre, Integer limit) {
         try {
-                               
+
             LambdaQueryWrapper<Song> songWrapper = new LambdaQueryWrapper<>();
             songWrapper.like(Song::getMainType, genre)
                     .eq(Song::getStatus, 1)
@@ -481,12 +481,12 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 return Collections.emptyList();
             }
 
-                       
+
             Map<Long, Integer> artistCountMap = new HashMap<>();
             Map<Long, Artist> artistMap = new HashMap<>();
 
             for (Song song : songs) {
-                                          
+
                 String artistIds = song.getArtistIds();
                 if (artistIds != null && !artistIds.isEmpty()) {
                     String[] ids = artistIds.split(",");
@@ -495,7 +495,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                             Long artistId = Long.parseLong(idStr.trim());
                             artistCountMap.merge(artistId, 1, Integer::sum);
 
-                                     
+
                             if (!artistMap.containsKey(artistId)) {
                                 Artist artist = artistMapper.selectById(artistId);
                                 if (artist != null
@@ -505,13 +505,13 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                                 }
                             }
                         } catch (NumberFormatException e) {
-                                     
+
                         }
                     }
                 }
             }
 
-                             
+
             return artistCountMap.entrySet().stream()
                     .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                     .limit(limit)
@@ -525,9 +525,9 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         }
     }
 
-       
-                    
-       
+
+
+
     private String getLanguageHotKeyword(String language) {
         switch (language) {
             case "zh":
@@ -574,7 +574,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
             redisTemplate.opsForList().trim(historyKey, 0, 19);
             redisTemplate.expire(historyKey, 30, TimeUnit.DAYS);
 
-                                                
+
             if (!isEligibleForPublicHotSearch(normalizedKeyword)) {
                 return;
             }
@@ -658,17 +658,17 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
             log.error("删除增强搜索活动失败: userId={}, keyword={}", userId, normalizedKeyword);
         }
     }
-       
-              
-                            
-       
+
+
+
+
     private List<String> getKeywordSuggestions(String keyword, Integer limit) {
         List<String> suggestions = new ArrayList<>();
 
-                       
+
         List<String> hotSearches = getHotSearchFromDatabase(100);
 
-                   
+
         for (String hotKeyword : hotSearches) {
             if (hotKeyword.contains(keyword) || keyword.contains(hotKeyword)) {
                 suggestions.add(hotKeyword);
@@ -681,19 +681,19 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return suggestions;
     }
 
-       
-               
-       
+
+
+
     private List<HotSearchVO> createDefaultHotSearch(Integer limit) {
         List<HotSearchVO> result = new ArrayList<>();
-                     
+
         List<String> hotSearches = getHotSearchFromDatabase(limit);
 
 
         for (int i = 0; i < Math.min(limit, hotSearches.size()); i++) {
             HotSearchVO vo = new HotSearchVO();
             vo.setKeyword(hotSearches.get(i));
-                                          
+
             vo.setHeat(null);
             vo.setRank(i + 1);
             vo.setTrend(null);
@@ -703,9 +703,9 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return result;
     }
 
-       
-                      
-       
+
+
+
     @SuppressWarnings("unchecked")
     private List<String> getStringList(Map<String, Object> map, String key, List<String> defaultValue) {
         Object value = map.get(key);
@@ -754,9 +754,9 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return normalized;
     }
 
-       
-                                            
-       
+
+
+
     private boolean isReadableSearchKeyword(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return false;
@@ -780,9 +780,9 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
         return hasLetterOrDigit;
     }
 
-       
-                                             
-       
+
+
+
     private boolean isEligibleForPublicHotSearch(String keyword) {
         if (!isReadableSearchKeyword(keyword)) {
             return false;
@@ -851,15 +851,15 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 .collect(Collectors.toList());
     }
 
-       
-                      
-                          
-      
-                        
-       
+
+
+
+
+
+
     private List<String> getHotSearchFromDatabase(Integer limit) {
         try {
-                           
+
             String cacheKey = HOT_SEARCH_DB_KEY + ":" + musicIntelligenceCacheService.searchVersionSegment();
             List<Object> cached = ObjectUtils.castList(redisTemplate.opsForValue().get(cacheKey), Object.class);
             if (cached != null && !cached.isEmpty()) {
@@ -869,7 +869,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                         .collect(Collectors.toList());
             }
 
-                        
+
             LambdaQueryWrapper<com.haoran.music.entity.ListenHistory> wrapper = new LambdaQueryWrapper<>();
             wrapper.ge(com.haoran.music.entity.ListenHistory::getListenTime,
                     java.time.LocalDateTime.now().minusDays(7))
@@ -881,7 +881,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 return DEFAULT_HOT_SEARCH.stream().limit(limit).collect(Collectors.toList());
             }
 
-                         
+
             Map<Long, Integer> songCountMap = new HashMap<>();
             for (com.haoran.music.entity.ListenHistory history : histories) {
                 if (history.getSongId() != null) {
@@ -889,7 +889,7 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
                 }
             }
 
-                              
+
             List<String> hotKeywords = new ArrayList<>();
             List<Map.Entry<Long, Integer>> sortedSongs = new ArrayList<>(songCountMap.entrySet());
             sortedSongs.sort(Map.Entry.<Long, Integer>comparingByValue().reversed()
@@ -899,24 +899,24 @@ public class SearchEnhanceServiceImpl implements SearchEnhanceService {
 
                 Song song = songMapper.selectById(entry.getKey());
                 if (isPublicSong(song)) {
-                            
+
                     if (song.getArtistNames() != null && !song.getArtistNames().isEmpty()) {
                         hotKeywords.add(song.getArtistNames());
                     }
-                            
+
                     if (song.getName() != null && !song.getName().isEmpty()) {
                         hotKeywords.add(song.getName());
                     }
                 }
             }
 
-                      
+
             List<String> result = hotKeywords.stream()
                     .distinct()
                     .limit(limit)
                     .collect(Collectors.toList());
 
-                        
+
             if (!result.isEmpty()) {
                 redisTemplate.opsForValue().set(cacheKey, result, 1, TimeUnit.HOURS);
             }

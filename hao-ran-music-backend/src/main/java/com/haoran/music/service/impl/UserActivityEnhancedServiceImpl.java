@@ -23,17 +23,17 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                           
-  
-                    
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedService {
 
-               
+
     private final UserCheckinMapper userCheckinMapper;
     private final UserActivityPointsMapper userActivityPointsMapper;
     private final UserFollowMapper userFollowMapper;
@@ -99,7 +99,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         this.musicIntelligenceCacheService = musicIntelligenceCacheService;
     }
 
-                                                        
+
 
     @Override
     public Integer getEnhancedActivityScore(Long userId) {
@@ -115,38 +115,38 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         }
         Long userId = user.getId();
 
-                  
+
         String cacheKey = ActivityAntiSpamConstants.ACTIVITY_CACHE_KEY_PREFIX + userId;
         Integer cachedScore = (Integer) redisTemplate.opsForValue().get(cacheKey);
         if (cachedScore != null) {
             return cachedScore;
         }
 
-                   
+
         int checkinScore = calculateCheckinActivityScore(userId);
         int socialScore = calculateSocialActivityScore(userId);
         int consumptionScore = calculateConsumptionActivityScore(userId);
         int creationScore = calculateCreationActivityScore(userId);
         int contentScore = calculateContentActivityScore(userId);
 
-                    
+
         double totalScore =
                 checkinScore * ActivityAntiSpamConstants.CHECKIN_WEIGHT +
                 socialScore * ActivityAntiSpamConstants.SOCIAL_WEIGHT +
                 consumptionScore * ActivityAntiSpamConstants.CONSUMPTION_WEIGHT +
                 creationScore * ActivityAntiSpamConstants.CREATION_WEIGHT;
 
-                             
+
         double contentBonus = contentScore * ActivityAntiSpamConstants.CONTENT_BONUS_WEIGHT;
         totalScore += contentBonus;
 
-                   
+
         double creditWeight = getCreditWeight(userId);
         totalScore = totalScore * creditWeight;
 
         int finalScore = (int) Math.min(Math.round(totalScore), 110);                
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, finalScore, CACHE_EXPIRE_MINUTES, TimeUnit.MINUTES);
 
         log.debug("用户活跃度计算: userId={}, checkin={}, social={}, consumption={}, creation={}, content={}, final={}",
@@ -167,7 +167,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         int creationScore = canInteract ? calculateCreationActivityScore(userId) : 0;
         int contentScore = canInteract ? calculateContentActivityScore(userId) : 0;
 
-                    
+
         detail.put("userId", userId);
         Map<String, Object> checkinMap = new HashMap<>();
         checkinMap.put("score", checkinScore);
@@ -200,7 +200,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         contentMap.put("detail", getContentDetail(userId));
         detail.put("content", contentMap);
 
-                 
+
         double creditWeight = getCreditWeight(userId);
         Map<String, Object> creditMap = new HashMap<>();
         creditMap.put("weight", creditWeight);
@@ -211,7 +211,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             detail.put("accountUnavailableMessage", UserAccountStatusUtil.currentUnavailableMessage(user));
         }
 
-               
+
         int totalScore = canInteract ? getEnhancedActivityScore(userId) : 0;
         detail.put("totalScore", totalScore);
         detail.put("activityLevel", getActivityLevel(totalScore));
@@ -219,7 +219,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return detail;
     }
 
-                                                         
+
 
     @Override
     public Integer getCheckinActivityScore(Long userId) {
@@ -232,19 +232,19 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
     private int calculateCheckinActivityScore(Long userId) {
         int score = 0;
 
-                   
+
         int monthCheckinCount = getMonthCheckinCount(userId);
         score += Math.min(monthCheckinCount * ActivityAntiSpamConstants.CHECKIN_DAILY_SCORE, 50);
 
-                 
+
         int continuousDays = getContinuousDays(userId);
         score += Math.min(continuousDays * ActivityAntiSpamConstants.CHECKIN_CONTINUOUS_SCORE, 20);
 
-                
+
         int totalPoints = getUserTotalPoints(userId);
         score += Math.min(totalPoints / 10, 20);
 
-                  
+
         int totalCheckinCount = getTotalCheckinCount(userId);
         score += Math.min(totalCheckinCount / 10, 10);
 
@@ -264,24 +264,24 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
 
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
-                 
+
         long followingCount = getUserFollowingCount(userId);
         long followerCount = getUserFollowerCount(userId);
         score += Math.min((int)((followingCount + followerCount) / 2), 15);
 
-                     
+
         int monthCommentCount = getMonthCommentCount(userId);
         score += Math.min(monthCommentCount * ActivityAntiSpamConstants.SOCIAL_COMMENT_SCORE, 30);
 
-                     
+
         int monthLikeCount = getMonthLikeCount(userId);
         score += Math.min(monthLikeCount * ActivityAntiSpamConstants.SOCIAL_LIKE_SCORE, 15);
 
-                     
+
         int monthShareCount = getMonthShareCount(userId);
         score += Math.min(monthShareCount * ActivityAntiSpamConstants.SOCIAL_SHARE_SCORE, 15);
 
-                       
+
         int monthPostCount = getMonthPostCount(userId);
         score += Math.min(monthPostCount * ActivityAntiSpamConstants.SOCIAL_POST_SCORE, 25);
 
@@ -301,21 +301,21 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
 
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
-                        
+
         int monthVipCount = getMonthVipPurchaseCount(userId, monthStart);
         score += monthVipCount * ActivityAntiSpamConstants.CONSUMPTION_VIP_SCORE;
 
         Map<String, Object> consumptionSummary = getMonthConsumptionSummary(userId, monthStart);
 
-                         
+
         int monthPaidCount = toInt(consumptionSummary.get("purchase_count"));
         score += monthPaidCount * ActivityAntiSpamConstants.CONSUMPTION_PAID_SCORE;
 
-                     
+
         int monthRewardCount = getMonthRewardCount(userId, monthStart);
         score += monthRewardCount * ActivityAntiSpamConstants.CONSUMPTION_REWARD_SCORE;
 
-                             
+
         BigDecimal monthAmount = toBigDecimal(consumptionSummary.get("total_amount"));
         score += monthAmount.intValue();
 
@@ -335,19 +335,19 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
 
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
-                       
+
         int monthWorkCount = getMonthWorkSubmitCount(userId, monthStart);
         score += monthWorkCount * ActivityAntiSpamConstants.CREATION_WORK_SCORE;
 
-                       
+
         int monthLyricCount = getMonthLyricRequestCount(userId, monthStart);
         score += monthLyricCount * ActivityAntiSpamConstants.CREATION_LYRIC_SCORE;
 
-                       
+
         int monthRequestCount = getMonthResourceRequestCount(userId, monthStart);
         score += monthRequestCount * ActivityAntiSpamConstants.CREATION_REQUEST_SCORE;
 
-                         
+
         int monthApprovedCount = getMonthApprovedCount(userId, monthStart);
         score += monthApprovedCount * ActivityAntiSpamConstants.CREATION_APPROVED_SCORE;
 
@@ -367,26 +367,26 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
 
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
-                       
+
         int totalListenMinutes = getMonthListenMinutes(userId, monthStart);
         score += Math.min(totalListenMinutes / ActivityAntiSpamConstants.CONTENT_LISTEN_MINUTE_SCORE, 40);
 
-                       
+
         int completePlayCount = getMonthCompletePlayCount(userId, monthStart);
         score += Math.min(completePlayCount * ActivityAntiSpamConstants.CONTENT_COMPLETE_SCORE / 10, 30);
 
-                       
+
         int monthPlaylistCount = getMonthPlaylistCreateCount(userId, monthStart);
         score += monthPlaylistCount * ActivityAntiSpamConstants.CONTENT_PLAYLIST_SCORE;
 
-                       
+
         int monthMvWatchCount = getMonthMvWatchCount(userId, monthStart);
         score += Math.min(monthMvWatchCount * ActivityAntiSpamConstants.CONTENT_MV_SCORE, 30);
 
         return Math.min(score, 100);
     }
 
-                                                     
+
 
     @Override
     public Map<String, Object> checkBehaviorAbnormal(Long userId, String behaviorType) {
@@ -395,7 +395,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         String reason = "";
         double reduceRate = 1.0;
 
-                    
+
         Map<String, Object> rateLimit = checkRateLimit(userId, behaviorType);
         if (!(boolean) rateLimit.get("allowed")) {
             isAbnormal = true;
@@ -403,7 +403,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             reduceRate = 0.1;
         }
 
-                      
+
         if (!isAbnormal) {
             Map<String, Object> behaviorAnalysis = getUserBehaviorAnalysis(userId);
             Map<String, Integer> distribution = (Map<String, Integer>) behaviorAnalysis.get("behaviorDistribution");
@@ -419,7 +419,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             }
         }
 
-                      
+
         User user = userMapper.selectById(userId);
         if (user != null && user.getCreateTime() != null) {
             long daysSinceRegister = ChronoUnit.DAYS.between(user.getCreateTime(), LocalDateTime.now());
@@ -429,7 +429,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             }
         }
 
-                           
+
         int currentHour = LocalDateTime.now().getHour();
         if (currentHour >= ActivityAntiSpamConstants.ABNORMAL_HOUR_START &&
             currentHour < ActivityAntiSpamConstants.ABNORMAL_HOUR_END) {
@@ -437,7 +437,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             reduceRate = Math.min(reduceRate, ActivityAntiSpamConstants.ABNORMAL_HOUR_WEIGHT);
         }
 
-                    
+
         double creditWeight = getCreditWeight(userId);
         reduceRate = reduceRate * creditWeight;
 
@@ -451,7 +451,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
 
     @Override
     public Double getCreditWeight(Long userId) {
-                                               
+
         LambdaQueryWrapper<UserCredit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserCredit::getUserId, userId);
         UserCredit userCredit = userCreditMapper.selectOne(wrapper);
@@ -473,11 +473,11 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
 
     @Override
     public Double calculateBehaviorScore(Long userId, String behaviorType, Double baseScore) {
-                  
+
         Map<String, Object> abnormalCheck = checkBehaviorAbnormal(userId, behaviorType);
         double reduceRate = (double) abnormalCheck.get("reduceRate");
 
-                    
+
         String recordKey = ActivityAntiSpamConstants.BEHAVIOR_RECORD_CACHE_KEY_PREFIX +
                           userId + ":" + behaviorType + ":" + LocalDate.now();
         Integer todayCount = (Integer) redisTemplate.opsForValue().get(recordKey);
@@ -493,10 +493,10 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             );
         }
 
-                    
+
         double finalScore = baseScore * reduceRate * decayRate;
 
-                      
+
         redisTemplate.opsForValue().set(recordKey, todayCount + 1,
                 ActivityAntiSpamConstants.BEHAVIOR_RECORD_CACHE_EXPIRE_DAYS, TimeUnit.DAYS);
 
@@ -510,7 +510,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
     public Map<String, Object> checkRateLimit(Long userId, String behaviorType) {
         Map<String, Object> result = new HashMap<>();
 
-                   
+
         String recordKey = ActivityAntiSpamConstants.BEHAVIOR_RECORD_CACHE_KEY_PREFIX +
                           userId + ":" + behaviorType + ":" + LocalDate.now();
         Integer todayCount = (Integer) redisTemplate.opsForValue().get(recordKey);
@@ -518,10 +518,10 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             todayCount = 0;
         }
 
-                 
+
         int dailyLimit = getDailyLimit(behaviorType);
 
-                  
+
         String minuteKey = ActivityAntiSpamConstants.RATE_LIMIT_CACHE_KEY_PREFIX +
                           userId + ":" + behaviorType + ":" + System.currentTimeMillis() / 60000;
         Integer minuteCount = (Integer) redisTemplate.opsForValue().get(minuteKey);
@@ -541,14 +541,14 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         result.put("resetTime", LocalDate.now().plusDays(1).atStartOfDay());
 
         if (allowed) {
-                   
+
             redisTemplate.opsForValue().set(minuteKey, minuteCount + 1, 1, TimeUnit.MINUTES);
         }
 
         return result;
     }
 
-                                                        
+
 
     @Override
     public Map<String, Object> getUserBehaviorAnalysis(Long userId) {
@@ -556,7 +556,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
 
         LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
-                  
+
         Map<String, Integer> behaviorDistribution = new HashMap<>();
         behaviorDistribution.put("like", getMonthLikeCount(userId));
         behaviorDistribution.put("comment", getMonthCommentCount(userId));
@@ -564,13 +564,13 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         behaviorDistribution.put("post", getMonthPostCount(userId));
         behaviorDistribution.put("follow", (int) getUserFollowingCount(userId));
 
-                   
+
         Map<Integer, Integer> hourDistribution = getActiveHourDistribution(userId, monthStart);
 
-               
+
         boolean hasAbnormalPattern = checkAbnormalPattern(behaviorDistribution, hourDistribution);
 
-               
+
         List<String> suggestions = generateSuggestions(behaviorDistribution, hourDistribution);
         int activityScore = getEnhancedActivityScore(userId);
         double creditWeight = getCreditWeight(userId);
@@ -626,7 +626,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         }
     }
 
-                                                      
+
 
     @Override
     public List<Map<String, Object>> getActivityRanking(String dimension, Integer limit) {
@@ -635,7 +635,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         String cacheKey = "activity:ranking:" + musicIntelligenceCacheService.rankingVersionSegment()
                 + "v2:" + rankingDimension;
 
-                                                 
+
         List<Object> cachedRanking = redisTemplate.opsForList().range(cacheKey, 0, safeLimit - 1);
         if (cachedRanking != null && !cachedRanking.isEmpty()) {
             List<Map<String, Object>> cachedItems = cachedRanking.stream()
@@ -717,10 +717,10 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         }
     }
 
-       
-                                                  
-      
-  
+
+
+
+
     private Map<String, Object> buildActivityRankingItem(User user, Integer score) {
         Map<String, Object> item = new HashMap<>();
         int activityScore = score == null ? 0 : score;
@@ -732,22 +732,22 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return item;
     }
 
-       
-                                   
-      
-                         
-       
+
+
+
+
+
     private LambdaQueryWrapper<User> buildPublicRankingUserQuery() {
         return UserAccountStatusUtil.publicStatsUserQuery()
                 .last("LIMIT " + RANKING_CANDIDATE_LIMIT);
     }
 
-       
-                                    
-      
-                          
-                           
-       
+
+
+
+
+
+
     private Map<Long, User> loadRankedUsers(List<Map<String, Object>> items) {
         Set<Long> userIds = items.stream()
                 .map(this::parseRankedUserId)
@@ -760,12 +760,12 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
                 .collect(Collectors.toMap(User::getId, user -> user, (left, right) -> left));
     }
 
-       
-                      
-      
-                         
-                               
-       
+
+
+
+
+
+
     private Long parseRankedUserId(Map<String, Object> item) {
         Object rawUserId = item.get("userId");
         if (rawUserId == null) {
@@ -779,7 +779,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             return null;
         }
     }
-                                                      
+
 
     @Override
     public Map<String, Object> getActivityRewards(Long userId) {
@@ -788,7 +788,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         int activityScore = getEnhancedActivityScore(userId);
         String activityLevel = getActivityLevel(activityScore);
 
-                          
+
         List<Map<String, String>> availableRewards = new ArrayList<>();
 
         switch (activityLevel) {
@@ -876,7 +876,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return progress;
     }
 
-                                                       
+
 
     private boolean canCalculateActivity(Long userId) {
         return UserAccountStatusUtil.canInteract(userId, userMapper::selectById);
@@ -940,7 +940,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         }
     }
 
-           
+
     private int getMonthCheckinCount(Long userId) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LambdaQueryWrapper<UserCheckin> wrapper = new LambdaQueryWrapper<>();
@@ -976,7 +976,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return points == null ? 0 : points;
     }
 
-           
+
     private long getUserFollowingCount(Long userId) {
         LambdaQueryWrapper<com.haoran.music.entity.UserFollow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.UserFollow::getFollowerId, userId);
@@ -1023,7 +1023,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return Math.toIntExact(musicPostMapper.selectCount(wrapper));
     }
 
-           
+
     private int getMonthVipPurchaseCount(Long userId, LocalDateTime monthStart) {
         LambdaQueryWrapper<VipOrder> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(VipOrder::getUserId, userId)
@@ -1033,7 +1033,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
     }
 
     private int getMonthRewardCount(Long userId, LocalDateTime monthStart) {
-                           
+
         return 0;
     }
 
@@ -1065,7 +1065,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return BigDecimal.ZERO;
     }
 
-           
+
     private int getMonthWorkSubmitCount(Long userId, LocalDateTime monthStart) {
         LambdaQueryWrapper<CreatorWork> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CreatorWork::getUserId, userId)
@@ -1095,7 +1095,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return Math.toIntExact(creatorWorkMapper.selectCount(wrapper));
     }
 
-           
+
     private int getMonthListenMinutes(Long userId, LocalDateTime monthStart) {
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ListenHistory::getUserId, userId)
@@ -1124,11 +1124,11 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
     }
 
     private int getMonthMvWatchCount(Long userId, LocalDateTime monthStart) {
-                             
+
         return 0;
     }
 
-           
+
     private Map<String, Object> getCheckinDetail(Long userId) {
         Map<String, Object> detail = new HashMap<>();
         detail.put("monthCheckinCount", getMonthCheckinCount(userId));
@@ -1180,15 +1180,15 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return detail;
     }
 
-               
+
     private Map<Integer, Integer> getActiveHourDistribution(Long userId, LocalDateTime monthStart) {
-                            
+
         Map<Integer, Integer> distribution = new HashMap<>();
         for (int i = 0; i < 24; i++) {
             distribution.put(i, 0);
         }
 
-                                  
+
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ListenHistory::getUserId, userId)
                .ge(ListenHistory::getCreateTime, monthStart);
@@ -1206,7 +1206,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
     }
     private boolean checkAbnormalPattern(Map<String, Integer> behaviorDistribution,
                                          Map<Integer, Integer> hourDistribution) {
-                   
+
         int totalBehavior = behaviorDistribution.values().stream().mapToInt(Integer::intValue).sum();
         if (totalBehavior > 20) {
             int maxBehavior = behaviorDistribution.values().stream().mapToInt(Integer::intValue).max().orElse(0);
@@ -1216,7 +1216,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             }
         }
 
-                      
+
         int activeHours = 0;
         for (Map.Entry<Integer, Integer> entry : hourDistribution.entrySet()) {
             if (entry.getValue() > 0) {
@@ -1234,7 +1234,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
                                             Map<Integer, Integer> hourDistribution) {
         List<String> suggestions = new ArrayList<>();
 
-                      
+
         int totalBehavior = behaviorDistribution.values().stream().mapToInt(Integer::intValue).sum();
         if (totalBehavior == 0) {
             suggestions.add("您还没有任何社交行为，试着去评论、点赞或分享吧！");
@@ -1248,7 +1248,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
             }
         }
 
-                 
+
         int activeHours = (int) hourDistribution.values().stream().filter(v -> v > 0).count();
         if (activeHours < 5) {
             suggestions.add("您的活跃时段较为集中，分散在不同时段活跃会获得更多奖励！");
@@ -1257,7 +1257,7 @@ public class UserActivityEnhancedServiceImpl implements UserActivityEnhancedServ
         return suggestions;
     }
 
-                                                                                 
+
 
     private Map<String, Object> buildBehaviorStatus(Long userId,
                                                     int activityScore,

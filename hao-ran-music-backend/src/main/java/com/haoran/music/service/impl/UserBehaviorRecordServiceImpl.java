@@ -1,7 +1,7 @@
-   
-                      
-                           
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-   
-              
-   
+
+
+
 @Slf4j
 @Service
 public class UserBehaviorRecordServiceImpl extends ServiceImpl<UserBehaviorRecordMapper, UserBehaviorRecord>
@@ -101,7 +101,7 @@ public class UserBehaviorRecordServiceImpl extends ServiceImpl<UserBehaviorRecor
             }
         }
 
-                                                
+
         this.saveBatch(validRecords);
 
         log.info("批量记录用户行为成功: count={}", validRecords.size());
@@ -236,7 +236,7 @@ public class UserBehaviorRecordServiceImpl extends ServiceImpl<UserBehaviorRecor
 
         LocalDateTime expireTime = LocalDateTime.now().minusDays(days);
 
-                 
+
         LambdaQueryWrapper<UserBehaviorRecord> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.lt(UserBehaviorRecord::getBehaviorTime, expireTime);
 

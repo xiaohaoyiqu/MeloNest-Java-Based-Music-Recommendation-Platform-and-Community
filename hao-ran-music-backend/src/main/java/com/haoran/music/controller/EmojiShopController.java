@@ -14,10 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-   
-                      
-                              
-   
+
+
+
+
 @RestController
 @RequestMapping("/emoji-shop")
 public class EmojiShopController {
@@ -25,9 +25,9 @@ public class EmojiShopController {
     @Resource
     private EmojiShopService emojiShopService;
 
-       
-               
-       
+
+
+
     @ApiLog("获取表情商城首页")
     @GetMapping("/home")
     public Result<EmojiShopHomeVO> getHomeData() {
@@ -35,9 +35,9 @@ public class EmojiShopController {
         return Result.success(result);
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取表情包列表")
     @GetMapping("/packages")
     public Result<PageResult<EmojiPackageVO>> getPackages(
@@ -49,9 +49,9 @@ public class EmojiShopController {
         return Result.success(result);
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取表情包详情")
     @GetMapping("/package/{id}")
     public Result<EmojiPackageDetailVO> getPackageDetail(@PathVariable Long id) {
@@ -59,9 +59,9 @@ public class EmojiShopController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("购买表情包")
     @PostMapping("/package/{id}/purchase")
     public Result<Void> purchasePackage(@PathVariable Long id) {
@@ -69,9 +69,9 @@ public class EmojiShopController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取我的表情")
     @GetMapping("/my")
     public Result<List<EmojiPackageVO>> getMyEmojis() {
@@ -79,9 +79,9 @@ public class EmojiShopController {
         return Result.success(result);
     }
 
-       
-            
-       
+
+
+
     @ApiLog("收藏表情包")
     @PostMapping("/package/{id}/favorite")
     public Result<Void> favoritePackage(@PathVariable Long id) {
@@ -89,9 +89,9 @@ public class EmojiShopController {
         return Result.success();
     }
 
-       
-           
-       
+
+
+
     @DeleteMapping("/package/{id}/favorite")
     @ApiLog("取消收藏表情包")
     public Result<Void> unfavoritePackage(@PathVariable Long id) {

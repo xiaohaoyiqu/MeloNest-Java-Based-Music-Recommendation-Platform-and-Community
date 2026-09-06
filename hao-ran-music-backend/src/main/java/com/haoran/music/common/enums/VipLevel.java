@@ -1,64 +1,64 @@
-   
-                      
-                       
-   
+
+
+
+
 package com.haoran.music.common.enums;
 
 import java.time.Duration;
 
-   
-          
-   
+
+
+
 public enum VipLevel {
 
-       
-           
-       
+
+
+
     FREE(0, "免费用户", 0, null, 10, 10),
 
-       
-            
-       
+
+
+
     MONTHLY_VIP(1, "月度VIP", 10, Duration.ofDays(30), 20, 20),
 
-       
-            
-       
+
+
+
     QUARTERLY_VIP(2, "季度VIP", 25, Duration.ofDays(90), 40, 50),
 
-       
-            
-       
+
+
+
     YEARLY_VIP(3, "年度VIP", 100, Duration.ofDays(365), 70, 100);
 
-       
-           
-       
+
+
+
     private final Integer code;
 
-       
-           
-       
+
+
+
     private final String name;
 
-       
-            
-       
+
+
+
     private final Integer price;
 
-       
-          
-       
+
+
+
     private final Duration duration;
 
-       
-             
-       
+
+
+
     private final Integer dailyDownloadQuota;
 
-       
-                
-       
+
+
+
     private final Integer maxPlaylists;
 
     VipLevel(Integer code, String name, Integer price, Duration duration, Integer dailyDownloadQuota, Integer maxPlaylists) {
@@ -94,11 +94,11 @@ public enum VipLevel {
         return maxPlaylists;
     }
 
-       
-               
-                  
-                      
-       
+
+
+
+
+
     public static VipLevel fromCode(Integer code) {
         if (code == null) {
             return FREE;
@@ -111,38 +111,38 @@ public enum VipLevel {
         return FREE;
     }
 
-       
-               
-                          
-       
+
+
+
+
     public boolean isPaidVip() {
         return this != FREE;
     }
 
-       
-                  
-                       
-                     
-       
+
+
+
+
+
     public static int getDownloadQuotaByLevel(Integer levelCode) {
         VipLevel level = fromCode(levelCode);
         return level.getDailyDownloadQuota();
     }
 
-       
-                      
-                       
-                      
-       
+
+
+
+
+
     public static int getMaxPlaylistsByLevel(Integer levelCode) {
         VipLevel level = fromCode(levelCode);
         return level.getMaxPlaylists();
     }
 
-       
-                
-                 
-       
+
+
+
+
     public String getDescription() {
         switch (this) {
             case MONTHLY_VIP:
@@ -157,10 +157,10 @@ public enum VipLevel {
         }
     }
 
-       
-                 
-                  
-       
+
+
+
+
     public String getPlaylistLimitDesc() {
         return "可创建" + maxPlaylists + "个歌单";
     }

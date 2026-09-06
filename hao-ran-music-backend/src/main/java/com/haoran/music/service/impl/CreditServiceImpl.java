@@ -1,7 +1,7 @@
-   
-                      
-                            
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-   
-          
-   
+
+
+
 @Slf4j
 @Service
 public class CreditServiceImpl implements CreditService {
@@ -60,9 +60,9 @@ public class CreditServiceImpl implements CreditService {
         this.creatorEligibilityService = creatorEligibilityService;
     }
 
-       
-              
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer getUserCredit(Long userId) {
@@ -71,7 +71,7 @@ public class CreditServiceImpl implements CreditService {
                         .eq(UserCredit::getUserId, userId)
         );
 
-                    
+
         if (ObjectUtils.isEmpty(credit)) {
             credit = getUserCreditEntity(userId);
         }
@@ -79,9 +79,9 @@ public class CreditServiceImpl implements CreditService {
         return credit != null ? credit.getCreditScore() : 100;
     }
 
-       
-               
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean initUserCredit(Long userId) {
@@ -90,7 +90,7 @@ public class CreditServiceImpl implements CreditService {
             throw new BusinessException("用户不存在");
         }
 
-                  
+
         UserCredit existing = userCreditMapper.selectOne(
                 new LambdaQueryWrapper<UserCredit>()
                         .eq(UserCredit::getUserId, userId)
@@ -115,25 +115,25 @@ public class CreditServiceImpl implements CreditService {
         return true;
     }
 
-       
-                    
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer addCreditRecord(Long userId, String creditType, Integer score,
                                    String reason, Long operatorId) {
-                  
+
         UserCredit credit = getUserCreditEntity(userId);
 
         Integer currentScore = credit.getCreditScore();
         Integer newScore = currentScore + score;
 
-                     
+
         newScore = Math.max(0, Math.min(100, newScore));
 
         insertCreditRecord(userId, creditType, score, reason, operatorId);
 
-                  
+
         credit.setCreditScore(newScore);
         credit.setCreditLevel(getCreditLevel(newScore));
         userCreditMapper.updateById(credit);
@@ -141,7 +141,7 @@ public class CreditServiceImpl implements CreditService {
 
         log.info("event=user_credit_updated userId={} creditType={}", userId, creditType);
 
-                        
+
         if (score < 0 && newScore < creditConfig.getThresholdScore()) {
             handleCreditDeduction(userId, creditType);
         }
@@ -149,9 +149,9 @@ public class CreditServiceImpl implements CreditService {
         return newScore;
     }
 
-       
-                      
-       
+
+
+
     @Override
     public boolean hasReceivedTodayReward(Long userId, String creditType) {
         LocalDate today = LocalDate.now();
@@ -161,9 +161,9 @@ public class CreditServiceImpl implements CreditService {
         return count != null && count > 0;
     }
 
-       
-                   
-       
+
+
+
     @Override
     public Integer getTodayRewardCount(Long userId, String creditType) {
         LocalDate today = LocalDate.now();
@@ -173,9 +173,9 @@ public class CreditServiceImpl implements CreditService {
         return count != null ? count : 0;
     }
 
-       
-                  
-       
+
+
+
     @Override
     public Map<String, Object> getCreditRecords(Long userId, String creditType,
                                                Integer page, Integer size) {
@@ -186,7 +186,7 @@ public class CreditServiceImpl implements CreditService {
         LambdaQueryWrapper<CreditRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CreditRecord::getUserId, userId);
 
-                                       
+
         if ("positive".equalsIgnoreCase(creditType)) {
             wrapper.gt(CreditRecord::getScore, 0);
         } else if ("negative".equalsIgnoreCase(creditType)) {
@@ -199,7 +199,7 @@ public class CreditServiceImpl implements CreditService {
 
         IPage<CreditRecord> recordPage = creditRecordMapper.selectPage(pageParam, wrapper);
 
-                    
+
         result.put("records", recordPage.getRecords());
         result.put("total", recordPage.getTotal());                                  
         result.put("current", page);
@@ -212,18 +212,18 @@ public class CreditServiceImpl implements CreditService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateReportCredit(Long userId, Long reportId, Integer score, String reason) {
-                  
+
         UserCredit credit = getUserCreditEntity(userId);
 
         Integer currentScore = credit.getCreditScore();
         Integer newScore = currentScore + score;
 
-                     
+
         newScore = Math.max(0, Math.min(100, newScore));
 
-                 
+
         if (score > 0) {
-                   
+
             credit.setApprovedReportCount(
                 (credit.getApprovedReportCount() != null ? credit.getApprovedReportCount() : 0) + 1
             );
@@ -234,7 +234,7 @@ public class CreditServiceImpl implements CreditService {
 
         insertCreditRecord(userId, "report", score, reason, null);
 
-                
+
         credit.setCreditScore(newScore);
         credit.setCreditLevel(getCreditLevel(newScore));
         userCreditMapper.updateById(credit);
@@ -248,18 +248,18 @@ public class CreditServiceImpl implements CreditService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateRefundCredit(Long userId, Long refundId, Integer score, String reason) {
-                  
+
         UserCredit credit = getUserCreditEntity(userId);
 
         Integer currentScore = credit.getCreditScore();
         Integer newScore = currentScore + score;
 
-                     
+
         newScore = Math.max(0, Math.min(100, newScore));
 
         insertCreditRecord(userId, "refund", score, reason, null);
 
-                
+
         credit.setCreditScore(newScore);
         credit.setCreditLevel(getCreditLevel(newScore));
         userCreditMapper.updateById(credit);
@@ -267,7 +267,7 @@ public class CreditServiceImpl implements CreditService {
 
         log.info("event=user_refund_credit_updated userId={}", userId);
 
-                        
+
         if (score < 0) {
             handleCreditDeduction(userId, "refund");
         }
@@ -344,14 +344,14 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public String getCurrentPeriod() {
-                       
+
         LocalDateTime now = LocalDateTime.now();
         return String.format("%04d%02d", now.getYear(), now.getMonthValue());
     }
 
     @Override
     public LocalDateTime getNextResetTime() {
-                   
+
         LocalDateTime now = LocalDateTime.now();
         return now.plusMonths(1).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
     }
@@ -359,12 +359,12 @@ public class CreditServiceImpl implements CreditService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean handleCreditDeduction(Long userId, String creditType) {
-                   
+
         if (!isBelowThreshold(userId)) {
             return false;
         }
 
-                  
+
         if (creatorEligibilityService.isEligible(userId)) {
             creatorEligibilityService.remove(userId, null,
                     "信用分低于" + creditConfig.getThresholdScore() + "分，自动移除创作者身份");
@@ -403,11 +403,11 @@ public class CreditServiceImpl implements CreditService {
         return result;
     }
 
-                                                     
 
-       
-                
-       
+
+
+
+
     private UserCredit getUserCreditEntity(Long userId) {
         User user = userMapper.selectByIdForUpdate(userId);
         if (user == null) {

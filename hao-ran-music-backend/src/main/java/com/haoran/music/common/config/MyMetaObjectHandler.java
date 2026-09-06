@@ -11,19 +11,19 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
-   
-                      
-                                    
-   
+
+
+
+
 @Slf4j
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 
-       
-              
-      
-                            
-       
+
+
+
+
+
     @Override
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
@@ -32,22 +32,22 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject, "updateBy", String.class, getCurrentUserId());
     }
 
-       
-              
-      
-                            
-       
+
+
+
+
+
     @Override
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
         this.strictUpdateFill(metaObject, "updateBy", String.class, getCurrentUserId());
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     private String getCurrentUserId() {
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -59,7 +59,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
                 }
             }
         } catch (Exception e) {
-                         
+
             log.warn("event=meta_object_user_resolution_failed errorType={}",
                     e.getClass().getSimpleName());
         }

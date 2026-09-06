@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashSet;
 
-   
-                      
-                              
-   
+
+
+
+
 @RestController
 @RequestMapping("/user")
 public class UserActivityController {
@@ -34,15 +34,15 @@ public class UserActivityController {
     @Resource
     private PermissionService permissionService;
 
-       
-                
-      
-                         
-                                                             
-                      
-                        
-                   
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("获取用户动态时间轴")
     @GetMapping("/{userId}/activities")
     public Result<PageResult<UserActivityVO>> getUserActivities(
@@ -57,12 +57,12 @@ public class UserActivityController {
         return Result.success(result);
     }
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取用户动态统计")
     @GetMapping("/{userId}/activities/stats")
     @SuppressWarnings("unchecked")
@@ -77,7 +77,7 @@ public class UserActivityController {
             return Result.success((UserActivityStatsVO) statsObj);
         }
 
-                            
+
         if (statsObj instanceof java.util.Map) {
             java.util.Map<String, Object> statsMap = (java.util.Map<String, Object>) statsObj;
             result.setPostCount(getIntValue(statsMap, "postCount"));
@@ -90,9 +90,9 @@ public class UserActivityController {
         return Result.success(result);
     }
 
-       
-                        
-       
+
+
+
     private Integer getIntValue(java.util.Map<String, Object> map, String key) {
         Object value = map.get(key);
         if (value == null) {
@@ -115,31 +115,31 @@ public class UserActivityController {
         return currentUserId != null && (currentUserId.equals(targetUserId) || permissionService.isAdmin(currentUserId));
     }
 
-       
-               
-       
+
+
+
     @lombok.Data
     public static class UserActivityStatsVO {
-                    
+
         private Integer postCount;
-                  
+
         private Integer commentCount;
-                  
+
         private Integer likeCount;
-                  
+
         private Integer favoriteCount;
-                  
+
         private Integer shareCount;
     }
 
-                                                          
 
-       
-                       
-                      
-      
-                    
-       
+
+
+
+
+
+
+
     @ApiLog("获取活跃度评分")
     @GetMapping("/activity-quick/score")
     public Result<Integer> getActivityScore() {
@@ -148,12 +148,12 @@ public class UserActivityController {
         return Result.success(score);
     }
 
-       
-                  
-                                    
-      
-                   
-       
+
+
+
+
+
+
     @ApiLog("判断是否活跃用户")
     @GetMapping("/activity-quick/is-active")
     public Result<Boolean> isActiveUser() {
@@ -162,15 +162,15 @@ public class UserActivityController {
         return Result.success(isActive);
     }
 
-       
-               
-                                  
-                                
-                                 
-                                                
-      
-                   
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("获取活跃等级")
     @GetMapping("/activity-quick/level")
     public Result<String> getActivityLevel() {
@@ -179,12 +179,12 @@ public class UserActivityController {
         return Result.successData(level);
     }
 
-       
-                
-                        
-      
-                    
-       
+
+
+
+
+
+
     @ApiLog("获取活跃度详情")
     @GetMapping("/activity-quick/detail")
     public Result<Map<String, Object>> getActivityDetail() {
@@ -193,11 +193,11 @@ public class UserActivityController {
         return Result.success(detail);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @ApiLog("获取签到统计")
     @GetMapping("/activity-quick/checkin-stats")
     public Result<Map<String, Object>> getCheckinStatistics() {
@@ -206,12 +206,12 @@ public class UserActivityController {
         return Result.success(stats);
     }
 
-       
-                  
-      
-                            
-                            
-       
+
+
+
+
+
+
     @ApiLog("批量获取活跃度评分")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/activity-quick/batch-score")
@@ -225,12 +225,12 @@ public class UserActivityController {
         return Result.success(scores);
     }
 
-       
-                 
-                         
-      
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取社交行为统计")
     @GetMapping("/activity-quick/social-stats")
     public Result<Map<String, Object>> getSocialStatistics() {
@@ -239,12 +239,12 @@ public class UserActivityController {
         return Result.success(stats);
     }
 
-       
-                
-                                
-      
-                     
-       
+
+
+
+
+
+
     @ApiLog("刷新活跃度缓存")
     @PostMapping("/activity-quick/refresh-cache")
     public Result<Boolean> refreshActivityCache() {

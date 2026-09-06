@@ -38,10 +38,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                             
-   
+
+
+
+
 @Slf4j
 @Service
 public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationService {
@@ -124,11 +124,11 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
                 "v1;collaboration=active", restored ? "恢复了歌单协作" : "开启了歌单协作");
     }
 
-       
-                                 
-      
-                             
-  
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void disableCollaboration(Long playlistId) {
@@ -353,7 +353,7 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
             return new ArrayList<>();
         }
 
-                      
+
         Set<Long> userIds = collaborators.stream()
                 .map(PlaylistCollaborator::getUserId)
                 .collect(Collectors.toSet());
@@ -516,9 +516,9 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
         return result;
     }
 
-       
-                     
-       
+
+
+
     private void insertOperationLog(Long playlistId, Long userId, String operationType,
                                     Long songId, String description) {
         PlaylistOperationLog log = new PlaylistOperationLog();
@@ -552,9 +552,9 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
                 + ";canEdit=" + collaborator.getCanEdit();
     }
 
-       
-                      
-       
+
+
+
     private CollaboratorVO convertToVO(
             PlaylistCollaborator collab, Map<Long, User> userMap, boolean showPermissions) {
         CollaboratorVO vo = new CollaboratorVO();
@@ -599,9 +599,9 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
         throw new BusinessException(ResultCode.FORBIDDEN, "无权访问该协作歌单信息");
     }
 
-       
-           
-       
+
+
+
     private enum CollaboratorRole {
         OWNER("owner", "所有者"),
         EDITOR("editor", "编辑者"),
@@ -625,16 +625,16 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
         }
     }
 
-       
-             
-       
+
+
+
     private String getRoleName(String role) {
         return CollaboratorRole.getName(role);
     }
 
-       
-                       
-       
+
+
+
     private List<PlaylistOperationLogVO> convertToVOList(List<PlaylistOperationLog> logs) {
         if (logs.isEmpty()) {
             return new ArrayList<>();
@@ -672,9 +672,9 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
         return result;
     }
 
-       
-             
-       
+
+
+
     private enum OperationType {
         ADD("add", "添加歌曲"),
         REMOVE("remove", "删除歌曲"),
@@ -702,9 +702,9 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
         }
     }
 
-       
-               
-       
+
+
+
     private String getOperationTypeName(String type) {
         return OperationType.getName(type);
     }
@@ -819,7 +819,7 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
                 return result;
             }
 
-                               
+
             Set<Long> songIds = playlistSongs.stream()
                     .map(com.haoran.music.entity.PlaylistSong::getSongId)
                     .filter(Objects::nonNull)
@@ -965,14 +965,14 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
                 && (playlist.getUserId() == null || allowedOwnerIds.contains(playlist.getUserId()));
     }
 
-       
-                                          
-      
-                           
-                     
-                                      
-                   
-  
+
+
+
+
+
+
+
+
     private String buildCollaborativeRecommendReason(
             Playlist playlist, Song song, PlaylistCollaborator collaborator) {
         if (playlist == null || song == null || collaborator == null) {
@@ -991,12 +991,12 @@ public class PlaylistCollaborationServiceImpl implements PlaylistCollaborationSe
         return reason.toString();
     }
 
-       
-                   
-      
-                         
-                           
-  
+
+
+
+
+
+
     private int normalizeRecommendLimit(Integer limit) {
         if (limit == null || limit <= 0) {
             return DEFAULT_RECOMMEND_LIMIT;

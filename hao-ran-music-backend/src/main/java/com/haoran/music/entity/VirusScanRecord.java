@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -10,9 +10,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                                                                    
-   
+
+
+
 @Data
 @TableName("virus_scan_record")
 public class VirusScanRecord {

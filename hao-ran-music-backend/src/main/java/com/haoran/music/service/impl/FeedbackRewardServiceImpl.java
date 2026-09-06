@@ -21,10 +21,10 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.*;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class FeedbackRewardServiceImpl implements FeedbackRewardService {
@@ -311,13 +311,13 @@ public class FeedbackRewardServiceImpl implements FeedbackRewardService {
         }
     }
 
-       
-             
-                    
-                         
-                       
-                           
-       
+
+
+
+
+
+
+
     private void grantPointsDirectly(Long userId, Integer points, String reason, Long rewardId) {
         try {
             userPointsService.addPoints(userId, "admin", points, reason, rewardId, "feedback_reward");

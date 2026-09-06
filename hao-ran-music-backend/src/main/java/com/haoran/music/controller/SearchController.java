@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 @RestController
 @RequestMapping("/search")
 public class SearchController {
@@ -28,13 +28,13 @@ public class SearchController {
     @Resource
     private SearchCorrectionService searchCorrectionService;
 
-       
-                 
-      
-                           
-                        
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("搜索建议")
     @GetMapping("/suggest")
     public Result<List<String>> getSearchSuggestions(
@@ -44,12 +44,12 @@ public class SearchController {
         return Result.success(suggestions);
     }
 
-       
-           
-      
-                        
-                      
-       
+
+
+
+
+
+
     @ApiLog("智能纠错")
     @GetMapping("/correct")
     public Result<String> correctSearch(@RequestParam String input) {
@@ -57,12 +57,12 @@ public class SearchController {
         return Result.successData(corrected);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("综合搜索")
     @DetectCrawler(operation = "综合搜索", checkReferer = true, riskThreshold = 50)
     @GetMapping
@@ -73,12 +73,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("搜索歌曲")
     @DetectCrawler(operation = "搜索歌曲", checkReferer = true, riskThreshold = 50)
     @GetMapping({"/song", "/songs"})
@@ -92,12 +92,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("搜索专辑")
     @DetectCrawler(operation = "搜索专辑", checkReferer = true)
     @GetMapping("/albums")
@@ -110,12 +110,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("搜索歌手")
     @DetectCrawler(operation = "搜索歌手", checkReferer = true)
     @GetMapping("/artists")
@@ -128,12 +128,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("搜索歌单")
     @GetMapping("/playlists")
     public Result<SearchResultVO> searchPlaylists(
@@ -145,12 +145,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("搜索MV")
     @GetMapping("/mvs")
     public Result<SearchResultVO> searchMvs(
@@ -162,12 +162,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("搜索用户")
     @GetMapping("/users")
     public Result<SearchResultVO> searchUsers(
@@ -179,12 +179,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-                
-      
-                        
-                      
-       
+
+
+
+
+
+
     @ApiLog("获取热门关键词")
     @GetMapping("/hot-keywords")
     public Result<List<String>> getHotKeywords(@RequestParam(defaultValue = "10") Integer limit) {
@@ -192,12 +192,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-             
-      
-                        
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取搜索历史")
     @GetMapping("/history")
     public Result<List<String>> getSearchHistory(
@@ -207,12 +207,12 @@ public class SearchController {
         return Result.success(result);
     }
 
-       
-             
-      
-                         
-                 
-       
+
+
+
+
+
+
     @ApiLog("保存搜索历史")
     @PostMapping("/history")
     public Result<Void> saveSearchHistory(
@@ -222,11 +222,11 @@ public class SearchController {
         return Result.success();
     }
 
-       
-             
-      
-                 
-       
+
+
+
+
+
     @ApiLog("清空搜索历史")
     @DeleteMapping("/history")
     public Result<Void> clearSearchHistory(
@@ -235,12 +235,12 @@ public class SearchController {
         return Result.success();
     }
 
-       
-               
-      
-                         
-                 
-       
+
+
+
+
+
+
     @ApiLog("删除单条搜索历史")
     @DeleteMapping("/history/item")
     public Result<Void> deleteSearchHistoryItem(

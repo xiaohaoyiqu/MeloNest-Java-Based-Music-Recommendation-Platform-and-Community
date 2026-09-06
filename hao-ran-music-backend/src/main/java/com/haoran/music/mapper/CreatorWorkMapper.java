@@ -5,10 +5,10 @@ import com.haoran.music.entity.CreatorWork;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 
-   
-                      
-                             
-   
+
+
+
+
 @Mapper
 public interface CreatorWorkMapper extends BaseMapper<CreatorWork> {
 

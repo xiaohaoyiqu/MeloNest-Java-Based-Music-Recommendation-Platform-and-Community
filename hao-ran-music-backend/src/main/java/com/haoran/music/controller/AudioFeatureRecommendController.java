@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-   
-            
-                       
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/audio-feature")
@@ -26,23 +26,23 @@ public class AudioFeatureRecommendController {
     @Autowired
     private AudioFeatureRecommendService audioFeatureRecommendService;
 
-                                                     
 
-       
-                        
-      
-                                                                          
-                             
-                   
-                     
-                              
-                            
-                            
-                              
-                       
-                            
-                           
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("场景推荐")
     @GetMapping("/scenario/{scenarioCode}")
     public Result<RecommendVO> recommendByScenario(
@@ -53,11 +53,11 @@ public class AudioFeatureRecommendController {
         return Result.success(result);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @ApiLog("获取场景列表")
     @GetMapping("/scenarios")
     public Result<List<Map<String, Object>>> getScenarios() {
@@ -65,22 +65,22 @@ public class AudioFeatureRecommendController {
         return Result.success(scenarios);
     }
 
-                                                     
 
-       
-                         
-      
-                                                        
-                                                    
-                             
-                   
-                      
-                         
-                     
-                     
-                     
-                        
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("情绪推荐")
     @GetMapping("/mood")
     @DetectCrawler(operation = "情绪推荐", checkReferer = true, checkBehavior = false)
@@ -93,12 +93,12 @@ public class AudioFeatureRecommendController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                         
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取用户情绪分析")
     @GetMapping("/mood/analysis")
     public Result<Map<String, Object>> getUserMoodAnalysis(@RequestAttribute("userId") Long userId) {
@@ -106,16 +106,16 @@ public class AudioFeatureRecommendController {
         return Result.success(analysis);
     }
 
-                                                      
 
-       
-                                
-      
-                           
-                             
-                   
-                                                                        
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("音频特征相似推荐")
     @GetMapping("/similar/{songId}")
     public Result<RecommendVO> recommendByAudioFeatures(
@@ -126,13 +126,13 @@ public class AudioFeatureRecommendController {
         return Result.success(result);
     }
 
-       
-                    
-      
-                            
-                            
-                              
-       
+
+
+
+
+
+
+
     @ApiLog("计算歌曲相似度")
     @GetMapping("/similarity")
     public Result<Double> calculateSimilarity(
@@ -142,16 +142,16 @@ public class AudioFeatureRecommendController {
         return Result.success(similarity);
     }
 
-                                                     
 
-       
-                       
-      
-                               
-                              
-                             
-                   
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("混合推荐")
     @GetMapping("/hybrid")
     public Result<RecommendVO> recommendByMoodAndPreference(
@@ -163,22 +163,22 @@ public class AudioFeatureRecommendController {
         return Result.success(result);
     }
 
-                                                      
 
-       
-                         
-      
-                          
-                          
-                             
-                   
-                       
-                     
-                    
-                      
-                      
-                    
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("BPM范围推荐")
     @GetMapping("/bpm")
     public Result<RecommendVO> recommendByBpmRange(
@@ -190,14 +190,14 @@ public class AudioFeatureRecommendController {
         return Result.success(result);
     }
 
-                                                       
 
-       
-                
-      
-                         
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取歌曲音频特征")
     @GetMapping("/features/{songId}")
     public Result<Map<String, Object>> getSongAudioFeatures(@PathVariable Long songId) {
@@ -205,12 +205,12 @@ public class AudioFeatureRecommendController {
         return Result.success(features);
     }
 
-       
-                 
-      
-                                  
-                     
-       
+
+
+
+
+
+
     @ApiLog("批量获取音频特征")
     @GetMapping("/features/batch")
     public Result<List<Map<String, Object>>> batchGetAudioFeatures(

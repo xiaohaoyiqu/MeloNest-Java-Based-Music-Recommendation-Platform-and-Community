@@ -1,12 +1,12 @@
-   
-                      
-                            
-  
-      
-                       
-                   
-                  
-   
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-   
-            
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/videos")
@@ -33,22 +33,22 @@ public class VideoTranscodeController {
     @Autowired(required = false)
     private com.haoran.music.service.impl.VideoPostServiceImpl videoPostService;
 
-       
-                
-      
-                                                                       
-                  
-       
+
+
+
+
+
+
     @GetMapping("/transcode/**")
     public ResponseEntity<Resource> transcodeVideo(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
 
-       
-                    
-      
-                      
-       
+
+
+
+
+
     @PostMapping("/cache/cleanup")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     public Result<Integer> cleanupCache() {

@@ -1,15 +1,15 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Map;
 
-   
-                      
-   
+
+
+
 public interface UserMusicSummaryBackfillTaskService {
 
     Map<String, Object> submitDaily(LocalDate startDate, LocalDate endDate, Long operatorId);

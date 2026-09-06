@@ -24,17 +24,17 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-           
-  
-          
-                                  
-                             
-                              
-                           
-  
-                      
-   
+
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class HybridRecommendServiceImpl implements HybridRecommendService {
@@ -66,9 +66,9 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         this.musicIntelligenceCacheService = musicIntelligenceCacheService;
     }
 
-             
 
-           
+
+
     private static final String CACHE_PREFIX = "hybrid_recommend:";
     private static final String WEIGHTS_CACHE_KEY = "recommend:weights";
 
@@ -96,7 +96,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
     @Value("${recommend.social.weight}")
     private double socialWeight;
 
-             
+
     private volatile Map<String, List<String>> collaborativeModel;
     private volatile Map<String, Map<String, Double>> audioSimilarityModel;
     private volatile Map<String, Object> hybridModel;
@@ -135,7 +135,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
 
         log.info("获取混合推荐: userId={}, limit={}", userId, limit);
 
-                    
+
         List<RecommendVO.SongSimpleVO> collaborativeRecs = getCollaborativeRecommendations(userId, effectiveLimit);
         List<RecommendVO.SongSimpleVO> contentRecs = getContentBasedRecommendations(userId, effectiveLimit);
         List<RecommendVO.SongSimpleVO> popularityRecs = getPopularityRecommendations(userId, effectiveLimit);
@@ -143,11 +143,11 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         String personalizedModelVersion = activePersonalizedModelVersion(userId);
         boolean modelBacked = personalizedModelVersion != null && !collaborativeRecs.isEmpty();
 
-                
+
         List<RecommendVO.SongSimpleVO> hybridRecs = mergeRecommendations(
                 collaborativeRecs, contentRecs, popularityRecs, socialRecs, effectiveLimit);
 
-                    
+
         List<RecommendVO.SongSimpleVO> uniqueRecs = removeDuplicates(hybridRecs, effectiveLimit);
         fillFavoriteStatus(userId, uniqueRecs);
 
@@ -163,7 +163,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         result.setFallbackReason(modelBacked ? null : "当前用户暂无可用的离线模型画像，已使用在线策略回退");
         result.setSongs(uniqueRecs);
 
-                
+
         redisTemplate.opsForValue().set(cacheKey, result, 1, TimeUnit.HOURS);
 
         return result;
@@ -185,7 +185,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         result.setSourceName("新发现");
         result.setReason("为你精选热门好歌");
 
-                
+
         List<RecommendVO.SongSimpleVO> hotSongs = getHotSongs((int) (limit * 0.6));
         List<RecommendVO.SongSimpleVO> newSongs = getNewSongs((int) (limit * 0.3));
         List<RecommendVO.SongSimpleVO> topSongs = getTopRatedSongs((int) (limit * 0.1));
@@ -349,7 +349,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return getModelStatus();
     }
 
-                                                     
+
 
     private boolean loadCollaborativeModel() {
         try {
@@ -547,13 +547,13 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return null;
     }
 
-       
-                              
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getCollaborativeRecommendations(Long userId, Integer limit) {
         List<String> targetSongIds = new ArrayList<>();
 
-                                        
+
         if (collaborativeModel != null && !collaborativeModel.isEmpty()) {
             String userIdKey = String.valueOf(userId);
             if (collaborativeModel.containsKey(userIdKey)) {
@@ -576,14 +576,14 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
             }
         }
 
-                          
+
         if (targetSongIds.isEmpty() && !globalHotSongs.isEmpty()) {
             targetSongIds = globalHotSongs.stream()
                     .limit(limit)
                     .collect(Collectors.toList());
         }
 
-                        
+
         if (!targetSongIds.isEmpty()) {
             return batchGetSongsByIds(targetSongIds, limit);
         }
@@ -591,9 +591,9 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return new ArrayList<>();
     }
 
-       
-                 
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> batchGetSongsByIds(List<String> songIdStrs, Integer limit) {
         List<Long> songIds = new ArrayList<>();
         for (String idStr : songIdStrs) {
@@ -652,9 +652,9 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return convertToSimpleVO(songs);
     }
 
-       
-                         
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getPopularityRecommendations(Long userId, Integer limit) {
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, 1)
@@ -666,9 +666,9 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return convertToSimpleVO(songs);
     }
 
-       
-                            
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getSocialRecommendations(Long userId, Integer limit) {
         Set<Long> friendIds = getMutualFriends(userId);
 
@@ -676,7 +676,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
             return new ArrayList<>();
         }
 
-                        
+
         Set<Long> allFriendLikedSongIds = new HashSet<>();
         for (Long friendId : friendIds) {
             List<Long> friendLikedSongs = getFriendLikedSongs(friendId, 5);
@@ -687,7 +687,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
             return new ArrayList<>();
         }
 
-                 
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Song::getId, allFriendLikedSongIds)
                 .eq(Song::getStatus, 1)
@@ -698,9 +698,9 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return convertToSimpleVO(songs);
     }
 
-       
-               
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> mergeRecommendations(
             List<RecommendVO.SongSimpleVO> collaborativeRecs,
             List<RecommendVO.SongSimpleVO> contentRecs,
@@ -710,42 +710,42 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
 
         Map<Long, Double> scoreMap = new HashMap<>();
 
-                 
+
         for (int i = 0; i < collaborativeRecs.size(); i++) {
             RecommendVO.SongSimpleVO song = collaborativeRecs.get(i);
             double score = (collaborativeRecs.size() - i) * collaborativeWeight;
             scoreMap.merge(song.getId(), score, Double::sum);
         }
 
-                  
+
         for (int i = 0; i < contentRecs.size(); i++) {
             RecommendVO.SongSimpleVO song = contentRecs.get(i);
             double score = (contentRecs.size() - i) * contentWeight;
             scoreMap.merge(song.getId(), score, Double::sum);
         }
 
-                
+
         for (int i = 0; i < popularityRecs.size(); i++) {
             RecommendVO.SongSimpleVO song = popularityRecs.get(i);
             double score = (popularityRecs.size() - i) * popularityWeight;
             scoreMap.merge(song.getId(), score, Double::sum);
         }
 
-               
+
         for (int i = 0; i < socialRecs.size(); i++) {
             RecommendVO.SongSimpleVO song = socialRecs.get(i);
             double score = (socialRecs.size() - i) * socialWeight;
             scoreMap.merge(song.getId(), score, Double::sum);
         }
 
-                
+
         List<Long> sortedSongIds = scoreMap.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(limit)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-                   
+
         if (!sortedSongIds.isEmpty()) {
             LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
             wrapper.in(Song::getId, sortedSongIds)
@@ -926,16 +926,16 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return convertToSimpleVO(songs);
     }
 
-       
-                                  
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> getRandomSongs(int limit) {
-                               
+
         String randomKey = "recommend:random:songs";
         List<Long> randomIds = (List<Long>) redisTemplate.opsForValue().get(randomKey);
 
         if (randomIds == null || randomIds.isEmpty()) {
-                                 
+
             LambdaQueryWrapper<Song> countWrapper = new LambdaQueryWrapper<>();
             countWrapper.eq(Song::getStatus, 1).eq(Song::getDeleted, 0);
             Long total = songMapper.selectCount(countWrapper);
@@ -950,16 +950,16 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
                 randomIds.add((long) rand.nextInt(total.intValue()) + 1);
             }
 
-                    
+
             redisTemplate.opsForValue().set(randomKey, randomIds, 1, TimeUnit.HOURS);
         }
 
-                     
+
         List<Long> targetIds = randomIds.stream()
                 .limit(limit)
                 .collect(Collectors.toList());
 
-               
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Song::getId, targetIds)
                 .eq(Song::getStatus, 1)
@@ -1201,7 +1201,7 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         wrapper.eq(Song::getStatus, 1)
                 .eq(Song::getDeleted, 0);
 
-                 
+
         if (config.genre != null) {
             wrapper.and(w -> w.eq(Song::getMainType, config.genre)
                     .or()
@@ -1215,9 +1215,9 @@ public class HybridRecommendServiceImpl implements HybridRecommendService {
         return convertToSimpleVO(songs);
     }
 
-       
-            
-       
+
+
+
     private static class MoodConfig {
         Double minBpm;
         Double maxBpm;

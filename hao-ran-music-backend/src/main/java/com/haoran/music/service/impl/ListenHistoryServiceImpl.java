@@ -34,10 +34,10 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, ListenHistory> implements ListenHistoryService {
@@ -45,10 +45,10 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
     private static final int MAX_QUERY_SIZE = 100;
     private static final int MAX_IMPORT_SIZE = 500;
 
-       
-                  
-                      
-       
+
+
+
+
     private static final int MAX_HISTORY_COUNT = 560;
 
     @Resource
@@ -97,8 +97,8 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             Song song = null;
             LocalMusic localMusic = null;
             if (normalizedIsLocal == 1) {
-                                                      
-                                      
+
+
                 if (!UserAccountStatusUtil.canInteract(userId, userMapper::selectById)) {
                     log.debug("跳过不可互动账号的本地播放事件: userId={}, songId={}", userId, songId);
                     processed = true;
@@ -283,13 +283,13 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
         }
     }
 
-       
-                                     
-      
-                         
-                          
-                        
-       
+
+
+
+
+
+
+
     @Override
     public List<SongVO> getRecentSongs(Long userId, Integer limit) {
         int actualLimit = limit == null ? 50 : Math.max(1, Math.min(limit, MAX_QUERY_SIZE));
@@ -300,7 +300,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
 
         List<ListenHistory> histories = list(queryWrapper);
 
-                             
+
         Set<Long> songIdSet = new LinkedHashSet<>();
         for (ListenHistory history : histories) {
             songIdSet.add(history.getSongId());
@@ -309,7 +309,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             }
         }
 
-                               
+
         if (songIdSet.isEmpty()) {
             return new ArrayList<>();
         }
@@ -317,11 +317,11 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
         List<Long> songIds = new ArrayList<>(songIdSet);
         List<Song> songs = songMapper.selectBatchIds(songIds);
 
-                                      
+
         Map<Long, Song> songMap = songs.stream()
                 .collect(Collectors.toMap(Song::getId, s -> s, (a, b) -> a));
 
-                           
+
         List<SongVO> result = new ArrayList<>();
         for (Long songId : songIds) {
             Song song = songMap.get(songId);
@@ -348,14 +348,14 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
         return list(queryWrapper);
     }
 
-       
-                                    
-      
-                         
-                           
-                       
-                       
-       
+
+
+
+
+
+
+
+
     @Override
     public List<ListenHistoryVO> getUserHistoryWithDetails(Long userId, Integer page, Integer size) {
         int safePage = page == null || page < 1 ? 1 : page;
@@ -371,7 +371,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             return new ArrayList<>();
         }
 
-                               
+
         List<Long> regularSongIds = new ArrayList<>();
         List<Long> localSongIds = new ArrayList<>();
 
@@ -383,7 +383,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             }
         }
 
-                        
+
         Map<Long, Song> songMap = new HashMap<>();
         if (!regularSongIds.isEmpty()) {
             List<Song> songs = songMapper.selectBatchIds(regularSongIds);
@@ -391,7 +391,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
                     .collect(Collectors.toMap(Song::getId, s -> s, (a, b) -> a));
         }
 
-                        
+
         Map<Long, LocalMusic> localMusicMap = new HashMap<>();
         if (!localSongIds.isEmpty()) {
             List<LocalMusic> localMusicList = localMusicMapper.selectBatchIds(localSongIds);
@@ -399,7 +399,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
                     .collect(Collectors.toMap(LocalMusic::getId, s -> s, (a, b) -> a));
         }
 
-                               
+
         List<ListenHistoryVO> result = new ArrayList<>();
 
         for (ListenHistory history : histories) {
@@ -412,14 +412,14 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             vo.setQuality(history.getQuality());
             vo.setListenTime(history.getCreateTime());
 
-                                   
+
             if (isLocalFlag != null && isLocalFlag == 1) {
                 LocalMusic localMusic = localMusicMap.get(songId);
                 if (ObjectUtils.isNotEmpty(localMusic)) {
                     vo.setSongName(localMusic.getName());
                     vo.setArtistNames(localMusic.getArtistName());
                     vo.setAlbumName(localMusic.getAlbumName());
-                                         
+
                     if (localMusic.getSongId() != null) {
                         Song relatedSong = songMap.get(localMusic.getSongId());
                         vo.setCover(relatedSong != null ? relatedSong.getCover() : null);
@@ -427,7 +427,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
                         vo.setCover("/images/default-cover.png");
                     }
                     vo.setDuration(localMusic.getDuration());
-                                              
+
                     vo.setUrlStandard(localMusic.getFilePath());
                     vo.setIsLocal(true);
                     result.add(vo);
@@ -468,13 +468,13 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
         return count(queryWrapper);
     }
 
-       
-                                  
-      
-                         
-                            
-                     
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int importHistory(Long userId, List<Long> songIds) {
@@ -492,7 +492,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             return 0;
         }
 
-                          
+
         List<Song> existingSongs = songMapper.selectBatchIds(uniqueSongIds);
         Set<Long> validSongIds = existingSongs.stream()
                 .map(Song::getId)
@@ -501,7 +501,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             return 0;
         }
 
-                           
+
         LambdaQueryWrapper<ListenHistory> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(ListenHistory::getUserId, userId)
                 .in(ListenHistory::getSongId, validSongIds);
@@ -510,7 +510,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
                 .map(ListenHistory::getSongId)
                 .collect(Collectors.toSet());
 
-                  
+
         int importCount = 0;
         List<ListenHistory> newHistories = new ArrayList<>();
 
@@ -529,7 +529,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
             importCount++;
         }
 
-                  
+
         if (!newHistories.isEmpty()) {
             saveBatch(newHistories);
         }
@@ -541,7 +541,7 @@ public class ListenHistoryServiceImpl extends ServiceImpl<ListenHistoryMapper, L
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteHistory(Long historyId, Long userId) {
-                       
+
         LambdaQueryWrapper<ListenHistory> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ListenHistory::getId, historyId)
                 .eq(ListenHistory::getUserId, userId);

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    
-                                                                    
-                                                                      
-                                                                     
-                                                                                          
-                                                                  
-                                         
 
-                                              
 
-                                                                     
-                                                                   
-                                                                          
-                                                                     
-                                
-   
 
-                                                                                  
-                         
-                      
-                   
-                 
-                                                                                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <configuration>
 
-                                                                         
+
 
 <property>
     <name>yarn.resourcemanager.hostname</name>
@@ -52,7 +52,7 @@
     <description>Spark Shuffle Handler（支持动态分配必需）</description>
 </property>
 
-                                                                           
+
 
 <property>
     <name>yarn.resourcemanager.address</name>
@@ -97,7 +97,7 @@
     <value>node1:8188</value>
 </property>
 
-                                                                         
+
 
 <property>
     <name>yarn.resourcemanager.fs.state-store.uri</name>
@@ -128,7 +128,7 @@
     <value>logs</value>
 </property>
 
-                                                                           
+
 
 <property>
     <name>yarn.log-aggregation.enable</name>
@@ -154,7 +154,7 @@
     <description>日志服务器URL</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>yarn.resourcemanager.ha.enabled</name>
@@ -174,7 +174,7 @@
     <description>ResourceManager列表</description>
 </property>
 
-                   
+
 <property>
     <name>yarn.resourcemanager.hostname.rm1</name>
     <value>node1</value>
@@ -185,7 +185,7 @@
     <value>node1:8088</value>
 </property>
 
-                   
+
 <property>
     <name>yarn.resourcemanager.hostname.rm2</name>
     <value>node2</value>
@@ -216,7 +216,7 @@
     <value>node2:8031</value>
 </property>
 
-                                                                                
+
 
 <property>
     <name>hadoop.zk.address</name>
@@ -224,7 +224,7 @@
     <description>ZooKeeper集群地址</description>
 </property>
 
-                                                                                 
+
 
 <property>
     <name>mapreduce.jobhistory.address</name>
@@ -250,7 +250,7 @@
     <description>历史任务目录</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>yarn.nodemanager.resource.memory-mb</name>
@@ -288,16 +288,16 @@
     <description>容器最大CPU核心（需≥Spark Executor核心数）</description>
 </property>
 
-                                                                                  
 
-                                         
+
+
 <property>
     <name>yarn.nodemanager.env-whitelist</name>
     <value>JAVA_HOME,HADOOP_COMMON_LIB_HOME,LD_LIBRARY_PATH,HADOOP_COMMON_LIB_NATIVE_DIR</value>
     <description>允许传递到 Container 的环境变量（Native 库支持）</description>
 </property>
 
-                         
+
 <property>
     <name>yarn.nodemanager.admin-env</name>
     <value>LD_LIBRARY_PATH=/sdb1/hadoop-3.3.6/lib/native,HADOOP_COMMON_LIB_NATIVE_DIR=/sdb1/hadoop-3.3.6/lib/native</value>
@@ -350,7 +350,7 @@
     <description>健康检查脚本超时（毫秒）</description>
 </property>
 
-                                                                           
+
 
 <property>
     <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
@@ -364,7 +364,7 @@
     <description>最小可用空间（MB）</description>
 </property>
 
-                                                                                      
+
 
 <property>
     <name>yarn.nodemanager.webapp.address</name>
@@ -372,7 +372,7 @@
     <description>NodeManager Web界面地址</description>
 </property>
 
-                                                                          
+
 
 <property>
     <name>yarn.scheduler.capacity.root.default-capacity</name>
@@ -398,7 +398,7 @@
     <description>最大应用生命周期（毫秒），7天</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>yarn.resourcemanager.container.liveness-monitor.expiry-interval-ms</name>
@@ -412,7 +412,7 @@
     <description>容器重用延迟分配</description>
 </property>
 
-                                                                           
+
 
 <property>
     <name>yarn.resourcemanager.recovery.enabled</name>
@@ -420,7 +420,7 @@
     <description>启用RM恢复</description>
 </property>
 
-                                                                
+
 <property>
     <name>yarn.resourcemanager.store.class</name>
     <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.FileSystemRMStateStore</value>
@@ -433,7 +433,7 @@
     <description>RM状态存储HDFS路径</description>
 </property>
 
-                                                                             
+
 
 <property>
     <name>yarn.application.classpath</name>
@@ -465,7 +465,7 @@
     <description>排除节点列表文件路径（软件配置目录下）</description>
 </property>
 
-                                                                           
+
 
 <property>
     <name>yarn.resourcemanager.scheduler.client.thread-count</name>
@@ -479,7 +479,7 @@
     <description>调度器实现类</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>yarn.resourcemanager.max-completed-applications-held</name>

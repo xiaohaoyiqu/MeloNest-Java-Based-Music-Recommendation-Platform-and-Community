@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -32,9 +32,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost>
@@ -97,7 +97,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         wrapper.eq(MusicPost::getIsDeleted, false);
         applyPublicAuthorFilter(wrapper);
 
-                 
+
         if (!ObjectUtils.isEmpty(timeRange) && !"all".equals(timeRange)) {
             LocalDateTime startTime = getTimeRangeStart(timeRange);
             if (startTime != null) {
@@ -105,9 +105,9 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             }
         }
 
-               
+
         if ("following".equals(type) && !ObjectUtils.isEmpty(currentUserId)) {
-                         
+
             LambdaQueryWrapper<UserFollow> followWrapper = new LambdaQueryWrapper<>();
             followWrapper.eq(UserFollow::getFollowerId, currentUserId)
                     .eq(UserFollow::getDeleted, 0);
@@ -124,7 +124,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                                 .or()
                                 .eq(MusicPost::getVisibility, ""));
             } else {
-                               
+
                 wrapper.eq(MusicPost::getId, -1L);              
             }
         } else if ("topic".equals(type) && !ObjectUtils.isEmpty(topicId)) {
@@ -143,7 +143,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 }
             }
         } else {
-                              
+
             applyPublicPostVisibility(wrapper);
         }
 
@@ -154,7 +154,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 wrapper
         );
 
-                             
+
         IPage<Object> result = new Page<>(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
         Set<Long> vipUserIds = activeVipUserIds(pageResult.getRecords());
         List<Object> records = pageResult.getRecords().stream()
@@ -177,7 +177,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
 
         MusicPost post = new MusicPost();
         post.setUserId(userId);
-                                          
+
         if (ObjectUtils.isNotEmpty(content)) {
             SecurityCheckUtil.CheckResult contentCheck = SecurityCheckUtil.checkDescription(content);
             if (!contentCheck.isSafe()) {
@@ -227,7 +227,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
 
         MusicPost post = new MusicPost();
         post.setUserId(userId);
-                                          
+
         if (ObjectUtils.isNotEmpty(content)) {
             SecurityCheckUtil.CheckResult contentCheck = SecurityCheckUtil.checkDescription(content);
             if (!contentCheck.isSafe()) {
@@ -315,15 +315,15 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return success;
     }
 
-       
-                             
-      
-                         
-                         
-                           
-                             
-                     
-       
+
+
+
+
+
+
+
+
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -339,7 +339,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             return null;
         }
 
-                             
+
         LocalDateTime todayStart = LocalDateTime.now().toLocalDate().atStartOfDay();
         LambdaQueryWrapper<MusicPost> checkWrapper = new LambdaQueryWrapper<>();
         checkWrapper.eq(MusicPost::getUserId, userId)
@@ -354,23 +354,23 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             return null;
         }
 
-                   
+
         String content = String.format("今天听了《%s》 - %s，感觉很不错！推荐给大家~", songName, artistName);
 
-                 
+
         String topics = null;
         try {
-                            
+
             topics = "{\"mood\":\"relaxed\",\"genre\":\"pop\"}";
         } catch (Exception e) {
             log.debug("event=listen_diary_topic_build_failed errorType={}",
                     e.getClass().getSimpleName());
         }
 
-                 
+
         MusicPost post = new MusicPost();
         post.setUserId(userId);
-                                          
+
         if (ObjectUtils.isNotEmpty(content)) {
             SecurityCheckUtil.CheckResult contentCheck = SecurityCheckUtil.checkDescription(content);
             if (!contentCheck.isSafe()) {
@@ -422,7 +422,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             return false;
         }
 
-               
+
         if (!post.getUserId().equals(userId)) {
             log.warn("event=music_post_delete_rejected postId={} userId={} ownerId={} reason=NOT_OWNER",
                     postId, userId, post.getUserId());
@@ -442,14 +442,14 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return result > 0;
     }
 
-       
-           
-      
-                         
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean updatePost(Long postId, Long userId, String content) {
@@ -470,21 +470,21 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             return false;
         }
 
-               
+
         if (!post.getUserId().equals(userId)) {
             log.warn("event=music_post_update_rejected postId={} userId={} ownerId={} reason=NOT_OWNER",
                     postId, userId, post.getUserId());
             return false;
         }
 
-                             
+
         LocalDateTime createTime = post.getCreateTime();
         if (createTime != null && createTime.plusMinutes(30).isBefore(LocalDateTime.now())) {
             log.warn("event=music_post_update_rejected postId={} reason=EDIT_WINDOW_EXPIRED", postId);
             return false;
         }
 
-                                          
+
         if (ObjectUtils.isNotEmpty(content)) {
             SecurityCheckUtil.CheckResult contentCheck = SecurityCheckUtil.checkDescription(content);
             if (!contentCheck.isSafe()) {
@@ -664,7 +664,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
 
         int likeResult = postLikeMapper.insertIgnore(postId, userId);
 
-                  
+
         if (likeResult > 0 && canCurrentUserContributePublicStats(userId) && canCurrentUserContributePublicStats(post.getUserId())) {
             musicPostMapper.incrementLikeCount(postId);
         }
@@ -690,7 +690,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
 
         int result = postLikeMapper.deleteByPostAndUser(postId, userId);
 
-                  
+
         if (result > 0) {
             MusicPost post = musicPostMapper.selectById(postId);
             if (post != null
@@ -722,9 +722,9 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return content.length() > 20 ? content.substring(0, 20) + "..." : content;
     }
 
-       
-                   
-       
+
+
+
     private String determinePostType(String resourceType) {
         if (ObjectUtils.isEmpty(resourceType)) {
             return "text";
@@ -744,9 +744,9 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         }
     }
 
-       
-                   
-       
+
+
+
     private LocalDateTime getTimeRangeStart(String timeRange) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -764,12 +764,12 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         }
     }
 
-       
-                       
-      
-                         
-                      
-       
+
+
+
+
+
+
     private Map<String, Object> getUserInfo(Long userId, boolean isVip) {
         if (ObjectUtils.isEmpty(userId)) {
             return getAnonymousUser();
@@ -786,10 +786,10 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         userInfo.put("avatar", user.getAvatar());
         userInfo.put("signature", user.getIntroduction());
 
-                    
+
         userInfo.put("userName", user.getNickname());
         userInfo.put("userAvatar", user.getAvatar());
-                                           
+
         UserType userType = UserType.fromCode(user.getUserType());
         int userLevel = 1;
         if (userType == UserType.ACTIVE) {
@@ -804,11 +804,11 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return userInfo;
     }
 
-       
-               
-      
-                        
-       
+
+
+
+
+
     private Map<String, Object> getAnonymousUser() {
         Map<String, Object> userInfo = new HashMap<>();
         String defaultAvatar = "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
@@ -818,7 +818,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         userInfo.put("avatar", defaultAvatar);
         userInfo.put("signature", "");
 
-                    
+
         userInfo.put("userName", "匿名用户");
         userInfo.put("userAvatar", defaultAvatar);
         userInfo.put("userLevel", 1);
@@ -828,13 +828,13 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return userInfo;
     }
 
-       
-                   
-      
-                         
-                         
-                    
-       
+
+
+
+
+
+
+
     private Boolean isPostLiked(Long postId, Long userId) {
         if (ObjectUtils.isEmpty(postId) || ObjectUtils.isEmpty(userId)) {
             return false;
@@ -848,13 +848,13 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return count != null && count > 0;
     }
 
-       
-                       
-      
-                               
-                             
-                      
-       
+
+
+
+
+
+
+
     private Map<String, Object> getMusicResource(String resourceType, Long resourceId) {
         if (ObjectUtils.isEmpty(resourceType) || ObjectUtils.isEmpty(resourceId)) {
             return null;
@@ -929,28 +929,28 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return resource;
     }
 
-       
-                           
-      
-                                  
-                      
-       
+
+
+
+
+
+
     private List<String> parseImages(String imagesJson) {
         if (ObjectUtils.isEmpty(imagesJson)) {
             return new ArrayList<>();
         }
 
         try {
-                         
+
             if (imagesJson.trim().startsWith("[")) {
-                                       
-                                     
+
+
                 java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\"([^\"]+)\"");
                 java.util.regex.Matcher matcher = pattern.matcher(imagesJson);
                 List<String> urls = new ArrayList<>();
                 while (matcher.find()) {
                     String url = matcher.group(1);
-                                        
+
                     if (!url.matches("^(url|imageUrl|src)$") &&
                         (url.startsWith("http") || url.startsWith("/") || url.matches("^[a-zA-Z]:\\\\.*"))) {
                         urls.add(url);
@@ -958,7 +958,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 }
                 return urls.isEmpty() ? Arrays.asList(imagesJson.replaceAll("[\\[\\]\"]", "").split(",")) : urls;
             }
-                        
+
             return Arrays.asList(imagesJson.split(","));
         } catch (Exception e) {
             log.debug("event=music_post_images_parse_failed errorType={}",
@@ -989,23 +989,23 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             musicTopicMapper.adjustPostCountByName(topicName, delta);
         }
     }
-       
-                     
-      
-                                  
-                     
-       
+
+
+
+
+
+
     private List<String> parseTopics(String topicsJson) {
         if (ObjectUtils.isEmpty(topicsJson)) {
             return new ArrayList<>();
         }
 
         try {
-                          
+
             if (topicsJson.startsWith("[")) {
                 return Arrays.asList(topicsJson.replaceAll("[\\[\\]\"]", "").split(","));
             }
-                         
+
             return Arrays.asList(topicsJson.split(","));
         } catch (Exception e) {
             log.debug("event=music_post_topics_parse_failed errorType={}",
@@ -1014,12 +1014,12 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         }
     }
 
-       
-                  
-      
-                                       
-                      
-  
+
+
+
+
+
+
     private Map<String, Object> parseVideoInfo(String videoInfoJson) {
         if (ObjectUtils.isEmpty(videoInfoJson)) {
             return null;
@@ -1077,13 +1077,13 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             target.put(key, value);
         }
     }
-       
-                               
-      
-                       
-                                  
-                                    
-       
+
+
+
+
+
+
+
     private Map<String, Object> convertToVO(MusicPost post, Long currentUserId) {
         Set<Long> vipUserIds = userVipService.getActiveVipExpirations(
                 Collections.singleton(post.getUserId())).keySet();
@@ -1091,10 +1091,10 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
     }
 
     private Map<String, Object> convertToVO(MusicPost post, Long currentUserId, Set<Long> vipUserIds) {
-                 
+
         Map<String, Object> userInfo = getUserInfo(post.getUserId(), vipUserIds.contains(post.getUserId()));
 
-                   
+
         List<Map<String, Object>> musicResources = new ArrayList<>();
         if (!ObjectUtils.isEmpty(post.getResourceType()) && !ObjectUtils.isEmpty(post.getResourceId())) {
             Map<String, Object> resource = getMusicResource(post.getResourceType(), post.getResourceId());
@@ -1104,19 +1104,19 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         }
 
         Map<String, Object> vo = new HashMap<>();
-               
+
         vo.put("id", post.getId());
         vo.put("userId", post.getUserId());
         vo.put("content", post.getContent());
 
-                            
+
         vo.put("userName", userInfo.get("userName"));
         vo.put("userAvatar", userInfo.get("userAvatar"));
         vo.put("userLevel", userInfo.get("userLevel"));
         vo.put("isCreator", userInfo.get("isCreator"));
         vo.put("isVip", userInfo.get("isVip"));
 
-               
+
         List<String> storedImages = parseImages(post.getImages());
         int imageCount = storedImages.size();
         try {
@@ -1124,7 +1124,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 imageCount = com.alibaba.fastjson2.JSON.parseArray(post.getImages()).size();
             }
         } catch (Exception ignored) {
-                                                                               
+
         }
         List<String> controlledImages = new ArrayList<>();
         for (int index = 0; index < imageCount; index++) {
@@ -1147,7 +1147,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             vo.put("topics", parseTopics(post.getTopics()));
         }
 
-               
+
         vo.put("likeCount", post.getLikeCount() != null ? post.getLikeCount() : 0);
         vo.put("commentCount", post.getCommentCount() != null ? post.getCommentCount() : 0);
         vo.put("shareCount", post.getShareCount() != null ? post.getShareCount() : 0);
@@ -1160,12 +1160,12 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         vo.put("canManageComment", !ObjectUtils.isEmpty(currentUserId) && currentUserId.equals(post.getUserId()));
         vo.put("canOfficialManageComment", isAdminUser(currentUserId));
 
-              
+
         vo.put("postType", post.getPostType());
         vo.put("visibility", post.getVisibility());
         vo.put("isListenDiary", post.getIsListenDiary());
 
-               
+
         vo.put("createTime", post.getCreateTime());
         vo.put("updateTime", post.getUpdateTime());
 
@@ -1212,17 +1212,17 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return null;
     }
 
-                                                                          
 
-       
-                
-      
-                         
-                                                 
-                     
-                       
-                       
-       
+
+
+
+
+
+
+
+
+
+
     @Override
     public IPage<Object> getUserPosts(Long userId, Long currentUserId, Integer page, Integer size) {
         if (ObjectUtils.isEmpty(page) || page <= 0) {
@@ -1248,7 +1248,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 wrapper
         );
 
-                             
+
         IPage<Object> result = new Page<>(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
         Set<Long> vipUserIds = activeVipUserIds(pageResult.getRecords());
         List<Object> records = pageResult.getRecords().stream()
@@ -1259,13 +1259,13 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return result;
     }
 
-       
-                  
-      
-                         
-                                             
-                                                                    
-       
+
+
+
+
+
+
+
     @Override
     public Map<String, Object> getUserPostStats(Long userId, Long currentUserId) {
         boolean includeAll = Objects.equals(userId, currentUserId);
@@ -1284,16 +1284,16 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return stats;
     }
 
-       
-                   
-      
-                         
-                                                                         
-                                    
-                     
-                       
-                     
-       
+
+
+
+
+
+
+
+
+
+
     @Override
     public IPage<Object> getUserPostsByType(Long userId, String postType, Long currentUserId, Integer page, Integer size) {
         if (ObjectUtils.isEmpty(page) || page <= 0) {
@@ -1313,7 +1313,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 .eq(MusicPost::getIsDeleted, false);
         applyPostVisibility(wrapper, userId, currentUserId);
 
-                 
+
         if (!ObjectUtils.isEmpty(postType) && !"all".equals(postType)) {
             if ("video".equals(postType)) {
                 wrapper.eq(MusicPost::getPostType, "video");
@@ -1339,7 +1339,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 wrapper
         );
 
-                
+
         IPage<Object> result = new Page<>(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
         Set<Long> vipUserIds = activeVipUserIds(pageResult.getRecords());
         List<Object> records = pageResult.getRecords().stream()
@@ -1350,13 +1350,13 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return result;
     }
 
-       
-               
-      
-                            
-                               
-                      
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer batchDeletePosts(List<Long> postIds, Long userId) {
@@ -1376,13 +1376,13 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return count;
     }
 
-       
-             
-      
-                         
-                                  
-                   
-       
+
+
+
+
+
+
+
     @Override
     public Map<String, Object> getPostDetail(Long postId, Long currentUserId) {
         MusicPost post = musicPostMapper.selectById(postId);
@@ -1405,15 +1405,15 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         return userVipService.getActiveVipExpirations(userIds).keySet();
     }
 
-                                                                          
 
-       
-                 
-      
-                         
-                                                    
-                     
-       
+
+
+
+
+
+
+
+
     @Override
     public List<Map<String, Object>> getMyVideoPosts(Long userId, Integer status) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -1425,7 +1425,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 .eq(MusicPost::getIsDeleted, false)
                 .eq(MusicPost::getPostType, "video");
 
-                                                                  
+
         if (status != null) {
             switch (status) {
                 case 0:       
@@ -1453,7 +1453,7 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                     videoInfo.put("createTime", post.getCreateTime());
                     videoInfo.put("updateTime", post.getUpdateTime());
 
-                                       
+
                     Integer statusCode;
                     String statusText;
                     if ("pending".equals(post.getVisibility())) {
@@ -1474,12 +1474,12 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
                 .collect(Collectors.toList());
     }
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     @Override
     public Map<String, Object> getVideoPostStats(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -1517,13 +1517,13 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
         }
     }
 
-       
-             
-      
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteVideoPost(Long postId, Long userId) {
@@ -1538,14 +1538,14 @@ public class MusicPostServiceImpl extends ServiceImpl<MusicPostMapper, MusicPost
             return false;
         }
 
-                    
+
         if (!"video".equals(post.getPostType())) {
             log.warn("event=video_post_delete_rejected postId={} postType={} reason=TYPE_MISMATCH",
                     postId, post.getPostType());
             return false;
         }
 
-               
+
         if (!post.getUserId().equals(userId)) {
             log.warn("event=video_post_delete_rejected postId={} userId={} ownerId={} reason=NOT_OWNER",
                     postId, userId, post.getUserId());

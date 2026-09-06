@@ -1,7 +1,7 @@
-   
-                       
-                             
-   
+
+
+
+
 :root {
   --auth-background-image: url('/mycartoon/auth-city-morning.png');
 }
@@ -63,7 +63,7 @@
   font-family: var(--town-font-ui, "Microsoft YaHei", "PingFang SC", system-ui, sans-serif);
 }
 
-                                                                                   
+
 .auth-background--legacy .auth-city-page {
   --auth-ink: #47363e;
   --auth-muted: #76626a;
@@ -454,7 +454,7 @@
   border-radius: 11px;
 }
 
-                                   
+
 .el-dialog.auth-reset-dialog {
   width: min(92vw, 420px) !important;
   border: 2px solid rgba(45, 129, 157, 0.28);

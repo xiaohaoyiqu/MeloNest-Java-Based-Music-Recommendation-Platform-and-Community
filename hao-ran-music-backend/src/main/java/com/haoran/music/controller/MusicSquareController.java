@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -25,9 +25,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-   
-          
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/music-square")
@@ -60,11 +60,11 @@ public class MusicSquareController {
     @Autowired
     private MarketplaceService marketplaceService;
 
-                                                        
 
-       
-                        
-       
+
+
+
+
     @PostMapping("/posts/images/upload")
     @ApiLog("上传动态图片")
     @RateLimit(maxRequests = 20, timeWindowSeconds = 3600, operation = "uploadPostImage",
@@ -85,9 +85,9 @@ public class MusicSquareController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @PostMapping("/posts/images/batch")
     @ApiLog("批量上传动态图片")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 3600, operation = "uploadPostImagesBatch",
@@ -104,9 +104,9 @@ public class MusicSquareController {
         return Result.success(results);
     }
 
-       
-                
-       
+
+
+
     @GetMapping("/posts/{postId}/images/{index}/original")
     @ApiLog("获取动态原图")
     public Result<String> getPostOriginalImage(
@@ -130,11 +130,11 @@ public class MusicSquareController {
         postImageService.deliverPostImage(postId, index, variant, userId, response);
     }
 
-                                                        
 
-       
-                             
-       
+
+
+
+
     @PostMapping("/posts/videos/upload")
     @ApiLog("上传视频动态")
     @RateLimit(maxRequests = 3, timeWindowSeconds = 3600, operation = "uploadVideoPost",
@@ -158,9 +158,9 @@ public class MusicSquareController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/posts/videos/{postId}/status")
     public Result<Map<String, Object>> getVideoStatus(
             @PathVariable Long postId,
@@ -168,9 +168,9 @@ public class MusicSquareController {
         return Result.success(videoPostService.getVideoPostStatus(postId, userId));
     }
 
-       
-                     
-       
+
+
+
     @GetMapping("/posts/videos/my")
     public Result<List<Map<String, Object>>> getMyVideoPosts(
             @RequestParam(value = "status", required = false) Integer status,
@@ -182,9 +182,9 @@ public class MusicSquareController {
         return Result.success(videoPostService.getMyVideoPosts(userId, status));
     }
 
-       
-                     
-       
+
+
+
     @GetMapping("/posts/videos/stats")
     public Result<Map<String, Object>> getVideoPostStats(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
@@ -194,9 +194,9 @@ public class MusicSquareController {
         return Result.success(videoPostService.getVideoPostStats(userId));
     }
 
-       
-                     
-       
+
+
+
     @PostMapping("/posts/videos/{postId}/retry")
     public Result<Map<String, Object>> retryVideoProcessing(
             @PathVariable Long postId,
@@ -212,9 +212,9 @@ public class MusicSquareController {
         return Result.success(result);
     }
 
-       
-                   
-       
+
+
+
     @DeleteMapping("/posts/videos/{postId}")
     public Result<Boolean> deleteVideoPost(
             @PathVariable Long postId,
@@ -226,9 +226,9 @@ public class MusicSquareController {
         return Result.success(videoPostService.deleteVideoPost(postId, userId));
     }
 
-       
-                      
-       
+
+
+
     @GetMapping("/posts/videos/{postId}/play")
     public Result<String> getVideoPlayUrl(
             @PathVariable Long postId,
@@ -250,11 +250,11 @@ public class MusicSquareController {
         videoPostService.deliverVideo(postId, quality, userId, response);
     }
 
-                                                        
 
-       
-             
-       
+
+
+
+
     @GetMapping("/posts")
     public Result getPosts(
             @RequestParam(defaultValue = "all") String timeRange,
@@ -268,9 +268,9 @@ public class MusicSquareController {
         return Result.success(result);
     }
 
-       
-           
-       
+
+
+
     @PostMapping("/posts")
     @ApiLog("发布动态")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 3600, operation = "createPost",
@@ -292,9 +292,9 @@ public class MusicSquareController {
         return Result.success(postId);
     }
 
-       
-             
-       
+
+
+
     @PostMapping("/posts/diary")
     @ApiLog("发布听歌日记")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 3600, operation = "createDiary",
@@ -311,9 +311,9 @@ public class MusicSquareController {
         return Result.success(postId);
     }
 
-       
-           
-       
+
+
+
     @PutMapping("/posts/{id}")
     @ApiLog("编辑动态")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 3600, operation = "editPost",
@@ -329,9 +329,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-           
-       
+
+
+
     @DeleteMapping("/posts/{id}")
     @ApiLog("删除动态")
     public Result deletePost(@PathVariable Long id, HttpServletRequest request) {
@@ -343,9 +343,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-           
-       
+
+
+
     @PostMapping("/posts/{id}/like")
     @ApiLog("点赞动态")
     public Result likePost(@PathVariable Long id, HttpServletRequest request) {
@@ -357,9 +357,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-           
-       
+
+
+
     @DeleteMapping("/posts/{id}/like")
     @ApiLog("取消点赞")
     public Result unlikePost(@PathVariable Long id, HttpServletRequest request) {
@@ -371,9 +371,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-                      
-       
+
+
+
     @PatchMapping("/posts/{id}/comment-settings")
     @ApiLog("更新动态评论开关")
     public Result updatePostCommentSetting(
@@ -387,9 +387,9 @@ public class MusicSquareController {
         return Result.success(musicPostService.updatePostCommentSetting(id, userId, allowComment));
     }
 
-       
-                   
-       
+
+
+
     @PatchMapping("/posts/{id}/official-comment")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @ApiLog("官方更新动态评论开关")
@@ -404,19 +404,19 @@ public class MusicSquareController {
         return Result.success(musicPostService.updateOfficialCommentClosed(id, userId, closed));
     }
 
-                                                        
 
-       
-                      
-       
+
+
+
+
     @GetMapping("/topics/hot")
     public Result getHotTopics(@RequestParam(defaultValue = "10") Integer limit) {
         return Result.success(musicTopicService.getHotTopics(limit));
     }
 
-       
-                          
-       
+
+
+
     @GetMapping("/topics/personalized")
     @ApiLog("获取个性化推荐话题")
     public Result getPersonalizedTopics(
@@ -426,9 +426,9 @@ public class MusicSquareController {
         return Result.success(musicTopicService.getPersonalizedTopics(userId, limit));
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/topics/{id}")
     @ApiLog("获取话题详情")
     public Result getTopicDetail(@PathVariable Long id, HttpServletRequest request) {
@@ -436,9 +436,9 @@ public class MusicSquareController {
         return Result.success(musicTopicService.getTopicDetail(id, userId));
     }
 
-       
-           
-       
+
+
+
     @PostMapping("/topics/{id}/follow")
     @ApiLog("关注话题")
     @RateLimit(maxRequests = 20, timeWindowSeconds = 3600, operation = "followTopic",
@@ -451,9 +451,9 @@ public class MusicSquareController {
         return Result.success(musicTopicService.followTopic(id, userId));
     }
 
-       
-             
-       
+
+
+
     @DeleteMapping("/topics/{id}/follow")
     @ApiLog("取消关注")
     public Result unfollowTopic(@PathVariable Long id, HttpServletRequest request) {
@@ -464,31 +464,31 @@ public class MusicSquareController {
         return Result.success(musicTopicService.unfollowTopic(id, userId));
     }
 
-                                                          
 
-       
-             
-       
+
+
+
+
     @GetMapping("/events/featured")
     public Result getFeaturedEvents(@RequestParam(defaultValue = "5") Integer limit) {
         return Result.success(hotEventService.getFeaturedEvents(limit));
     }
 
-       
-             
-                     
-                   
-  
+
+
+
+
+
     @GetMapping("/events/{id}")
     public Result getEventDetail(@PathVariable Long id, HttpServletRequest request) {
         return Result.success(hotEventService.getEventDetail(id, buildViewerKey(request)));
     }
 
-                                                        
 
-       
-            
-       
+
+
+
+
     @PostMapping("/vote")
     @ApiLog("歌曲投票")
     @RateLimit(maxRequests = 20, timeWindowSeconds = 3600, operation = "songVote",
@@ -501,9 +501,9 @@ public class MusicSquareController {
         return Result.success(songVoteService.vote(songId, userId));
     }
 
-       
-             
-       
+
+
+
     @DeleteMapping("/vote")
     @ApiLog("取消投票")
     public Result unvoteSong(@RequestParam Long songId, HttpServletRequest request) {
@@ -514,9 +514,9 @@ public class MusicSquareController {
         return Result.success(songVoteService.unvote(songId, userId));
     }
 
-       
-                        
-       
+
+
+
     @GetMapping("/vote/hot")
     public Result getHotVotedSongs(
             @RequestParam(defaultValue = "10") Integer limit,
@@ -525,9 +525,9 @@ public class MusicSquareController {
         return Result.success(songVoteService.getHotVotedSongs(limit, userId));
     }
 
-       
-                            
-       
+
+
+
     @GetMapping("/vote/personalized")
     @ApiLog("获取个性化推荐投票歌曲")
     public Result getPersonalizedVotedSongs(
@@ -537,20 +537,20 @@ public class MusicSquareController {
         return Result.success(songVoteService.getPersonalizedVotedSongs(userId, limit));
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/vote/stats")
     public Result getTodayVoteStats(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         return Result.success(songVoteService.getTodayVoteStats(userId));
     }
 
-                                                        
 
-       
-                        
-       
+
+
+
+
     @GetMapping("/recommend-users")
     public Result getRecommendUsers(
             @RequestParam(defaultValue = "5") Integer limit,
@@ -559,9 +559,9 @@ public class MusicSquareController {
         return Result.success(userFollowService.getRecommendUsers(userId, limit));
     }
 
-       
-                          
-       
+
+
+
     @GetMapping("/recommend-users/personalized")
     @ApiLog("获取个性化推荐用户")
     public Result getPersonalizedRecommendUsers(
@@ -571,11 +571,11 @@ public class MusicSquareController {
         return Result.success(userFollowService.getPersonalizedRecommendUsers(userId, limit));
     }
 
-                                                        
 
-       
-             
-       
+
+
+
+
     @GetMapping("/marketplace")
     @ApiLog("获取交易商品列表")
     public Result getMarketplaceItems(
@@ -590,9 +590,9 @@ public class MusicSquareController {
         return Result.success(marketplaceService.getItems(category, condition, sortBy, keyword, userId, page, size));
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/marketplace/{id}")
     @ApiLog("获取商品详情")
     public Result getMarketplaceItemDetail(
@@ -602,9 +602,9 @@ public class MusicSquareController {
         return Result.success(marketplaceService.getItemDetail(id, userId, buildViewerKey(request)));
     }
 
-       
-           
-       
+
+
+
     @PostMapping("/marketplace")
     @ApiLog("发布交易商品")
     @RateLimit(maxRequests = 3, timeWindowSeconds = 3600, operation = "createMarketplaceItem",
@@ -634,9 +634,9 @@ public class MusicSquareController {
         return Result.success(itemId);
     }
 
-       
-             
-       
+
+
+
     @PutMapping("/marketplace/{id}/status")
     @ApiLog("更新商品状态")
     public Result updateMarketplaceItemStatus(
@@ -651,9 +651,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-           
-       
+
+
+
     @DeleteMapping("/marketplace/{id}")
     @ApiLog("删除商品")
     public Result deleteMarketplaceItem(
@@ -667,9 +667,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-                    
-       
+
+
+
     @PutMapping("/marketplace/{id}/edit")
     @ApiLog("编辑商品")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 3600, operation = "editMarketplaceItem",
@@ -700,9 +700,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-           
-       
+
+
+
     @PostMapping("/marketplace/{id}/favorite")
     @ApiLog("收藏商品")
     @RateLimit(maxRequests = 30, timeWindowSeconds = 3600, operation = "favoriteItem",
@@ -718,9 +718,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-             
-       
+
+
+
     @DeleteMapping("/marketplace/{id}/favorite")
     @ApiLog("取消收藏商品")
     public Result unfavoriteMarketplaceItem(
@@ -734,9 +734,9 @@ public class MusicSquareController {
         return Result.success(success);
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/marketplace/my")
     @ApiLog("获取我的商品")
     public Result getMyMarketplaceItems(
@@ -751,9 +751,9 @@ public class MusicSquareController {
         return Result.success(marketplaceService.getMyItems(userId, status, page, size));
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/marketplace/favorites")
     @ApiLog("获取收藏商品")
     public Result getMyFavoriteItems(
@@ -767,11 +767,11 @@ public class MusicSquareController {
         return Result.success(marketplaceService.getMyFavorites(userId, page, size));
     }
 
-                                                      
 
-       
-                       
-       
+
+
+
+
     @GetMapping("/monitor/operation-stats")
     @ApiLog("获取操作统计")
     public Result<Map<String, Object>> getOperationStats(
@@ -785,11 +785,11 @@ public class MusicSquareController {
         return Result.success(stats);
     }
 
-                                                                         
 
-       
-                
-       
+
+
+
+
     @GetMapping("/posts/user/{userId}")
     @ApiLog("获取用户动态列表")
     public Result getUserPosts(
@@ -802,9 +802,9 @@ public class MusicSquareController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/posts/my")
     @ApiLog("获取我的动态列表")
     public Result getMyPosts(
@@ -819,9 +819,9 @@ public class MusicSquareController {
         return Result.success(result);
     }
 
-       
-                 
-       
+
+
+
     @GetMapping("/posts/my/type")
     @ApiLog("按类型获取我的动态")
     public Result getMyPostsByType(
@@ -837,9 +837,9 @@ public class MusicSquareController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/posts/user/{userId}/stats")
     @ApiLog("获取用户动态统计")
     public Result getUserPostStats(@PathVariable Long userId, HttpServletRequest request) {
@@ -848,9 +848,9 @@ public class MusicSquareController {
         return Result.success(stats);
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/posts/my/stats")
     @ApiLog("获取我的动态统计")
     public Result getMyPostStats(HttpServletRequest request) {
@@ -862,9 +862,9 @@ public class MusicSquareController {
         return Result.success(stats);
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/posts/{id}/detail")
     @ApiLog("获取动态详情")
     public Result getPostDetail(@PathVariable Long id, HttpServletRequest request) {
@@ -876,9 +876,9 @@ public class MusicSquareController {
         return Result.success(detail);
     }
 
-       
-             
-       
+
+
+
     @DeleteMapping("/posts/batch")
     @ApiLog("批量删除动态")
     public Result batchDeletePosts(

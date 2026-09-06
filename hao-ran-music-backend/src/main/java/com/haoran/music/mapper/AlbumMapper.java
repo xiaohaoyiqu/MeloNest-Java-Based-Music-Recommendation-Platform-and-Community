@@ -6,18 +6,18 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface AlbumMapper extends BaseMapper<Album> {
 
-       
-               
-      
-                          
-       
+
+
+
+
+
     @Update("UPDATE album SET play_count = COALESCE(play_count, 0) + 1 WHERE id = #{albumId}")
     void incrementPlayCount(@Param("albumId") Long albumId);
 

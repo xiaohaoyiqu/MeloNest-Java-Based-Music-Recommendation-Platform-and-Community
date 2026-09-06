@@ -1,13 +1,13 @@
-   
-                      
-                                     
-                   
-  
-                                                          
-                         
-   
 
-                                                           
+
+
+
+
+
+
+
+
+
 
 .song-stats,
 .album-stats,
@@ -21,7 +21,7 @@
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
 
-                      
+
   .stat-item,
   > span {
     display: flex;
@@ -46,7 +46,7 @@
     }
   }
 
-              
+
   .stat-number {
     color: var(--el-color-primary);
     font-weight: 600;
@@ -61,7 +61,7 @@
   }
 }
 
-                                                              
+
 
 @media (max-width: 768px) {
   .song-stats,
@@ -85,7 +85,7 @@
   }
 }
 
-                                                              
+
 
 @media (max-width: 480px) {
   .song-stats,
@@ -107,7 +107,7 @@
       font-size: 12px;
     }
 
-                          
+
     .stat-item .stat-label {
       display: none;
     }
@@ -116,14 +116,14 @@
       font-size: 11px;
     }
 
-                
+
     .stat-number {
       font-size: 11px;
     }
   }
 }
 
-                                                               
+
 
 @media (max-width: 375px) {
   .song-stats,

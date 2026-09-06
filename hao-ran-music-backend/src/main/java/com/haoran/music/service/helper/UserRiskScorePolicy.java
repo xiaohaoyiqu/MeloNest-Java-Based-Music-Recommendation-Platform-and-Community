@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.helper;
 
 import com.alibaba.fastjson2.JSON;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                                                                                       
-   
+
+
+
 @Component
 public class UserRiskScorePolicy {
 

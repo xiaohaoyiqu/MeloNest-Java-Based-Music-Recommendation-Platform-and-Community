@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-   
-                      
-                                         
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/user-work")
@@ -42,9 +42,9 @@ public class UserWorkController {
     private final ZipUtil zipUtil;
     private final SubmissionFileSecurityService submissionFileSecurityService;
 
-       
-           
-       
+
+
+
     @ApiLog("提交用户投稿")
     @PostMapping("/submit")
     public Result submitWork(HttpServletRequest request,
@@ -59,7 +59,7 @@ public class UserWorkController {
             }
             userWork.setUserId(userId);
 
-                   
+
             if (userWork.getWorkName() == null || userWork.getWorkName().trim().isEmpty()) {
                 return Result.error(400, "workName is required");
             }
@@ -73,8 +73,8 @@ public class UserWorkController {
                 return Result.error(400, "请上传封面图片");
             }
 
-                                       
-                                          
+
+
             boolean hasFileUrl = userWork.getFileUrl() != null && !userWork.getFileUrl().trim().isEmpty();
             boolean hasFileUrls = userWork.getFileUrls() != null && !userWork.getFileUrls().trim().isEmpty();
             boolean hasZipFileUrl = userWork.getZipFileUrl() != null && !userWork.getZipFileUrl().trim().isEmpty();
@@ -111,19 +111,19 @@ public class UserWorkController {
                 return Result.error(400, "作品描述不能超过1000个字符");
             }
 
-                       
+
             String fileUrlToDetect = hasFileUrl ? userWork.getFileUrl() : null;
             if (fileUrlToDetect != null) {
                 Integer detectedQuality = audioQualityDetector.detectQuality(fileUrlToDetect);
                 userWork.setQualityType(detectedQuality);
             }
-            
-                                
+
+
             if (userWork.getVersionType() == null || userWork.getVersionType().trim().isEmpty()) {
                 userWork.setVersionType(VersionType.ORIGINAL.getCode());
             }
-            
-                                
+
+
             if (userWork.getProductionType() == null || userWork.getProductionType().trim().isEmpty()) {
                 userWork.setProductionType(ProductionType.OFFICIAL.getCode());
             }
@@ -141,9 +141,9 @@ public class UserWorkController {
         }
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取我的投稿列表")
     @GetMapping("/my")
     public Result getMyWorks(HttpServletRequest request,
@@ -155,7 +155,7 @@ public class UserWorkController {
             }
             List<UserWork> works = userWorkService.getMyWorks(userId);
 
-                        
+
             if (status != null) {
                 works = works.stream()
                         .filter(w -> status.equals(w.getStatus()))
@@ -171,9 +171,9 @@ public class UserWorkController {
         }
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取投稿详情")
     @GetMapping("/{workId}")
     public Result getWorkDetail(@PathVariable Long workId,
@@ -189,7 +189,7 @@ public class UserWorkController {
                 return Result.error(404, "投稿不存在");
             }
 
-                        
+
             if (!work.getUserId().equals(userId)) {
                 return Result.error(403, "无权查看此投稿");
             }
@@ -203,9 +203,9 @@ public class UserWorkController {
         }
     }
 
-       
-           
-       
+
+
+
     @ApiLog("编辑投稿")
     @PutMapping("/{workId}")
     public Result updateWork(@PathVariable Long workId,
@@ -236,9 +236,9 @@ public class UserWorkController {
         }
     }
 
-       
-           
-       
+
+
+
     @ApiLog("删除投稿")
     @DeleteMapping("/{workId}")
     public Result deleteWork(@PathVariable Long workId,
@@ -262,9 +262,9 @@ public class UserWorkController {
         }
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("获取待审核投稿列表")
     @GetMapping("/pending")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -278,9 +278,9 @@ public class UserWorkController {
         }
     }
 
-       
-                
-       
+
+
+
     @ApiLog("审核用户投稿")
     @PostMapping("/{workId}/review")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -311,9 +311,9 @@ public class UserWorkController {
         }
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取投稿统计")
     @GetMapping("/stats")
     public Result getStats(HttpServletRequest request) {
@@ -342,9 +342,9 @@ public class UserWorkController {
         }
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取投稿奖励进度")
     @GetMapping("/{workId}/reward-progress")
     public Result getRewardProgress(@PathVariable Long workId,
@@ -360,7 +360,7 @@ public class UserWorkController {
                 return Result.error(404, "投稿不存在");
             }
 
-                        
+
             if (!work.getUserId().equals(userId)) {
                 return Result.error(403, "无权查看此投稿");
             }
@@ -383,16 +383,16 @@ public class UserWorkController {
         }
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取奖励规则说明")
     @GetMapping("/reward-rules")
     public Result getRewardRules() {
         try {
             Map<String, Object> rules = new HashMap<>();
 
-                     
+
             Map<String, Object> levels = new HashMap<>();
 
             Map<String, Object> bronze = new HashMap<>();
@@ -437,16 +437,16 @@ public class UserWorkController {
             return Result.error(500, "获取奖励规则失败，请稍后重试");
         }
     }
-       
-               
-       
+
+
+
     @ApiLog("获取版本类型选项")
     @GetMapping("/version-types")
     public Result getVersionTypes() {
         try {
             Map<String, Object> result = new HashMap<>();
-            
-                     
+
+
             List<Map<String, String>> versionTypes = new ArrayList<>();
             for (VersionType type : VersionType.values()) {
                 Map<String, String> item = new HashMap<>();
@@ -455,8 +455,8 @@ public class UserWorkController {
                 versionTypes.add(item);
             }
             result.put("versionTypes", versionTypes);
-            
-                     
+
+
             List<Map<String, String>> productionTypes = new ArrayList<>();
             for (ProductionType type : ProductionType.values()) {
                 Map<String, String> item = new HashMap<>();
@@ -465,12 +465,12 @@ public class UserWorkController {
                 productionTypes.add(item);
             }
             result.put("productionTypes", productionTypes);
-            
-                   
+
+
             List<Map<String, Object>> qualityTypes = new ArrayList<>();
 Map<String, Object> q1 = new HashMap<>(); q1.put("code", 1); q1.put("name", "标准音质"); qualityTypes.add(q1);            Map<String, Object> q2 = new HashMap<>(); q2.put("code", 2); q2.put("name", "高品质"); qualityTypes.add(q2);            Map<String, Object> q3 = new HashMap<>(); q3.put("code", 3); q3.put("name", "无损音质"); qualityTypes.add(q3);
             result.put("qualityTypes", qualityTypes);
-            
+
             return Result.success(result);
         } catch (Exception e) {
             log.error("event=user_work_version_option_query_failed errorType={}", e.getClass().getSimpleName());

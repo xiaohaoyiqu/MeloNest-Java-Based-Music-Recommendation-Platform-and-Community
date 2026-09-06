@@ -1,11 +1,11 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.constant;
 
-   
-                                                                                     
-   
+
+
+
 public final class UserAccountPolicyConstants {
 
     public static final int HIGH_RISK_SCORE_THRESHOLD = 70;

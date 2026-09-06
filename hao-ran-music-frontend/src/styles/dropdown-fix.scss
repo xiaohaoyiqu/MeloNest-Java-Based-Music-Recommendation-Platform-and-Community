@@ -1,25 +1,25 @@
-   
-                      
-                                              
-                   
-   
 
-                                          
+
+
+
+
+
+
 .el-popper,
 .el-dropdown__popper,
 .el-select__popper {
-                                            
+
   position: fixed !important;
 }
 
-             
+
 .el-dropdown__popper.song-action-dropdown {
   background: var(--card-background, rgba(30, 30, 30, 0.98)) !important;
   border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15)) !important;
   border-radius: 8px !important;
 }
 
-           
+
 .filter-dropdown-popper.el-select__popper {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;

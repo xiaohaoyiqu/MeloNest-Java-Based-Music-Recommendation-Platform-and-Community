@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.mapper;
 
 import com.haoran.music.dto.user.RfmAggregateDTO;
@@ -11,9 +11,9 @@ import org.apache.ibatis.annotations.Select;
 import java.util.Collection;
 import java.util.List;
 
-   
-             
-   
+
+
+
 @Mapper
 public interface RfmAnalysisMapper {
 

@@ -1,7 +1,7 @@
-   
-                      
-                                                 
-   
+
+
+
+
 
 package com.haoran.music.schedule;
 
@@ -12,10 +12,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.Map;
 
-   
-            
-                        
-   
+
+
+
+
 @Slf4j
 @Component
 public class PaymentCodeScanner {
@@ -23,28 +23,28 @@ public class PaymentCodeScanner {
     private final PaymentCodeService paymentCodeService;
     private final PaymentConfig paymentConfig;
 
-       
-                      
-      
-                                        
-                                                
-       
+
+
+
+
+
+
     public PaymentCodeScanner(PaymentCodeService paymentCodeService, PaymentConfig paymentConfig) {
         this.paymentCodeService = paymentCodeService;
         this.paymentConfig = paymentConfig;
     }
 
-       
-                           
-                                     
-       
+
+
+
+
     @Scheduled(cron = "${payment.scan-cron}")
     public void scanPaymentCodes() {
         log.info("event=payment_code_scan_started trigger=scheduled");
 
         try {
-                                                                                
-                                                                 
+
+
             Map<String, Object> result = paymentCodeService.scanPaymentCodes(paymentConfig.getScanPath());
             log.info("event=payment_code_scan_completed trigger=scheduled resultFieldCount={}", result.size());
 
@@ -54,11 +54,11 @@ public class PaymentCodeScanner {
         }
     }
 
-       
-                            
-      
-                                                
-       
+
+
+
+
+
     public java.util.Map<String, Object> manualScan() {
         log.info("event=payment_code_scan_started trigger=manual");
         Map<String, Object> result = paymentCodeService.scanPaymentCodes(paymentConfig.getScanPath());

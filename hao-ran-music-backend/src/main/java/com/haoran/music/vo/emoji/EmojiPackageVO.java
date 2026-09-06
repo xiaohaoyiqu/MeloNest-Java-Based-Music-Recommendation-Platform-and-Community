@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 @Data
 public class EmojiPackageVO implements Serializable {
 
@@ -32,7 +32,7 @@ public class EmojiPackageVO implements Serializable {
     private Integer itemCount;
     private Integer itemLimit;
     private Integer remainingCount;
-                                           
+
     private List<EmojiPreviewItemVO> previewItems;
     private Boolean isPurchased;
     private Boolean isFavorited;

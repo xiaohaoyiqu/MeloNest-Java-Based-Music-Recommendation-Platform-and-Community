@@ -1,7 +1,7 @@
-   
-                      
-                     
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Map;
 
-   
-        
-               
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/reward")
@@ -30,9 +30,9 @@ public class RewardController {
         this.rewardService = rewardService;
     }
 
-       
-            
-       
+
+
+
     @ApiLog("打赏创作者")
     @PostMapping("/{creatorId}")
     public Result rewardCreator(HttpServletRequest request,
@@ -47,9 +47,9 @@ public class RewardController {
                 message, resourceId, resourceType, isAnonymous));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取打赏记录")
     @GetMapping("/my")
     public Result getMyRewardRecords(HttpServletRequest request,
@@ -59,9 +59,9 @@ public class RewardController {
         return Result.success(rewardService.getMyRewardRecords(userId, page, size));
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("获取收到的打赏")
     @GetMapping("/received")
     public Result getReceivedRewards(HttpServletRequest request,
@@ -71,9 +71,9 @@ public class RewardController {
         return Result.success(rewardService.getReceivedRewards(creatorId, page, size));
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("获取打赏统计")
     @GetMapping("/statistics")
     public Result getRewardStatistics(HttpServletRequest request) {
@@ -81,9 +81,9 @@ public class RewardController {
         return Result.success(rewardService.getRewardStatistics(creatorId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取资源打赏")
     @GetMapping("/resource")
     public Result getResourceRewards(@RequestParam Long resourceId,
@@ -93,9 +93,9 @@ public class RewardController {
         return Result.success(rewardService.getResourceRewards(resourceId, resourceType, page, size));
     }
 
-       
-           
-       
+
+
+
     @ApiLog("取消打赏")
     @PostMapping("/{rewardId}/cancel")
     public Result cancelReward(HttpServletRequest request,
@@ -104,9 +104,9 @@ public class RewardController {
         return Result.success(rewardService.cancelReward(rewardId, userId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取打赏详情")
     @GetMapping("/{rewardId}")
     public Result getRewardDetail(HttpServletRequest request,

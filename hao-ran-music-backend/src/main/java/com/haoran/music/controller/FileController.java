@@ -17,10 +17,10 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/files")
@@ -38,59 +38,59 @@ public class FileController {
     @Value("${local.upload.path}")
     private String localMusicPath;
 
-       
-             
-      
-                          
-                   
-  
+
+
+
+
+
+
     @ApiLog("获取头像文件")
     @GetMapping("/avatar/{filename:.+}")
     public ResponseEntity<org.springframework.core.io.Resource> getAvatar(@PathVariable String filename) {
         return getFile(avatarPath, filename);
     }
 
-       
-               
-      
-                          
-                   
-  
+
+
+
+
+
+
     @ApiLog("获取专辑封面文件")
     @GetMapping("/album-cover/{filename:.+}")
     public ResponseEntity<org.springframework.core.io.Resource> getAlbumCover(@PathVariable String filename) {
         return getFile(albumCoverPath, filename);
     }
 
-       
-               
-      
-                          
-                   
-  
+
+
+
+
+
+
     @ApiLog("获取歌单封面文件")
     @GetMapping("/playlist-cover/{filename:.+}")
     public ResponseEntity<org.springframework.core.io.Resource> getPlaylistCover(@PathVariable String filename) {
         return getFile(playlistCoverPath, filename);
     }
 
-       
-               
-      
-                                              
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取本地音乐文件")
     @GetMapping("/local-music/**")
     public ResponseEntity<org.springframework.core.io.Resource> getLocalMusic(HttpServletRequest request) {
         try {
-                        
+
             String path = (String) request.getAttribute(
                     org.springframework.web.servlet.HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 
-                                        
-                                                                             
-                                                             
+
+
+
             if (path != null) {
                 if (path.startsWith("/files/local-music/")) {
                     path = path.substring("/files/local-music/".length());
@@ -116,7 +116,7 @@ public class FileController {
 
             org.springframework.core.io.Resource resource = new FileSystemResource(file);
 
-                     
+
             String contentType = "audio/mpeg";
             String filename = file.getName().toLowerCase();
             if (filename.endsWith(".flac")) {
@@ -147,13 +147,13 @@ public class FileController {
         }
     }
 
-       
-           
-      
-                           
-                          
-                   
-       
+
+
+
+
+
+
+
     private ResponseEntity<org.springframework.core.io.Resource> getFile(String basePath, String filename) {
         try {
             if (filename == null || filename.trim().isEmpty()) {
@@ -171,7 +171,7 @@ public class FileController {
 
             org.springframework.core.io.Resource resource = new FileSystemResource(file);
 
-                                    
+
             String contentType = Files.probeContentType(filePath);
             if (contentType == null) {
                 contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;

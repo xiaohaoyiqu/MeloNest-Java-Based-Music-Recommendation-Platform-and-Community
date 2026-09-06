@@ -1,7 +1,7 @@
-   
-                      
-                             
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-   
-                
-   
+
+
+
 @Service
 public class DecorationConfigServiceImpl extends ServiceImpl<DecorationConfigMapper, DecorationConfig>
         implements DecorationConfigService {

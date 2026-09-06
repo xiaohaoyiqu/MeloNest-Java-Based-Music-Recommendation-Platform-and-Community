@@ -9,10 +9,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,39 +21,39 @@ public class PageResult<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-       
-           
-       
+
+
+
 
     private List<T> records;
 
-       
-           
-       
+
+
+
 
     private Long total;
 
-       
-          
-       
+
+
+
 
     private Long current;
 
-       
-           
-       
+
+
+
 
     private Long size;
 
-       
-          
-       
+
+
+
 
     private Long pages;
 
-       
-                   
-       
+
+
+
     public PageResult(List<T> records, Long total, Long current, Long size) {
         this.records = records;
         this.total = total;
@@ -62,16 +62,16 @@ public class PageResult<T> implements Serializable {
         this.pages = (total + size - 1) / size;
     }
 
-       
-             
-      
-                          
-                         
-                        
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
+
+
+
     public static <T> PageResult<T> of(List<T> records, Long total, Integer page, Integer size) {
         return new PageResult<>(
                 records,
@@ -81,9 +81,9 @@ public class PageResult<T> implements Serializable {
         );
     }
 
-       
-            
-       
+
+
+
     public static <T> PageResult<T> empty() {
         return new PageResult<>(new ArrayList<T>(), 0L, 1L, (long) CommonConstants.DEFAULT_SIZE);
     }

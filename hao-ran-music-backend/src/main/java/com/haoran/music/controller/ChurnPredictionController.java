@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/api/churn")
@@ -31,12 +31,12 @@ public class ChurnPredictionController {
     @Autowired
     private ChurnPredictionService churnPredictionService;
 
-       
-               
-      
-                         
-                     
-  
+
+
+
+
+
+
     @ApiLog("预测用户流失风险")
     @GetMapping("/predict/{userId}")
     public Result<ChurnPredictionVO> predictUserChurn(@PathVariable Long userId) {
@@ -44,12 +44,12 @@ public class ChurnPredictionController {
         return Result.success(prediction);
     }
 
-       
-                 
-      
-                            
-                       
-  
+
+
+
+
+
+
     @ApiLog("批量预测用户流失风险")
     @PostMapping("/batch-predict")
     public Result<List<ChurnPredictionVO>> batchPredictUserChurn(@RequestBody List<Long> userIds) {
@@ -57,13 +57,13 @@ public class ChurnPredictionController {
         return Result.success(predictions);
     }
 
-       
-                  
-      
-                            
-                        
-                      
-  
+
+
+
+
+
+
+
     @ApiLog("获取高风险流失用户列表")
     @GetMapping("/high-risk")
     public Result<List<ChurnPredictionVO>> getHighRiskUsers(
@@ -73,11 +73,11 @@ public class ChurnPredictionController {
         return Result.success(users);
     }
 
-       
-               
-      
-                       
-  
+
+
+
+
+
     @ApiLog("获取流失用户统计")
     @GetMapping("/statistics")
     public Result<Map<String, Object>> getChurnStatistics() {
@@ -85,12 +85,12 @@ public class ChurnPredictionController {
         return Result.success(stats);
     }
 
-       
-               
-      
-                         
-                     
-  
+
+
+
+
+
+
     @ApiLog("分析用户流失原因")
     @GetMapping("/reasons/{userId}")
     public Result<List<String>> analyzeChurnReasons(@PathVariable Long userId) {
@@ -98,12 +98,12 @@ public class ChurnPredictionController {
         return Result.success(reasons);
     }
 
-       
-               
-      
-                         
-                     
-  
+
+
+
+
+
+
     @ApiLog("生成用户召回策略")
     @GetMapping("/recall-strategy/{userId}")
     public Result<List<String>> generateRecallStrategy(@PathVariable Long userId) {
@@ -111,12 +111,12 @@ public class ChurnPredictionController {
         return Result.success(strategies);
     }
 
-       
-               
-      
-                     
-                     
-  
+
+
+
+
+
+
     @ApiLog("获取流失趋势数据")
     @GetMapping("/trend")
     public Result<Map<String, Object>> getChurnTrend(
@@ -125,12 +125,12 @@ public class ChurnPredictionController {
         return Result.success(trend);
     }
 
-       
-               
-      
-                         
-                     
-  
+
+
+
+
+
+
     @ApiLog("发送流失预警通知")
     @PostMapping("/alert/{userId}")
     public Result<Boolean> sendChurnAlert(@PathVariable Long userId) {
@@ -138,12 +138,12 @@ public class ChurnPredictionController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                            
-                   
-  
+
+
+
+
+
+
     @ApiLog("批量发送流失预警通知")
     @PostMapping("/alert/batch")
     public Result<Integer> batchSendChurnAlerts(@RequestParam String riskLevel) {
@@ -151,14 +151,14 @@ public class ChurnPredictionController {
         return Result.success(count);
     }
 
-       
-             
-      
-                         
-                         
-                     
-                     
-  
+
+
+
+
+
+
+
+
     @ApiLog("记录召回操作")
     @PostMapping("/recall/record")
     public Result<Boolean> recordRecallAction(
@@ -169,12 +169,12 @@ public class ChurnPredictionController {
         return Result.success(result);
     }
 
-       
-               
-      
-                     
-                     
-  
+
+
+
+
+
+
     @ApiLog("获取召回效果统计")
     @GetMapping("/recall/effectiveness")
     public Result<Map<String, Object>> getRecallEffectiveness(

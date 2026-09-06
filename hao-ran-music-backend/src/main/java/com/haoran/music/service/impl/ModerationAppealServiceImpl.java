@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -75,16 +75,16 @@ public class ModerationAppealServiceImpl extends ServiceImpl<ModerationAppealMap
                 attachments, null);
     }
 
-       
-                      
-      
-                               
-                         
-                               
-                                
-                                         
-                   
-       
+
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long submitAppealWithAssets(Long moderationId, Long userId, String appealReason,
@@ -93,17 +93,17 @@ public class ModerationAppealServiceImpl extends ServiceImpl<ModerationAppealMap
                 null, attachmentAssetIds);
     }
 
-       
-                             
-      
-                               
-                         
-                               
-                                
-                               
-                                         
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
     private Long submitAppealInternal(Long moderationId, Long userId, String appealReason,
                                       String appealContent, String attachments,
                                       List<Long> attachmentAssetIds) {
@@ -152,13 +152,13 @@ public class ModerationAppealServiceImpl extends ServiceImpl<ModerationAppealMap
         return appeal.getId();
     }
 
-       
-                       
-      
-                           
-                            
-                   
-       
+
+
+
+
+
+
+
     @Override
     public Map<String, Object> getAppealDetail(Long appealId, Long viewerId) {
         ModerationAppeal appeal = getById(appealId);

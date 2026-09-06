@@ -15,10 +15,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class ABTestServiceImpl implements ABTestService {
@@ -29,9 +29,9 @@ public class ABTestServiceImpl implements ABTestService {
         this.redisTemplate = redisTemplate;
     }
 
-       
-              
-       
+
+
+
     private static final String EXPERIMENT_ID_COUNTER = "ab:test:id:counter";
 
     @Override
@@ -40,10 +40,10 @@ public class ABTestServiceImpl implements ABTestService {
             return null;
         }
 
-                 
+
         Long experimentId = redisTemplate.opsForValue().increment(EXPERIMENT_ID_COUNTER);
 
-                 
+
         String configKey = "ab:test:config:" + experimentId;
         Map<String, Object> config = new LinkedHashMap<>();
         config.put("experimentId", experimentId);
@@ -57,7 +57,7 @@ public class ABTestServiceImpl implements ABTestService {
 
         redisTemplate.opsForValue().set(configKey, config, 365, TimeUnit.DAYS);
 
-                  
+
         redisTemplate.opsForSet().add("ab:test:list", experimentId);
 
         log.info("event=ab_test_created experimentId={}", experimentId);
@@ -173,27 +173,27 @@ public class ABTestServiceImpl implements ABTestService {
             return null;
         }
 
-                    
+
         String assignmentKey = "ab:test:assignment:" + experimentId + ":" + userId;
         Object existingAssignment = redisTemplate.opsForValue().get(assignmentKey);
         if (ObjectUtils.isNotEmpty(existingAssignment)) {
             return existingAssignment.toString();
         }
 
-                 
+
         ABTestVO experiment = getExperiment(experimentId);
         if (ObjectUtils.isEmpty(experiment) || ObjectUtils.isEmpty(experiment.getTrafficAllocation())) {
             return "A";        
         }
 
-                     
+
         Map<String, Integer> allocation = experiment.getTrafficAllocation();
         String variant = assignVariantByHash(userId, allocation);
 
-                 
+
         redisTemplate.opsForValue().set(assignmentKey, variant, 30, TimeUnit.DAYS);
 
-                   
+
         String variantUsersKey = "ab:test:variant:" + experimentId + ":" + variant + ":users";
         redisTemplate.opsForSet().add(variantUsersKey, userId);
         redisTemplate.expire(variantUsersKey, 30, TimeUnit.DAYS);
@@ -224,13 +224,13 @@ public class ABTestServiceImpl implements ABTestService {
             return false;
         }
 
-                   
+
         String variant = assignUserToVariant(userId, experimentId);
         if (ObjectUtils.isEmpty(variant)) {
             return false;
         }
 
-               
+
         String eventKey = "ab:test:events:" + experimentId + ":" + variant + ":" + eventType;
         Map<String, Object> event = new LinkedHashMap<>();
         event.put("userId", userId);
@@ -241,7 +241,7 @@ public class ABTestServiceImpl implements ABTestService {
         redisTemplate.opsForList().rightPush(eventKey, JSON.toJSONString(event));
         redisTemplate.expire(eventKey, 30, TimeUnit.DAYS);
 
-                 
+
         String countKey = "ab:test:counts:" + experimentId + ":" + variant + ":" + eventType;
         redisTemplate.opsForValue().increment(countKey);
         redisTemplate.expire(countKey, 30, TimeUnit.DAYS);
@@ -258,11 +258,11 @@ public class ABTestServiceImpl implements ABTestService {
             return null;
         }
 
-                  
+
         ABTestVO.StatisticalSignificance significance = calculateSignificance(experimentId);
         experiment.setSignificance(significance);
 
-               
+
         if (ObjectUtils.isNotEmpty(significance) && Boolean.TRUE.equals(significance.getIsSignificant())) {
             experiment.setConclusion("实验结果显著，建议采用" + (significance.getRelativeLift().compareTo(BigDecimal.ZERO) > 0 ? "实验组" : "对照组") + "方案");
         } else {
@@ -281,7 +281,7 @@ public class ABTestServiceImpl implements ABTestService {
         ABTestVO.StatisticalSignificance significance = new ABTestVO.StatisticalSignificance();
 
         try {
-                           
+
             long aConversions = getEventCount(experimentId, "A", "conversion");
             long aUsers = getVariantUserCount(experimentId, "A");
             long bConversions = getEventCount(experimentId, "B", "conversion");
@@ -294,24 +294,24 @@ public class ABTestServiceImpl implements ABTestService {
                 return significance;
             }
 
-                    
+
             BigDecimal aRate = new BigDecimal(aConversions).divide(new BigDecimal(aUsers), 4, RoundingMode.HALF_UP);
             BigDecimal bRate = new BigDecimal(bConversions).divide(new BigDecimal(bUsers), 4, RoundingMode.HALF_UP);
 
-                     
+
             BigDecimal relativeLift = bRate.subtract(aRate).divide(aRate, 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100"));
             significance.setRelativeLift(relativeLift);
 
-                     
+
             BigDecimal absoluteDiff = bRate.subtract(aRate);
             significance.setAbsoluteDifference(absoluteDiff);
 
-                                      
+
             double pooledRate = (double) (aConversions + bConversions) / (aUsers + bUsers);
             double se = Math.sqrt(pooledRate * (1 - pooledRate) * (1.0 / aUsers + 1.0 / bUsers));
             double zScore = se > 0 ? (bRate.doubleValue() - aRate.doubleValue()) / se : 0;
 
-                         
+
             double pValue = 1 - Math.abs(zScore) / 5;           
             pValue = Math.max(0, Math.min(1, pValue));
 
@@ -380,7 +380,7 @@ public class ABTestServiceImpl implements ABTestService {
             return false;
         }
 
-               
+
         currentConfig.putAll(config);
         currentConfig.put("updateTime", LocalDateTime.now());
 
@@ -391,9 +391,9 @@ public class ABTestServiceImpl implements ABTestService {
         return true;
     }
 
-       
-                    
-       
+
+
+
     private String assignVariantByHash(Long userId, Map<String, Integer> allocation) {
         int hash = userId.hashCode();
         int total = allocation.values().stream().mapToInt(Integer::intValue).sum();
@@ -410,9 +410,9 @@ public class ABTestServiceImpl implements ABTestService {
         return "A";        
     }
 
-       
-               
-       
+
+
+
     private Map<String, Integer> getDefaultTrafficAllocation() {
         Map<String, Integer> allocation = new LinkedHashMap<>();
         allocation.put("A", 50);
@@ -420,27 +420,27 @@ public class ABTestServiceImpl implements ABTestService {
         return allocation;
     }
 
-       
-             
-       
+
+
+
     private long getEventCount(Long experimentId, String variant, String eventType) {
         String countKey = "ab:test:counts:" + experimentId + ":" + variant + ":" + eventType;
         Object count = redisTemplate.opsForValue().get(countKey);
         return ObjectUtils.isNotEmpty(count) ? Long.parseLong(count.toString()) : 0;
     }
 
-       
-              
-       
+
+
+
     private long getVariantUserCount(Long experimentId, String variant) {
         String variantUsersKey = "ab:test:variant:" + experimentId + ":" + variant + ":users";
         Long size = redisTemplate.opsForSet().size(variantUsersKey);
         return ObjectUtils.isNotEmpty(size) ? size : 0;
     }
 
-       
-               
-       
+
+
+
     private ABTestVO convertMapToVO(Map<String, Object> config) {
         ABTestVO vo = new ABTestVO();
         vo.setExperimentId(((Number) config.get("experimentId")).longValue());
@@ -453,7 +453,7 @@ public class ABTestServiceImpl implements ABTestService {
         vo.setEndTime((LocalDateTime) config.get("endTime"));
         vo.setCreateTime((LocalDateTime) config.get("createTime"));
 
-                 
+
         for (ABTestVO.ExperimentStatus status : ABTestVO.ExperimentStatus.values()) {
             if (status.getCode().equals(vo.getStatus())) {
                 vo.setStatusDescription(status.getDescription());

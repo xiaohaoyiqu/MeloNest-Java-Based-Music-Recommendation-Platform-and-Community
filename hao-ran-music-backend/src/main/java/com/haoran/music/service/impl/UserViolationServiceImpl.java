@@ -23,10 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserViolationServiceImpl extends ServiceImpl<UserViolationMapper, UserViolation>
@@ -44,9 +44,9 @@ public class UserViolationServiceImpl extends ServiceImpl<UserViolationMapper, U
     @Autowired(required = false)
     private SimpleUserClassificationService userClassificationService;
 
-       
-           
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void recordViolation(Long userId, String contentType, Long contentId,
@@ -59,7 +59,7 @@ public class UserViolationServiceImpl extends ServiceImpl<UserViolationMapper, U
         violation.setViolationLevel(level);
         violation.setContentType(contentType);
         violation.setContentId(contentId);
-                                      
+
         if (ObjectUtils.isNotEmpty(description)) {
             SecurityCheckUtil.CheckResult descriptionCheck = SecurityCheckUtil.checkDescription(description);
             if (!descriptionCheck.isSafe()) {
@@ -72,15 +72,15 @@ public class UserViolationServiceImpl extends ServiceImpl<UserViolationMapper, U
         violation.setIsResolved(0);
         save(violation);
 
-                        
+
         checkAndPenalty(userId, level);
 
         log.info("event=user_violation_recorded violationId={}", violation.getId());
     }
 
-       
-              
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void checkAndPenalty(Long userId, Integer currentLevel) {
@@ -93,7 +93,7 @@ public class UserViolationServiceImpl extends ServiceImpl<UserViolationMapper, U
             return;
         }
 
-                       
+
         long minorCount = count(new LambdaQueryWrapper<UserViolation>()
                 .eq(UserViolation::getUserId, userId)
                 .eq(UserViolation::getIsResolved, 0)
@@ -111,26 +111,26 @@ public class UserViolationServiceImpl extends ServiceImpl<UserViolationMapper, U
 
         log.info("event=user_violation_summary_evaluated userId={}", userId);
 
-                 
-                      
+
+
         long actualNormalCount = normalCount + (minorCount / 3);
 
-                                 
+
         if (actualNormalCount >= 3 || seriousCount >= 1) {
             downgradeOrBanUser(user, seriousCount >= 3);
         }
     }
 
-       
-              
-       
+
+
+
     private void downgradeOrBanUser(User user, boolean permanent) {
         Long userId = user.getId();
         log.warn("event=user_violation_penalty_applied userId={}", userId);
 
         if (permanent) {
-                                                                                              
-                                                                                              
+
+
             if (!UserType.fromCode(user.getUserType()).shouldRestrict()) {
                 user.setUserType(UserType.BANNED.getCode());
             }
@@ -151,7 +151,7 @@ public class UserViolationServiceImpl extends ServiceImpl<UserViolationMapper, U
                     "account-restriction:auto-ban:" + userId);
             log.warn("event=user_violation_account_restricted userId={}", userId);
         } else {
-                      
+
             if (creatorService != null) {
                 try {
                     creatorService.removeCreator(userId, "违规被取消创作者认证");

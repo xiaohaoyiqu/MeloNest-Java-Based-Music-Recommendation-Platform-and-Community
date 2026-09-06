@@ -1,7 +1,7 @@
-   
-                      
-                                   
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -30,10 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-           
-                
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/admin/notification")
@@ -52,14 +52,14 @@ public class AdminNotificationController {
     @Resource
     private NotificationDeliveryOutboxService notificationDeliveryOutboxService;
 
-       
-                   
-      
-                            
-                                
-                                
-                   
-       
+
+
+
+
+
+
+
+
     @PostMapping("/list")
     @ApiLog("管理员获取通知列表")
     public Result<IPage<Notification>> getNotificationList(
@@ -83,14 +83,14 @@ public class AdminNotificationController {
         return Result.success(result);
     }
 
-       
-                    
-      
-                                 
-                                 
-                                   
-                   
-       
+
+
+
+
+
+
+
+
     @DeleteMapping("/recall/{notificationId}")
     @ApiLog("管理员撤回通知")
     public Result<Void> recallNotification(
@@ -111,14 +111,14 @@ public class AdminNotificationController {
         return Result.error("撤回失败，通知可能不存在");
     }
 
-       
-                
-      
-                         
-                             
-                            
-                   
-       
+
+
+
+
+
+
+
+
     @DeleteMapping("/recall/user/{userId}")
     @ApiLog("管理员批量撤回用户通知")
     public Result<Integer> recallUserNotifications(
@@ -136,14 +136,14 @@ public class AdminNotificationController {
         return Result.success("成功撤回 " + count + " 条通知", count);
     }
 
-       
-                
-      
-                         
-                         
-                            
-                   
-       
+
+
+
+
+
+
+
+
     @RequireRole({UserRole.SUPER_ADMIN})
     @DeleteMapping("/recall/type/{type}")
     @ApiLog("管理员按类型批量撤回通知")
@@ -162,11 +162,11 @@ public class AdminNotificationController {
         return Result.success("成功撤回 " + count + " 条通知", count);
     }
 
-       
-               
-      
-                      
-       
+
+
+
+
+
     @GetMapping("/stats")
     @ApiLog("管理员获取通知统计")
     public Result<Map<String, Object>> getNotificationStats(HttpServletRequest request) {
@@ -189,23 +189,23 @@ public class AdminNotificationController {
         return Result.success(stats);
     }
 
-       
-                                
-      
-                               
-       
+
+
+
+
+
     @GetMapping("/delivery-outbox/status")
     @ApiLog("管理员获取通知投递状态")
     public Result<Map<String, Object>> getDeliveryOutboxStatus() {
         return Result.success(notificationDeliveryOutboxService.getStatusSummary());
     }
 
-       
-                       
-      
-                         
-                     
-       
+
+
+
+
+
+
     @PostMapping("/delivery-outbox/retry")
     @ApiLog("管理员重试通知投递")
     public Result<Integer> retryDeliveryOutbox(@RequestParam(defaultValue = "20") Integer limit) {
@@ -213,12 +213,12 @@ public class AdminNotificationController {
         return Result.success(notificationDeliveryOutboxService.retryDueEvents(safeLimit));
     }
 
-       
-                               
-      
-                        
-                     
-       
+
+
+
+
+
+
     @GetMapping("/delivery-outbox/failures")
     @ApiLog("管理员获取通知投递失败事件")
     public Result<List<Map<String, Object>>> getDeliveryOutboxFailures(
@@ -227,12 +227,12 @@ public class AdminNotificationController {
         return Result.success(notificationDeliveryOutboxService.getRecentFailures(safeLimit));
     }
 
-       
-                              
-      
-                          
-                           
-       
+
+
+
+
+
+
     @PostMapping("/delivery-outbox/{eventId}/retry")
     @ApiLog("管理员重试单个通知投递事件")
     public Result<Boolean> retryFailedDeliveryEvent(@PathVariable String eventId) {
@@ -240,13 +240,13 @@ public class AdminNotificationController {
         return delivered ? Result.success(true) : Result.error("事件不存在、状态不可重试或会话仍不可用");
     }
 
-       
-                   
-      
-                                                          
-                            
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/broadcast")
     @ApiLog("管理员发送系统公告")
     public Result<Map<String, Object>> sendBroadcast(
@@ -279,23 +279,23 @@ public class AdminNotificationController {
         }
     }
 
-       
-                    
-      
-                     
-       
+
+
+
+
+
     @GetMapping("/broadcast/tasks/status")
     @ApiLog("管理员获取广播任务状态汇总")
     public Result<Map<String, Object>> getBroadcastTaskStatus() {
         return Result.success(notificationBroadcastTaskService.getTaskStatus());
     }
 
-       
-                  
-      
-                         
-                     
-       
+
+
+
+
+
+
     @GetMapping("/broadcast/tasks/{taskId}")
     @ApiLog("管理员获取广播任务详情")
     public Result<Map<String, Object>> getBroadcastTask(@PathVariable String taskId) {
@@ -306,12 +306,12 @@ public class AdminNotificationController {
         return Result.success(task);
     }
 
-       
-                   
-      
-                         
-                     
-       
+
+
+
+
+
+
     @PostMapping("/broadcast/tasks/{taskId}/retry")
     @ApiLog("管理员重试广播任务")
     public Result<Map<String, Object>> retryBroadcastTask(@PathVariable String taskId,

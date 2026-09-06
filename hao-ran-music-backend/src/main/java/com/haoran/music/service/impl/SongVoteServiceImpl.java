@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -26,9 +26,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class SongVoteServiceImpl extends ServiceImpl<SongVoteMapper, SongVote> implements SongVoteService {
@@ -42,7 +42,7 @@ public class SongVoteServiceImpl extends ServiceImpl<SongVoteMapper, SongVote> i
     @Autowired
     private UserMapper userMapper;
 
-               
+
     private static final int MAX_DAILY_VOTES = 10;
     private static final int DEFAULT_LIST_LIMIT = 10;
     private static final int MAX_LIST_LIMIT = 20;
@@ -65,7 +65,7 @@ public class SongVoteServiceImpl extends ServiceImpl<SongVoteMapper, SongVote> i
 
         LocalDate today = LocalDate.now();
 
-                        
+
         LambdaQueryWrapper<SongVote> checkWrapper = new LambdaQueryWrapper<>();
         checkWrapper.eq(SongVote::getSongId, songId)
                 .eq(SongVote::getUserId, userId)
@@ -77,7 +77,7 @@ public class SongVoteServiceImpl extends ServiceImpl<SongVoteMapper, SongVote> i
             return 1;
         }
 
-                   
+
         LambdaQueryWrapper<SongVote> countWrapper = new LambdaQueryWrapper<>();
         countWrapper.eq(SongVote::getUserId, userId)
                 .eq(SongVote::getVoteDate, today);
@@ -90,7 +90,7 @@ public class SongVoteServiceImpl extends ServiceImpl<SongVoteMapper, SongVote> i
             return 0;
         }
 
-                   
+
         SongVote songVote = new SongVote();
         songVote.setSongId(songId);
         songVote.setUserId(userId);

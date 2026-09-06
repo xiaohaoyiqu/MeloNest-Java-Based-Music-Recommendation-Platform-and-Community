@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-   
-                      
-                        
-   
+
+
+
+
 @Slf4j
 @Component
 public class WorkTimeScheduler {
@@ -46,18 +46,18 @@ public class WorkTimeScheduler {
         this.onlineStatusService = onlineStatusService;
     }
 
-       
-                   
-               
-       
+
+
+
+
     @Scheduled(cron = "${schedule.work-time.pending-tasks-cron}")
     public void checkPendingTasks() {
-                   
+
         if (!workTimeConfig.isWorkTime()) {
             return;
         }
 
-                  
+
         List<ModerationRecord> pendingTasks = recordMapper.selectList(
             new LambdaQueryWrapper<ModerationRecord>()
                 .eq(ModerationRecord::getStatus, ModerationConstants.STATUS_PENDING)
@@ -96,13 +96,13 @@ public class WorkTimeScheduler {
         log.info("任务分配完成: 成功={}, 失败={}", successCount, failCount);
     }
 
-       
-                  
-               
-       
+
+
+
+
     @Scheduled(cron = "${schedule.work-time.moderator-online-refresh-cron}")
     public void refreshModeratorOnlineStatus() {
-                   
+
         if (!workTimeConfig.isWorkTime()) {
             return;
         }
@@ -110,21 +110,21 @@ public class WorkTimeScheduler {
         onlineStatusService.refreshModeratorOnlineStatus();
     }
 
-       
-                
-                
-       
+
+
+
+
     @Scheduled(cron = "${schedule.work-time.online-status-cleanup-cron}")
     public void cleanExpiredOnlineStatus() {
         onlineStatusService.cleanExpiredOnlineStatus();
     }
 
-       
-                       
-       
+
+
+
     @Scheduled(cron = "${schedule.work-time.daily-quota-reset-cron}")
     public void resetDailyQuota() {
-                          
+
         userMapper.update(null,
             new LambdaUpdateWrapper<User>()
                 .and(wrapper -> wrapper
@@ -140,10 +140,10 @@ public class WorkTimeScheduler {
         log.info("重置审核员每日配额完成");
     }
 
-       
-                   
-               
-       
+
+
+
+
     @Scheduled(cron = "${schedule.work-time.ending-reminder-cron}")
     public void workTimeEndingReminder() {
         if (!workTimeConfig.isWorkTime()) {
@@ -152,7 +152,7 @@ public class WorkTimeScheduler {
 
         Integer minutesUntilOff = workTimeConfig.getMinutesUntilOff(java.time.LocalTime.now());
 
-                   
+
         if (minutesUntilOff != null && minutesUntilOff <= 15 && minutesUntilOff > 10) {
             log.info("工作时间即将结束，还有{}分钟", minutesUntilOff);
         }

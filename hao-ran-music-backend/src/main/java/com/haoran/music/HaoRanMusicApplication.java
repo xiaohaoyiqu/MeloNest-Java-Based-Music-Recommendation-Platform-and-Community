@@ -10,11 +10,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-   
-                                  
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @SpringBootApplication(scanBasePackages = "com.haoran.music")
 @MapperScan("com.haoran.music.mapper")

@@ -1,11 +1,11 @@
-   
-                      
-                                 
-                   
-                                      
-   
 
-                                                  
+
+
+
+
+
+
+
 :root {
   --comment-bg: rgba(255, 255, 255, 0.1);
   --comment-border: rgba(100, 200, 255, 0.3);
@@ -14,7 +14,7 @@
   --comment-item-gap: 12px;
 }
 
-                                                  
+
 .comment-list {
   .input-area {
     margin-bottom: 24px;
@@ -77,7 +77,7 @@
           border-bottom: none;
         }
 
-                 
+
         .comment-main.is-hot {
           background: rgba(255, 153, 102, 0.05);
           border-radius: 8px;
@@ -102,19 +102,19 @@
           }
         }
 
-               
+
         .avatar-main {
           width: 40px;
           height: 40px;
           flex-shrink: 0;
         }
 
-               
+
         .comment-content-wrapper {
           flex: 1;
           min-width: 0;
 
-                  
+
           .user-info {
             display: flex;
             align-items: center;
@@ -135,7 +135,7 @@
             }
           }
 
-                 
+
           .comment-content {
             margin: 8px 0 12px;
             line-height: 1.6;
@@ -178,7 +178,7 @@
             }
           }
 
-                  
+
           .comment-actions {
             display: flex;
             gap: 16px;
@@ -220,7 +220,7 @@
     }
   }
 
-                                                   
+
   .replies-section {
     margin-top: 12px;
     padding: 12px;
@@ -341,7 +341,7 @@
     }
   }
 
-                                                       
+
   .edit-input-area,
   .reply-input-area {
     margin-top: 12px;
@@ -386,7 +386,7 @@
     }
   }
 
-                                                  
+
   .empty-state {
     display: flex;
     flex-direction: column;
@@ -407,7 +407,7 @@
     }
   }
 
-                                                  
+
   .floor-number {
     display: inline-flex;
     align-items: center;
@@ -440,7 +440,7 @@
     }
   }
 
-                                                   
+
   .comment-badges {
     display: inline-flex;
     align-items: center;
@@ -484,7 +484,7 @@
   }
 }
 
-                                                  
+
 @media (max-width: 768px) {
   .comment-list {
     .comments-container {
@@ -610,8 +610,8 @@
   }
 }
 
-                                                      
-               
+
+
 .comment-list {
   :deep(.el-dropdown-menu) {
     background: transparent;
@@ -625,14 +625,14 @@
         background: var(--card-background-hover);
       }
 
-                        
+
       .el-icon {
         color: rgba(255, 255, 255, 0.9) !important;
       }
     }
   }
 
-              
+
   :deep(.el-dropdown .el-button .el-icon) {
     color: rgba(255, 255, 255, 0.8);
 

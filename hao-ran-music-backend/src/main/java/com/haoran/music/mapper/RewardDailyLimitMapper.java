@@ -1,7 +1,7 @@
-   
-                      
-                              
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -15,9 +15,9 @@ import org.apache.ibatis.annotations.Update;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-   
-                 
-   
+
+
+
 @Mapper
 public interface RewardDailyLimitMapper extends BaseMapper<RewardDailyLimit> {
 

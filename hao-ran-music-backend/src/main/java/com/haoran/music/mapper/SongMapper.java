@@ -12,26 +12,26 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface SongMapper extends BaseMapper<Song> {
 
-       
-                               
-       
+
+
+
     @Select("SELECT * FROM song WHERE id = #{songId} AND deleted = 0 LIMIT 1 FOR UPDATE")
     Song selectByIdForUpdate(@Param("songId") Long songId);
 
-       
-                 
-      
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
     @Select("<script>" +
             "SELECT * FROM song " +
             "WHERE status = 1 AND deleted = 0 " +
@@ -43,36 +43,36 @@ public interface SongMapper extends BaseMapper<Song> {
             "</script>")
     List<Song> selectHotSongsByType(@Param("type") String type, @Param("size") Integer size);
 
-       
-             
-      
-                     
-                     
-                   
-       
+
+
+
+
+
+
+
     IPage<Song> selectNewSongs(Page<Song> page, @Param("days") Integer days);
 
-       
-               
-      
-                         
-       
+
+
+
+
+
     @Update("UPDATE song SET hot_score = hot_score + 1 WHERE id = #{songId} AND deleted = 0")
     void updateHotScore(@Param("songId") Long songId);
 
-       
-               
-      
-                         
-       
+
+
+
+
+
     @Update("UPDATE song SET download_count = download_count + 1 WHERE id = #{songId}")
     void updateDownloadCount(@Param("songId") Long songId);
 
-       
-               
-      
-                         
-       
+
+
+
+
+
     @Update("UPDATE song SET play_count = COALESCE(play_count, 0) + 1 WHERE id = #{songId} AND deleted = 0")
     void incrementPlayCount(@Param("songId") Long songId);
 

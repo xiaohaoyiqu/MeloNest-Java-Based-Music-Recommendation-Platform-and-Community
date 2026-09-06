@@ -35,15 +35,15 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-   
-                      
-                             
-  
-        
-                    
-                    
-                                         
-   
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Component
 public class PlayEventListener {
@@ -67,21 +67,21 @@ public class PlayEventListener {
     @org.springframework.beans.factory.annotation.Autowired(required = false)
     private QualifiedPlayFactMapper qualifiedPlayFactMapper;
 
-       
-                   
-                         
-      
-          
-                      
-                                  
-                                
-      
-                          
-                                   
-                           
-                            
-                          
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @KafkaListener(
         topics = "${haoran.kafka.play-topic:play-events}",
         containerFactory = "kafkaListenerContainerFactory",
@@ -112,7 +112,7 @@ public class PlayEventListener {
             }
             normalizeEventId(event, topic, partition, offset);
 
-                   
+
             if (!validateEvent(event)) {
                 log.warn("[Kafka消息校验失败] topic={}, partition={}, offset={}",
                         topic, partition, offset);
@@ -135,9 +135,9 @@ public class PlayEventListener {
         }
     }
 
-       
-                                    
-       
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public void replayDeadLetter(String message, String topic, int partition, long offset) {
         PlayEvent event = JSON.parseObject(message, PlayEvent.class);
@@ -148,9 +148,9 @@ public class PlayEventListener {
         processPlayEvent(event);
     }
 
-       
-                
-       
+
+
+
     private void processPlayEvent(PlayEvent event) {
         Long userId = parseId(event.getUserId(), "user");
         Long songId = parseId(event.getSongId(), "song");
@@ -167,7 +167,7 @@ public class PlayEventListener {
         Song song = null;
         LocalMusic localMusic = null;
         if (Integer.valueOf(1).equals(event.getIsLocal())) {
-                                                   
+
             if (!UserAccountStatusUtil.canInteract(userId, userMapper::selectById)) {
                 log.debug("跳过不可互动账号的本地播放事件: userId={}, songId={}", event.getUserId(), event.getSongId());
                 playEventReceiptService.markProcessed(event.getEventId());
@@ -195,7 +195,7 @@ public class PlayEventListener {
 
         boolean qualified = ValidPlayPolicy.isQualified(event.getProgress(),
                 localMusic != null ? localMusic.getDuration() : (song != null ? song.getDuration() : null));
-                                   
+
         saveListenHistory(event, userId, songId, qualified);
 
         if (!qualified) {
@@ -205,7 +205,7 @@ public class PlayEventListener {
 
         appendQualifiedPlayFact(event, userId, songId, song);
 
-                 
+
         if (Integer.valueOf(1).equals(event.getIsLocal())) {
             localMusicService.incrementPlayCount(userId, songId);
         } else {
@@ -214,9 +214,9 @@ public class PlayEventListener {
         playEventReceiptService.markProcessed(event.getEventId());
     }
 
-       
-                          
-       
+
+
+
     private void appendQualifiedPlayFact(PlayEvent event, Long userId, Long songId, Song song) {
         if (Integer.valueOf(1).equals(event.getIsLocal())
                 || ObjectUtils.isEmpty(qualifiedPlayFactMapper)) {
@@ -232,12 +232,12 @@ public class PlayEventListener {
         qualifiedPlayFactMapper.insertIgnore(fact);
     }
 
-       
-             
-      
-                        
-                   
-       
+
+
+
+
+
+
     private boolean validateEvent(PlayEvent event) {
         if (event == null) {
             return false;
@@ -258,11 +258,11 @@ public class PlayEventListener {
         return true;
     }
 
-       
-                      
-      
-                         
-       
+
+
+
+
+
     private void incrementPlayCounts(Long songId, Song song) {
         try {
             if (!canContributeSongStats(song)) {
@@ -270,7 +270,7 @@ public class PlayEventListener {
                 return;
             }
 
-                      
+
             songMapper.incrementPlayCount(songId);
 
             if (song != null) {
@@ -278,7 +278,7 @@ public class PlayEventListener {
                     artistMapper.incrementPlayCount(artistId);
                 }
 
-                          
+
                 if (ObjectUtils.isNotEmpty(song.getAlbumId())) {
                     albumMapper.incrementPlayCount(song.getAlbumId());
                 }
@@ -292,9 +292,9 @@ public class PlayEventListener {
         }
     }
 
-       
-             
-       
+
+
+
     private Set<Long> resolveArtistIds(Song song) {
         Set<Long> artistIds = new LinkedHashSet<>();
         if (song == null) {
@@ -406,9 +406,9 @@ public class PlayEventListener {
         }
     }
 
-       
-           
-       
+
+
+
     public static class PlayEvent {
         private String eventId;
         private String userId;

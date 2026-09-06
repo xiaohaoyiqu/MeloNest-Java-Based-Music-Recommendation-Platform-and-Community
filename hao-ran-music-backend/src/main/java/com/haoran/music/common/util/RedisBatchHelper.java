@@ -8,28 +8,28 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-   
-               
-                                  
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 public final class RedisBatchHelper {
 
     private RedisBatchHelper() {
-                    
+
     }
 
-       
-                       
-                        
-      
-                                 
-                                                           
-                             
-                     
-       
+
+
+
+
+
+
+
+
+
     public static Set<Long> getSetMemberIds(RedisUtils redisUtils, String pattern, Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return Collections.emptySet();
@@ -58,14 +58,14 @@ public final class RedisBatchHelper {
         }
     }
 
-       
-                         
-      
-                                 
-                                 
-                               
-                                 
-       
+
+
+
+
+
+
+
+
     public static Map<Long, Set<Long>> getSetMemberIdsBatch(RedisUtils redisUtils,
                                                               String pattern,
                                                               List<Long> userIds) {
@@ -81,14 +81,14 @@ public final class RedisBatchHelper {
         return result;
     }
 
-       
-                    
-      
-                                 
-                               
-                                 
-                         
-       
+
+
+
+
+
+
+
+
     public static Set<Long> getMembersInSet(RedisUtils redisUtils, String key, List<Long> ids) {
         if (ObjectUtils.isEmpty(ids)) {
             return Collections.emptySet();
@@ -100,17 +100,17 @@ public final class RedisBatchHelper {
                 return Collections.emptySet();
             }
 
-                             
+
             Set<Long> memberSet = new HashSet<>();
             for (Object member : allMembers) {
                 try {
                     memberSet.add(Long.valueOf(member.toString()));
                 } catch (NumberFormatException e) {
-                             
+
                 }
             }
 
-                                     
+
             return ids.stream()
                     .filter(memberSet::contains)
                     .collect(Collectors.toSet());
@@ -121,14 +121,14 @@ public final class RedisBatchHelper {
         }
     }
 
-       
-                  
-      
-                                 
-                                    
-                              
-                             
-       
+
+
+
+
+
+
+
+
     public static Map<String, Object> hGetBatch(RedisUtils redisUtils, String key, Set<String> fields) {
         if (ObjectUtils.isEmpty(fields)) {
             return Collections.emptyMap();
@@ -144,13 +144,13 @@ public final class RedisBatchHelper {
         return result;
     }
 
-       
-                    
-      
-                                 
-                            
-                         
-       
+
+
+
+
+
+
+
     public static Map<String, Object> mGetBatch(RedisUtils redisUtils, List<String> keys) {
         if (ObjectUtils.isEmpty(keys)) {
             return Collections.emptyMap();
@@ -166,14 +166,14 @@ public final class RedisBatchHelper {
         return result;
     }
 
-       
-               
-      
-                                 
-                               
-                             
-                    
-       
+
+
+
+
+
+
+
+
     public static long sAddBatch(RedisUtils redisUtils, String key, List<Long> members) {
         if (ObjectUtils.isEmpty(members)) {
             return 0;
@@ -186,14 +186,14 @@ public final class RedisBatchHelper {
         return redisUtils.sAdd(key, memberArray);
     }
 
-       
-               
-      
-                                 
-                               
-                             
-                    
-       
+
+
+
+
+
+
+
+
     public static long sRemoveBatch(RedisUtils redisUtils, String key, List<Long> members) {
         if (ObjectUtils.isEmpty(members)) {
             return 0;
@@ -206,13 +206,13 @@ public final class RedisBatchHelper {
         return redisUtils.sRemove(key, memberArray);
     }
 
-       
-                 
-      
-                                 
-                                    
-                                       
-       
+
+
+
+
+
+
+
     public static void hSetBatch(RedisUtils redisUtils, String key, Map<String, Object> map) {
         if (ObjectUtils.isEmpty(map)) {
             return;
@@ -223,20 +223,20 @@ public final class RedisBatchHelper {
         }
     }
 
-       
-                    
-      
-                                 
-                               
-                                 
-                                
-       
+
+
+
+
+
+
+
+
     public static Map<Long, Boolean> sIsMemberBatch(RedisUtils redisUtils, String key, Set<Long> ids) {
         if (ObjectUtils.isEmpty(ids)) {
             return Collections.emptyMap();
         }
 
-                 
+
         Set<Object> allMembers = redisUtils.sMembers(key);
         Set<Long> memberSet = new HashSet<>();
 
@@ -245,12 +245,12 @@ public final class RedisBatchHelper {
                 try {
                     memberSet.add(Long.valueOf(member.toString()));
                 } catch (NumberFormatException e) {
-                         
+
                 }
             }
         }
 
-               
+
         Map<Long, Boolean> result = new HashMap<>();
         for (Long id : ids) {
             result.put(id, memberSet.contains(id));
@@ -258,14 +258,14 @@ public final class RedisBatchHelper {
         return result;
     }
 
-       
-                    
-      
-                                 
-                                   
-                             
-                             
-       
+
+
+
+
+
+
+
+
     public static void mSetBatch(RedisUtils redisUtils,
                                   Map<String, Object> data,
                                   long expire,
@@ -279,24 +279,24 @@ public final class RedisBatchHelper {
         }
     }
 
-       
-             
-      
-                                 
-                                   
-                    
-       
+
+
+
+
+
+
+
     public static long deleteByPattern(RedisUtils redisUtils, String pattern) {
         return redisUtils == null ? 0L : redisUtils.deleteByPattern(pattern);
     }
 
-       
-              
-      
-                                 
-                            
-                    
-       
+
+
+
+
+
+
+
     public static long deleteKeys(RedisUtils redisUtils, Set<String> keys) {
         if (ObjectUtils.isEmpty(keys)) {
             return 0;
@@ -305,27 +305,27 @@ public final class RedisBatchHelper {
         return keys.size();
     }
 
-       
-                 
-      
-                                 
-                            
-                     
-       
+
+
+
+
+
+
+
     public static Set<String> keys(RedisUtils redisUtils, String pattern) {
         return redisUtils.keys(pattern);
     }
 
-       
-               
-                          
-      
-                               
-                                     
-                                     
-                                  
-                               
-       
+
+
+
+
+
+
+
+
+
+
     public static <V> void setBatchStatus(List<V> voList,
                                             Function<V, Long> idExtractor,
                                             Set<Long> statusSet,
@@ -335,12 +335,12 @@ public final class RedisBatchHelper {
         }
 
         if (ObjectUtils.isEmpty(statusSet)) {
-                                  
+
             for (V vo : voList) {
                 statusSetter.accept(vo, false);
             }
         } else {
-                             
+
             for (V vo : voList) {
                 Long id = idExtractor.apply(vo);
                 statusSetter.accept(vo, statusSet.contains(id));
@@ -348,14 +348,14 @@ public final class RedisBatchHelper {
         }
     }
 
-       
-               
-      
-                                 
-                               
-                             
-                            
-       
+
+
+
+
+
+
+
+
     public static Map<Long, Long> getCounterBatch(RedisUtils redisUtils, String pattern, List<Long> ids) {
         if (ObjectUtils.isEmpty(ids)) {
             return Collections.emptyMap();

@@ -33,10 +33,10 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.*;
 
-   
-                      
-                             
-   
+
+
+
+
 @Slf4j
 @Service
 public class EmojiShopServiceImpl implements EmojiShopService {
@@ -66,23 +66,23 @@ public class EmojiShopServiceImpl implements EmojiShopService {
     public EmojiShopService.EmojiShopHomeVO getHomeData() {
         EmojiShopService.EmojiShopHomeVO result = new EmojiShopService.EmojiShopHomeVO();
 
-                  
+
         List<EmojiPackageVO> recommended = getRecommendedPackages();
         result.setRecommended(recommended);
 
-                  
+
         List<EmojiPackageVO> hot = getHotPackages(10);
         result.setHot(hot);
 
-                  
+
         List<EmojiPackageVO> latest = getLatestPackages(10);
         result.setLatest(latest);
 
-                  
+
         List<EmojiPackageVO> free = getFreePackages(10);
         result.setFree(free);
 
-                 
+
         List<EmojiPackageVO> myEmojis = getMyEmojis();
         result.setMyEmojis(myEmojis);
 
@@ -124,8 +124,8 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return result;
     }
 
-       
-       
+
+
     @Override
     public EmojiPackageDetailVO getPackageDetail(Long id) {
         EmojiPackage emojiPackage = emojiPackageMapper.selectById(id);
@@ -159,7 +159,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             }
         }
 
-                      
+
         if (userId != null) {
             result.setIsPurchased(purchased);
             result.setIsFavorited(userEmoji != null && userEmoji.getIsFavorited() != null && userEmoji.getIsFavorited() == 1);
@@ -168,7 +168,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             result.setIsFavorited(false);
         }
 
-                  
+
         LambdaQueryWrapper<EmojiItem> itemWrapper = new LambdaQueryWrapper<>();
         itemWrapper.eq(EmojiItem::getEmojiPackageId, id)
                 .orderByAsc(EmojiItem::getSortOrder);
@@ -176,7 +176,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         List<EmojiItem> items = canLoadAllItems
                 ? emojiItemMapper.selectList(itemWrapper) : Collections.emptyList();
 
-                
+
         List<EmojiItemVO> itemVOs = new ArrayList<>();
         for (EmojiItem item : items) {
             EmojiItemVO itemVO = new EmojiItemVO();
@@ -188,8 +188,8 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return result;
     }
 
-       
-       
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void purchasePackage(Long id) {
@@ -199,7 +199,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         }
         UserAccountStatusUtil.requireCanInteract(userMapper.selectByIdForUpdate(userId), "购买表情包");
 
-                                           
+
         EmojiPackage emojiPackage = emojiPackageMapper.selectById(id);
         if (ObjectUtils.isEmpty(emojiPackage)) {
             throw new RuntimeException("表情包不存在");
@@ -218,7 +218,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         }
         int purchaseCost = freePackage ? 0 : configuredPrice;
 
-                  
+
         LambdaQueryWrapper<UserEmoji> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(UserEmoji::getUserId, userId)
                 .eq(UserEmoji::getEmojiPackageId, id);
@@ -227,7 +227,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             return;
         }
 
-                        
+
         UserEmoji userEmoji;
         if (existUserEmoji != null) {
             userEmoji = existUserEmoji;
@@ -240,7 +240,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         userEmoji.setIsPurchased(1);
         userEmoji.setPurchaseTime(LocalDateTime.now());
 
-                                        
+
         if (purchaseCost > 0) {
             activityPointsService.consumePoints(
                     userId, purchaseCost, "emoji", "购买表情包：" + emojiPackage.getName());
@@ -253,7 +253,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             userEmojiMapper.updateById(userEmoji);
         }
 
-                                     
+
         if (emojiPackageMapper.incrementDownloadCount(id) != 1) {
             throw new RuntimeException("表情包当前不可购买");
         }
@@ -261,8 +261,8 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         log.info("用户购买表情包成功: userId={}, packageId={}, cost={}", userId, id, purchaseCost);
     }
 
-       
-       
+
+
     @Override
     public List<EmojiPackageVO> getMyEmojis() {
         Long userId = getCurrentUserId();
@@ -270,7 +270,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             return new ArrayList<>();
         }
 
-                         
+
         LambdaQueryWrapper<UserEmoji> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserEmoji::getUserId, userId)
                 .eq(UserEmoji::getIsPurchased, 1);
@@ -280,7 +280,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             return new ArrayList<>();
         }
 
-                                       
+
         List<Long> packageIds = new ArrayList<>();
         for (UserEmoji userEmoji : userEmojis) {
             if (userEmoji.getEmojiPackageId() != null) {
@@ -295,7 +295,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             packagesById.put(pkg.getId(), pkg);
         }
 
-                                     
+
         List<EmojiPackage> orderedPackages = new ArrayList<>();
         for (UserEmoji userEmoji : userEmojis) {
             EmojiPackage pkg = packagesById.get(userEmoji.getEmojiPackageId());
@@ -306,8 +306,8 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return convertToVOList(orderedPackages, false);
     }
 
-       
-       
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void favoritePackage(Long id) {
@@ -317,7 +317,7 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         }
         UserAccountStatusUtil.requireCanInteract(userMapper.selectByIdForUpdate(userId), "收藏表情包");
 
-                    
+
         EmojiPackage pkg = emojiPackageMapper.selectById(id);
         if (pkg == null) {
             throw new RuntimeException("表情包不存在");
@@ -326,21 +326,21 @@ public class EmojiShopServiceImpl implements EmojiShopService {
             throw new RuntimeException("表情包当前不可收藏");
         }
 
-                 
+
         LambdaQueryWrapper<UserEmoji> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserEmoji::getUserId, userId)
                 .eq(UserEmoji::getEmojiPackageId, id);
         UserEmoji userEmoji = userEmojiMapper.selectOne(wrapper);
 
         if (userEmoji != null) {
-                     
+
             if (userEmoji.getIsFavorited() == null || userEmoji.getIsFavorited() != 1) {
                 userEmoji.setIsFavorited(1);
                 userEmoji.setFavoriteTime(LocalDateTime.now());
                 userEmojiMapper.updateById(userEmoji);
             }
         } else {
-                    
+
             userEmoji = new UserEmoji();
             userEmoji.setUserId(userId);
             userEmoji.setEmojiPackageId(id);
@@ -353,8 +353,8 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         log.info("用户{}收藏表情包{}成功", userId, id);
     }
 
-       
-       
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void unfavoritePackage(Long id) {
@@ -376,11 +376,11 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         }
     }
 
-       
-              
-       
+
+
+
     private List<EmojiPackageVO> getRecommendedPackages() {
-                                           
+
         LambdaQueryWrapper<EmojiPackage> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EmojiPackage::getStatus, 1)
                 .eq(EmojiPackage::getType, "system")
@@ -391,9 +391,9 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return convertToVOList(packages);
     }
 
-       
-              
-       
+
+
+
     private List<EmojiPackageVO> getHotPackages(Integer limit) {
         LambdaQueryWrapper<EmojiPackage> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EmojiPackage::getStatus, 1)
@@ -404,9 +404,9 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return convertToVOList(packages);
     }
 
-       
-              
-       
+
+
+
     private List<EmojiPackageVO> getLatestPackages(Integer limit) {
         LambdaQueryWrapper<EmojiPackage> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EmojiPackage::getStatus, 1)
@@ -417,9 +417,9 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return convertToVOList(packages);
     }
 
-       
-              
-       
+
+
+
     private List<EmojiPackageVO> getFreePackages(Integer limit) {
         LambdaQueryWrapper<EmojiPackage> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EmojiPackage::getStatus, 1)
@@ -431,9 +431,9 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return convertToVOList(packages);
     }
 
-       
-              
-       
+
+
+
     private List<EmojiPackageVO> convertToVOList(List<EmojiPackage> packages) {
         return convertToVOList(packages, true);
     }
@@ -472,9 +472,9 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return result;
     }
 
-       
-                                                 
-       
+
+
+
     private Map<Long, EmojiPackagePreviewData> findPackagePreviewData(List<EmojiPackage> packages) {
         if (packages == null || packages.isEmpty()) {
             return Collections.emptyMap();
@@ -590,9 +590,9 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return packageIds;
     }
 
-       
-            
-       
+
+
+
     private EmojiPackageVO convertToVO(EmojiPackage pkg) {
         EmojiPackageVO vo = new EmojiPackageVO();
         BeanUtils.copyProperties(pkg, vo);
@@ -620,11 +620,11 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         vo.setRemainingCount(Math.max(0, itemLimit - itemCount));
     }
 
-       
-       
-       
-             
-       
+
+
+
+
+
     private String getTypeName(String type) {
         if (ObjectUtils.isEmpty(type)) return "";
         Map<String, String> typeMap = new HashMap<>();
@@ -633,9 +633,9 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return typeMap.getOrDefault(type, type);
     }
 
-       
-             
-       
+
+
+
     private String getCategoryName(String category) {
         if (ObjectUtils.isEmpty(category)) return "";
         Map<String, String> categoryMap = new HashMap<>();
@@ -646,8 +646,8 @@ public class EmojiShopServiceImpl implements EmojiShopService {
         return categoryMap.getOrDefault(category, category);
     }
 
-       
-       
+
+
     private Long getCurrentUserId() {
         return UserContext.getCurrentUserId();
     }

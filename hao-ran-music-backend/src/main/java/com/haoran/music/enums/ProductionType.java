@@ -2,30 +2,30 @@ package com.haoran.music.enums;
 
 import lombok.Getter;
 
-   
-                      
-                        
-   
+
+
+
+
 @Getter
 public enum ProductionType {
-       
-            
-       
+
+
+
     DEMO("demo", "Demo版"),
 
-       
-          
-       
+
+
+
     OFFICIAL("official", "正式版"),
 
-       
-          
-       
+
+
+
     REMASTERED("remastered", "重制版"),
 
-       
-          
-       
+
+
+
     DELUXE("deluxe", "豪华版");
 
     private final String code;

@@ -21,11 +21,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-   
-                                            
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class MediaScanServiceImpl extends ServiceImpl<SongMapper, Song> implements MediaScanService {
@@ -195,9 +195,9 @@ public class MediaScanServiceImpl extends ServiceImpl<SongMapper, Song> implemen
         return null;
     }
 
-       
-                                             
-       
+
+
+
     private String getUrlToNode3Path(String url) {
         if (StrUtil.isBlank(url) || StrUtil.isBlank(node3MediaRoot)) {
             return null;

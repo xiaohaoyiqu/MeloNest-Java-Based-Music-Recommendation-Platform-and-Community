@@ -8,10 +8,10 @@ import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface ModerationAppealMapper extends BaseMapper<ModerationAppeal> {
 

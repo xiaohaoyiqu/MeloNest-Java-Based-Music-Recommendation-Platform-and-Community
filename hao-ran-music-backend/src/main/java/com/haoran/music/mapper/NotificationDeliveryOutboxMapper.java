@@ -11,11 +11,11 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 import java.util.Map;
 
-   
-                           
-  
-                      
-   
+
+
+
+
+
 @Mapper
 public interface NotificationDeliveryOutboxMapper extends BaseMapper<NotificationDeliveryOutboxEvent> {
 
@@ -26,9 +26,9 @@ public interface NotificationDeliveryOutboxMapper extends BaseMapper<Notificatio
             + "'pending', 0, #{maxAttempts}, NOW(), NOW())")
     int insertEvent(NotificationDeliveryOutboxEvent event);
 
-       
-                                                   
-       
+
+
+
     @Select("SELECT * FROM notification_delivery_outbox WHERE event_id = #{eventId} "
             + "AND status = 'processing' AND worker_id = #{workerId} "
             + "AND lease_until IS NOT NULL AND lease_until > NOW() LIMIT 1")
@@ -41,9 +41,9 @@ public interface NotificationDeliveryOutboxMapper extends BaseMapper<Notificatio
             + "ORDER BY create_time ASC LIMIT #{limit}")
     List<String> selectDueEventIds(@Param("limit") int limit);
 
-       
-                                             
-       
+
+
+
     @Update("UPDATE notification_delivery_outbox SET status = 'processing', worker_id = #{workerId}, lease_until = DATE_ADD(NOW(), INTERVAL #{leaseSeconds} SECOND), attempt_count = attempt_count + 1, error_category = NULL, error_message = NULL, update_time = NOW() WHERE event_id = #{eventId} AND attempt_count < max_attempts AND ((status IN ('pending','failed') AND (next_retry_time IS NULL OR next_retry_time <= NOW())) OR (status = 'processing' AND lease_until IS NOT NULL AND lease_until <= NOW()))")
     int claimEvent(@Param("eventId") String eventId,
                    @Param("workerId") String workerId,
@@ -52,9 +52,9 @@ public interface NotificationDeliveryOutboxMapper extends BaseMapper<Notificatio
     @Update("UPDATE notification_delivery_outbox SET status = 'success', delivered_at = NOW(), worker_id = NULL, lease_until = NULL, next_retry_time = NULL, error_category = NULL, error_message = NULL, update_time = NOW() WHERE event_id = #{eventId} AND status = 'processing' AND worker_id = #{workerId}")
     int markSuccess(@Param("eventId") String eventId, @Param("workerId") String workerId);
 
-       
-                                      
-       
+
+
+
     @Update("UPDATE notification_delivery_outbox SET status = 'failed', worker_id = NULL, lease_until = NULL, error_category = #{errorCategory}, error_message = #{errorMessage}, next_retry_time = CASE WHEN #{retryDelaySeconds} IS NULL THEN NULL ELSE DATE_ADD(NOW(), INTERVAL #{retryDelaySeconds} SECOND) END, update_time = NOW() WHERE event_id = #{eventId} AND status = 'processing' AND worker_id = #{workerId}")
     int markFailed(@Param("eventId") String eventId,
                    @Param("workerId") String workerId,
@@ -62,21 +62,21 @@ public interface NotificationDeliveryOutboxMapper extends BaseMapper<Notificatio
                    @Param("errorMessage") String errorMessage,
                    @Param("retryDelaySeconds") Integer retryDelaySeconds);
 
-       
-                                    
-       
+
+
+
     @Update("UPDATE notification_delivery_outbox SET status = 'failed', attempt_count = max_attempts, worker_id = NULL, lease_until = NULL, error_category = #{errorCategory}, error_message = #{errorMessage}, next_retry_time = NULL, update_time = NOW() WHERE event_id = #{eventId} AND status = 'processing' AND worker_id = #{workerId}")
     int markTerminalFailed(@Param("eventId") String eventId,
                            @Param("workerId") String workerId,
                            @Param("errorCategory") String errorCategory,
                            @Param("errorMessage") String errorMessage);
 
-       
-                                         
-      
-                          
-                    
-       
+
+
+
+
+
+
     @Update("UPDATE notification_delivery_outbox SET status = 'pending', attempt_count = 0, worker_id = NULL, lease_until = NULL, error_category = NULL, error_message = NULL, next_retry_time = NOW(), update_time = NOW() WHERE event_id = #{eventId} AND status = 'failed'")
     int requeueFailed(@Param("eventId") String eventId);
 
@@ -84,12 +84,12 @@ public interface NotificationDeliveryOutboxMapper extends BaseMapper<Notificatio
             + "FROM notification_delivery_outbox GROUP BY status ORDER BY status")
     List<Map<String, Object>> selectStatusSummary();
 
-       
-                               
-      
-                        
-                     
-       
+
+
+
+
+
+
     @Select("SELECT event_id AS eventId, notification_id AS notificationId, recipient_id AS recipientId, "
             + "attempt_count AS attemptCount, max_attempts AS maxAttempts, "
             + "error_category AS errorCategory, next_retry_time AS nextRetryTime, update_time AS updateTime "

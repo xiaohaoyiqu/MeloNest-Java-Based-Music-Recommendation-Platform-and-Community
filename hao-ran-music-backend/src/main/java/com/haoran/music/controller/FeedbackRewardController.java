@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-   
-          
-                     
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/feedback-reward")
@@ -30,9 +30,9 @@ public class FeedbackRewardController {
         this.feedbackRewardService = feedbackRewardService;
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("创建反馈奖励")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/create")
@@ -42,9 +42,9 @@ public class FeedbackRewardController {
         return Result.success(feedbackRewardService.createReward(feedbackId, rewardLevel, rewardDescription));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("发放反馈奖励")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{id}/grant")
@@ -56,9 +56,9 @@ public class FeedbackRewardController {
         return Result.success(feedbackRewardService.grantReward(id, grantorId));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("取消反馈奖励")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{id}/cancel")
@@ -67,9 +67,9 @@ public class FeedbackRewardController {
         return Result.success(feedbackRewardService.cancelReward(id, cancelReason));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取我的奖励列表")
     @GetMapping("/my-rewards")
     public Result getMyRewards(HttpServletRequest request,
@@ -82,9 +82,9 @@ public class FeedbackRewardController {
         return Result.success(feedbackRewardService.getMyRewards(userId, page, size));
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("获取待发放奖励")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending")
@@ -93,27 +93,27 @@ public class FeedbackRewardController {
         return Result.success(feedbackRewardService.getPendingRewards(page, size));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取奖励等级配置")
     @GetMapping("/reward-levels")
     public Result getRewardLevels() {
         return Result.success(feedbackRewardService.getRewardLevels());
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取奖励详情")
     @GetMapping("/{id}")
     public Result getRewardDetail(@PathVariable Long id) {
         return Result.success(feedbackRewardService.getRewardDetail(id));
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("批量发放奖励")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/batch-grant")
@@ -125,9 +125,9 @@ public class FeedbackRewardController {
         return Result.success(feedbackRewardService.batchGrantRewards(ids, grantorId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取奖励统计")
     @GetMapping("/statistics")
     public Result getRewardStatistics(HttpServletRequest request) {

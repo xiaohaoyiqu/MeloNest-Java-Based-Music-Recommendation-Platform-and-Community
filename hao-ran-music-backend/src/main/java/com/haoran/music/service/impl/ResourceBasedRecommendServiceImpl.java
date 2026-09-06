@@ -15,19 +15,19 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                             
-  
-        
-                               
-   
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommendService {
 
     private final SongResourceRequestMapper songResourceRequestMapper;
-                                         
+
     private final SongMapper songMapper;
     private final ArtistMapper artistMapper;
     private final SongLikeMapper songLikeMapper;
@@ -53,7 +53,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         result.setSource("resource_request");
         result.setSourceName("根据你的申请推荐");
 
-                        
+
         List<SongResourceRequest> userRequests = getUserRequests(userId, 50);
 
         if (userRequests.isEmpty()) {
@@ -61,7 +61,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             return result;
         }
 
-                         
+
         Set<String> requestedArtists = new HashSet<>();
         Set<String> requestedGenres = new HashSet<>();
         Map<String, Integer> artistRequestCount = new HashMap<>();
@@ -71,20 +71,20 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
                 requestedArtists.add(request.getArtistName());
                 artistRequestCount.merge(request.getArtistName(), 1, Integer::sum);
             }
-                             
+
             String genre = inferGenreFromArtist(request.getArtistName());
             if (genre != null) {
                 requestedGenres.add(genre);
             }
         }
 
-                          
+
         Set<Long> userLikedSongIds = getUserLikedSongIds(userId);
 
-                           
+
         Map<Long, Double> songScoreMap = new HashMap<>();
 
-                               
+
         for (String artistName : requestedArtists) {
             List<Artist> artists = findArtistsByName(artistName);
             for (Artist artist : artists) {
@@ -97,7 +97,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
                 List<Song> artistSongs = filterPublicUploaderSongs(songMapper.selectList(wrapper));
                 for (Song song : artistSongs) {
                     if (!userLikedSongIds.contains(song.getId())) {
-                                              
+
                         double score = 50.0 + artistRequestCount.getOrDefault(artistName, 1) * 10;
                         songScoreMap.put(song.getId(), Math.max(songScoreMap.getOrDefault(song.getId(), 0.0), score));
                     }
@@ -105,7 +105,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             }
         }
 
-                         
+
         for (String genre : requestedGenres) {
             LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Song::getMainType, genre)
@@ -121,7 +121,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             }
         }
 
-                      
+
         List<RecommendVO.SongSimpleVO> songs = songScoreMap.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(actualLimit)
@@ -144,7 +144,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         result.setSource("hot_request");
         result.setSourceName("热门申请推荐");
 
-                          
+
         Map<String, Integer> songRequestCount = getHotRequestedSongs(100);
 
         if (songRequestCount.isEmpty()) {
@@ -152,17 +152,17 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             return result;
         }
 
-                          
+
         Set<Long> userLikedSongIds = getUserLikedSongIds(userId);
 
-                             
+
         Map<Long, Double> songScoreMap = new HashMap<>();
 
         for (Map.Entry<String, Integer> entry : songRequestCount.entrySet()) {
             String songName = entry.getKey();
             Integer requestCount = entry.getValue();
 
-                              
+
             LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
             wrapper.like(Song::getName, songName)
                     .eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
@@ -172,14 +172,14 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             List<Song> matchedSongs = filterPublicUploaderSongs(songMapper.selectList(wrapper));
             for (Song song : matchedSongs) {
                 if (!userLikedSongIds.contains(song.getId())) {
-                                  
+
                     double score = 50.0 + requestCount * 5;
                     songScoreMap.put(song.getId(), Math.max(songScoreMap.getOrDefault(song.getId(), 0.0), score));
                 }
             }
         }
 
-                      
+
         List<RecommendVO.SongSimpleVO> songs = songScoreMap.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(actualLimit)
@@ -199,14 +199,14 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         result.setSource("request_preference");
         result.setSourceName("申请偏好推荐");
 
-                             
+
         Map<String, Integer> genrePreference = analyzeRequestGenrePreference(userId);
         Map<String, Integer> languagePreference = analyzeRequestLanguagePreference(userId);
 
-                          
+
         Set<Long> userLikedSongIds = getUserLikedSongIds(userId);
 
-                        
+
         Map<Long, Double> songScoreMap = new HashMap<>();
 
         for (Map.Entry<String, Integer> entry : genrePreference.entrySet()) {
@@ -223,14 +223,14 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             List<Song> genreSongs = filterPublicUploaderSongs(songMapper.selectList(wrapper));
             for (Song song : genreSongs) {
                 if (!userLikedSongIds.contains(song.getId())) {
-                                  
+
                     double score = weight * 10.0 + (song.getHotScore() != null ? song.getHotScore() / 10.0 : 0);
                     songScoreMap.put(song.getId(), Math.max(songScoreMap.getOrDefault(song.getId(), 0.0), score));
                 }
             }
         }
 
-                              
+
         for (Map.Entry<String, Integer> entry : languagePreference.entrySet()) {
             String language = entry.getKey();
             Integer weight = entry.getValue();
@@ -245,14 +245,14 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             List<Song> languageSongs = filterPublicUploaderSongs(songMapper.selectList(wrapper));
             for (Song song : languageSongs) {
                 if (!userLikedSongIds.contains(song.getId())) {
-                                    
+
                     double score = weight * 5.0 + (song.getHotScore() != null ? song.getHotScore() / 20.0 : 0);
                     songScoreMap.put(song.getId(), Math.max(songScoreMap.getOrDefault(song.getId(), 0.0), score));
                 }
             }
         }
 
-                      
+
         List<RecommendVO.SongSimpleVO> songs = songScoreMap.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(actualLimit)
@@ -268,16 +268,16 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
     public Map<String, Object> getUnmetRequestsAnalysis(Long userId) {
         Map<String, Object> analysis = new HashMap<>();
 
-                        
+
         List<SongResourceRequest> userRequests = getUserRequests(userId, 1000);
 
-                  
+
         int totalRequests = userRequests.size();
         int pendingCount = 0;
         int completedCount = 0;
         int rejectedCount = 0;
 
-                 
+
         List<Map<String, String>> unmatchedList = new ArrayList<>();
 
         for (SongResourceRequest request : userRequests) {
@@ -290,7 +290,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
                 rejectedCount++;
             }
 
-                     
+
             if (ObjectUtils.isEmpty(request.getMatchedSongId()) &&
                     ObjectUtils.isEmpty(request.getAutoSongId())) {
                 Map<String, String> unmet = new HashMap<>();
@@ -303,7 +303,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             }
         }
 
-                       
+
         Map<String, Integer> unmatchedSongCount = new HashMap<>();
         for (Map<String, String> unmet : unmatchedList) {
             String key = unmet.get("songName") + " - " + unmet.get("artistName");
@@ -338,14 +338,14 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
 
         Map<String, Object> statistics = new HashMap<>();
 
-                          
+
         LambdaQueryWrapper<SongResourceRequest> wrapper = new LambdaQueryWrapper<>();
         wrapper.ge(SongResourceRequest::getCreateTime, LocalDateTime.now().minusDays(30))
                 .eq(SongResourceRequest::getDeleted, 0);
 
         List<SongResourceRequest> recentRequests = filterPublicSignalRequests(songResourceRequestMapper.selectList(wrapper));
 
-                      
+
         Map<String, Integer> songCount = new HashMap<>();
         Map<String, Integer> artistCount = new HashMap<>();
 
@@ -357,7 +357,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
             artistCount.merge(artistKey, 1, Integer::sum);
         }
 
-                   
+
         List<Map<String, Object>> topSongs = songCount.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(actualLimit)
@@ -369,7 +369,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
                 })
                 .collect(Collectors.toList());
 
-                   
+
         List<Map<String, Object>> topArtists = artistCount.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(actualLimit)
@@ -388,11 +388,11 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         return statistics;
     }
 
-                                                       
 
-       
-                
-       
+
+
+
+
     private List<SongResourceRequest> getUserRequests(Long userId, int limit) {
         LambdaQueryWrapper<SongResourceRequest> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongResourceRequest::getUserId, userId)
@@ -403,9 +403,9 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         return songResourceRequestMapper.selectList(wrapper);
     }
 
-       
-                   
-       
+
+
+
     private Set<Long> getUserLikedSongIds(Long userId) {
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
@@ -417,9 +417,9 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
                 .collect(Collectors.toSet());
     }
 
-       
-               
-       
+
+
+
     private List<Artist> findArtistsByName(String artistName) {
         LambdaQueryWrapper<Artist> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(Artist::getName, artistName)
@@ -429,9 +429,9 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         return artistMapper.selectList(wrapper);
     }
 
-       
-                 
-       
+
+
+
     private Map<String, Integer> getHotRequestedSongs(int limit) {
         LambdaQueryWrapper<SongResourceRequest> wrapper = new LambdaQueryWrapper<>();
         wrapper.ge(SongResourceRequest::getCreateTime, LocalDateTime.now().minusDays(30))
@@ -469,18 +469,18 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
     }
 
 
-       
-                                                                             
-         
-      
-       
+
+
+
+
+
     private String inferGenreFromArtist(String artistName) {
         if (artistName == null || artistName.trim().isEmpty()) {
             return null;
         }
-                      
+
         String name = artistName.trim().toLowerCase();
-                     
+
         if (name.contains("dj") || name.contains("组合") || name.contains("band")) {
             return "电子";
         }
@@ -493,7 +493,7 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         if (name.contains("民谣") || name.contains("folk")) {
             return "民谣";
         }
-                           
+
         String[] popArtists = {"周杰伦", "陈奕迅", "林俊杰", "王力宏", "蔡依林", "张韶涵", "梁静茹", "孙燕姿", "邓紫棋", "薛之谦", "华晨宇", "李荣浩", "毛不易", "汪苏泷"};
         for (String artist : popArtists) {
             if (name.contains(artist.toLowerCase()) || artist.toLowerCase().contains(name)) {
@@ -512,17 +512,17 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
                 return "说唱";
             }
         }
-                      
+
         log.debug("无法从歌手名推断流派: {}", artistName);
         return null;
     }
 
 
-       
-                  
-       
+
+
+
     private Map<String, Integer> analyzeRequestGenrePreference(Long userId) {
-                          
+
         List<SongResourceRequest> requests = getUserRequests(userId, 100);
 
         Map<String, Integer> genreCount = new HashMap<>();
@@ -538,9 +538,9 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         return genreCount;
     }
 
-       
-                  
-       
+
+
+
     private Map<String, Integer> analyzeRequestLanguagePreference(Long userId) {
         List<SongResourceRequest> requests = getUserRequests(userId, 100);
 
@@ -557,9 +557,9 @@ public class ResourceBasedRecommendServiceImpl implements ResourceBasedRecommend
         return languageCount;
     }
 
-       
-              
-       
+
+
+
     private RecommendVO.SongSimpleVO convertToSimpleVO(Long songId) {
         Song song = songMapper.selectById(songId);
         if (!isPublicSong(song)) {

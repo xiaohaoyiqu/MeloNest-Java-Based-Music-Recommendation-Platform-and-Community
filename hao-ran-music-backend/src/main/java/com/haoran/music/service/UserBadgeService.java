@@ -1,7 +1,7 @@
-  
-                      
-                           
-   
+
+
+
+
 package com.haoran.music.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -31,11 +31,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-              
-                                        
-  
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
@@ -67,15 +67,15 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
     @Autowired(required = false)
     private BadgeGrantEventMapper badgeGrantEventMapper;
 
-                                                           
 
-       
-                      
-       
+
+
+
+
     private static final Map<String, BadgeConfig> BADGE_CONFIGS = new LinkedHashMap<>();
 
     static {
-                                      
+
         BADGE_CONFIGS.put("music_master", new BadgeConfig("music_master", "音乐达人", "🎵", "#ff6b6b",
             "累计播放100首歌曲", "播放100首不同歌曲", "achievement", "common"));
         BADGE_CONFIGS.put("music_legend", new BadgeConfig("music_legend", "音乐传奇", "👑", "#ffd700",
@@ -101,7 +101,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         BADGE_CONFIGS.put("veteran", new BadgeConfig("veteran", "元老用户", "🏅", "#fbc2eb",
             "注册1年以上", "注册满1年", "achievement", "epic"));
 
-                                          
+
         BADGE_CONFIGS.put("active_normal", new BadgeConfig("active_normal", "活跃新星", "🌱", "#90ee90",
             "活跃度达到30分", "保持活跃获得30活跃度评分", "activity", "common"));
         BADGE_CONFIGS.put("active_member", new BadgeConfig("active_member", "活跃会员", "🌿", "#00d2d3",
@@ -111,7 +111,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         BADGE_CONFIGS.put("active_legend", new BadgeConfig("active_legend", "活跃传奇", "🌺", "#ff6b6b",
             "活跃度达到100分", "保持活跃获得100活跃度评分", "activity", "legendary"));
 
-                                      
+
         BADGE_CONFIGS.put("vip_monthly", new BadgeConfig("vip_monthly", "月度会员", "💎", "#ffd700",
             "月度VIP会员", "开通月度会员", "vip", "common"));
         BADGE_CONFIGS.put("vip_quarterly", new BadgeConfig("vip_quarterly", "季度会员", "💠", "#ffec8b",
@@ -119,7 +119,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         BADGE_CONFIGS.put("vip_yearly", new BadgeConfig("vip_yearly", "年度会员", "👑", "#ffeaa7",
             "年度VIP会员", "开通年度会员", "vip", "epic"));
 
-                                      
+
         BADGE_CONFIGS.put("creator_basic", new BadgeConfig("creator_basic", "创作者", "🎤", "#ff6b6b",
             "认证创作者", "成为认证创作者", "creator", "common"));
         BADGE_CONFIGS.put("creator_pro", new BadgeConfig("creator_pro", "资深创作者", "🎸", "#ff8e8e",
@@ -129,7 +129,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         BADGE_CONFIGS.put("creator_legend", new BadgeConfig("creator_legend", "创作传奇", "🎼", "#c0392b",
             "发布100首作品", "发布100首原创作品", "creator", "legendary"));
 
-                                         
+
         BADGE_CONFIGS.put("spring_festival_2026", new BadgeConfig("spring_festival_2026", "新春快乐", "🧧", "#e74c3c",
             "2026春节限定", "在2026年春节期间签到", "festival", "legendary"));
         BADGE_CONFIGS.put("valentine_2026", new BadgeConfig("valentine_2026", "情人节限定", "💕", "#fd79a8",
@@ -139,7 +139,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         BADGE_CONFIGS.put("children_day_2026", new BadgeConfig("children_day_2026", "童心未泯", "🎈", "#55efc4",
             "2026儿童节限定", "在2026年儿童节登录", "festival", "rare"));
 
-                                           
+
         BADGE_CONFIGS.put("first_song", new BadgeConfig("first_song", "初听之音", "🎧", "#74b9ff",
             "首次播放歌曲", "播放第一首歌曲", "special", "common"));
         BADGE_CONFIGS.put("night_owl", new BadgeConfig("night_owl", "夜猫子", "🦉", "#6c5ce7",
@@ -154,9 +154,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             "帮助他人", "帮助10位新用户完成注册", "special", "rare"));
     }
 
-       
-             
-       
+
+
+
     private static final Map<String, BadgeCategory> BADGE_CATEGORIES = new HashMap<>();
 
     static {
@@ -168,9 +168,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         BADGE_CATEGORIES.put("special", new BadgeCategory("special", "特殊成就", "特殊方式获得", 6));
     }
 
-       
-            
-       
+
+
+
     private static final Map<String, RarityConfig> RARITY_CONFIGS = new HashMap<>();
 
     static {
@@ -180,9 +180,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         RARITY_CONFIGS.put("legendary", new RarityConfig("legendary", "传说", "#ffd700", 4));
     }
 
-       
-              
-       
+
+
+
     private static class BadgeConfig {
         String type;
         String name;
@@ -206,9 +206,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-       
-              
-       
+
+
+
     private static class BadgeCategory {
         String code;
         String name;
@@ -223,9 +223,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-       
-               
-       
+
+
+
     private static class RarityConfig {
         String code;
         String name;
@@ -240,14 +240,14 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-                                                       
 
-       
-                    
-      
-                         
-                     
-       
+
+
+
+
+
+
+
     public List<UserBadgeVO> getUserBadgeVOList(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return Collections.emptyList();
@@ -267,11 +267,11 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             .collect(Collectors.toList());
     }
 
-       
-                    
-      
-                                            
-       
+
+
+
+
+
     public List<UserBadgeVO> getPublicUserBadgeVOList(Long userId) {
         if (ObjectUtils.isEmpty(userId)
                 || !UserAccountStatusUtil.canExposePublicContent(userId, userMapper::selectById)) {
@@ -291,9 +291,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
                 .collect(Collectors.toList());
     }
 
-       
-                                            
-       
+
+
+
     private boolean isPubliclyVisible(UserBadge badge) {
         if (ObjectUtils.isEmpty(badgeRuleCatalogService) || ObjectUtils.isEmpty(badge.getRuleId())) {
             return true;
@@ -302,13 +302,13 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return ObjectUtils.isNotEmpty(rule) && "public".equals(rule.getVisibility());
     }
 
-       
-                  
-      
-                         
-                           
-                   
-       
+
+
+
+
+
+
+
     public List<UserBadgeVO> getUserBadgesByCategory(Long userId, String category) {
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(category)) {
             return Collections.emptyList();
@@ -328,34 +328,34 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             .collect(Collectors.toList());
     }
 
-       
-               
-      
-                        
-                   
-       
+
+
+
+
+
+
     private boolean isValidBadge(UserBadge badge) {
         if (badge == null) {
             return false;
         }
-                 
+
         if (badge.getExpireTime() != null && badge.getExpireTime().isBefore(LocalDateTime.now())) {
             return false;
         }
         return true;
     }
 
-       
-               
-      
-                        
-                   
-       
+
+
+
+
+
+
     private UserBadgeVO convertToVO(UserBadge badge) {
         UserBadgeVO vo = new UserBadgeVO();
         BeanUtils.copyProperties(badge, vo);
 
-                 
+
         if (badge.getExpireTime() == null) {
             vo.setRemainingDays(-1);      
         } else {
@@ -375,7 +375,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             vo.setCategory(rule.getCategory());
             vo.setRarityOrder(rarityOrder(rule.getRarity()));
         } else {
-                                             
+
             BadgeConfig config = BADGE_CONFIGS.get(badge.getBadgeType());
             if (config != null) {
             vo.setDescription(config.description);
@@ -398,27 +398,27 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return vo;
     }
 
-       
-                       
-       
+
+
+
     private int rarityOrder(String rarity) {
         RarityConfig config = RARITY_CONFIGS.get(rarity);
         return config == null ? 1 : config.displayOrder;
     }
 
-                                                     
 
-       
-              
-      
-                             
-                             
-                             
-                             
-                             
-                             
-                             
-       
+
+
+
+
+
+
+
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     private void addLegacyUserBadge(Long userId, String badgeType, String badgeName,
                                     String badgeIcon, String badgeColor,
@@ -426,14 +426,14 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         if (userMapper.selectByIdForUpdate(userId) == null) {
             throw new IllegalArgumentException("用户不存在");
         }
-                      
+
         UserBadge existing = lambdaQuery()
             .eq(UserBadge::getUserId, userId)
             .eq(UserBadge::getBadgeType, badgeType)
             .one();
 
         if (existing != null) {
-                     
+
             if (days != null && days > 0) {
                 existing.setExpireTime(LocalDateTime.now().plusDays(days));
                 updateById(existing);
@@ -441,7 +441,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             return;
         }
 
-                
+
         UserBadge badge = new UserBadge();
         badge.setUserId(userId);
         badge.setBadgeType(badgeType);
@@ -460,17 +460,17 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         log.info("颁发徽章成功: userId={}, badgeType={}, badgeName={}", userId, badgeType, badgeName);
     }
 
-       
-                       
-      
-                         
-                            
-                         
-                                   
-                              
-                         
-                         
-       
+
+
+
+
+
+
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public boolean grantBadgeByRule(Long userId, String badgeType, Integer days,
                                     Long operatorId, String requestId, String reason) {
@@ -491,16 +491,16 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
                 "operatorDecision=true", operatorId, truncate(reason, 500));
     }
 
-       
-                        
-      
-                         
-                            
-                               
-                               
-                                    
-                         
-       
+
+
+
+
+
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public boolean grantSystemBadge(Long userId, String badgeType, String evidenceType,
                                     String evidenceId, String evidenceSummary) {
@@ -524,16 +524,16 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
                 evidenceSummary, null, "系统规则授予");
     }
 
-       
-                            
-      
-                         
-                            
-                                   
-                              
-                           
-                                     
-       
+
+
+
+
+
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public boolean revokeBadge(Long userId, String badgeType, Long operatorId,
                                String requestId, String reason) {
@@ -564,9 +564,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return baseMapper.delete(wrapper) == 1;
     }
 
-       
-                              
-       
+
+
+
     private boolean grantRule(Long userId, BadgeRule rule, Integer days,
                               String evidenceType, String evidenceId, String evidenceSummary,
                               Long operatorId, String reason) {
@@ -617,9 +617,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return true;
     }
 
-       
-                       
-       
+
+
+
     private BadgeGrantEvent grantEvent(String businessKey, Long userId, String badgeType,
                                        Integer ruleVersion, String action, String evidenceType,
                                        String evidenceId, String evidenceSummary, Long operatorId,
@@ -639,9 +639,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return event;
     }
 
-       
-                        
-       
+
+
+
     private void requireStableRequest(String requestId, String reason) {
         if (ObjectUtils.isEmpty(requestId)
                 || !requestId.matches("[A-Za-z0-9:_-]{8,128}")) {
@@ -652,27 +652,27 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-       
-                           
-       
+
+
+
     private void requireOperator(Long operatorId) {
         if (ObjectUtils.isEmpty(operatorId) || operatorId <= 0) {
             throw new IllegalArgumentException("管理员身份无效");
         }
     }
 
-       
-                         
-       
+
+
+
     private void requireConfiguredRuleServices() {
         if (ObjectUtils.isEmpty(badgeRuleCatalogService) || ObjectUtils.isEmpty(badgeGrantEventMapper)) {
             throw new IllegalStateException("徽章规则服务尚未完成迁移");
         }
     }
 
-       
-                 
-       
+
+
+
     private String normalizeCode(String value, String fallback) {
         String normalized = ObjectUtils.isEmpty(value) ? fallback : value.trim().toLowerCase(Locale.ROOT);
         if (!normalized.matches("[a-z0-9_]{2,64}")) {
@@ -681,16 +681,16 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return normalized;
     }
 
-       
-                 
-       
+
+
+
     private String normalizePosition(String position) {
         return Arrays.asList("avatar", "name", "both").contains(position) ? position : "name";
     }
 
-       
-                       
-       
+
+
+
     private Integer normalizeGrantDays(Integer days) {
         if (ObjectUtils.isEmpty(days)) {
             return null;
@@ -701,9 +701,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return days;
     }
 
-       
-                      
-       
+
+
+
     private String truncate(String value, int maxLength) {
         if (ObjectUtils.isEmpty(value)) {
             return null;
@@ -712,13 +712,13 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return normalized.length() <= maxLength ? normalized : normalized.substring(0, maxLength);
     }
 
-                                                         
 
-       
-                           
-      
-                         
-       
+
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public void calculateAndUpdateAchievementBadges(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -737,7 +737,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             return;
         }
 
-                              
+
         long songCount = getDistinctSongCount(userId);
         if (songCount >= 500) {
             awardBadge(userId, "music_legend");
@@ -746,7 +746,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             awardBadge(userId, "music_master");
         }
 
-                            
+
         int commentCount = getCommentCount(userId);
         if (commentCount >= 200) {
             awardBadge(userId, "comment_expert");
@@ -755,7 +755,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             awardBadge(userId, "comment_master");
         }
 
-                            
+
         int favoriteCount = getFavoriteCount(userId);
         if (favoriteCount >= 200) {
             awardBadge(userId, "super_collector");
@@ -764,7 +764,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             awardBadge(userId, "collector");
         }
 
-                            
+
         int fansCount = user.getFansCount() != null ? user.getFansCount() : 0;
         if (fansCount >= 100) {
             awardBadge(userId, "social_influencer");
@@ -773,7 +773,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             awardBadge(userId, "social_star");
         }
 
-                             
+
         int consecutiveDays = getConsecutiveCheckinDays(userId);
         if (consecutiveDays >= 30) {
             awardBadge(userId, "loyal_user");
@@ -782,7 +782,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             awardBadge(userId, "active_user");
         }
 
-                              
+
         if (user.getCreateTime() != null) {
             long registeredDays = ChronoUnit.DAYS.between(user.getCreateTime(), LocalDateTime.now());
             if (registeredDays >= 365) {
@@ -793,7 +793,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             }
         }
 
-                   
+
         if (user.getIsCreator() != null && user.getIsCreator() == 1) {
             awardBadge(userId, "creator_basic");
             int workCount = getCreatorWorkCount(userId);
@@ -808,7 +808,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             }
         }
 
-                       
+
         if (userActivityEnhancedService != null) {
             Integer activityScore = userActivityEnhancedService.getEnhancedActivityScore(userId);
             if (activityScore != null) {
@@ -817,9 +817,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-       
-                             
-       
+
+
+
     private void calculateFromPublishedRules(Long userId, User user) {
         List<BadgeRule> rules = badgeRuleCatalogService.listActiveRules(LocalDateTime.now());
         Map<String, Long> metrics = new HashMap<>();
@@ -838,9 +838,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-       
-                                 
-       
+
+
+
     private Long metricValue(Long userId, User user, String triggerType, Map<String, Long> metrics) {
         String trigger = normalizeCode(triggerType, "manual");
         if ("manual".equals(trigger) || "system_event".equals(trigger)) {
@@ -891,14 +891,14 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return value;
     }
 
-       
-              
-      
-                         
-                                 
-       
+
+
+
+
+
+
     private void calculateActivityBadges(Long userId, Integer activityScore) {
-                      
+
         if (activityScore >= 100) {
             awardBadge(userId, "active_legend");
         }
@@ -913,19 +913,19 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-       
-                  
-      
-                            
-                            
-       
+
+
+
+
+
+
     private void awardBadge(Long userId, String badgeType) {
         BadgeConfig config = BADGE_CONFIGS.get(badgeType);
         if (config == null) {
             return;
         }
 
-                    
+
         Long count = lambdaQuery()
             .eq(UserBadge::getUserId, userId)
             .eq(UserBadge::getBadgeType, badgeType)
@@ -941,14 +941,14 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
     }
 
-                                                       
 
-       
-                    
-      
-                         
-                   
-       
+
+
+
+
+
+
+
     private long getDistinctSongCount(Long userId) {
         try {
             if (listenHistoryService != null) {
@@ -956,17 +956,17 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
                 return count != null ? count : 0;
             }
         } catch (Exception e) {
-                   
+
         }
         return 0;
     }
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     private int getCommentCount(Long userId) {
         try {
             if (commentService != null) {
@@ -975,17 +975,17 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
                 return (int) commentService.count(wrapper);
             }
         } catch (Exception e) {
-                   
+
         }
         return 0;
     }
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     private int getFavoriteCount(Long userId) {
         try {
             if (favoriteHistoryService != null) {
@@ -994,34 +994,34 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
                 return (int) favoriteHistoryService.count(wrapper);
             }
         } catch (Exception e) {
-                   
+
         }
         return 0;
     }
 
-       
-                 
-      
-                         
-                     
-       
+
+
+
+
+
+
     private int getConsecutiveCheckinDays(Long userId) {
         try {
             if (userCheckinService != null) {
                 return userCheckinService.getContinuousDays(userId);
             }
         } catch (Exception e) {
-                   
+
         }
         return 0;
     }
 
-       
-                
-      
-                         
-                   
-       
+
+
+
+
+
+
     private int getCreatorWorkCount(Long userId) {
         try {
             if (creatorWorkMapper != null) {
@@ -1037,13 +1037,13 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return 0;
     }
 
-                                                          
 
-       
-                        
-      
-                     
-       
+
+
+
+
+
+
     public List<UserBadgeVO> getAvailableBadges() {
         if (ObjectUtils.isNotEmpty(badgeRuleCatalogService)) {
             return badgeRuleCatalogService.listActiveRules(LocalDateTime.now()).stream()
@@ -1078,9 +1078,9 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             .collect(Collectors.toList());
     }
 
-       
-                             
-       
+
+
+
     private UserBadgeVO convertRuleToVO(BadgeRule rule) {
         UserBadgeVO vo = new UserBadgeVO();
         vo.setBadgeType(rule.getBadgeType());
@@ -1097,11 +1097,11 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return vo;
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     public List<Map<String, Object>> getBadgeCategories() {
         List<Map<String, Object>> result = new ArrayList<>();
         List<UserBadgeVO> availableBadges = getAvailableBadges();
@@ -1113,7 +1113,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             categoryMap.put("description", category.description);
             categoryMap.put("displayOrder", category.displayOrder);
 
-                          
+
             long count = availableBadges.stream()
                     .filter(badge -> category.code.equals(badge.getCategory()))
                     .count();
@@ -1127,11 +1127,11 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             .collect(Collectors.toList());
     }
 
-       
-                
-      
-                    
-       
+
+
+
+
+
     public List<Map<String, Object>> getRarityConfigs() {
         List<Map<String, Object>> result = new ArrayList<>();
 
@@ -1149,12 +1149,12 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
             .collect(Collectors.toList());
     }
 
-       
-                  
-      
-                           
-                   
-       
+
+
+
+
+
+
     public List<UserBadgeVO> getBadgesByCategory(String category) {
         if (ObjectUtils.isEmpty(category)) {
             return Collections.emptyList();
@@ -1164,21 +1164,21 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
                 .collect(Collectors.toList());
     }
 
-       
-                 
-      
-                         
-                   
-       
+
+
+
+
+
+
     public Map<String, Object> getUserBadgeStats(Long userId) {
         Map<String, Object> result = new HashMap<>();
 
         List<UserBadgeVO> badges = getUserBadgeVOList(userId);
 
-             
+
         result.put("totalBadges", badges.size());
 
-                
+
         Map<String, Long> categoryStats = new HashMap<>();
         for (BadgeCategory category : BADGE_CATEGORIES.values()) {
             long count = badges.stream()
@@ -1188,7 +1188,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
         result.put("categoryStats", categoryStats);
 
-                 
+
         Map<String, Long> rarityStats = new HashMap<>();
         for (String rarity : Arrays.asList("common", "rare", "epic", "legendary")) {
             long count = badges.stream()
@@ -1198,7 +1198,7 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         }
         result.put("rarityStats", rarityStats);
 
-              
+
         int totalConfigBadges = ObjectUtils.isNotEmpty(badgeRuleCatalogService)
                 ? getAvailableBadges().size() : BADGE_CONFIGS.size();
         double completionRate = totalConfigBadges == 0
@@ -1209,13 +1209,13 @@ public class UserBadgeService extends ServiceImpl<UserBadgeMapper, UserBadge> {
         return result;
     }
 
-       
-               
-      
-                          
-                          
-                          
-       
+
+
+
+
+
+
+
     public void setBadgeEquip(Long userId, Long badgeId, Boolean equip) {
         UserBadge badge = getById(badgeId);
         if (badge == null || !badge.getUserId().equals(userId)) {

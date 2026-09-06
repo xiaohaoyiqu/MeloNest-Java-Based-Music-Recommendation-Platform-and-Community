@@ -2,10 +2,10 @@ package com.haoran.music.common.enums;
 
 import lombok.Getter;
 
-   
-                      
-                      
-   
+
+
+
+
 @Getter
 public enum ContentType {
 

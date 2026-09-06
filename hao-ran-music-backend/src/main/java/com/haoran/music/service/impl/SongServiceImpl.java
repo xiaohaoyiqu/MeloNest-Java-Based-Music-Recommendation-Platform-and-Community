@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -67,9 +67,9 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                               
-   
+
+
+
 @Slf4j
 @Service
 public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements SongService {
@@ -164,8 +164,8 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             throw new BusinessException(ResultCode.NOT_FOUND, "\u6b4c\u66f2\u4e0d\u5b58\u5728");
         }
 
-                                        
-                                       
+
+
         applyLiveCounters(vo, accessSong);
 
         if (ObjectUtils.isNotEmpty(userId)) {
@@ -224,9 +224,9 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
                 List.class
         );
 
-                                                                                         
-                                                                                         
-                                            
+
+
+
         List<Song> filteredNewSongList = filterNewSongs(
                 filterPublicUploaderSongs(newSongList, 0), pageQuery);
         IPage<SongVO> resultPage = ConvertHelper.toPage(
@@ -381,10 +381,10 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
     public List<SongVO> getHotSongs(String type, Integer limit, Long userId) {
         String safeType = ObjectUtils.isEmpty(type) || "all".equalsIgnoreCase(type) ? null : type.trim();
         int actualLimit = limit == null ? 20 : Math.max(1, Math.min(limit, 100));
-                                           
+
         String cacheKey = RedisConstants.HOT_SONG_PREFIX + (safeType == null ? "all" : safeType);
 
-                            
+
         List<SongVO> cachedList = CacheHelper.getOrLoad(
                 redisUtils,
                 cacheKey,
@@ -394,11 +394,11 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
                 List.class
         );
 
-                        
+
         if (cachedList != null && !cachedList.isEmpty()) {
             List<SongVO> result = ConvertHelper.cloneVOList(cachedList, SongVO.class);
 
-                       
+
             if (ObjectUtils.isNotEmpty(userId)) {
                 Set<Long> favoriteSongIds = getFavoriteSongIdsByList(userId, cachedList);
                 ConvertHelper.setFieldFromSet(result, SongVO::getId, favoriteSongIds, SongVO::setIsFavorite);
@@ -437,9 +437,9 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
                 .collect(Collectors.toList());
     }
 
-       
-                 
-       
+
+
+
     private List<SongVO> loadHotSongsFromDB(String type, int limit) {
         int queryLimit = limit > 0 ? limit * 3 : limit;
         List<Song> hotSongs = baseMapper.selectHotSongsByType(type, queryLimit);
@@ -504,7 +504,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             return;
         }
 
-                   
+
         Song song = getById(songId);
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "\u6b4c\u66f2\u4e0d\u5b58\u5728");
@@ -514,7 +514,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             return;
         }
 
-                 
+
         ListenHistory history = new ListenHistory();
         history.setUserId(userId);
         history.setSongId(songId);
@@ -523,17 +523,17 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         history.setIsCompleted(CommonConstants.NO);
         listenHistoryMapper.insert(history);
 
-                                                   
+
         userStatisticsService.recordPlay(userId, songId, 0, false);
 
-                   
+
         LambdaQueryWrapper<ListenHistory> historyWrapper = new LambdaQueryWrapper<>();
         historyWrapper.eq(ListenHistory::getUserId, userId)
                 .orderByDesc(ListenHistory::getCreateTime);
         List<ListenHistory> historyList = listenHistoryMapper.selectList(historyWrapper);
 
         if (historyList.size() > CommonConstants.HISTORY_MAX_COUNT) {
-                           
+
             List<Long> idsToDelete = new ArrayList<>();
             for (int i = CommonConstants.HISTORY_MAX_COUNT; i < historyList.size(); i++) {
                 idsToDelete.add(historyList.get(i).getId());
@@ -543,18 +543,18 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             }
         }
 
-                                     
+
         String playCountKey = RedisConstants.PLAY_COUNT_PREFIX + songId;
         redisUtils.increment(playCountKey);
 
-                             
+
         if (ObjectUtils.isNotEmpty(playlistId)) {
             try {
                 Playlist playlist = playlistMapper.selectById(playlistId);
                 if (ObjectUtils.isNotEmpty(playlist)
                         && !playlist.getUserId().equals(userId)
                         && canContributePlaylistStats(playlist)) {
-                                    
+
                     playlist.setPlayCount((playlist.getPlayCount() != null ? playlist.getPlayCount() : 0L) + 1);
                     playlistMapper.updateById(playlist);
                     log.debug("歌单播放量+1: playlistId={}, songId={}, userId={}", playlistId, songId, userId);
@@ -564,7 +564,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             }
         }
 
-                   
+
         baseMapper.updateHotScore(songId);
 
         log.debug("记录播放: userId={}, songId={}, quality={}", userId, songId, quality);
@@ -614,22 +614,22 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
                 : controlledUrl + "&grant=" + mediaAccessGrantService.issue("song", songId, "preview", userId);
     }
 
-       
-                      
-      
-                         
-                        
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteSongIds(Long userId, List<Song> songs) {
         if (ObjectUtils.isEmpty(userId) || userId <= 0 || songs.isEmpty()) {
             return Collections.emptySet();
         }
 
-                   
+
         List<Long> songIds = ConvertHelper.extractIds(songs, Song::getId);
 
-                                                        
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
                 .in(SongLike::getSongId, songIds)
@@ -638,26 +638,26 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
 
         List<SongLike> songLikes = songLikeMapper.selectList(wrapper);
 
-                      
+
         return ConvertHelper.extractIdSet(songLikes, SongLike::getSongId);
     }
 
-       
-                                 
-      
-                         
-                            
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteSongIdsByList(Long userId, List<SongVO> songVOs) {
         if (ObjectUtils.isEmpty(userId) || userId <= 0 || songVOs.isEmpty()) {
             return Collections.emptySet();
         }
 
-                   
+
         List<Long> songIds = ConvertHelper.extractIds(songVOs, SongVO::getId);
 
-                                                        
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
                 .in(SongLike::getSongId, songIds)
@@ -666,19 +666,19 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
 
         List<SongLike> songLikes = songLikeMapper.selectList(wrapper);
 
-                      
+
         return ConvertHelper.extractIdSet(songLikes, SongLike::getSongId);
     }
 
-       
-                              
-      
-                         
-                         
-                                 
-       
+
+
+
+
+
+
+
     private Boolean checkIsFavorite(Long userId, Long songId) {
-                                                        
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getSongId, songId)
@@ -688,13 +688,13 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         return count != null && count > 0;
     }
 
-       
-           
-      
-                            
-                            
-                            
-       
+
+
+
+
+
+
+
     private void handleSort(LambdaQueryWrapper<Song> wrapper, String sortField, String sortOrder) {
         if (StrUtil.isBlank(sortField)) {
             wrapper.orderByDesc(Song::getCreateTime);
@@ -725,26 +725,26 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         }
     }
 
-       
-            
-      
-                       
-                   
-       
+
+
+
+
+
+
     private SongVO convertToVO(Song song) {
         SongVO vo = BeanUtil.copyProperties(song, SongVO.class);
 
-                                   
+
         vo.setIsSingle(song.getIsSingle());
 
-                   
+
         vo.setVersionType(song.getVersionType());
         vo.setVersionName(song.getVersionName());
-        
-                             
+
+
         vo.setLanguage(song.getLanguage());
 
-                
+
         if (StrUtil.isNotBlank(song.getSubTypes())) {
             try {
                 vo.setSubTypes(JSON.parseArray(song.getSubTypes(), String.class));
@@ -755,25 +755,25 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             vo.setSubTypes(new ArrayList<>());
         }
 
-                             
+
         vo.setUrlStandard(UrlHelper.buildRelativeAudioUrl(song.getUrlStandard()));
         vo.setUrlHigh(UrlHelper.buildRelativeAudioUrl(song.getUrlHigh()));
         vo.setUrlLossless(UrlHelper.buildRelativeAudioUrl(song.getUrlLossless()));
 
-                  
-           
+
+
         vo.setPlayable(hasPlayableAudioUrl(song));
 
-                 
+
         vo.setSizeStandard(song.getSizeStandard());
         vo.setSizeHigh(song.getSizeHigh());
         vo.setSizeLossless(song.getSizeLossless());
-                              
+
         String coverUrl = UrlHelper.buildRelativeCoverUrl(song.getCover());
         vo.setCover(StrUtil.isNotBlank(coverUrl) ? coverUrl : "/default-cover.png");
 
-                 
-           
+
+
         if (song.getHasLyric() != null && song.getHasLyric() == 1) {
             try {
                 LambdaQueryWrapper<com.haoran.music.entity.Lyric> lyricWrapper = new LambdaQueryWrapper<>();
@@ -835,15 +835,15 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         return value > Integer.MAX_VALUE ? Integer.MAX_VALUE : Math.max(0, value.intValue());
     }
 
-       
-                        
-      
-                         
-                        
-                          
-                         
-                             
-       
+
+
+
+
+
+
+
+
+
     @Override
     public void streamSong(Long songId, String quality, String grant, String range, Long userId,
                            javax.servlet.http.HttpServletResponse response) {
@@ -851,7 +851,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             throw new BusinessException(ResultCode.PARAM_ERROR, "\u6b4c\u66f2ID\u4e0d\u80fd\u4e3a\u7a7a");
         }
 
-                 
+
         Song song = getById(songId);
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "\u6b4c\u66f2\u4e0d\u5b58\u5728");
@@ -878,7 +878,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             requireVip(authorizedUserId);
         }
 
-               
+
         response.setHeader("Cache-Control", authorizedUserId != null ? "private, no-store" : "public, max-age=300");
         String sourceUrl = toSourceUrl(resolved.sourceUrl);
         if (!redirectToNginx(sourceUrl, "/songs/", response)) {
@@ -976,13 +976,13 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         }
     }
 
-       
-             
-      
-                           
-                          
-                             
-       
+
+
+
+
+
+
+
     private void streamAudio(String fileUrl, String range, javax.servlet.http.HttpServletResponse response) {
         java.net.HttpURLConnection conn = null;
         java.io.InputStream in = null;
@@ -995,12 +995,12 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
                 throw new BusinessException("外部音频地址不安全");
             }
 
-                               
+
             String encodedUrl = UrlHelper.encodePath(fileUrl);
             conn = ExternalStreamUtil.openGetConnection(encodedUrl);
             ExternalStreamUtil.applyBrowserHeaders(conn, false);
 
-                        
+
             if (StrUtil.isNotBlank(range) && range.startsWith("bytes=")) {
                 conn.setRequestProperty("Range", range);
             }
@@ -1021,7 +1021,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             response.setStatus(responseCode);
             response.setContentType(contentType);
 
-                            
+
             String acceptRanges = conn.getHeaderField("Accept-Ranges");
             if (StrUtil.isNotBlank(acceptRanges)) {
                 response.setHeader("Accept-Ranges", acceptRanges);
@@ -1037,7 +1037,7 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
                 response.setContentLengthLong(contentLength);
             }
 
-                   
+
             in = conn.getInputStream();
             javax.servlet.ServletOutputStream out = response.getOutputStream();
             ExternalStreamUtil.copy(in, out);
@@ -1082,10 +1082,10 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
                 || normalized.startsWith("binary/octet-stream");
     }
 
-       
-                                                                                        
-                                                              
-       
+
+
+
+
     private List<Long> parseArtistIds(String artistIds) {
         if (StrUtil.isBlank(artistIds)) {
             return Collections.emptyList();
@@ -1201,9 +1201,9 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         }
     }
 
-       
-                                                              
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean save(Song song) {
@@ -1219,9 +1219,9 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         return result;
     }
 
-       
-                                                                                           
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateById(Song song) {
@@ -1258,9 +1258,9 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         return result;
     }
 
-       
-                                                                
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeById(java.io.Serializable id) {
@@ -1346,54 +1346,54 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
     @Override
     public List<SongVO> getRisingSongs(Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Song::getDeleted, CommonConstants.NOT_DELETED)
                 .orderByDesc(Song::getHotScore)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
-        
+
         List<Song> songs = filterPublicUploaderSongs(list(wrapper), actualLimit);
         return ConvertHelper.toVOList(songs, this::convertToVO);
     }
 
-       
-                   
-      
-                        
-                        
-                   
-       
+
+
+
+
+
+
+
     @Override
     public List<SongVO> getSongsByGenre(String genre, Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Song::getDeleted, CommonConstants.NOT_DELETED);
-        
+
         if (StrUtil.isNotBlank(genre)) {
-                                 
+
             wrapper.eq(Song::getMainType, genre);
         }
-        
+
         wrapper.orderByDesc(Song::getHotScore, Song::getPlayCount)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
-        
+
         List<Song> songs = filterPublicUploaderSongs(list(wrapper), actualLimit);
         return ConvertHelper.toVOList(songs, this::convertToVO);
     }
 
-       
-                  
-      
-                        
-                   
-       
+
+
+
+
+
+
     @Override
     public List<SongVO> getNewSongs(Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LocalDateTime newSongTime = LocalDateTime.now().minusDays(CommonConstants.NEW_SONG_DAYS);
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
@@ -1408,25 +1408,25 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         return ConvertHelper.toVOList(songs, this::convertToVO);
     }
 
-       
-                  
-      
-                                                
-                        
-                   
-       
+
+
+
+
+
+
+
     @Override
     public List<SongVO> getSongsByLanguage(String language, Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Song::getDeleted, CommonConstants.NOT_DELETED);
-        
-                       
+
+
         if (ObjectUtils.isNotEmpty(language)) {
             String langCondition = language;
-                       
+
             switch (language) {
                 case "zh":
                     langCondition = "zh";       
@@ -1445,10 +1445,10 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
             }
             wrapper.eq(Song::getLanguage, langCondition);
         }
-        
+
         wrapper.orderByDesc(Song::getHotScore, Song::getPlayCount)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
-        
+
         List<Song> songs = filterPublicUploaderSongs(list(wrapper), actualLimit);
         return ConvertHelper.toVOList(songs, this::convertToVO);
     }

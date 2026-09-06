@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.*;
 
-   
-                
-  
-                      
-   
+
+
+
+
+
 @Service
 public class RefundCreditServiceImpl extends ServiceImpl<RefundCreditLogMapper, RefundCreditLog> implements RefundCreditService {
 
@@ -175,21 +175,21 @@ public class RefundCreditServiceImpl extends ServiceImpl<RefundCreditLogMapper, 
         if (ObjectUtils.isEmpty(userId)) {
             return null;
         }
-        
+
         RefundCreditLog refundCredit = new RefundCreditLog();
         refundCredit.setUserId(userId);
         refundCredit.setChangeType("reset");
         refundCredit.setScore(DEFAULT_CREDIT);
         refundCredit.setReason("系统重置");
         refundCredit.setAfterScore(DEFAULT_CREDIT);
-        
+
         YearMonth currentMonth = YearMonth.now();
         refundCredit.setCreditPeriod(currentMonth.toString());
         refundCredit.setPeriodStartTime(currentMonth.atDay(1).atStartOfDay());
         refundCredit.setPeriodEndTime(currentMonth.atEndOfMonth().atTime(23, 59, 59));
-        
+
         save(refundCredit);
-        
+
         logger.info("重置退款信用分: userId={}, newScore={}", userId, DEFAULT_CREDIT);
         return DEFAULT_CREDIT;
     }

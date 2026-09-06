@@ -11,10 +11,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
-   
-                      
-                                     
-   
+
+
+
+
 @Slf4j
 @Component
 public class UserContext {
@@ -29,11 +29,11 @@ public class UserContext {
         instance = this;
     }
 
-       
-               
-      
-                             
-       
+
+
+
+
+
     public static Long getCurrentUserId() {
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -44,7 +44,7 @@ public class UserContext {
 
             HttpServletRequest request = attributes.getRequest();
 
-                                         
+
             Object userId = request.getAttribute(CommonConstants.USER_ID_KEY);
             if (userId != null) {
                 try {
@@ -60,31 +60,31 @@ public class UserContext {
         return null;
     }
 
-       
-                      
-      
-                              
-                   
-       
+
+
+
+
+
+
     public static Long getCurrentUserIdOrDefault(Long defaultValue) {
         Long userId = getCurrentUserId();
         return userId != null ? userId : defaultValue;
     }
 
-       
-                
-      
-                                 
-       
+
+
+
+
+
     public static boolean isLoggedIn() {
         return getCurrentUserId() != null;
     }
 
-       
-                
-      
-                   
-       
+
+
+
+
+
     public static String getClientIp() {
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

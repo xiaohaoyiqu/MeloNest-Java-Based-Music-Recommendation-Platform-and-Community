@@ -1,15 +1,15 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.vo.curated;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-              
-   
+
+
+
 @Data
 public class CuratedCarouselItemVO {
 

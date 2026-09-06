@@ -11,17 +11,17 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                            
-  
-        
-                               
-                     
-                     
-                
-                  
-   
+
+
+
+
+
+
+
+
+
+
+
 @RestController
 @RequestMapping("/recommend/resource")
 public class ResourceBasedRecommendController {
@@ -29,13 +29,13 @@ public class ResourceBasedRecommendController {
     @Resource
     private ResourceBasedRecommendService resourceBasedRecommendService;
 
-       
-                    
-                              
-      
-                        
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("根据申请歌曲推荐")
     @GetMapping("/requested")
     public Result<RecommendVO> getRecommendByRequestedSongs(
@@ -45,13 +45,13 @@ public class ResourceBasedRecommendController {
         return Result.success(result);
     }
 
-       
-                 
-                            
-      
-                        
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("热门申请歌曲推荐")
     @GetMapping("/hot-requested")
     public Result<RecommendVO> getHotRequestedSongsRecommend(
@@ -61,13 +61,13 @@ public class ResourceBasedRecommendController {
         return Result.success(result);
     }
 
-       
-                 
-                        
-      
-                        
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("申请偏好推荐")
     @GetMapping("/preference")
     public Result<RecommendVO> getRecommendByRequestPreference(
@@ -77,12 +77,12 @@ public class ResourceBasedRecommendController {
         return Result.success(result);
     }
 
-       
-                   
-                        
-      
-                      
-       
+
+
+
+
+
+
     @ApiLog("未满足需求分析")
     @GetMapping("/unmet-analysis")
     public Result<Map<String, Object>> getUnmetRequestsAnalysis() {
@@ -91,13 +91,13 @@ public class ResourceBasedRecommendController {
         return Result.success(result);
     }
 
-       
-               
-                        
-      
-                        
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("热门申请统计")
     @GetMapping("/hot-statistics")
     public Result<Map<String, Object>> getHotRequestStatistics(

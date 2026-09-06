@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.websocket;
 
 import com.alibaba.fastjson2.JSON;
@@ -29,9 +29,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-   
-                                                                                        
-   
+
+
+
 @Slf4j
 @Component
 public class ModerationWebSocketHandler extends TextWebSocketHandler implements WebSocketService {
@@ -182,13 +182,13 @@ public class ModerationWebSocketHandler extends TextWebSocketHandler implements 
         trySendToUser(userId, message);
     }
 
-       
-                                     
-      
-                         
-                          
-                                
-       
+
+
+
+
+
+
+
     @Override
     public boolean trySendToUser(Long userId, Object message) {
         if (userId == null || message == null) {
@@ -266,10 +266,10 @@ public class ModerationWebSocketHandler extends TextWebSocketHandler implements 
         return session != null && session.isOpen();
     }
 
-       
-                                 
-                                           
-       
+
+
+
+
     @Override
     public boolean disconnectUser(Long userId, String reason) {
         if (userId == null) {
@@ -342,10 +342,10 @@ public class ModerationWebSocketHandler extends TextWebSocketHandler implements 
         return false;
     }
 
-       
-                                                   
-                                     
-       
+
+
+
+
     private boolean isAccountSessionAllowed(Long userId, WebSocketSession session) {
         if (userMapper == null) {
             return true;
@@ -373,9 +373,9 @@ public class ModerationWebSocketHandler extends TextWebSocketHandler implements 
         }
     }
 
-       
-                                 
-       
+
+
+
     private void recordDisconnectedSafely(Long userId, String reason) {
         try {
             onlineStatusService.recordWebSocketDisconnected(userId, reason);
@@ -458,10 +458,10 @@ public class ModerationWebSocketHandler extends TextWebSocketHandler implements 
         }
     }
 
-       
-                                                                                 
-                                                                                  
-       
+
+
+
+
     @Scheduled(fixedDelayString = "${security.websocket.cleanup-interval-ms:30000}")
     public void cleanupStaleSessions() {
         cleanupStaleSessions(System.currentTimeMillis());

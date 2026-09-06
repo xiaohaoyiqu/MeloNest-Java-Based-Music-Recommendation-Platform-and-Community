@@ -5,7 +5,7 @@
 - Windows 10/11 或可运行相同工具链的 Linux/macOS。
 - JDK 8 与 Maven 3.6+，用于 Spring Boot 2.7.18 后端。
 - Node.js 18+ 与 npm，用于 Vite 5 前端和本地音乐服务。
-- MySQL 5.7、Redis 5；Kafka、Elasticsearch、Hadoop、Hive、Spark 按功能需要启用。
+- MySQL 5.7、Redis 5；Kafka、Elasticsearch、Hadoop、Hive、Spark 按功能需要启用。搜索默认使用 MySQL，只有显式选择 Elasticsearch 后才切换。
 - FFmpeg/ffprobe 6.1.1 用于音频解码、视频探测、缩略图和转码；后端通过绝对路径调用，不使用系统旧版本。
 - OpenSSH 客户端用于三节点管理，主机指纹必须固定。
 
@@ -35,6 +35,21 @@ Kafka 2.4 的 broker 配置以 `broker.id`、`log.dirs`、`zookeeper.connect` �
 ## 环境变量
 
 至少配置数据库地址、用户和口令，Redis 口令，JWT 密钥，允许来源以及各媒体根目录。`FFMPEG_PATH`、`FFPROBE_PATH` 默认指向 `/usr/local/soft/ffmpeg-6.1.1/bin`；Windows 本地开发需显式指向本机安装。`NODE3_LYRIC_URL` 指向 node3 只读歌词目录的内部 HTTP 基址，默认值为 `http://192.168.153.133:8081/lyrics/`；生产环境应限制为集群内访问，留空才启用维护用 SFTP 回退。支付、短信、邮件、外部 AI、Elasticsearch 认证和对象存储仅在启用对应能力时配置。真实值放入权限受控的环境或秘密文件，不写入 `application*.yml`、脚本、文档或压缩包。
+
+## Elasticsearch 搜索适配
+
+Elasticsearch 7.17.24 的脱敏节点配置位于 `ee/current/node1/elasticsearch/`；后端包含搜索路由、索引服务、事务 outbox 和索引重建任务。MySQL 始终保存业务事实并负责结果组装，Elasticsearch 请求不可用、索引不存在或结果无法组装时自动回退到 MySQL。
+
+部署 Elasticsearch 后，先确认服务可访问和索引存储目录可写，再通过受控环境设置下列变量；未设置时仍使用 MySQL。
+
+```bash
+export SEARCH_ENGINE=elasticsearch
+export SEARCH_ES_ENABLED=true
+export SEARCH_ES_URIS=http://127.0.0.1:9200
+export SEARCH_ES_INDEX_PREFIX=haoran_music
+```
+
+首次导入或需要全量校准时，才额外设置 `SEARCH_ES_BOOTSTRAP_REBUILD_ENABLED=true` 或在授权的管理端点触发重建。定时重建由 `SEARCH_ES_REBUILD_ENABLED=true` 单独开启。用户名、密码和地址由受控环境注入，不写入交付包；切回 MySQL 只需将 `SEARCH_ENGINE=mysql` 或 `SEARCH_ES_ENABLED=false` 后重启应用。
 
 ## Windows DeepSeek 服务
 

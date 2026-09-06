@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class SocialRecommendServiceImpl implements SocialRecommendService {
@@ -90,7 +90,7 @@ public class SocialRecommendServiceImpl implements SocialRecommendService {
 
         Set<Long> userSongIds = getUserLikedSongs(userId);
 
-                                  
+
         List<Long> targetSongIds = songScoreMap.entrySet().stream()
                 .filter(e -> !userSongIds.contains(e.getKey()))
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
@@ -203,7 +203,7 @@ public class SocialRecommendServiceImpl implements SocialRecommendService {
         Set<Long> friendIds = getMutualFriends(userId);
 
         if ("song".equals(contentType) && !friendIds.isEmpty()) {
-                          
+
             LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
             wrapper.in(SongLike::getUserId, friendIds)
                     .eq(SongLike::getSongId, contentId)
@@ -460,9 +460,9 @@ public class SocialRecommendServiceImpl implements SocialRecommendService {
         return user1Following.size();
     }
 
-       
-                       
-       
+
+
+
     private Set<String> getFriendLikedGenres(Long userId) {
         Set<Long> friendIds = getMutualFriends(userId);
 
@@ -470,7 +470,7 @@ public class SocialRecommendServiceImpl implements SocialRecommendService {
             return new HashSet<>();
         }
 
-                      
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(SongLike::getUserId, friendIds)
                 .eq(SongLike::getIsFavorite, 1)
@@ -486,7 +486,7 @@ public class SocialRecommendServiceImpl implements SocialRecommendService {
             return new HashSet<>();
         }
 
-                      
+
         LambdaQueryWrapper<Song> songWrapper = new LambdaQueryWrapper<>();
         songWrapper.in(Song::getId, songIds)
                 .isNotNull(Song::getMainType)
@@ -538,15 +538,15 @@ public class SocialRecommendServiceImpl implements SocialRecommendService {
         }
     }
 
-       
-                                 
-       
+
+
+
     private List<RecommendVO.SongSimpleVO> batchConvertToSimpleVO(List<Long> songIds) {
         if (songIds == null || songIds.isEmpty()) {
             return new ArrayList<>();
         }
 
-               
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Song::getId, songIds)
                 .eq(Song::getStatus, 1)
@@ -562,9 +562,9 @@ public class SocialRecommendServiceImpl implements SocialRecommendService {
                 .collect(Collectors.toList());
     }
 
-       
-                      
-       
+
+
+
     private RecommendVO.SongSimpleVO convertSongToSimpleVO(Song song) {
         if (song == null) {
             return null;

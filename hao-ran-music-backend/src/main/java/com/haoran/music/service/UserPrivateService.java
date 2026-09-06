@@ -1,111 +1,111 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.service;
 
 import com.haoran.music.entity.UserPrivate;
 
-   
-             
-                     
-   
+
+
+
+
 public interface UserPrivateService {
 
-       
-                        
-      
-                         
-                                    
-       
+
+
+
+
+
+
     UserPrivateDTO getUserPrivateInfo(Long userId);
 
-       
-                        
-      
-                         
-                                          
-       
+
+
+
+
+
+
     void saveUserPrivateInfo(Long userId, UserPrivateDTO dto);
 
-       
-                   
-      
-                           
-                               
-       
+
+
+
+
+
+
     void saveRealName(Long userId, String realName);
 
-       
-                      
-      
-                         
-                             
-       
+
+
+
+
+
+
     void saveIdCard(Long userId, String idCard);
 
-       
-                     
-      
-                         
-                            
-       
+
+
+
+
+
+
     void savePhone(Long userId, String phone);
 
-       
-               
-      
-                         
-                      
-       
+
+
+
+
+
+
     String getPhone(Long userId);
 
-       
-              
-      
-                         
-                                  
-       
+
+
+
+
+
+
     String getMaskedPhone(Long userId);
 
-       
-                
-      
-                         
-                       
-       
+
+
+
+
+
+
     String getIdCard(Long userId);
 
-       
-             
-      
-                           
-                           
-                           
-                     
-       
+
+
+
+
+
+
+
+
     boolean verifyRealName(Long userId, String realName, String idCard);
 
-       
-               
-      
-                            
-                             
-                               
-       
+
+
+
+
+
+
+
     void setRealNameVerified(Long userId, boolean verified, String verifyMethod);
 
-       
-               
-      
-                         
-       
+
+
+
+
+
     void deleteUserPrivate(Long userId);
 
-       
-                     
-       
+
+
+
     class UserPrivateDTO {
         private String realName;
         private String idCard;
@@ -119,7 +119,7 @@ public interface UserPrivateService {
         private String bankName;
         private String bankAccount;
 
-                              
+
         public String getRealName() { return realName; }
         public void setRealName(String realName) { this.realName = realName; }
 

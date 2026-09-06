@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                              
-   
+
+
+
+
 @Mapper
 public interface UserStatisticsMapper extends BaseMapper<UserStatistics> {
 
-       
-                        
-       
+
+
+
     @Select("SELECT * FROM user_statistics WHERE user_id = #{userId} " +
             "AND stat_date BETWEEN #{startDate} AND #{endDate} " +
             "AND deleted = 0 ORDER BY stat_date DESC")
@@ -29,16 +29,16 @@ public interface UserStatisticsMapper extends BaseMapper<UserStatistics> {
                                             @Param("startDate") LocalDate startDate,
                                             @Param("endDate") LocalDate endDate);
 
-       
-                   
-       
+
+
+
     @Select("SELECT * FROM user_statistics WHERE stat_date = #{statDate} " +
             "AND deleted = 0 ORDER BY play_duration DESC")
     List<UserStatistics> selectByStatDate(@Param("statDate") LocalDate statDate);
 
-       
-                 
-       
+
+
+
     @Select("SELECT user_id, username, " +
             "SUM(play_count) AS total_play_count, " +
             "SUM(play_duration) AS total_play_duration, " +
@@ -53,25 +53,25 @@ public interface UserStatisticsMapper extends BaseMapper<UserStatistics> {
                                               @Param("startDate") LocalDate startDate,
                                               @Param("endDate") LocalDate endDate);
 
-       
-                  
-       
+
+
+
     @Select("SELECT * FROM user_statistics WHERE stat_date = #{statDate} " +
             "AND is_abnormal = 1 AND deleted = 0")
     List<UserStatistics> selectAbnormalUsers(@Param("statDate") LocalDate statDate);
 
-       
-                    
-       
+
+
+
     @Select("SELECT COUNT(DISTINCT stat_date) FROM user_statistics " +
             "WHERE user_id = #{userId} AND stat_date >= #{startDate} " +
             "AND (play_count > 0 OR login_count > 0) AND deleted = 0")
     Integer selectActiveDaysCount(@Param("userId") Long userId,
                                     @Param("startDate") LocalDate startDate);
 
-       
-                      
-       
+
+
+
     @Select("SELECT user_id, username, MAX(play_count) AS max_daily_plays, " +
             "MAX(play_duration) AS max_daily_duration, COUNT(DISTINCT stat_date) AS days " +
             "FROM user_statistics " +
@@ -83,10 +83,10 @@ public interface UserStatisticsMapper extends BaseMapper<UserStatistics> {
                                               @Param("maxPlayCount") Integer maxPlayCount,
                                               @Param("maxDuration") Integer maxDuration);
 
-       
-                                   
-      
-  
+
+
+
+
     @Select("SELECT lh.user_id AS user_id, COALESCE(NULLIF(u.username, ''), u.nickname) AS username, " +
             "COUNT(*) AS play_count, IFNULL(SUM(IFNULL(lh.duration, 0)), 0) AS play_duration, " +
             "COUNT(DISTINCT lh.song_id) AS unique_song_count, " +

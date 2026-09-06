@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -37,10 +37,10 @@ public final class UserAccountStatusUtil {
                 && !isRestrictedType(user);
     }
 
-       
-                                         
-                          
-       
+
+
+
+
     public static boolean canAuthenticate(User user) {
         return user != null
                 && !CommonConstants.DELETED.equals(user.getDeleted())
@@ -53,9 +53,9 @@ public final class UserAccountStatusUtil {
         return userId != null && userLookup != null && canInteract(userLookup.apply(userId));
     }
 
-       
-                                                   
-       
+
+
+
     public static LambdaQueryWrapper<User> interactableUserQuery() {
         return new LambdaQueryWrapper<User>()
                 .eq(User::getStatus, CommonConstants.STATUS_NORMAL)
@@ -64,17 +64,17 @@ public final class UserAccountStatusUtil {
                 .and(w -> w.isNull(User::getUserType).or().in(User::getUserType, UserType.nonRestrictedCodes()));
     }
 
-       
-                                     
-       
+
+
+
     public static boolean canAppearInRecommendations(User user) {
         return canInteract(user) && !isRecommendationRisk(user);
     }
 
-       
-                                        
-                                
-       
+
+
+
+
     public static boolean canRetainPublicContent(User user) {
         return user != null
                 && !CommonConstants.DELETED.equals(user.getDeleted())
@@ -101,9 +101,9 @@ public final class UserAccountStatusUtil {
         return filterUserIds(userIds, userLookup, UserAccountStatusUtil::canAppearInRecommendations);
     }
 
-       
-                                      
-       
+
+
+
     public static boolean canContributePublicStats(User user) {
         return canAppearInRecommendations(user);
     }
@@ -117,9 +117,9 @@ public final class UserAccountStatusUtil {
         return filterUserIds(userIds, userLookup, UserAccountStatusUtil::canContributePublicStats);
     }
 
-       
-                                          
-       
+
+
+
     public static boolean canExposePublicContent(User user) {
         return canContributePublicStats(user)
                 && (user.getCreatorStatus() == null || !"suspended".equalsIgnoreCase(user.getCreatorStatus()));
@@ -134,9 +134,9 @@ public final class UserAccountStatusUtil {
         return filterUserIds(userIds, userLookup, UserAccountStatusUtil::canExposePublicContent);
     }
 
-       
-                                                
-       
+
+
+
     public static LambdaQueryWrapper<User> publicStatsUserQuery() {
         return applyPublicStatsUserFilter(new LambdaQueryWrapper<>());
     }
@@ -151,9 +151,9 @@ public final class UserAccountStatusUtil {
                 .and(w -> w.isNull(User::getCreditScore).or().ge(User::getCreditScore, NORMAL_CREDIT_MIN_SCORE));
     }
 
-       
-                                          
-       
+
+
+
     public static LambdaQueryWrapper<User> publicContentUserQuery() {
         return applyPublicContentUserFilter(new LambdaQueryWrapper<>());
     }

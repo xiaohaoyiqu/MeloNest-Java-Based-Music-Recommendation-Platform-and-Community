@@ -24,10 +24,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class PushNotificationServiceImpl implements PushNotificationService {
@@ -64,14 +64,14 @@ public class PushNotificationServiceImpl implements PushNotificationService {
                 : PUSH_CACHE_KEY;
 
         try {
-                              
+
             Object cached = redisTemplate.opsForValue().get(cacheKey);
             if (cached instanceof List) {
                 List<PushNotificationVO> result = convertCachedPushes((List<?>) cached);
                 return filterActivePushes(result);
             }
         } catch (Exception e) {
-                                                 
+
             log.warn("[PushNotification] 读取缓存失败，回退数据库: type={}, error={}",
                     type, e.getClass().getSimpleName());
         }
@@ -110,14 +110,14 @@ public class PushNotificationServiceImpl implements PushNotificationService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String createPushNotification(PushNotificationVO push) {
-                          
+
         if (ObjectUtils.isNotEmpty(push.getPushId())) {
             PushNotification existing = pushNotificationMapper.selectOne(
                     new LambdaQueryWrapper<PushNotification>()
                             .eq(PushNotification::getPushId, push.getPushId())
             );
             if (ObjectUtils.isNotEmpty(existing)) {
-                         
+
                 existing.setType(push.getType());
                 existing.setTitle(push.getTitle());
                 existing.setDescription(push.getDescription());
@@ -139,11 +139,11 @@ public class PushNotificationServiceImpl implements PushNotificationService {
             }
         }
 
-                
+
         PushNotification entity = new PushNotification();
         BeanUtils.copyProperties(push, entity);
 
-                          
+
         String pushId = push.getPushId();
         if (ObjectUtils.isEmpty(pushId)) {
             pushId = UUID.randomUUID().toString();
@@ -162,7 +162,7 @@ public class PushNotificationServiceImpl implements PushNotificationService {
     @Transactional(rollbackFor = Exception.class)
     public boolean deletePushNotification(String pushId) {
         try {
-                   
+
             pushNotificationMapper.delete(
                     new LambdaQueryWrapper<PushNotification>()
                             .eq(PushNotification::getPushId, pushId)
@@ -179,12 +179,12 @@ public class PushNotificationServiceImpl implements PushNotificationService {
         }
     }
 
-       
-                       
-      
-                         
-                   
-       
+
+
+
+
+
+
     public boolean disablePushNotification(String pushId) {
         try {
             PushNotification entity = pushNotificationMapper.selectOne(
@@ -208,15 +208,15 @@ public class PushNotificationServiceImpl implements PushNotificationService {
         }
     }
 
-       
-           
-       
+
+
+
     private void clearCache() {
         try {
             redisTemplate.delete(PUSH_CACHE_KEY);
             CacheHelper.deleteByPattern(redisUtils, PUSH_TYPE_CACHE_KEY_PREFIX + "*");
         } catch (Exception e) {
-                                        
+
             log.warn("[PushNotification] 清理缓存失败: {}", e.getClass().getSimpleName());
         }
     }
@@ -247,9 +247,9 @@ public class PushNotificationServiceImpl implements PushNotificationService {
         return pushes;
     }
 
-       
-                         
-       
+
+
+
     private List<PushNotificationVO> filterActivePushes(List<PushNotificationVO> pushes) {
         if (ObjectUtils.isEmpty(pushes)) {
             return Collections.emptyList();
@@ -258,7 +258,7 @@ public class PushNotificationServiceImpl implements PushNotificationService {
         LocalDateTime now = LocalDateTime.now();
         return pushes.stream()
                 .filter(push -> {
-                             
+
                     if (push.getStartTime() != null && push.getStartTime().isAfter(now)) {
                         return false;
                     }
@@ -279,9 +279,9 @@ public class PushNotificationServiceImpl implements PushNotificationService {
                 .collect(Collectors.toList());
     }
 
-       
-            
-       
+
+
+
     private PushNotificationVO convertToVO(PushNotification entity) {
         PushNotificationVO vo = new PushNotificationVO();
         vo.setId(entity.getPushId());

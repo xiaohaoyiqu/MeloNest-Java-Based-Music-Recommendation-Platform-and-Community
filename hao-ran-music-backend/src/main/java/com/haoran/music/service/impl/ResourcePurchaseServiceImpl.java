@@ -1,7 +1,7 @@
-   
-                      
-                         
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -35,16 +35,16 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-            
-  
-                                                      
-                    
-                            
-                         
-                                             
-                                                               
-   
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class ResourcePurchaseServiceImpl extends ServiceImpl<ResourcePurchaseMapper, ResourcePurchase>
@@ -66,7 +66,7 @@ public class ResourcePurchaseServiceImpl extends ServiceImpl<ResourcePurchaseMap
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> createPurchase(Long userId, Long resourceId, String resourceType,
                                        Long ownerId, String ownerType, BigDecimal amount) {
-               
+
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(resourceId) || ObjectUtils.isEmpty(amount)) {
             return Result.error("参数不能为空");
         }
@@ -84,16 +84,16 @@ public class ResourcePurchaseServiceImpl extends ServiceImpl<ResourcePurchaseMap
             return Result.error("资源创作者账号状态不可用");
         }
 
-                    
+
         if (hasPurchased(userId, resourceId, resourceType)) {
             return Result.error("您已经购买过该资源");
         }
 
-                        
+
         BigDecimal platformFee = amount.multiply(paymentConfig.getPlatformFeeRate()).setScale(2, RoundingMode.HALF_UP);
         BigDecimal creatorEarnings = amount.subtract(platformFee);
 
-                 
+
         ResourcePurchase purchase = new ResourcePurchase();
         purchase.setOrderNo(generateOrderNo());
         purchase.setUserId(userId);
@@ -146,8 +146,8 @@ public class ResourcePurchaseServiceImpl extends ServiceImpl<ResourcePurchaseMap
                 .set(ResourcePurchase::getPaymentOrderId, paymentOrderId);
         resourcePurchaseMapper.update(null, updateWrapper);
 
-                               
-                                                         
+
+
 
         log.info("确认购买成功: purchaseId={}, paymentOrderId={}, creatorEarnings={}",
             purchaseId, paymentOrderId, purchase.getCreatorEarnings());
@@ -174,8 +174,8 @@ public class ResourcePurchaseServiceImpl extends ServiceImpl<ResourcePurchaseMap
                 .set(ResourcePurchase::getRefundTime, LocalDateTime.now());
         resourcePurchaseMapper.update(null, updateWrapper);
 
-                               
-                           
+
+
 
         log.info("退款成功: purchaseId={}, reason={}, refundAmount={}",
             purchaseId, reason, purchase.getCreatorEarnings());
@@ -283,9 +283,9 @@ public class ResourcePurchaseServiceImpl extends ServiceImpl<ResourcePurchaseMap
         return Result.success(result);
     }
 
-       
-            
-       
+
+
+
     private String generateOrderNo() {
         return "RP" + System.currentTimeMillis() + IdUtil.randomUUID().substring(0, 4).toUpperCase();
     }

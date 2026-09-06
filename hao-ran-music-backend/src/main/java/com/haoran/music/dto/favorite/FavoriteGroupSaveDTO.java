@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-                  
+
 @Data
 public class FavoriteGroupSaveDTO {
     @NotBlank(message = "分组名称不能为空")

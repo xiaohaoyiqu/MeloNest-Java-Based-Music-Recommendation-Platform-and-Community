@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -15,9 +15,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-   
-             
-   
+
+
+
 @Data
 @TableName("user_music_daily_summary")
 public class UserMusicDailySummary {

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-   
-                      
-                     
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/share")
@@ -25,13 +25,13 @@ public class ShareController {
         this.shareService = shareService;
     }
 
-       
-             
-      
-                                                          
-                             
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/generate")
     @ApiLog("生成分享链接")
     public Result<Map<String, Object>> generateShareLink(@RequestParam String type,
@@ -46,12 +46,12 @@ public class ShareController {
         return Result.success(shareInfo);
     }
 
-       
-                  
-      
-                           
-                   
-       
+
+
+
+
+
+
     @GetMapping("/resource/{shareCode}")
     @ApiLog("访问分享链接")
     public Result<Map<String, Object>> getResourceByShareCode(@PathVariable String shareCode,
@@ -61,22 +61,22 @@ public class ShareController {
             return Result.error(404, "分享链接不存在或已过期");
         }
 
-                   
+
         Long userId = (Long) request.getAttribute("userId");
         shareService.incrementShareView(shareCode, userId);
 
         return Result.success(resourceInfo);
     }
 
-       
-             
-      
-                            
-                             
-                                              
-                             
-                 
-       
+
+
+
+
+
+
+
+
+
     @PostMapping("/record")
     @ApiLog("记录分享行为")
     @RateLimit(maxRequests = 50, timeWindowSeconds = 3600, operation = "recordShare",
@@ -94,13 +94,13 @@ public class ShareController {
         return Result.success();
     }
 
-       
-             
-      
-                            
-                             
-                   
-       
+
+
+
+
+
+
+
     @GetMapping("/stats")
     @ApiLog("获取分享统计")
     public Result<Map<String, Object>> getShareStats(@RequestParam String type,
@@ -109,13 +109,13 @@ public class ShareController {
         return Result.success(stats);
     }
 
-       
-               
-      
-                         
-                            
-                     
-       
+
+
+
+
+
+
+
     @PostMapping("/batch-generate")
     @ApiLog("批量生成分享链接")
     public Result<Map<String, Object>> batchGenerateShareLinks(@RequestBody Map<String, Object> items,
@@ -129,13 +129,13 @@ public class ShareController {
         return Result.success(result);
     }
 
-       
-                   
-      
-                           
-                              
-                 
-       
+
+
+
+
+
+
+
     @DeleteMapping("/{shareCode}")
     @ApiLog("取消分享")
     public Result<Void> cancelShare(@PathVariable String shareCode,

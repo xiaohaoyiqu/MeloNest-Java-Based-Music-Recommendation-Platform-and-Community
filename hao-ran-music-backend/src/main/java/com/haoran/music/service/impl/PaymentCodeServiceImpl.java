@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -50,9 +50,9 @@ import java.util.concurrent.TimeUnit;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;
 
-   
-          
-   
+
+
+
 @Slf4j
 @Service
 public class PaymentCodeServiceImpl implements PaymentCodeService {
@@ -96,34 +96,34 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> uploadPaymentCode(Long userId, String paymentType,
                                                String imageUrl, Long operatorId) {
-                 
+
         if (!isValidPaymentType(paymentType)) {
             throw new BusinessException("不支持的支付类型");
         }
 
-                
+
         if (userId != null) {
             creatorEligibilityService.requireEligible(userId, "上传创作者收款码");
         }
 
-                
+
         String md5Hash = calculateMd5(imageUrl);
 
-                                                        
+
         LambdaQueryWrapper<com.haoran.music.entity.PaymentConfigEntity> wrapper = new LambdaQueryWrapper<>();
         applyPaymentOwnerFilter(wrapper, userId);
         wrapper.eq(com.haoran.music.entity.PaymentConfigEntity::getPaymentType, paymentType);
 
         com.haoran.music.entity.PaymentConfigEntity existing = paymentConfigEntityMapper.selectOne(wrapper);
 
-                
+
         String verifyCode = generateVerifyCode();
 
-                  
+
         String qrCodeWithVerify = compositeVerifyCode(imageUrl, verifyCode);
 
         if (existing != null) {
-                     
+
             String oldUrl = existing.getQrCodeUrl();
             String oldMd5 = existing.getMd5Hash();
 
@@ -136,7 +136,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
 
             paymentConfigEntityMapper.updateById(existing);
 
-                   
+
             logOperation(existing.getId(), operatorId, "update",
                     oldUrl, imageUrl, oldMd5, md5Hash,
                     paymentSecurityService.hashConfigCode(verifyCode), "更新付款码");
@@ -144,7 +144,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
             log.info("更新付款码: userId={}, paymentType={}", userId, paymentType);
 
         } else {
-                    
+
             com.haoran.music.entity.PaymentConfigEntity config = new com.haoran.music.entity.PaymentConfigEntity();
             config.setUserId(userId);
             config.setUserType(userId == null ? "platform" : "creator");
@@ -160,7 +160,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
 
             paymentConfigEntityMapper.insert(config);
 
-                   
+
             logOperation(config.getId(), operatorId, "create",
                     null, imageUrl, null, md5Hash,
                     paymentSecurityService.hashConfigCode(verifyCode), "上传付款码");
@@ -217,7 +217,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
 
             String basePath = resolveScanBasePath(scanPath);
 
-                                                                                            
+
             wechatCount = scanPaymentCodePath(session, basePath + "platform/wechat/", null, "wechat", result);
             alipayCount = scanPaymentCodePath(session, basePath + "platform/alipay/", null, "alipay", result);
             scanCreatorPaymentCodes(session, basePath + "creator/", result);
@@ -273,7 +273,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
 
         String newVerifyCode = generateVerifyCode();
 
-                      
+
         String newQrCodeWithVerify = compositeVerifyCode(config.getQrCodeUrl(), newVerifyCode);
 
         String newVerifyCodeHash = paymentSecurityService.hashConfigCode(newVerifyCode);
@@ -281,7 +281,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         config.setQrCodeWithVerify(newQrCodeWithVerify);
         paymentConfigEntityMapper.updateById(config);
 
-               
+
         logOperation(configId, operatorId, "update",
                 config.getQrCodeUrl(), config.getQrCodeUrl(),
                 config.getMd5Hash(), config.getMd5Hash(),
@@ -308,7 +308,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         config.setIsEnabled(0);
         paymentConfigEntityMapper.updateById(config);
 
-               
+
         logOperation(configId, operatorId, "disable",
                 null, null, null, null, null, "禁用付款码: " + reason);
 
@@ -327,7 +327,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         config.setIsEnabled(1);
         paymentConfigEntityMapper.updateById(config);
 
-               
+
         logOperation(configId, operatorId, "scan",
                 null, null, null, null, null, "启用付款码");
 
@@ -357,7 +357,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
             return false;
         }
 
-                   
+
         if (!config.getLastResetDate().equals(LocalDate.now())) {
             resetDailyLimit(configId);
             config = paymentConfigEntityMapper.selectById(configId);
@@ -408,7 +408,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
     @Override
     public String compositeVerifyCode(String originalUrl, String verifyCode) {
         try {
-                       
+
             byte[] imageBytes = downloadImage(originalUrl);
 
             if (imageBytes == null || imageBytes.length == 0) {
@@ -416,14 +416,14 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
                 return originalUrl;
             }
 
-                   
+
             BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(imageBytes));
             if (originalImage == null) {
                 log.warn("event=payment_code_image_decode_failed");
                 return originalUrl;
             }
 
-                              
+
             int newHeight = originalImage.getHeight() + 40;
             BufferedImage watermarkedImage = new BufferedImage(
                     originalImage.getWidth(),
@@ -433,14 +433,14 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
 
             Graphics2D g = watermarkedImage.createGraphics();
 
-                     
+
             g.drawImage(originalImage, 0, 0, null);
 
-                        
+
             g.setColor(new Color(240, 240, 240));
             g.fillRect(0, originalImage.getHeight(), originalImage.getWidth(), 40);
 
-                      
+
             g.setColor(new Color(100, 100, 100));
             g.setFont(new Font("Arial", Font.BOLD, 16));
             FontMetrics fm = g.getFontMetrics();
@@ -451,8 +451,8 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
 
             g.dispose();
 
-                                               
-                                                     
+
+
             log.debug("event=payment_code_watermark_rendered");
             return originalUrl;
 
@@ -465,7 +465,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
     @Override
     public String calculateMd5(String imageUrl) {
         try {
-                             
+
             byte[] imageBytes = downloadImage(imageUrl);
 
             if (imageBytes != null && imageBytes.length > 0) {
@@ -481,7 +481,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
                 return sb.toString();
             }
 
-                                     
+
             String input = imageUrl + System.currentTimeMillis();
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
@@ -499,7 +499,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         }
     }
 
-                                                     
+
 
     private byte[] downloadImage(String imageUrl) {
         String resolvedUrl = resolvePaymentImageUrl(imageUrl);
@@ -587,12 +587,12 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         return "'" + value.replace("'", "'\"'\"'") + "'";
     }
 
-       
-                       
-      
-                                                           
-                           
-       
+
+
+
+
+
+
     private int scanPaymentCodePath(Session session, String path, Long userId,
                                      String paymentType, Map<String, Object> result) {
         int count = 0;
@@ -617,9 +617,9 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
 
         return count;
     }
-       
-               
-       
+
+
+
     private void scanCreatorPaymentCodes(Session session, String creatorPath,
                                          Map<String, Object> result) {
         try {
@@ -636,7 +636,7 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
                             creatorId, "alipay", result);
 
                 } catch (NumberFormatException e) {
-                                                    
+
                 }
             }
 
@@ -645,9 +645,9 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         }
     }
 
-       
-               
-       
+
+
+
     private void processScannedFile(String filePath, Long userId, String paymentType,
                                     String md5Hash, Map<String, Object> result) {
         try {
@@ -721,9 +721,9 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         }
         return normalizedFilePath;
     }
-       
-             
-       
+
+
+
     private Boolean isValidPaymentType(String paymentType) {
         return "wechat".equals(paymentType) || "alipay".equals(paymentType);
     }
@@ -737,16 +737,16 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         }
     }
 
-       
-            
-       
+
+
+
     private String generateVerifyCode() {
         return paymentSecurityService.generateVerificationCode();
     }
 
-       
-             
-       
+
+
+
     private void logOperation(Long configId, Long operatorId, String actionType,
                              String oldUrl, String newUrl, String oldMd5, String newMd5,
                              String verifyCode, String remark) {
@@ -764,9 +764,9 @@ public class PaymentCodeServiceImpl implements PaymentCodeService {
         paymentCodeLogMapper.insert(operationLog);
     }
 
-       
-             
-       
+
+
+
     private Map<String, Object> buildConfigResult(com.haoran.music.entity.PaymentConfigEntity config) {
         Map<String, Object> result = new HashMap<>();
         result.put("configId", config.getId());

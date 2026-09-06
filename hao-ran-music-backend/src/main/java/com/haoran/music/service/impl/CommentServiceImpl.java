@@ -38,10 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
@@ -75,7 +75,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Resource
     private MarketplaceItemMapper marketplaceItemMapper;
-    
+
     @Resource
     private com.haoran.music.mapper.UserFollowMapper userFollowMapper;
     @Resource
@@ -118,7 +118,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         CommentVO vo = convertToVO(comment, userId);
 
-                
+
         IPage<CommentVO> replies = getReplies(commentId, new PageQuery(1, 10), userId);
         if (CollUtil.isNotEmpty(replies.getRecords())) {
             vo.setReplies(replies.getRecords());
@@ -142,12 +142,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .eq(Comment::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Comment::getDeleted, CommonConstants.NOT_DELETED);
 
-                          
+
         wrapper.orderByDesc(Comment::getIsPinned, Comment::getCreateTime);
 
         IPage<Comment> commentPage = page(page, wrapper);
 
-                 
+
         if (!commentPage.getRecords().isEmpty()) {
             return convertToVOBatch(commentPage, userId);
         }
@@ -171,7 +171,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         IPage<Comment> commentPage = page(page, wrapper);
 
-                 
+
         if (!commentPage.getRecords().isEmpty()) {
             return convertToVOBatch(commentPage, userId);
         }
@@ -188,9 +188,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         ensureCurrentUserCanInteract(userId, "发表评论");
         boolean canContributeStats = canCurrentUserContributePublicStats(userId);
 
-                   
+
         validateTarget(dto.getTargetType(), dto.getTargetId(), userId, true);
-                         
+
         if (ObjectUtils.isNotEmpty(dto.getReplyToUserId())) {
             User replyToUser = userMapper.selectById(dto.getReplyToUserId());
             if (!UserAccountStatusUtil.canInteract(replyToUser)) {
@@ -204,13 +204,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
 
         Comment parentComment = null;
-                           
+
         if (ObjectUtils.isNotEmpty(dto.getParentId()) && !dto.getParentId().equals(0L)) {
             parentComment = getById(dto.getParentId());
             if (ObjectUtils.isEmpty(parentComment)) {
                 throw new BusinessException(ResultCode.NOT_FOUND, "父评论不存在");
             }
-                           
+
             if (!parentComment.getTargetType().equals(dto.getTargetType()) ||
                 !parentComment.getTargetId().equals(dto.getTargetId())) {
                 throw new BusinessException("父评论目标不匹配");
@@ -223,13 +223,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
         emojiService.requireContentEmojiAccess(contentCheck.getCleanedValue(), userId);
 
-               
+
         Comment comment = new Comment();
         comment.setUserId(userId);
         comment.setTargetType(dto.getTargetType());
         comment.setTargetId(dto.getTargetId());
         comment.setParentId(ObjectUtils.isNotEmpty(dto.getParentId()) ? dto.getParentId() : 0L);
-                              
+
         comment.setReplyUserId(dto.getReplyToUserId());
         comment.setContent(SecurityCheckUtil.escapeHtml(contentCheck.getCleanedValue()));
         comment.setLikeCount(0L);
@@ -241,7 +241,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         save(comment);
 
-                    
+
         if (ObjectUtils.isNotEmpty(dto.getParentId()) && !dto.getParentId().equals(0L)) {
             if (ObjectUtils.isNotEmpty(parentComment)
                     && canContributeStats
@@ -250,7 +250,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             }
         }
 
-                                       
+
         if ((ObjectUtils.isEmpty(dto.getParentId()) || dto.getParentId().equals(0L))
                 && canContributeStats
                 && canContributeTargetStats(dto.getTargetType(), dto.getTargetId())) {
@@ -287,17 +287,17 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             throw new BusinessException(ResultCode.NOT_FOUND, "评论不存在");
         }
 
-                         
+
         if (!userId.equals(comment.getUserId())) {
             throw new BusinessException(ResultCode.FORBIDDEN, "无权删除此评论");
         }
 
-               
+
         removeById(commentId);
 
         boolean canContributeStats = canCurrentUserContributePublicStats(userId);
 
-                    
+
         if (ObjectUtils.isNotEmpty(comment.getParentId()) && !comment.getParentId().equals(0L)) {
             Comment parentComment = getById(comment.getParentId());
             if (ObjectUtils.isNotEmpty(parentComment)
@@ -307,21 +307,21 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             }
         }
 
-                                       
+
         if ((ObjectUtils.isEmpty(comment.getParentId()) || comment.getParentId().equals(0L))
                 && canContributeStats
                 && canContributeTargetStats(comment.getTargetType(), comment.getTargetId())) {
             updateTargetCommentCount(comment.getTargetType(), comment.getTargetId(), -1);
         }
 
-                     
+
         commentLikeMapper.deleteDeletedHistoryByComment(commentId);
         LambdaQueryWrapper<CommentLike> likeWrapper = new LambdaQueryWrapper<>();
         likeWrapper.eq(CommentLike::getCommentId, commentId);
-                                       
+
         commentLikeMapper.delete(likeWrapper);
 
-                              
+
         try {
             int revokedCount = notificationService.revokeCommentNotifications(commentId);
             log.info("删除评论，已撤回相关通知: commentId={}, revokedCount={}", commentId, revokedCount);
@@ -396,14 +396,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             throw new BusinessException("未点赞过该评论");
         }
 
-                  
+
         Comment comment = getById(commentId);
         if (ObjectUtils.isNotEmpty(comment)) {
             if (canCurrentUserContributePublicStats(userId) && canContributeCommentStats(comment)) {
                 commentMapper.adjustLikeCount(commentId, -1);
             }
 
-                     
+
             try {
                 notificationService.revokeLikeNotification(comment.getUserId(), userId, commentId);
                 log.info("取消点赞评论，已撤回通知: userId={}, commentId={}", userId, commentId);
@@ -442,7 +442,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             return new ArrayList<>();
         }
 
-                 
+
         return convertToVOBatch(comments, userId);
     }
 
@@ -458,20 +458,20 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         IPage<Comment> commentPage = page(page, wrapper);
 
-                 
+
         if (!commentPage.getRecords().isEmpty()) {
             return convertToVOBatch(commentPage, userId);
         }
         return commentPage.convert(comment -> new CommentVO());
     }
 
-       
-                       
-      
-                                
-                           
-                     
-       
+
+
+
+
+
+
+
     private IPage<CommentVO> convertToVOBatch(IPage<Comment> commentPage, Long userId) {
         List<Comment> comments = commentPage.getRecords();
         if (comments.isEmpty()) {
@@ -485,15 +485,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return voPage;
     }
 
-       
-                         
-      
-                           
-                           
-                   
-       
+
+
+
+
+
+
+
     private List<CommentVO> convertToVOBatch(List<Comment> comments, Long userId) {
-                     
+
         if (ObjectUtils.isNotEmpty(userId)) {
             List<Long> blacklistedUserIds = userBlacklistService.getBlacklistedUserIds(userId);
             if (CollUtil.isNotEmpty(blacklistedUserIds)) {
@@ -510,11 +510,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             return new ArrayList<>();
         }
 
-                               
+
         Set<Long> userIds = new HashSet<>(comments.stream()
                 .map(Comment::getUserId)
                 .collect(Collectors.toSet()));
-                    
+
         for (Comment comment : comments) {
             if (ObjectUtils.isNotEmpty(comment.getReplyUserId())) {
                 userIds.add(comment.getReplyUserId());
@@ -523,7 +523,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         Map<Long, User> userMap = getUserInfos(userIds);
         Map<Long, java.time.LocalDateTime> vipExpirations = userVipService.getActiveVipExpirations(userIds);
 
-                             
+
         Map<Integer, Set<Long>> targetIdsByType = new HashMap<>();
         for (Comment comment : comments) {
             targetIdsByType.computeIfAbsent(comment.getTargetType(), k -> new HashSet<>())
@@ -531,7 +531,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
         Map<String, TargetInfo> targetInfoMap = getTargetInfos(targetIdsByType);
 
-                      
+
         Set<Long> likedCommentIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId)) {
             List<Long> commentIds = comments.stream()
@@ -540,21 +540,21 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             likedCommentIds = getLikedCommentIds(userId, commentIds);
         }
 
-                   
+
         List<CommentVO> voList = new ArrayList<>();
         for (Comment comment : comments) {
             CommentVO vo = BeanUtil.copyProperties(comment, CommentVO.class);
 
-                     
+
             User user = userMap.get(comment.getUserId());
             if (user != null) {
                 vo.setUsername(user.getNickname());
                 vo.setUserAvatar(user.getAvatar());
-                           
+
                 setUserRoleInfo(vo, user, vipExpirations.containsKey(user.getId()));
             }
 
-                     
+
             String targetKey = comment.getTargetType() + ":" + comment.getTargetId();
             TargetInfo targetInfo = targetInfoMap.get(targetKey);
             if (targetInfo != null) {
@@ -562,15 +562,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 vo.setTargetCover(targetInfo.getCover());
             }
 
-                     
+
             vo.setIsLiked(likedCommentIds.contains(comment.getId()));
 
-                       
+
             int editCount = comment.getEditCount() != null ? comment.getEditCount() : 0;
             vo.setEditCount(editCount);
             vo.setRemainingEditCount(Math.max(0, 3 - editCount));
 
-                        
+
             if (ObjectUtils.isNotEmpty(comment.getReplyUserId())) {
                 User replyUser = userMap.get(comment.getReplyUserId());
                 if (replyUser != null) {
@@ -578,13 +578,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 }
             }
 
-                                          
+
             boolean canEdit = userId != null && userId.equals(comment.getUserId()) &&
                     System.currentTimeMillis() - comment.getCreateTime().atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli() < 30 * 60 * 1000 &&
                     editCount < 3;
             vo.setCanEdit(canEdit);
 
-                   
+
             vo.setIp(maskIp(comment.getIp()));
 
             voList.add(vo);
@@ -593,12 +593,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return voList;
     }
 
-       
-               
-      
-                            
-                              
-       
+
+
+
+
+
+
     private Map<Long, User> getUserInfos(Set<Long> userIds) {
         if (userIds == null || userIds.isEmpty()) {
             return Collections.emptyMap();
@@ -620,12 +620,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
     }
 
-       
-               
-      
-                                               
-                                      
-       
+
+
+
+
+
+
     private Map<String, TargetInfo> getTargetInfos(Map<Integer, Set<Long>> targetIdsByType) {
         if (targetIdsByType == null || targetIdsByType.isEmpty()) {
             return Collections.emptyMap();
@@ -634,7 +634,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         Map<String, TargetInfo> result = new HashMap<>();
 
         try {
-                                   
+
             if (targetIdsByType.containsKey(1)) {
                 Set<Long> songIds = targetIdsByType.get(1);
                 if (!songIds.isEmpty()) {
@@ -652,7 +652,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 }
             }
 
-                                   
+
             if (targetIdsByType.containsKey(2)) {
                 Set<Long> albumIds = targetIdsByType.get(2);
                 if (!albumIds.isEmpty()) {
@@ -670,7 +670,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 }
             }
 
-                                   
+
             if (targetIdsByType.containsKey(3)) {
                 Set<Long> playlistIds = targetIdsByType.get(3);
                 if (!playlistIds.isEmpty()) {
@@ -688,7 +688,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 }
             }
 
-                                   
+
             if (targetIdsByType.containsKey(4)) {
                 Set<Long> mvIds = targetIdsByType.get(4);
                 if (!mvIds.isEmpty()) {
@@ -706,7 +706,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 }
             }
 
-                                   
+
             if (targetIdsByType.containsKey(5)) {
                 Set<Long> artistIds = targetIdsByType.get(5);
                 if (!artistIds.isEmpty()) {
@@ -725,7 +725,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             }
 
 
-                                       
+
             if (targetIdsByType.containsKey(6)) {
                 Set<Long> postIds = targetIdsByType.get(6);
                 if (!postIds.isEmpty()) {
@@ -749,13 +749,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return result;
     }
 
-       
-                      
-      
-                         
-                               
-                         
-       
+
+
+
+
+
+
+
     private Set<Long> getLikedCommentIds(Long userId, List<Long> commentIds) {
         if (userId == null || commentIds == null || commentIds.isEmpty()) {
             return Collections.emptySet();
@@ -779,9 +779,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
     }
 
-       
-              
-       
+
+
+
     @lombok.Getter
     private static class TargetInfo {
         private final String name;
@@ -845,10 +845,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return authorAllowComment && !Boolean.TRUE.equals(post.getOfficialCommentClosed());
     }
 
-       
-                                                                                
-                                                                               
-       
+
+
+
+
     private void requireTargetOwnerCanReceiveInteraction(Long ownerId, String action) {
         if (ownerId == null) {
             return;
@@ -909,12 +909,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
     }
 
-       
-               
-      
-                             
-                             
-       
+
+
+
+
+
+
     private void validateTarget(Integer targetType, Long targetId, Long userId) {
         validateTarget(targetType, targetId, userId, false);
     }
@@ -1013,13 +1013,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
     }
 
-       
-                 
-      
-                             
-                             
-                            
-       
+
+
+
+
+
+
+
     private void updateTargetCommentCount(Integer targetType, Long targetId, int delta) {
         switch (targetType) {
             case 1:      
@@ -1029,7 +1029,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 albumMapper.adjustCommentCount(targetId, delta);
                 break;
             case 3:      
-                            
+
                 break;
             case 4:      
                 mvMapper.adjustCommentCount(targetId, delta);
@@ -1045,30 +1045,30 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
     }
 
-       
-                        
-      
-                          
-                          
-                   
-       
+
+
+
+
+
+
+
     private CommentVO convertToVO(Comment comment, Long userId) {
         CommentVO vo = BeanUtil.copyProperties(comment, CommentVO.class);
 
-                 
+
         User user = userMapper.selectById(comment.getUserId());
         if (ObjectUtils.isNotEmpty(user)) {
             vo.setUsername(user.getNickname());
             vo.setUserAvatar(user.getAvatar());
-                       
+
             setUserRoleInfo(vo, user, Boolean.TRUE.equals(userVipService.isVip(user.getId())));
         }
 
-                 
+
         vo.setTargetName(getTargetName(comment.getTargetType(), comment.getTargetId()));
         vo.setTargetCover(getTargetCover(comment.getTargetType(), comment.getTargetId()));
 
-                 
+
         if (ObjectUtils.isNotEmpty(userId)) {
             LambdaQueryWrapper<CommentLike> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(CommentLike::getUserId, userId)
@@ -1080,30 +1080,30 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             vo.setIsLiked(count != null && count > 0);
         }
 
-                   
+
         int editCount = comment.getEditCount() != null ? comment.getEditCount() : 0;
         vo.setEditCount(editCount);
         vo.setRemainingEditCount(Math.max(0, 3 - editCount));
 
-                                                       
+
         boolean canEdit = userId != null && userId.equals(comment.getUserId()) &&
                 System.currentTimeMillis() - comment.getCreateTime().atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli() < 30 * 60 * 1000 &&
                 editCount < 3;
         vo.setCanEdit(canEdit);
 
-               
+
         vo.setIp(maskIp(comment.getIp()));
 
         return vo;
     }
 
-       
-             
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
     private String getTargetName(Integer targetType, Long targetId) {
         switch (targetType) {
             case 1:
@@ -1132,13 +1132,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
     }
 
-       
-             
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
     private String getTargetCover(Integer targetType, Long targetId) {
         switch (targetType) {
             case 1:
@@ -1167,23 +1167,23 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
     }
 
-       
-               
-      
-                       
-                       
-       
+
+
+
+
+
+
     private void setUserRoleInfo(CommentVO vo, User user, boolean isVip) {
         if (ObjectUtils.isEmpty(user)) {
             return;
         }
 
-                 
+
         String role = user.getRole();
         if (StrUtil.isNotBlank(role)) {
             vo.setUserRole(role);
         } else {
-                         
+
             if (user.getIsModerator() != null && user.getIsModerator() == 1) {
                 vo.setUserRole("moderator");
             } else {
@@ -1193,21 +1193,21 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         vo.setIsVip(isVip);
 
-                   
+
         vo.setIsOfficial(user.getIsOfficial() != null && user.getIsOfficial() == 1);
     }
 
-       
-           
-      
-                     
-                     
-       
+
+
+
+
+
+
     private String maskIp(String ip) {
         if (StrUtil.isBlank(ip)) {
             return "未知";
         }
-                 
+
         String[] parts = ip.split("\\.");
         if (parts.length >= 4) {
             parts[3] = "***";
@@ -1241,28 +1241,28 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
         emojiService.requireContentEmojiAccess(contentCheck.getCleanedValue(), userId);
 
-               
+
         Comment comment = getById(commentId);
         if (ObjectUtils.isEmpty(comment)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "评论不存在");
         }
 
-                         
+
         if (!userId.equals(comment.getUserId())) {
             throw new BusinessException(ResultCode.FORBIDDEN, "无权编辑此评论");
         }
 
-                   
+
         int currentEditCount = comment.getEditCount() != null ? comment.getEditCount() : 0;
         if (currentEditCount >= 3) {
             throw new BusinessException("编辑次数已达上限（3次）");
         }
 
-                       
+
         User user = userMapper.selectById(userId);
         String editorNickname = user != null ? user.getNickname() : "未知用户";
 
-                 
+
         CommentEditHistory history = new CommentEditHistory();
         history.setCommentId(commentId);
         history.setOriginalContent(comment.getContent());
@@ -1273,7 +1273,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         history.setEditTime(java.time.LocalDateTime.now());
         commentEditHistoryMapper.insert(history);
 
-                 
+
         comment.setContent(SecurityCheckUtil.escapeHtml(contentCheck.getCleanedValue()));
         comment.setEditCount(currentEditCount + 1);
         updateById(comment);
@@ -1324,13 +1324,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             throw new BusinessException(ResultCode.PARAM_ERROR, "举报理由不能为空");
         }
 
-                   
+
         Comment comment = getById(commentId);
         if (ObjectUtils.isEmpty(comment)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "评论不存在");
         }
 
-                   
+
         com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<Report> wrapper =
             new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
         wrapper.eq(Report::getReporterId, userId)
@@ -1343,7 +1343,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             throw new BusinessException("您已经举报过该评论，请勿重复举报");
         }
 
-                 
+
         Report report = new Report();
         report.setReporterId(userId);
         report.setTargetType("comment");
@@ -1361,9 +1361,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return true;
     }                                                            
 
-       
-                       
-       
+
+
+
     @Override
     public List<CommentVO> getQualityComments(Integer targetType, Long targetId, Integer limit, Long userId) {
         if (ObjectUtils.isEmpty(targetType) || ObjectUtils.isEmpty(targetId)) {
@@ -1415,9 +1415,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return batchConvertToVO(topComments, userId);
     }
 
-       
-             
-       
+
+
+
     @Override
     public List<CommentVO> getFriendComments(Integer targetType, Long targetId, Integer limit, Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -1467,9 +1467,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return batchConvertToVO(friendComments, userId);
     }
 
-       
-                
-       
+
+
+
     @Override
     public List<com.haoran.music.vo.user.UserVO> getCommentRecommendedUsers(
             Integer targetType, Long targetId, Integer limit, Long userId) {

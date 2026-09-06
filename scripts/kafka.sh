@@ -1,16 +1,16 @@
 #!/bin/bash
-                                                                               
-                      
-                     
-                  
-                
-                                        
-                                                                               
 
-               
+
+
+
+
+
+
+
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-        
+
 if [ -f "${SCRIPT_DIR}/env.sh" ]; then
     source "${SCRIPT_DIR}/env.sh"
 else
@@ -18,44 +18,44 @@ else
     exit 1
 fi
 
-                                                                               
-      
-                                                                               
+
+
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-                                                                               
-        
-                                                                               
+
+
+
 log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 log_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
-                                                                               
-               
-                                                                               
-                                 
-       
-               
-           
-                                
+
+
+
+
+
+
+
+
 run_as_hdfs() {
     if [ "$(whoami)" = "${CLUSTER_USER}" ]; then
-                        
+
         eval "$@"
     else
-                                    
+
         sudo -u ${CLUSTER_USER} bash -c "source /etc/profile >/dev/null 2>&1; $*"
     fi
 }
 
-                                                                               
-                     
-                                                                               
+
+
+
 get_broker_id() {
     case "$1" in
         ${NODE1_IP}) echo "1" ;;
@@ -68,14 +68,14 @@ get_broker_id() {
     esac
 }
 
-                                                                               
-                     
-                                                                               
-                                     
-       
-               
-                           
-               
+
+
+
+
+
+
+
+
 ensure_kafka_config() {
     local node_ip="$1"
     local is_remote="$2"
@@ -84,26 +84,26 @@ ensure_kafka_config() {
     local template_config="${project_dir}/ee/kafka/node1/server.properties"
 
     if [ "$is_remote" = "remote" ]; then
-                          
+
         ssh ${SSH_OPTS} ${CLUSTER_USER}@${node_ip} "
             source /etc/profile 2>/dev/null
 
-                        
+
             if [ ! -f \${KAFKA_HOME}/config/server.properties ]; then
                 echo 'config_missing'
 
-                             
+
                 if [ -f '${template_config}' ]; then
                     mkdir -p \${KAFKA_HOME}/config 2>/dev/null
                     cp '${template_config}' \${KAFKA_HOME}/config/server.properties
                     echo 'config_restored'
                 else
-                            
+
                     mkdir -p \${KAFKA_HOME}/config 2>/dev/null
                     cat > \${KAFKA_HOME}/config/server.properties << 'EOFCONFIG'
-                                                                               
-                 
-                                                                               
+
+
+
 
 broker.id=${broker_id}
 listeners=PLAINTEXT://${node_ip}:9092
@@ -140,23 +140,23 @@ EOFCONFIG
             fi
         " 2>/dev/null
     else
-                          
+
         if [ ! -f "${KAFKA_HOME}/config/server.properties" ]; then
             log_warn "Kafka配置文件不存在，尝试恢复..."
 
-                         
+
             if [ -f "${template_config}" ]; then
                 run_as_hdfs "mkdir -p ${KAFKA_HOME}/config"
                 run_as_hdfs "cp ${template_config} ${KAFKA_HOME}/config/server.properties"
                 log_info "从项目模板恢复配置文件"
                 return 0
             else
-                        
+
                 run_as_hdfs "mkdir -p ${KAFKA_HOME}/config"
                 run_as_hdfs "cat > ${KAFKA_HOME}/config/server.properties << 'EOFCONFIG'
-                                                                               
-                 
-                                                                               
+
+
+
 
 broker.id=${broker_id}
 listeners=PLAINTEXT://${node_ip}:9092
@@ -194,9 +194,9 @@ EOFCONFIG"
     fi
 }
 
-                                                                               
-           
-                                                                               
+
+
+
 start() {
     echo ""
     echo "=========================================="
@@ -206,7 +206,7 @@ start() {
     log_info "集群节点: ${NODE1_IP}(broker.1), ${NODE2_IP}(broker.2), ${NODE3_IP}(broker.3)"
     echo ""
 
-          
+
     local current_user=$(whoami)
     if [ "$current_user" != "${CLUSTER_USER}" ]; then
         log_warn "当前用户: ${current_user}，自动切换到 ${CLUSTER_USER} 用户执行"
@@ -220,38 +220,38 @@ start() {
         local broker_id=$(get_broker_id $node)
         echo -n "  broker.${broker_id} (${node}): "
 
-                   
+
         local kafka_log_dir=$(get_node_log_dir $node)
         local kafka_log_dir="${kafka_log_dir}/kafka"
         local env_sh=$(get_node_env_sh $node)
 
         if [ "$node" = "$(get_current_ip)" ]; then
-                  
-                     
+
+
             if run_as_hdfs "jps | grep -q Kafka"; then
                 echo -e "${YELLOW}已运行${NC}"
                 continue
             fi
 
-                                 
+
             ensure_kafka_config "$node" "local"
 
-                         
+
             run_as_hdfs "mkdir -p /sdb1/haoranmusicData/kafka ${kafka_log_dir}"
 
-                                  
+
             run_as_hdfs "rm -f /sdb1/haoranmusicData/kafka/pid 2>/dev/null"
 
-                              
+
             if [ -f "${KAFKA_HOME}/config/server.properties" ]; then
                 run_as_hdfs "cp ${KAFKA_HOME}/config/server.properties ${KAFKA_HOME}/config/server.properties.bak"
             fi
 
-                                 
+
             run_as_hdfs "
-                             
+
                 sed -i '/#===DYN_CONFIG_START===/,/#===DYN_CONFIG_END===/d' \${KAFKA_HOME}/config/server.properties 2>/dev/null || true
-                        
+
                 echo '#===DYN_CONFIG_START===（自动生成，勿手动修改）' >> \${KAFKA_HOME}/config/server.properties
                 echo 'broker.id=${broker_id}' >> \${KAFKA_HOME}/config/server.properties
                 echo 'listeners=PLAINTEXT://${node}:9092' >> \${KAFKA_HOME}/config/server.properties
@@ -261,7 +261,7 @@ start() {
                 echo '#===DYN_CONFIG_END===' >> \${KAFKA_HOME}/config/server.properties
             "
 
-                     
+
             run_as_hdfs "export KAFKA_HEAP_OPTS='-Xmx1G -Xms1G'; export LOG_DIR=${kafka_log_dir}; nohup ${KAFKA_HOME}/bin/kafka-server-start.sh -daemon \${KAFKA_HOME}/config/server.properties >/dev/null 2>&1"
 
             sleep 3
@@ -272,11 +272,11 @@ start() {
                 echo -e "${RED}启动失败${NC}"
             fi
         else
-                                
+
             local config_check=$(ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} "
                 source /etc/profile 2>/dev/null
 
-                            
+
                 if [ ! -f \${KAFKA_HOME}/config/server.properties ]; then
                     echo 'missing'
                     exit 0
@@ -284,7 +284,7 @@ start() {
                 echo 'exists'
             " 2>/dev/null)
 
-                           
+
             if [ "$config_check" = "missing" ]; then
                 echo -e "${YELLOW}配置文件缺失，正在恢复...${NC}"
                 local restore_result=$(ensure_kafka_config "$node" "remote")
@@ -296,33 +296,33 @@ start() {
                 fi
             fi
 
-                            
-                                                
-                                           
-                                       
+
+
+
+
             local result=$(ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} "
                 source /etc/profile 2>/dev/null
                 source '${env_sh}' 2>/dev/null
 
-                         
+
                 if jps 2>/dev/null | grep -q Kafka; then
                     echo 'already_running'
                     exit 0
                 fi
 
-                             
+
                 mkdir -p /sdb1/haoranmusicData/kafka '${kafka_log_dir}' 2>/dev/null
 
-                                      
+
                 rm -f /sdb1/haoranmusicData/kafka/pid 2>/dev/null
 
-                       
+
                 cp \$KAFKA_HOME/config/server.properties \$KAFKA_HOME/config/server.properties.bak 2>/dev/null || true
 
-                          
-                             
+
+
                 sed -i '/#===DYN_CONFIG_START===/,/#===DYN_CONFIG_END===/d' \$KAFKA_HOME/config/server.properties 2>/dev/null || true
-                                                         
+
                 echo '#===DYN_CONFIG_START===（自动生成，勿手动修改）' >> \$KAFKA_HOME/config/server.properties
                 echo 'broker.id=${broker_id}' >> \$KAFKA_HOME/config/server.properties
                 echo 'listeners=PLAINTEXT://${node}:9092' >> \$KAFKA_HOME/config/server.properties
@@ -331,7 +331,7 @@ start() {
                 echo 'zookeeper.connect=${NODE1_IP}:2181,${NODE2_IP}:2181,${NODE3_IP}:2181/kafka' >> \$KAFKA_HOME/config/server.properties
                 echo '#===DYN_CONFIG_END===' >> \$KAFKA_HOME/config/server.properties
 
-                         
+
                 export KAFKA_HEAP_OPTS='-Xmx1G -Xms1G'
                 export LOG_DIR='${kafka_log_dir}'
                 nohup \$KAFKA_HOME/bin/kafka-server-start.sh -daemon \$KAFKA_HOME/config/server.properties >/dev/null 2>&1
@@ -364,9 +364,9 @@ start() {
     echo ""
 }
 
-                                                                               
-           
-                                                                               
+
+
+
 stop() {
     echo ""
     echo "=========================================="
@@ -379,10 +379,10 @@ stop() {
         echo -n "  broker.${broker_id} (${node}): "
 
         if [ "$node" = "$(get_current_ip)" ]; then
-                  
+
             run_as_hdfs "\${KAFKA_HOME}/bin/kafka-server-stop.sh" >/dev/null 2>&1
         else
-                                    
+
             ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} '
                 source /etc/profile 2>/dev/null
                 source '$(get_node_env_sh $node)' 2>/dev/null
@@ -394,7 +394,7 @@ stop() {
         echo -e "${GREEN}已停止${NC}"
     done
 
-              
+
     for node in "${KAFKA_NODES[@]}"; do
         if [ "$node" = "$(get_current_ip)" ]; then
             pkill -9 -f kafka 2>/dev/null || true
@@ -408,18 +408,18 @@ stop() {
     status
 }
 
-                                                                               
-           
-                                                                               
+
+
+
 restart() {
     stop
     sleep 3
     start
 }
 
-                                                                               
-        
-                                                                               
+
+
+
 status() {
     echo ""
     echo "=========================================="
@@ -434,7 +434,7 @@ status() {
         echo -n "  broker.${broker_id} (${node}): "
 
         if [ "$node" = "$(get_current_ip)" ]; then
-                  
+
             if run_as_hdfs "jps | grep -q Kafka"; then
                 local pid=$(run_as_hdfs "jps | grep Kafka | awk '{print \$1}'")
                 echo -e "${GREEN}[RUNNING]${NC} (PID: ${pid})"
@@ -443,7 +443,7 @@ status() {
                 echo -e "${YELLOW}[STOPPED]${NC}"
             fi
         else
-                  
+
             local result=$(ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} "
                 source /etc/profile 2>/dev/null
                 if jps | grep -q Kafka; then
@@ -468,9 +468,9 @@ status() {
     echo "=========================================="
 }
 
-                                                                               
-       
-                                                                               
+
+
+
 COMMAND="${1:-start}"
 
 case "${COMMAND}" in

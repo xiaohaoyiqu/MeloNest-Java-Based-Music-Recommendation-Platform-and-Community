@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 
 public class ArtistVO implements Serializable {
@@ -36,12 +36,12 @@ public class ArtistVO implements Serializable {
 
     private Integer type;
 
-                                              
+
     private String artistKind;
 
     private String artistKindName;
 
-                                                        
+
     private String profileSource;
 
     private String profileSourceName;
@@ -55,15 +55,15 @@ public class ArtistVO implements Serializable {
     private Integer followingCount;
 
 
-       
-          
-       
+
+
+
     private Long playCount;
 
 
-       
-          
-       
+
+
+
     private Integer commentCount;
 
 
@@ -81,9 +81,9 @@ public class ArtistVO implements Serializable {
 
     private LocalDate birthday;
 
-       
-                       
-       
+
+
+
     private Integer gender;
 
 
@@ -98,9 +98,9 @@ public class ArtistVO implements Serializable {
 
     private LocalDateTime createTime;
 
-       
-                     
-       
+
+
+
     @Data
 
     public static class SongSimpleVO implements Serializable {
@@ -123,9 +123,9 @@ public class ArtistVO implements Serializable {
         private String cover;
     }
 
-       
-                     
-       
+
+
+
     @Data
 
     public static class AlbumSimpleVO implements Serializable {

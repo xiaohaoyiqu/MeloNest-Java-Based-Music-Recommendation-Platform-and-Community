@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-         
-   
+
+
+
 @Slf4j
 @Service
 public class WithdrawServiceImpl implements WithdrawService {
@@ -63,24 +63,24 @@ public class WithdrawServiceImpl implements WithdrawService {
     public Map<String, Object> applyWithdraw(Long creatorId, BigDecimal amount,
                                              String withdrawType, String withdrawAccount,
                                              String withdrawName) {
-                
+
         creatorEligibilityService.requireEligible(creatorId, "申请提现");
         User creator = userMapper.selectByIdForUpdate(creatorId);
         if (creator == null) {
             throw new BusinessException("创作者不存在");
         }
 
-                 
+
         if (!checkWithdrawCondition(creator, amount)) {
             throw new BusinessException("不满足提现条件");
         }
 
-                 
+
         if (!isValidWithdrawType(withdrawType)) {
             throw new BusinessException("不支持的提现类型");
         }
 
-                 
+
         WithdrawApply apply = new WithdrawApply();
         apply.setCreatorId(creatorId);
         apply.setAmount(amount);
@@ -93,7 +93,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             throw new BusinessException("提现申请创建失败");
         }
 
-                  
+
         BigDecimal pendingEarnings = creator.getPendingEarnings() != null ?
                 creator.getPendingEarnings() : BigDecimal.ZERO;
         creator.setPendingEarnings(pendingEarnings.subtract(amount));
@@ -185,15 +185,15 @@ public class WithdrawServiceImpl implements WithdrawService {
         }
 
         if (approved) {
-                   
+
             result.put("status", "processing");
             result.put("message", "提现申请已通过，等待打款");
 
             log.info("event=withdraw_reviewed withdrawId={} approved=true", withdrawId);
 
         } else {
-                   
-                     
+
+
             User creator = userMapper.selectByIdForUpdate(apply.getCreatorId());
             if (creator == null) {
                 throw new BusinessException("创作者不存在，无法返还提现冻结金额");
@@ -230,7 +230,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             throw new BusinessException("申请状态不正确");
         }
 
-                 
+
         apply.setStatus("completed");
         apply.setTransactionId(transactionId.trim());
         apply.setCompletedTime(LocalDateTime.now());
@@ -238,7 +238,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             throw new BusinessException("提现申请已被处理");
         }
 
-                    
+
         User creator = userMapper.selectByIdForUpdate(apply.getCreatorId());
         if (creator == null) {
             throw new BusinessException("创作者不存在，无法累计已提现金额");
@@ -311,7 +311,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         BigDecimal pendingEarnings = creator.getPendingEarnings() != null ?
                 creator.getPendingEarnings() : BigDecimal.ZERO;
 
-               
+
         LambdaQueryWrapper<CreatorDebt> debtWrapper = new LambdaQueryWrapper<>();
         debtWrapper.eq(CreatorDebt::getCreatorId, creatorId)
                 .in(CreatorDebt::getStatus, "pending", "partial")
@@ -336,13 +336,13 @@ public class WithdrawServiceImpl implements WithdrawService {
     }
 
     private Boolean checkWithdrawCondition(User creator, BigDecimal amount) {
-                 
+
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0
                 || amount.compareTo(paymentConfig.getWithdrawMinAmount()) < 0) {
             return false;
         }
 
-                 
+
         BigDecimal pendingEarnings = creator.getPendingEarnings() == null
                 ? BigDecimal.ZERO : creator.getPendingEarnings();
         BigDecimal available = pendingEarnings.subtract(getOutstandingDebt(creator.getId()));
@@ -441,7 +441,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         }
 
         if (deduct) {
-                             
+
             recordCreatorDebt(freeze.getCreatorId(), freeze.getRefundId(),
                     freeze.getWithdrawId(), freeze.getFreezeAmount());
         }
@@ -502,7 +502,7 @@ public class WithdrawServiceImpl implements WithdrawService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BigDecimal deductDebtFromEarnings(Long creatorId) {
-                 
+
         LambdaQueryWrapper<CreatorDebt> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CreatorDebt::getCreatorId, creatorId)
                 .in(CreatorDebt::getStatus, "pending", "partial")
@@ -532,13 +532,13 @@ public class WithdrawServiceImpl implements WithdrawService {
                 break;
             }
 
-                      
+
             BigDecimal deductAmount = pendingEarnings.min(debt.getRemainingAmount());
 
-                 
+
             pendingEarnings = pendingEarnings.subtract(deductAmount);
 
-                     
+
             debt.setPaidAmount(debt.getPaidAmount().add(deductAmount));
             debt.setRemainingAmount(debt.getRemainingAmount().subtract(deductAmount));
 
@@ -613,7 +613,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         return result;
     }
 
-                                                     
+
 
     private int normalizePage(Integer page) {
         return ObjectUtils.isEmpty(page) || page < 1 ? 1 : page;
@@ -626,18 +626,18 @@ public class WithdrawServiceImpl implements WithdrawService {
         return Math.min(size, 100);
     }
 
-       
-             
-       
+
+
+
     private Boolean isValidWithdrawType(String withdrawType) {
         return "alipay".equals(withdrawType)
                 || "wechat".equals(withdrawType)
                 || "bank".equals(withdrawType);
     }
 
-       
-           
-       
+
+
+
     private String maskAccount(String account) {
         if (account == null || account.length() < 4) {
             return account;

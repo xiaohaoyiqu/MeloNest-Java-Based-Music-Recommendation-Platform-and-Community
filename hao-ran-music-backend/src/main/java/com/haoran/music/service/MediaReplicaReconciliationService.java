@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-   
-                             
-  
-                      
-   
+
+
+
+
+
 @Service
 @RequiredArgsConstructor
 public class MediaReplicaReconciliationService {
@@ -41,14 +41,14 @@ public class MediaReplicaReconciliationService {
     @Value("${music.node3.reconcile-max-hash-bytes:536870912}")
     private long reconcileMaxHashBytes = 536870912L;
 
-       
-                                     
-      
-                                 
-                                               
-                                    
-                           
-       
+
+
+
+
+
+
+
+
     public MediaReplicaReconciliationVO reconcile(int limit, boolean verifyHash, int maxHashFiles) {
         int safeLimit = safeLimit(limit);
         int safeHashLimit = Math.max(0, Math.min(maxHashFiles, MAX_HASH_FILES));
@@ -95,9 +95,9 @@ public class MediaReplicaReconciliationService {
         return result;
     }
 
-       
-                        
-       
+
+
+
     private Map<String, MediaAsset> indexExpected(List<MediaAsset> assets, String root,
                                                    MediaReplicaReconciliationVO result) {
         Map<String, MediaAsset> indexed = new LinkedHashMap<>();
@@ -117,9 +117,9 @@ public class MediaReplicaReconciliationService {
         return indexed;
     }
 
-       
-                              
-       
+
+
+
     private Map<String, Node3MediaInventory.FileEntry> indexActual(
             List<Node3MediaInventory.FileEntry> files, String root) {
         Map<String, Node3MediaInventory.FileEntry> indexed = new LinkedHashMap<>();
@@ -134,9 +134,9 @@ public class MediaReplicaReconciliationService {
         return indexed;
     }
 
-       
-                                          
-       
+
+
+
     private void compare(Map<String, MediaAsset> expected,
                          Map<String, Node3MediaInventory.FileEntry> actual,
                          String root,
@@ -195,9 +195,9 @@ public class MediaReplicaReconciliationService {
         result.setHashSkippedCount(hashSkipped);
     }
 
-       
-                                
-       
+
+
+
     private MediaReplicaReconciliationVO.Mismatch mismatch(String type, MediaAsset asset,
                                                             String relativePath, Long expectedSize,
                                                             Long actualSize, String expectedHashPrefix,
@@ -213,9 +213,9 @@ public class MediaReplicaReconciliationService {
         return mismatch;
     }
 
-       
-                        
-       
+
+
+
     private Map<String, Object> queueObservation() {
         Map<String, Object> observation = new LinkedHashMap<>();
         observation.put("mediaReclaim", mediaAssetMapper.selectReclaimObservation());
@@ -225,9 +225,9 @@ public class MediaReplicaReconciliationService {
         return observation;
     }
 
-       
-                               
-       
+
+
+
     private Map<String, Object> toDiskUsage(Node3DiskUsage usage) {
         if (usage == null) {
             return Collections.singletonMap("available", false);
@@ -242,23 +242,23 @@ public class MediaReplicaReconciliationService {
         return result;
     }
 
-       
-                          
-       
+
+
+
     private String relative(String path, String root) {
         return path.substring(root.length() + 1);
     }
 
-       
-                         
-       
+
+
+
     private boolean isWithinRoot(String path, String root) {
         return ObjectUtils.isNotEmpty(path) && path.startsWith(root + "/") && !path.contains("..");
     }
 
-       
-                   
-       
+
+
+
     private String normalizeRoot(String root) {
         if (ObjectUtils.isEmpty(root)) {
             return null;
@@ -267,9 +267,9 @@ public class MediaReplicaReconciliationService {
         return normalized.matches("/[A-Za-z0-9_./-]+") && !normalized.contains("..") ? normalized : null;
     }
 
-       
-                   
-       
+
+
+
     private String normalizeHash(String hash) {
         if (ObjectUtils.isEmpty(hash)) {
             return null;
@@ -278,30 +278,30 @@ public class MediaReplicaReconciliationService {
         return normalized.matches("[a-f0-9]{64}") ? normalized : null;
     }
 
-       
-                            
-       
+
+
+
     private String prefix(String hash) {
         return hash == null ? null : hash.substring(0, 12);
     }
 
-       
-                
-       
+
+
+
     private int safeLimit(int limit) {
         return Math.max(1, Math.min(limit <= 0 ? DEFAULT_LIMIT : limit, MAX_LIMIT));
     }
 
-       
-                                   
-       
+
+
+
     private long safeMaxHashBytes() {
         return Math.max(1L, Math.min(reconcileMaxHashBytes, 1024L * 1024L * 1024L));
     }
 
-       
-                     
-       
+
+
+
     private String safeCategory(String category) {
         return ObjectUtils.isEmpty(category) ? null : category.replaceAll("[^A-Z0-9_]", "_");
     }

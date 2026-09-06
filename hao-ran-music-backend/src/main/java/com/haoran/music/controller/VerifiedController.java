@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Map;
 
-   
-                      
-                              
-   
+
+
+
+
 @RestController
 @RequestMapping("/verified")
 public class VerifiedController {
@@ -24,12 +24,12 @@ public class VerifiedController {
     @Resource
     private VerifiedService verifiedService;
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取用户认证信息")
     @GetMapping("/user/{userId}")
     public Result<VerifiedInfoVO> getUserVerifiedInfo(@PathVariable Long userId) {
@@ -37,15 +37,15 @@ public class VerifiedController {
         return Result.success(result);
     }
 
-       
-                     
-      
-                          
-                          
-                      
-                        
-                     
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("获取认证列表")
     @GetMapping("/list")
     public Result<PageResult<PublicUserVO>> getVerifiedList(
@@ -57,16 +57,16 @@ public class VerifiedController {
         return Result.success(result);
     }
 
-       
-                  
-      
-                                 
-                                
-                                
-                                
-                                
-                   
-       
+
+
+
+
+
+
+
+
+
+
     @ApiLog("审核认证申请")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/review/{creatorId}")
@@ -81,13 +81,13 @@ public class VerifiedController {
         return Result.success();
     }
 
-       
-                    
-      
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("更新用户认证信息")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PutMapping("/user/{userId}")

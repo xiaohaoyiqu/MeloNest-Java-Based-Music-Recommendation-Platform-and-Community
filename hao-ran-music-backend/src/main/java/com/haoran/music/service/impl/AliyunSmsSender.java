@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.haoran.music.common.config.SmsConfig;
@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-   
-                                                                                   
-   
+
+
+
 @Slf4j
 @Service
 @ConditionalOnProperty(prefix = "sms", name = "enabled", havingValue = "true")

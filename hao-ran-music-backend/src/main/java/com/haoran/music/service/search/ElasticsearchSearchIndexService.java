@@ -28,16 +28,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-   
-                                                   
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class ElasticsearchSearchIndexService implements SearchIndexService {
 
-                                                        
+
     private static final int BATCH_SIZE = 100;
     private static final String TYPE_SONG = "song";
     private static final String TYPE_ALBUM = "album";
@@ -284,7 +284,7 @@ public class ElasticsearchSearchIndexService implements SearchIndexService {
             httpClient.request(HttpMethod.GET, "/" + indexName(), null);
             exists = true;
         } catch (Exception ignored) {
-                                                          
+
         }
         if (exists) {
             updateIndexMappings();

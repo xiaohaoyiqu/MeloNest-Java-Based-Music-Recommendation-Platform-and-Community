@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.constant;
 
 import java.util.Collection;
@@ -11,9 +11,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-   
-                                                     
-   
+
+
+
 public final class ModerationConstants {
 
     public static final String STATUS_PENDING = "pending";

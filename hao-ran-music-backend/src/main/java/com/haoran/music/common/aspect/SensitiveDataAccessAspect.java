@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.common.aspect;
 
@@ -30,11 +30,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                     
-  
-                                                      
-   
+
+
+
+
+
 @Aspect
 @Component
 public class SensitiveDataAccessAspect {
@@ -50,20 +50,20 @@ public class SensitiveDataAccessAspect {
     @Autowired
     private ClientIpResolver clientIpResolver;
 
-       
-                                       
-      
-                                
-                                         
-                          
-                                     
-       
+
+
+
+
+
+
+
+
     @Around("@annotation(sensitiveAccess)")
     public Object controlSensitiveDataAccess(ProceedingJoinPoint joinPoint,
                                              SensitiveDataAccess sensitiveAccess) throws Throwable {
         long startTime = System.currentTimeMillis();
 
-                  
+
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
             log.warn("event=sensitive_data_access_request_context_missing action=proceed_without_audit");
@@ -72,19 +72,19 @@ public class SensitiveDataAccessAspect {
 
         HttpServletRequest request = attributes.getRequest();
 
-                   
+
         Long userId = getUserIdFromRequest(request);
         String requestUri = request.getRequestURI();
         String ipAddress = getClientIp(request);
         String userAgent = request.getHeader("User-Agent");
 
-                 
+
         int requireLevel = sensitiveAccess.requireLevel();
         if (!checkPermission(userId, requireLevel)) {
             log.warn("event=sensitive_data_access_denied userId={} requireLevel={} dataType={}",
                     userId, requireLevel, sensitiveAccess.dataType());
 
-                       
+
             if (sensitiveAccess.logAccess()) {
                 asyncLogAccess(userId, null, "blocked", sensitiveAccess.dataType(),
                         requestUri, ipAddress, userAgent, "权限不足");
@@ -93,14 +93,14 @@ public class SensitiveDataAccessAspect {
             return createErrorResponse("权限不足，无法访问敏感数据");
         }
 
-                     
+
         if (sensitiveAccess.requireReVerify() && requireLevel >= 1) {
             String reVerifyToken = request.getHeader("X-Reverify-Token");
             if (reVerifyToken == null || reVerifyToken.isEmpty()) {
                 log.warn("event=sensitive_data_access_reverify_required userId={} dataType={}",
                         userId, sensitiveAccess.dataType());
 
-                             
+
                 if (sensitiveAccess.logAccess()) {
                     asyncLogAccess(userId, null, "blocked", sensitiveAccess.dataType(),
                             requestUri, ipAddress, userAgent, "需要二次验证");
@@ -110,7 +110,7 @@ public class SensitiveDataAccessAspect {
             }
         }
 
-               
+
         Object result;
         try {
             result = joinPoint.proceed();
@@ -124,12 +124,12 @@ public class SensitiveDataAccessAspect {
             throw e;
         }
 
-                 
+
         if (sensitiveAccess.maskData() && result != null) {
             result = maskSensitiveData(result);
         }
 
-                 
+
         if (sensitiveAccess.logAccess()) {
             long duration = System.currentTimeMillis() - startTime;
             asyncLogAccess(userId, null, "success", sensitiveAccess.dataType(),
@@ -141,12 +141,12 @@ public class SensitiveDataAccessAspect {
         return result;
     }
 
-       
-                            
-       
+
+
+
     private Long getUserIdFromRequest(HttpServletRequest request) {
         try {
-                                    
+
             Object userIdAttr = request.getAttribute("userId");
             if (userIdAttr instanceof Long) {
                 return (Long) userIdAttr;
@@ -166,25 +166,25 @@ public class SensitiveDataAccessAspect {
         }
     }
 
-       
-                                      
-       
+
+
+
     private boolean checkPermission(Long userId, int requireLevel) {
         if (userId == null) {
             return false;
         }
 
-                    
+
         if (requireLevel == 0) {
             return true;
         }
 
-                    
+
         if (requireLevel == 1) {
             return userId != null && userId > 0;
         }
 
-                                    
+
         if (requireLevel == 2) {
             if (userMapper != null) {
                 try {
@@ -200,13 +200,13 @@ public class SensitiveDataAccessAspect {
             return false;
         }
 
-                              
+
         if (requireLevel == 3) {
             if (userMapper != null) {
                 try {
                     User user = userMapper.selectById(userId);
                     if (user != null && "ADMIN".equals(user.getRole())) {
-                                            
+
                         return user.getUsername() != null &&
                                (user.getUsername().equals("admin") || user.getUsername().equals("superadmin"));
                     }
@@ -221,21 +221,21 @@ public class SensitiveDataAccessAspect {
         return false;
     }
 
-       
-                                          
-       
+
+
+
     private Object maskSensitiveData(Object data) {
         if (data == null) {
             return null;
         }
 
-                  
+
         if (data instanceof Map) {
             @SuppressWarnings("unchecked")
             Map<String, Object> map = (Map<String, Object>) data;
             Map<String, Object> maskedMap = new HashMap<>(map);
 
-                        
+
             if (maskedMap.containsKey("phone")) {
                 Object phone = maskedMap.get("phone");
                 if (phone instanceof String) {
@@ -264,20 +264,20 @@ public class SensitiveDataAccessAspect {
             return maskedMap;
         }
 
-                           
+
         return data;
     }
 
-       
-                                  
-       
+
+
+
     private String getClientIp(HttpServletRequest request) {
         return clientIpResolver.resolve(request);
     }
 
-       
-                                        
-       
+
+
+
     @Async
     private void asyncLogAccess(Long userId, Long operatorId, String result, String dataType,
                               String requestUri, String ipAddress, String userAgent, String errorMsg) {
@@ -307,9 +307,9 @@ public class SensitiveDataAccessAspect {
                 userId, result, dataType);
     }
 
-       
-                                 
-       
+
+
+
     private Map<String, Object> createErrorResponse(String message) {
         Map<String, Object> response = new HashMap<>();
         response.put("code", 403);

@@ -10,10 +10,10 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface PlaylistMapper extends BaseMapper<Playlist> {
 

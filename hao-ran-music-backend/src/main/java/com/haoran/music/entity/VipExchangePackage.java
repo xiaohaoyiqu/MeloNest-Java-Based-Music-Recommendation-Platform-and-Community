@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
-                                                        
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("vip_exchange_package")

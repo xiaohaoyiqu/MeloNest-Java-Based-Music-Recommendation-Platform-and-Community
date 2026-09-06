@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service;
 
@@ -10,94 +10,94 @@ import com.haoran.music.entity.UserDecoration;
 
 import java.util.List;
 
-   
-           
-   
+
+
+
 public interface DecorationService {
 
-       
-               
-      
-                         
-                     
-       
+
+
+
+
+
+
     List<UserDecoration> getUserDecorations(Long userId);
 
-       
-                 
-      
-                         
-                                 
-                     
-       
+
+
+
+
+
+
+
     List<UserDecoration> getUserDecorationsByType(Long userId, String decorationType);
 
-       
-               
-      
-                         
-                                 
-                     
-       
+
+
+
+
+
+
+
     UserDecoration getEquippedDecoration(Long userId, String decorationType);
 
-       
-           
-      
-                         
-                               
-                   
-       
+
+
+
+
+
+
+
     boolean equipDecoration(Long userId, String decorationId);
 
-       
-           
-      
-                         
-                                 
-                   
-       
+
+
+
+
+
+
+
     boolean unequipDecoration(Long userId, String decorationType);
 
-       
-           
-      
-                         
-                               
-                       
-                   
-       
+
+
+
+
+
+
+
+
     boolean grantDecoration(Long userId, String decorationId, String source);
 
-       
-              
-      
-                         
-                               
-                   
-       
+
+
+
+
+
+
+
     boolean redeemDecoration(Long userId, String decorationId);
 
-       
-               
-      
-                                     
-                     
-       
+
+
+
+
+
+
     List<DecorationConfig> getDecorationConfigs(String decorationType);
 
-       
-                 
-      
-                         
-                               
-                   
-       
+
+
+
+
+
+
+
     boolean hasDecoration(Long userId, String decorationId);
 
-       
-            
-       
+
+
+
     class DecorationDTO {
         private Long configId;
         private String decorationId;
@@ -118,7 +118,7 @@ public interface DecorationService {
         private Integer durationDays;
         private String obtainDescription;
 
-                              
+
         public Long getConfigId() { return configId; }
         public void setConfigId(Long configId) { this.configId = configId; }
 

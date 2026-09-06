@@ -1,7 +1,7 @@
-   
-                      
-                                                                                              
-   
+
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.aspect.ApiLog;
@@ -91,9 +91,9 @@ public class AuthController {
     @Resource
     private SecurityConfig securityConfig;
 
-       
-                                                
-       
+
+
+
     @ApiLog("用户登录")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 60, operation = "login", scope = RateLimitScope.IP,
             message = "登录尝试过于频繁，请稍后再试", captchaBypass = false)
@@ -138,9 +138,9 @@ public class AuthController {
         }
     }
 
-       
-                         
-       
+
+
+
     @ApiLog("用户注册")
     @RateLimit(maxRequests = 3, timeWindowSeconds = 3600, operation = "register", scope = RateLimitScope.IP,
             message = "注册次数过多，请1小时后再试", captchaBypass = false)
@@ -160,9 +160,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                                                               
-       
+
+
+
     @ApiLog("发送手机验证码")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 3600, operation = "sendCode", scope = RateLimitScope.IP,
             message = "验证码发送过于频繁，请稍后再试", captchaBypass = false)
@@ -178,9 +178,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                                                                                
-       
+
+
+
     @ApiLog("发送邮箱验证码")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 3600, operation = "sendEmailCode", scope = RateLimitScope.IP,
             message = "验证码发送过于频繁，请稍后再试", captchaBypass = false)
@@ -196,9 +196,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                                                            
-       
+
+
+
     @ApiLog("校验邮箱验证码")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 300, operation = "verifyEmailCode",
             scope = RateLimitScope.IP, message = "验证码校验过于频繁，请稍后再试", captchaBypass = false)
@@ -208,9 +208,9 @@ public class AuthController {
         return Result.success();
     }
 
-       
-                                                           
-       
+
+
+
     @ApiLog("重置密码")
     @RateLimit(maxRequests = 3, timeWindowSeconds = 3600, operation = "resetPassword", scope = RateLimitScope.IP,
             message = "密码重置次数过多，请稍后再试", captchaBypass = false)
@@ -220,10 +220,10 @@ public class AuthController {
         return Result.success();
     }
 
-       
-                                                                                     
-                                                                                                    
-       
+
+
+
+
     @ApiLog(value = "请求受限账号申诉验证码", logArgs = false, logReturn = false)
     @RateLimit(maxRequests = 3, timeWindowSeconds = 3600, operation = "accountRestrictionAppealCode",
             scope = RateLimitScope.IP, message = "申诉验证码请求过于频繁，请1小时后再试",
@@ -235,10 +235,10 @@ public class AuthController {
         return Result.success();
     }
 
-       
-                                                                                    
-                                                                                                      
-       
+
+
+
+
     @ApiLog(value = "提交受限账号申诉", logArgs = false, logReturn = false)
     @RateLimit(maxRequests = 3, timeWindowSeconds = 3600, operation = "accountRestrictionAppealSubmit",
             scope = RateLimitScope.IP, message = "申诉提交过于频繁，请1小时后再试",
@@ -249,9 +249,9 @@ public class AuthController {
         accountRestrictionAppealService.submitBoundContactAppeal(dto);
         return Result.success();
     }
-       
-                            
-       
+
+
+
     @ApiLog("刷新Token")
     @PostMapping("/refresh")
     public Result<Map<String, String>> refreshToken(
@@ -270,9 +270,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                                            
-       
+
+
+
     @ApiLog("用户登出")
     @PostMapping("/logout")
     public Result<Void> logout(HttpServletRequest request, HttpServletResponse response) {
@@ -287,9 +287,9 @@ public class AuthController {
         return Result.success();
     }
 
-       
-                      
-       
+
+
+
     @ApiLog("验证Token")
     @PostMapping("/validate")
     public Result<Map<String, Object>> validateToken(
@@ -306,9 +306,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                                   
-       
+
+
+
     @ApiLog("获取验证码")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 60, operation = "captchaGet", scope = RateLimitScope.IP,
             message = "验证码获取过于频繁，请稍后再试", captchaBypass = false)
@@ -321,9 +321,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                                         
-       
+
+
+
     @ApiLog("校验验证码")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 60, operation = "captchaVerify", scope = RateLimitScope.IP,
             message = "验证码校验过于频繁，请稍后再试", captchaBypass = false)
@@ -350,9 +350,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                                   
-       
+
+
+
     @RateLimit(maxRequests = 60, timeWindowSeconds = 60, operation = "captchaCheck",
             scope = RateLimitScope.IP, message = "验证码状态查询过于频繁，请稍后再试", captchaBypass = false)
     @GetMapping("/captcha/check")
@@ -371,9 +371,9 @@ public class AuthController {
         return Result.success(result);
     }
 
-       
-                                                        
-       
+
+
+
     @GetMapping("/risk/status")
     public Result<Map<String, Object>> getRiskStatus(@RequestParam(required = false) String account,
                                                      HttpServletRequest request) {
@@ -419,9 +419,9 @@ public class AuthController {
                 || ResultCode.LOGIN_ERROR.getCode().equals(e.getCode());
     }
 
-       
-                                                                                       
-       
+
+
+
     private String getClientIp(HttpServletRequest request) {
         return clientIpResolver.resolve(request);
     }

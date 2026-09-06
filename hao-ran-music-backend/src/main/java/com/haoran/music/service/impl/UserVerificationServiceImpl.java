@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -26,9 +26,9 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-   
-             
-   
+
+
+
 @Slf4j
 @Service
 public class UserVerificationServiceImpl implements UserVerificationService {
@@ -43,9 +43,9 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     private UserVerificationConfig userVerificationConfig;
 
 
-       
-                
-       
+
+
+
     private static final String CODE_CACHE_PREFIX = "verification:code:";
     private static final String SEND_LIMIT_PREFIX = "verification:limit:";
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -53,7 +53,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Void> sendVerificationCode(String target, Integer type, String clientIp) {
-               
+
         if (StrUtil.isBlank(target)) {
             return Result.error("目标不能为空");
         }
@@ -61,20 +61,20 @@ public class UserVerificationServiceImpl implements UserVerificationService {
             return Result.error("验证类型不能为空");
         }
 
-                   
+
         if (!canSendCode(target, type)) {
             return Result.error("发送过于频繁，请稍后再试");
         }
 
-                     
+
         if (!isValidTarget(target, type)) {
             return Result.error("目标格式不正确");
         }
 
-                  
+
         String code = generateNumericCode(userVerificationConfig.getCodeLength());
 
-                        
+
         LambdaQueryWrapper<UserVerification> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserVerification::getTarget, target)
                 .eq(UserVerification::getVerificationType, type)
@@ -83,7 +83,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
         UserVerification existing = userVerificationMapper.selectOne(queryWrapper);
 
         if (ObjectUtils.isNotEmpty(existing)) {
-                     
+
             LambdaUpdateWrapper<UserVerification> updateWrapper = new LambdaUpdateWrapper<>();
             updateWrapper.eq(UserVerification::getId, existing.getId())
                     .set(UserVerification::getCode, null)
@@ -94,7 +94,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
                     .set(UserVerification::getClientIp, clientIp);
             userVerificationMapper.update(null, updateWrapper);
         } else {
-                    
+
             UserVerification verification = new UserVerification();
             verification.setTarget(target);
             verification.setVerificationType(type);
@@ -112,16 +112,16 @@ public class UserVerificationServiceImpl implements UserVerificationService {
             userVerificationMapper.insert(verification);
         }
 
-                              
+
         String cacheKey = CODE_CACHE_PREFIX + target + ":" + type;
         redisTemplate.opsForValue().set(cacheKey, hashCode(code), userVerificationConfig.getCodeExpireMinutes(), TimeUnit.MINUTES);
 
-                 
+
         String limitKey = SEND_LIMIT_PREFIX + target + ":" + type;
         redisTemplate.opsForValue().set(limitKey, "1", userVerificationConfig.getResendIntervalSeconds(), TimeUnit.SECONDS);
 
-                                           
-                                            
+
+
         log.info("Verification code delivery is disabled: target={}, type={}", maskTarget(target), type);
         redisTemplate.delete(limitKey);
         invalidateCode(target, type);
@@ -131,7 +131,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Boolean> verifyCode(String target, Integer type, String code) {
-               
+
         if (StrUtil.isBlank(target) || StrUtil.isBlank(code)) {
             return Result.error("参数不能为空");
         }
@@ -149,7 +149,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
             return Result.error("验证码不存在或已过期");
         }
 
-                
+
         if (!inputHash.equals(verification.getCodeHash())) {
             userVerificationMapper.recordFailedAttempt(
                     verification.getId(), safeMaxFailCount(), now);
@@ -167,12 +167,12 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Boolean> verifyCodeByUserId(Long userId, Integer type, String code) {
-               
+
         if (ObjectUtils.isEmpty(userId) || StrUtil.isBlank(code)) {
             return Result.error("参数不能为空");
         }
 
-                     
+
         List<UserVerification> verifications = userVerificationMapper.selectByUserAndType(userId, type, 1);
 
         if (ObjectUtils.isEmpty(verifications) || verifications.isEmpty()) {
@@ -181,12 +181,12 @@ public class UserVerificationServiceImpl implements UserVerificationService {
 
         UserVerification verification = verifications.get(0);
 
-                  
+
         if (verification.getExpireTime().isBefore(LocalDateTime.now())) {
             return Result.error("验证码已过期");
         }
 
-                  
+
         if (ObjectUtils.isNotEmpty(verification.getIsUsed()) && verification.getIsUsed() == 1) {
             return Result.error("验证码已使用");
         }
@@ -216,7 +216,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
                 .set(UserVerification::getStatus, 2);
         userVerificationMapper.update(null, updateWrapper);
 
-               
+
         String cacheKey = CODE_CACHE_PREFIX + target + ":" + type;
         redisTemplate.delete(cacheKey);
     }
@@ -243,14 +243,14 @@ public class UserVerificationServiceImpl implements UserVerificationService {
 
     @Override
     public Boolean canSendCode(String target, Integer type) {
-                    
+
         String limitKey = SEND_LIMIT_PREFIX + target + ":" + type;
         Boolean exists = redisTemplate.hasKey(limitKey);
         if (Boolean.TRUE.equals(exists)) {
             return false;
         }
 
-                    
+
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
         Integer count = userVerificationMapper.countRecentCodes(target, type, oneHourAgo);
 
@@ -265,25 +265,25 @@ public class UserVerificationServiceImpl implements UserVerificationService {
         return userVerificationMapper.selectByUserAndType(userId, type, limit);
     }
 
-       
-             
-       
+
+
+
     private Boolean isValidTarget(String target, Integer type) {
-                               
+
         if (type == 0 || type == 4) {
             return target.matches("^[A-Za-z0-9+_.-]+@(.+)$");
         }
-                         
+
         if (type == 1 || type == 2 || type == 3) {
             return target.matches("^1[3-9]\\d{9}$");
         }
         return false;
     }
 
-       
-                       
-                              
-  
+
+
+
+
     private String generateNumericCode(Integer length) {
         int realLength = ObjectUtils.isEmpty(length) || length <= 0 ? 6 : length;
         StringBuilder code = new StringBuilder();
@@ -314,7 +314,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
             return sb.toString();
         } catch (Exception e) {
             log.error("哈希计算失败: {}", e.getClass().getSimpleName());
-                      
+
             return String.valueOf(code.hashCode());
         }
     }

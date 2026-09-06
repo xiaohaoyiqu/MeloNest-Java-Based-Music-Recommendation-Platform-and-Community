@@ -41,10 +41,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVService {
@@ -148,7 +148,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
 
         contentAccessService.requireMvMetadataAccess(mvMapper.selectById(mvId), userId);
 
-                                   
+
         String cacheKey = cacheService.MV_CACHE_PREFIX + mvId;
         MVVO mvVO = CacheHelper.getOrLoadWithNullProtection(
                 redisUtils,
@@ -164,15 +164,15 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             throw new BusinessException(ResultCode.NOT_FOUND, "MV不存在");
         }
 
-                                       
+
         setUserActionStatus(mvVO, userId);
 
         return mvVO;
     }
 
-       
-                        
-       
+
+
+
     private MVVO buildMVVOFromDB(Long mvId, Long userId) {
         MV mv = mvMapper.selectById(mvId);
         if (ObjectUtils.isEmpty(mv) || CommonConstants.DELETED.equals(mv.getDeleted())) {
@@ -201,7 +201,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         IPage<MV> mvPage = mvMapper.selectPageWithFilters(page, area, genre, escapedKeyword, sortBy, language,
                 publishYear, publishDateStart, publishDateEnd, minDuration, maxDuration, quality, binding, albumType);
 
-                                
+
         return convertToVOBatch(mvPage, userId);
     }
 
@@ -358,11 +358,11 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
 
         MV mv = mvMapper.selectById(mvId);
         if (ObjectUtils.isNotEmpty(mv)) {
-                     
+
             mv.setPlayCount((mv.getPlayCount() != null ? mv.getPlayCount() : 0) + 1);
             mvMapper.updateById(mv);
 
-                   
+
             cacheService.clearMVCache(mvId);
 
             log.debug("记录MV播放: mvId={}, userId={}", mvId, userId);
@@ -378,13 +378,13 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         User user = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(user, "收藏MV");
 
-                   
+
         MV mv = getById(mvId);
         if (ObjectUtils.isEmpty(mv)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "MV不存在");
         }
 
-                             
+
         LambdaQueryWrapper<MvFavorite> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(MvFavorite::getUserId, userId)
                .eq(MvFavorite::getMvId, mvId)
@@ -396,11 +396,11 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             return true;
         }
 
-                                         
+
         String cleanupSql = "DELETE FROM mv_favorite WHERE user_id = ? AND mv_id = ? AND deleted = 1";
         jdbcTemplate.update(cleanupSql, userId, mvId);
 
-                
+
         MvFavorite mvFavorite = new MvFavorite();
         mvFavorite.setUserId(userId);
         mvFavorite.setMvId(mvId);
@@ -424,7 +424,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             throw new BusinessException(ResultCode.PARAM_ERROR);
         }
 
-                   
+
         LambdaQueryWrapper<MvFavorite> activeWrapper = new LambdaQueryWrapper<>();
         activeWrapper.eq(MvFavorite::getUserId, userId)
                 .eq(MvFavorite::getMvId, mvId)
@@ -433,17 +433,17 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         MvFavorite activeRecord = mvFavoriteMapper.selectOne(activeWrapper);
         if (activeRecord == null) {
             removeFavoriteGrouping(userId, "mv", mvId);
-                       
+
             log.debug("MV未收藏，跳过: userId={}, mvId={}", userId, mvId);
             return true;
         }
 
-                                            
+
         mvFavoriteMapper.deleteById(activeRecord.getId());
         removeFavoriteGrouping(userId, "mv", mvId);
         log.info("用户取消收藏MV: userId={}, mvId={}", userId, mvId);
 
-                  
+
         MV mv = getById(mvId);
         if (ObjectUtils.isNotEmpty(mv)
                 && UserAccountStatusUtil.canContributePublicStats(userId, userMapper::selectById)) {
@@ -466,7 +466,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             return new ArrayList<>();
         }
 
-                                    
+
         LambdaQueryWrapper<MvFavorite> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(MvFavorite::getUserId, userId)
                 .eq(MvFavorite::getDeleted, CommonConstants.NOT_DELETED)
@@ -477,25 +477,25 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             return new ArrayList<>();
         }
 
-                  
+
         List<Long> mvIds = favorites.stream()
                 .map(MvFavorite::getMvId)
                 .collect(Collectors.toList());
 
-                   
+
         List<MV> mvs = mvMapper.selectBatchIds(mvIds);
         if (CollUtil.isEmpty(mvs)) {
             return new ArrayList<>();
         }
 
-                                
+
         List<MVVO> result = ConvertHelper.toVOList(mvs, MVVO.class);
 
-                             
+
         Set<Long> favoriteMvIds = ConvertHelper.extractIdSet(favorites, MvFavorite::getMvId);
         ConvertHelper.setFieldFromSet(result, MVVO::getId, favoriteMvIds, MVVO::setIsFavorite);
 
-                           
+
         result.sort((a, b) -> {
             int idxA = mvIds.indexOf(a.getId());
             int idxB = mvIds.indexOf(b.getId());
@@ -522,21 +522,21 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         String likeKey = MV_LIKE_PREFIX + userId;
         String member = String.valueOf(mvId);
 
-                  
+
         Boolean isMember = redisUtils.sIsMember(likeKey, member);
         if (Boolean.TRUE.equals(isMember)) {
             return true;
         }
 
-                  
+
         redisUtils.sAdd(likeKey, member);
 
         if (UserAccountStatusUtil.canContributePublicStats(user)) {
-                    
+
             mv.setLikeCount((mv.getLikeCount() != null ? mv.getLikeCount() : 0) + 1);
             mvMapper.updateById(mv);
 
-                   
+
             cacheService.clearMVCache(mvId);
         }
 
@@ -554,18 +554,18 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         String likeKey = MV_LIKE_PREFIX + userId;
         String member = String.valueOf(mvId);
 
-                  
+
         redisUtils.sRemove(likeKey, member);
 
         MV mv = mvMapper.selectById(mvId);
         if (ObjectUtils.isNotEmpty(mv)
                 && UserAccountStatusUtil.canContributePublicStats(userId, userMapper::selectById)) {
-                    
+
             Long currentCount = mv.getLikeCount() != null ? mv.getLikeCount() : 0L;
             mv.setLikeCount(Math.max(0L, currentCount - 1));
             mvMapper.updateById(mv);
 
-                   
+
             cacheService.clearMVCache(mvId);
         }
 
@@ -835,61 +835,61 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         }
     }
 
-       
-                      
-      
-                         
-                           
-                   
-       
+
+
+
+
+
+
+
     private List<MVVO> convertToVOBatch(List<MV> mvList, Long userId) {
         if (mvList == null || mvList.isEmpty()) {
             return new ArrayList<>();
         }
 
-                                   
+
         Set<Long> favoriteMvIds = Collections.emptySet();
         Set<Long> likedMvIds = Collections.emptySet();
 
         if (ObjectUtils.isNotEmpty(userId)) {
-                         
+
             favoriteMvIds = getFavoriteMvIds(userId, mvList);
-                           
+
             likedMvIds = RedisBatchHelper.getSetMemberIds(redisUtils, MV_LIKE_PREFIX + "{userId}", userId);
         }
 
-                        
+
         Map<Long, String> songLanguageMap = Collections.emptyMap();                                         
 
-                                
+
         final Set<Long> finalFavoriteMvIds = favoriteMvIds;
         final Set<Long> finalLikedMvIds = likedMvIds;
 
         return mvList.stream().map(mv -> {
             MVVO mvVO = BeanUtil.copyProperties(mv, MVVO.class);
 
-                     
+
             mvVO.setIsFavorite(finalFavoriteMvIds.contains(mv.getId()));
             mvVO.setIsLike(finalLikedMvIds.contains(mv.getId()));
 
-                     
+
             if (mv.getSongId() != null && songLanguageMap.containsKey(mv.getSongId())) {
                 mvVO.setSongLanguage(songLanguageMap.get(mv.getSongId()));
             }
 
-                     
+
             if (StrUtil.isBlank(mvVO.getCover())) {
                 mvVO.setCover("/default-cover.png");
             }
 
-                                            
+
             if (StrUtil.isNotBlank(mv.getArtistIds())) {
                 String[] ids = mv.getArtistIds().split(",");
                 if (ids.length > 0) {
                     try {
                         mvVO.setArtistId(Long.parseLong(ids[0].trim()));
                     } catch (NumberFormatException e) {
-                                 
+
                     }
                 }
             }
@@ -898,13 +898,13 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         }).collect(Collectors.toList());
     }
 
-       
-                       
-      
-                         
-                         
-                         
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteMvIds(Long userId, List<MV> mvList) {
         if (mvList == null || mvList.isEmpty()) {
             return Collections.emptySet();
@@ -944,13 +944,13 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         return limit > 0 ? Math.min(limit * 3, 300) : limit;
     }
 
-       
-                      
-      
-                           
-                           
-                     
-       
+
+
+
+
+
+
+
     private IPage<MVVO> convertToVOBatch(IPage<MV> mvPage, Long userId) {
         List<MV> mvList = mvPage.getRecords();
         if (mvList == null || mvList.isEmpty()) {
@@ -964,14 +964,14 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         return voPage;
     }
 
-       
-                 
-      
-                         
-                            
-       
+
+
+
+
+
+
     private Map<Long, String> getSongLanguageMap(List<MV> mvList) {
-                         
+
         Set<Long> songIds = mvList.stream()
                 .map(MV::getSongId)
                 .filter(ObjectUtils::isNotEmpty)
@@ -981,7 +981,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             return Collections.emptyMap();
         }
 
-                   
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Song::getId, Song::getLanguage)
                 .in(Song::getId, songIds)
@@ -989,25 +989,25 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
 
         List<Song> songs = songMapper.selectList(wrapper);
 
-               
+
         return songs.stream()
                 .collect(Collectors.toMap(Song::getId, Song::getLanguage, (a, b) -> a));
     }
 
-       
-               
-      
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
     private MVVO buildMVVO(MV mv, Long userId) {
         MVVO mvVO = BeanUtil.copyProperties(mv, MVVO.class);
 
-                         
+
         setUserActionStatus(mvVO, userId);
 
-                 
+
         if (mv.getSongId() != null) {
             Song song = songMapper.selectById(mv.getSongId());
             if (song != null) {
@@ -1015,14 +1015,14 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             }
         }
 
-                                        
+
         if (StrUtil.isNotBlank(mv.getArtistIds())) {
             String[] ids = mv.getArtistIds().split(",");
             if (ids.length > 0) {
                 try {
                     mvVO.setArtistId(Long.parseLong(ids[0].trim()));
                 } catch (NumberFormatException e) {
-                             
+
                 }
             }
         }
@@ -1030,12 +1030,12 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         return mvVO;
     }
 
-       
-                      
-      
-                           
-                         
-       
+
+
+
+
+
+
     private void setUserActionStatus(MVVO mvVO, Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             mvVO.setIsFavorite(false);
@@ -1043,7 +1043,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             return;
         }
 
-                     
+
         LambdaQueryWrapper<MvFavorite> favoriteWrapper = new LambdaQueryWrapper<>();
         favoriteWrapper.eq(MvFavorite::getUserId, userId)
                 .eq(MvFavorite::getMvId, mvVO.getId())
@@ -1051,7 +1051,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         Long count = mvFavoriteMapper.selectCount(favoriteWrapper);
         boolean isFavorited = count != null && count > 0;
 
-                       
+
         String likeKey = MV_LIKE_PREFIX + userId;
         String member = String.valueOf(mvVO.getId());
         Boolean isLiked = redisUtils.sIsMember(likeKey, member);
@@ -1060,14 +1060,14 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         mvVO.setIsLike(Boolean.TRUE.equals(isLiked));
     }
 
-       
-               
-                       
-      
-                         
-                        
-                     
-       
+
+
+
+
+
+
+
+
     @Override
     public List<MVVO> getSimilarMVs(Long mvId, Integer limit) {
         if (ObjectUtils.isEmpty(mvId)) {
@@ -1076,7 +1076,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
 
         int actualLimit = limit != null && limit > 0 ? Math.min(limit, 50) : 10;
 
-                  
+
         MV originalMV = getById(mvId);
         if (originalMV == null) {
             return new ArrayList<>();
@@ -1084,7 +1084,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
 
         Set<Long> mvIds = new LinkedHashSet<>();
 
-                            
+
         if (StrUtil.isNotBlank(originalMV.getArtistIds()) && mvIds.size() < actualLimit) {
             String[] artistIds = originalMV.getArtistIds().split(",");
             for (String artistId : artistIds) {
@@ -1105,7 +1105,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             }
         }
 
-                               
+
         if (StrUtil.isNotBlank(originalMV.getTags()) && mvIds.size() < actualLimit) {
             String[] tags = originalMV.getTags().split(",");
             for (String tag : tags) {
@@ -1127,7 +1127,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             }
         }
 
-                                
+
         if (mvIds.size() < actualLimit) {
             LambdaQueryWrapper<MV> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(MV::getStatus, CommonConstants.STATUS_NORMAL)
@@ -1147,7 +1147,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             return new ArrayList<>();
         }
 
-                 
+
         LambdaQueryWrapper<MV> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(MV::getId, mvIds)
                 .eq(MV::getStatus, CommonConstants.STATUS_NORMAL)
@@ -1157,13 +1157,13 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
         return convertToVOBatch(mvs, null);
     }
 
-       
-                  
-      
-                         
-                        
-                       
-       
+
+
+
+
+
+
+
     @Override
     public List<MVVO> getArtistOtherMVs(Long mvId, Integer limit) {
         if (ObjectUtils.isEmpty(mvId)) {
@@ -1172,13 +1172,13 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
 
         int actualLimit = limit != null && limit > 0 ? limit : 10;
 
-                  
+
         MV originalMV = getById(mvId);
         if (originalMV == null || StrUtil.isBlank(originalMV.getArtistIds())) {
             return new ArrayList<>();
         }
 
-                         
+
         String[] artistIds = originalMV.getArtistIds().split(",");
         if (artistIds.length == 0) {
             return new ArrayList<>();
@@ -1191,7 +1191,7 @@ public class MVServiceImpl extends ServiceImpl<MVMapper, MV> implements MVServic
             return new ArrayList<>();
         }
 
-                     
+
         LambdaQueryWrapper<MV> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(MV::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(MV::getDeleted, CommonConstants.NOT_DELETED)

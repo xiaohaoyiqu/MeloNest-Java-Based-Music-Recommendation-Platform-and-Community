@@ -26,10 +26,10 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class ModeratorManagementServiceImpl implements ModeratorManagementService {
@@ -51,7 +51,7 @@ public class ModeratorManagementServiceImpl implements ModeratorManagementServic
         AdminAccountOperationGuard.requireCanAssignRole(
                 getCurrentOperator(), user, UserRole.MODERATOR);
 
-                 
+
         userMapper.update(null,
                 new LambdaUpdateWrapper<User>()
                         .eq(User::getId, userId)
@@ -77,7 +77,7 @@ public class ModeratorManagementServiceImpl implements ModeratorManagementServic
         AdminAccountOperationGuard.requireCanOperateAccount(
                 getCurrentOperator(), user, "取消审核员资格");
 
-                 
+
         userMapper.update(null,
                 new LambdaUpdateWrapper<User>()
                         .eq(User::getId, userId)
@@ -231,9 +231,9 @@ public class ModeratorManagementServiceImpl implements ModeratorManagementServic
         return operator;
     }
 
-       
-            
-       
+
+
+
     private List<User> selectModerationUsers(String status) {
         return userMapper.selectList(
                 new LambdaQueryWrapper<User>()
@@ -280,14 +280,14 @@ public class ModeratorManagementServiceImpl implements ModeratorManagementServic
         vo.setDailyQuota(user.getDailyQuota() != null ? user.getDailyQuota() : 100);
         vo.setLastReviewTime(user.getLastReviewTime());
 
-                  
+
         Map<Long, Integer> loads = assignmentService.getAllModeratorLoads();
         vo.setCurrentTaskCount(loads.getOrDefault(user.getId(), 0));
 
-                
+
         vo.setHasQuota(assignmentService.hasQuota(user.getId()));
 
-                  
+
         Integer dailyQuota = user.getDailyQuota() != null ? user.getDailyQuota() : 100;
         Integer todayCount = user.getTodayReviewCount() != null ? user.getTodayReviewCount() : 0;
         if (dailyQuota > 0) {
@@ -296,7 +296,7 @@ public class ModeratorManagementServiceImpl implements ModeratorManagementServic
             vo.setTodayCompletionRate(0.0);
         }
 
-                 
+
         if (Integer.valueOf(1).equals(user.getIsOnline())) {
             vo.setOnlineStatus("在线");
         } else {

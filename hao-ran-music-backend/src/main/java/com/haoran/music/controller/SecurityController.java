@@ -1,7 +1,7 @@
-   
-                      
-                                     
-   
+
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.aspect.ApiLog;
@@ -34,10 +34,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-        
-                  
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/security")
@@ -67,9 +67,9 @@ public class SecurityController {
     @Resource
     private ClientIpResolver clientIpResolver;
 
-       
-                 
-       
+
+
+
     @ApiLog("查询IP访问限制")
     @GetMapping("/ip-limit")
     public Result getIpLimitInfo(HttpServletRequest request) {
@@ -95,12 +95,12 @@ public class SecurityController {
         return Result.success(data);
     }
 
-       
-                
-      
-                                               
-                    
-       
+
+
+
+
+
+
     @ApiLog("获取行为检测验证码")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 60, operation = "securityCaptchaGet",
             scope = RateLimitScope.IP, message = "验证码获取过于频繁，请稍后再试", captchaBypass = false)
@@ -115,9 +115,9 @@ public class SecurityController {
         return Result.success(result);
     }
 
-       
-            
-       
+
+
+
     @ApiLog("验证码校验")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 60, operation = "securityCaptchaVerify",
             scope = RateLimitScope.IP, message = "验证码校验过于频繁，请稍后再试", captchaBypass = false)
@@ -132,7 +132,7 @@ public class SecurityController {
         boolean valid = verifyCodeService.verifyCode(type, ip, scene, code);
 
         if (valid) {
-                           
+
             ipRateLimiter.addToCaptchaWhitelist(ip);
             ipRateLimiter.addToCaptchaWhitelist(ip, scene);
         }
@@ -145,9 +145,9 @@ public class SecurityController {
         return Result.success(result);
     }
 
-       
-                
-       
+
+
+
     @RateLimit(maxRequests = 60, timeWindowSeconds = 60, operation = "securityCaptchaCheck",
             scope = RateLimitScope.IP, message = "验证码状态查询过于频繁，请稍后再试", captchaBypass = false)
     @GetMapping("/captcha/check")
@@ -155,7 +155,7 @@ public class SecurityController {
                                HttpServletRequest request) {
         String ip = getClientIp(request);
 
-                         
+
         long minuteCount = ipRateLimiter.getCurrentMinuteCount(ip);
         boolean sceneNeedCaptcha = verifyCodeService.needVerifyCode(ip, scene);
 
@@ -167,9 +167,9 @@ public class SecurityController {
     }
 
 
-       
-                                                     
-       
+
+
+
     @ApiLog("查询病毒扫描状态")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/antivirus/status")
@@ -188,9 +188,9 @@ public class SecurityController {
         return Result.success(data);
     }
 
-       
-                                                      
-       
+
+
+
     @ApiLog("查询病毒扫描记录")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/antivirus/records")
@@ -224,9 +224,9 @@ public class SecurityController {
         }
     }
 
-       
-                
-       
+
+
+
     private boolean isLoggedIn(HttpServletRequest request) {
         Object userId = request.getAttribute("userId");
         if (userId != null) {
@@ -262,16 +262,16 @@ public class SecurityController {
         }
     }
 
-       
-                                                    
-       
+
+
+
     private String getClientIp(HttpServletRequest request) {
         return clientIpResolver.resolve(request);
     }
 
-       
-               
-       
+
+
+
     private String getTodayEndTime() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endOfDay = now.toLocalDate().atTime(23, 59, 59);

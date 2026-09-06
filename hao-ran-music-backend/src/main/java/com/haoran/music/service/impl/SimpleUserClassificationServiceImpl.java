@@ -32,10 +32,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class SimpleUserClassificationServiceImpl implements SimpleUserClassificationService {
@@ -58,14 +58,14 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
     @Autowired(required = false)
     private UserSessionRevocationService userSessionRevocationService;
 
-       
-               
-       
+
+
+
     private static final String USER_TYPE_CACHE_PREFIX = "user:type:";
 
-       
-                  
-       
+
+
+
     private static final String STATS_PREFIX = "user:stats:";
     private static final long REDIS_SCAN_COUNT = 1000L;
 
@@ -208,9 +208,9 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
         return isBotUser(userId, 1);
     }
 
-       
-                        
-       
+
+
+
     private Boolean isBotUser(Long userId, Integer days) {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(days == null || days <= 0 ? 1 : days);
@@ -253,7 +253,7 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
             userSessionRevocationService.revokeWebSocketSessions(userId, "account_restricted");
         }
 
-                                                                     
+
         String tokenKey = RedisConstants.TOKEN_PREFIX + userId;
         redisTemplate.delete(tokenKey);
 
@@ -321,9 +321,9 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
         redisTemplate.expire(redisKey, userGrowthConfig.getStatistics().getCacheDays(), TimeUnit.DAYS);
     }
 
-       
-                    
-       
+
+
+
     private UserType determineUserType(UserStatistics stat) {
         if (ObjectUtils.isEmpty(stat)) {
             return UserType.NORMAL;
@@ -343,10 +343,10 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
         return UserType.NORMAL;
     }
 
-       
-                                  
-      
-  
+
+
+
+
     private int checkRedisBotUsers(LocalDate statDate) {
         int updatedCount = 0;
         String pattern = STATS_PREFIX + statDate + ":*";
@@ -412,9 +412,9 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
         return userMapper.selectById(operatorId);
     }
 
-       
-                   
-       
+
+
+
     private void markAsAbnormal(Long userId, LocalDate statDate, String abnormalReason) {
         UserStatistics existStat = userStatisticsMapper.selectOne(
                 new LambdaQueryWrapper<UserStatistics>()
@@ -444,9 +444,9 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
         }
     }
 
-       
-                  
-       
+
+
+
     private String buildAbnormalReason(Integer playCount, Integer playDuration) {
         StringBuilder reason = new StringBuilder("{");
         if (ObjectUtils.isNotEmpty(playCount) && playCount >= userGrowthConfig.getStatistics().getBotMaxDailyPlayCount()) {
@@ -462,9 +462,9 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
         return reason.toString();
     }
 
-       
-              
-       
+
+
+
     private Integer calculateRiskScore(UserStatistics stat) {
         if (ObjectUtils.isEmpty(stat)) {
             return 0;
@@ -489,9 +489,9 @@ public class SimpleUserClassificationServiceImpl implements SimpleUserClassifica
         return Math.min(score, 100);
     }
 
-       
-                  
-       
+
+
+
     private void updateLastActiveTime(Long userId) {
         LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(User::getId, userId)

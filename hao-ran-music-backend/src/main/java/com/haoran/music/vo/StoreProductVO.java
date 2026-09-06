@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.vo;
 
@@ -9,7 +9,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-                                
+
 @Data
 public class StoreProductVO {
     private String productType;

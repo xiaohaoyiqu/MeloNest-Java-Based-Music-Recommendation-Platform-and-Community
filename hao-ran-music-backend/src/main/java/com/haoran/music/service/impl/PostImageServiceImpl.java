@@ -1,7 +1,7 @@
-   
-                      
-                                      
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -34,9 +34,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
-   
-             
-   
+
+
+
 @Slf4j
 @Service
 public class PostImageServiceImpl implements PostImageService {
@@ -83,7 +83,7 @@ public class PostImageServiceImpl implements PostImageService {
             } catch (Exception e) {
                 log.error("event=post_image_batch_item_failed index={} errorType={}",
                         i, e.getClass().getSimpleName());
-                         
+
                 Map<String, String> errorInfo = new HashMap<>();
                 errorInfo.put("error", "图片上传失败，请检查文件后重试");
                 results.add(errorInfo);
@@ -108,14 +108,14 @@ public class PostImageServiceImpl implements PostImageService {
         }
         musicPostService.requirePostReadable(postId, viewerId);
 
-                     
+
         MusicPost post = musicPostMapper.selectById(postId);
         if (post == null || StrUtil.isBlank(post.getImages())) {
             return imageList;
         }
 
         try {
-                              
+
             List<Object> images = JSON.parseArray(post.getImages(), Object.class);
 
             for (int i = 0; i < images.size(); i++) {
@@ -237,29 +237,29 @@ public class PostImageServiceImpl implements PostImageService {
         }
 
         try {
-                     
+
             MusicPost post = musicPostMapper.selectById(postId);
             if (post == null || StrUtil.isBlank(post.getImages())) {
                 return true;
             }
 
-                     
+
             List<com.alibaba.fastjson2.JSONObject> images = JSON.parseArray(post.getImages()).toJavaList(com.alibaba.fastjson2.JSONObject.class);
 
-                           
+
             int deletedCount = 0;
             for (com.alibaba.fastjson2.JSONObject img : images) {
                 String original = img.getString("original");
                 String compressed = img.getString("compressed");
                 String thumbnail = img.getString("thumbnail");
 
-                            
+
                 deletedCount += deleteImageFile(original);
                 deletedCount += deleteImageFile(compressed);
                 deletedCount += deleteImageFile(thumbnail);
             }
 
-                          
+
             post.setImages(null);
             musicPostMapper.updateById(post);
 
@@ -272,9 +272,9 @@ public class PostImageServiceImpl implements PostImageService {
         }
     }
 
-       
-             
-       
+
+
+
     private int deleteImageFile(String imageUrl) {
         if (StrUtil.isBlank(imageUrl)) {
             return 0;
@@ -297,9 +297,9 @@ public class PostImageServiceImpl implements PostImageService {
         return 0;
     }
 
-       
-              
-       
+
+
+
     private Path resolveManagedPostImagePath(String imageUrl) {
         String mappedPath = CommonUtil.extractLocalPath(imageUrl);
         if (StrUtil.isNotBlank(mappedPath)) {
@@ -386,23 +386,23 @@ public class PostImageServiceImpl implements PostImageService {
         Path thumbnailTarget = null;
 
         try {
-                      
+
             validateImageFile(file);
 
-                         
+
             String extension = getFileExtension(file.getOriginalFilename());
 
-                        
+
             String originalFilePath = postMediaConfig.getImageOriginalPath() + baseName + "_original" + extension;
             String compressedFilePath = postMediaConfig.getImageCompressedPath() + baseName + "_compressed" + extension;
             String thumbnailFilePath = postMediaConfig.getImageThumbnailPath() + baseName + "_thumb" + extension;
 
-                        
+
             Files.createDirectories(Paths.get(originalFilePath).getParent());
             Files.createDirectories(Paths.get(compressedFilePath).getParent());
             Files.createDirectories(Paths.get(thumbnailFilePath).getParent());
 
-                      
+
             originalTarget = Paths.get(originalFilePath);
             compressedTarget = Paths.get(compressedFilePath);
             thumbnailTarget = Paths.get(thumbnailFilePath);
@@ -410,7 +410,7 @@ public class PostImageServiceImpl implements PostImageService {
                 Files.copy(input, originalTarget, StandardCopyOption.REPLACE_EXISTING);
             }
 
-                                                                                                                     
+
             File originalFile = originalTarget.toFile();
             FileSecurityUtil.SecurityCheckResult securityResult = FileSecurityUtil.checkImageSecurity(
                     originalFile,
@@ -428,7 +428,7 @@ public class PostImageServiceImpl implements PostImageService {
                 throw new SecurityException("post image virus scan failed");
             }
 
-                             
+
             CompressUtil.CompressResult compressedResult = CompressUtil.compressImage(
                     originalFilePath,
                     compressedFilePath,
@@ -442,7 +442,7 @@ public class PostImageServiceImpl implements PostImageService {
                 throw new IllegalStateException("动态图片压缩失败");
             }
 
-                                          
+
             CompressUtil.CompressResult thumbnailResult = CompressUtil.compressImage(
                     originalFilePath,
                     thumbnailFilePath,
@@ -457,7 +457,7 @@ public class PostImageServiceImpl implements PostImageService {
                 throw new IllegalStateException("动态图片缩略图生成失败");
             }
 
-                            
+
             String originalUrl = postMediaConfig.getNginxUrlPrefix() + "posts/images/original/" + baseName + "_original" + extension;
             String compressedUrl = postMediaConfig.getNginxUrlPrefix() + "posts/images/compressed/" + baseName + "_compressed" + extension;
             String thumbnailUrl = postMediaConfig.getNginxUrlPrefix() + "posts/images/thumbnails/" + baseName + "_thumb" + extension;
@@ -497,29 +497,29 @@ public class PostImageServiceImpl implements PostImageService {
         }
     }
 
-       
-             
-       
+
+
+
     private void validateImageFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("文件不能为空");
         }
 
-                 
+
         if (file.getSize() > postMediaConfig.getImageMaxFileSize()) {
             throw new IllegalArgumentException("图片大小不能超过10MB");
         }
 
-                 
+
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             throw new IllegalArgumentException("只支持图片文件");
         }
     }
 
-       
-              
-       
+
+
+
     private String getFileExtension(String filename) {
         if (filename == null || filename.isEmpty()) {
             return ".jpg";
@@ -529,20 +529,20 @@ public class PostImageServiceImpl implements PostImageService {
             return ".jpg";
         }
         String ext = filename.substring(lastDotIndex).toLowerCase();
-                            
+
         if (isAllowedImageExtension(ext)) {
             return ext;
         }
         return ".jpg";
     }
 
-       
-              
-       
-       
-                                                                      
-      
-  
+
+
+
+
+
+
+
     private boolean isAllowedImageExtension(String extension) {
         return postMediaConfig.getImageAllowedExtensions() != null
                 && postMediaConfig.getImageAllowedExtensions().contains(extension);

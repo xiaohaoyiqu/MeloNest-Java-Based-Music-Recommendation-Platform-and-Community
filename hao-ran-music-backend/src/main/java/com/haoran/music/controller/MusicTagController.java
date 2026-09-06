@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                              
-   
+
+
+
+
 @RestController
 @RequestMapping("/music-tag")
 public class MusicTagController {
@@ -25,9 +25,9 @@ public class MusicTagController {
     @Resource
     private MusicTagService musicTagService;
 
-       
-                  
-       
+
+
+
     @ApiLog("获取音乐标签列表")
     @GetMapping("/list")
     public Result<Map<String, List<MusicTagVO>>> getTagList() {
@@ -35,9 +35,9 @@ public class MusicTagController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取热门标签")
     @GetMapping("/hot")
     public Result<List<MusicTagVO>> getHotTags(@RequestParam(defaultValue = "10") Integer limit) {
@@ -45,9 +45,9 @@ public class MusicTagController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("根据标签搜索歌曲")
     @GetMapping("/songs")
     public Result<PageResult> searchSongsByTags(
@@ -58,9 +58,9 @@ public class MusicTagController {
         return Result.success(result);
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取歌曲标签")
     @GetMapping("/song/{songId}")
     public Result<List<MusicTagVO>> getSongTags(@PathVariable Long songId) {
@@ -68,9 +68,9 @@ public class MusicTagController {
         return Result.success(result);
     }
 
-       
-              
-       
+
+
+
     @ApiLog("添加歌曲标签")
     @PostMapping("/song/{songId}")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -81,9 +81,9 @@ public class MusicTagController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @ApiLog("移除歌曲标签")
     @DeleteMapping("/song/{songId}/tag/{tagId}")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -94,9 +94,9 @@ public class MusicTagController {
         return Result.success();
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取用户标签偏好")
     @GetMapping("/user/preference")
     public Result<List<MusicTagVO>> getUserTagPreference() {
@@ -104,9 +104,9 @@ public class MusicTagController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("基于标签推荐歌曲")
     @GetMapping("/recommend")
     public Result<List> recommendByTags(@RequestParam(defaultValue = "10") Integer limit) {

@@ -22,11 +22,11 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class RecommendWeightServiceImpl implements RecommendWeightService {
@@ -71,7 +71,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
-                
+
     private static final String VIP_WEIGHT_CACHE_PREFIX = "recommend_weight:vip:";
     private static final String ROLE_WEIGHT_CACHE_PREFIX = "recommend_weight:role:";
     private static final String CREDIT_WEIGHT_CACHE_PREFIX = "recommend_weight:credit:";
@@ -79,10 +79,10 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
     private static final String CREATOR_TYPE_CACHE_PREFIX = "recommend_weight:creator:";
     private static final String USER_COEFFICIENT_CACHE_PREFIX = "recommend_coefficient:";
 
-                
+
     private static final long CACHE_EXPIRE_SECONDS = 3600;
 
-                                                       
+
 
     @Override
     public Double calculateRecommendWeight(Long userId, Long contentId, Long creatorId) {
@@ -90,22 +90,22 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return 0.0;
         }
 
-                    
+
         Double baseScore = calculateBaseScore(contentId, "song");
         if (baseScore == null || baseScore <= 0) {
             return 0.0;
         }
 
-                      
+
         Double userCoefficient = getUserRecommendCoefficient(userId);
 
-                      
+
         Double socialWeight = 1.0;
         if (ObjectUtils.isNotEmpty(creatorId) && ObjectUtils.isNotEmpty(userId)) {
             socialWeight = getSocialRelationWeight(userId, creatorId);
         }
 
-                    
+
         return baseScore * userCoefficient * socialWeight;
     }
 
@@ -115,29 +115,29 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return 1.0;        
         }
 
-                  
+
         String cacheKey = USER_COEFFICIENT_CACHE_PREFIX + userId;
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached != null) {
             return (Double) cached;
         }
 
-                 
+
         double coefficient = 1.0;
 
-                
+
         coefficient *= getVipWeight(userId);
 
-               
+
         coefficient *= getRoleWeight(userId);
 
-                
+
         coefficient *= getCreditWeight(userId);
 
-               
+
         coefficient *= getDecorationWeight(userId);
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, coefficient, CACHE_EXPIRE_SECONDS, TimeUnit.SECONDS);
 
         return coefficient;
@@ -174,7 +174,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
 
         double score = 0.0;
 
-                              
+
         LambdaQueryWrapper<SongLike> likeWrapper = new LambdaQueryWrapper<>();
         likeWrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getSongId, contentId)
@@ -184,7 +184,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             score += 40.0;
         }
 
-                                             
+
         LambdaQueryWrapper<ListenHistory> historyWrapper = new LambdaQueryWrapper<>();
         historyWrapper.eq(ListenHistory::getUserId, userId)
                 .eq(ListenHistory::getSongId, contentId);
@@ -193,7 +193,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             score += Math.min(30.0, playCount / 5.0);
         }
 
-                                      
+
         historyWrapper = new LambdaQueryWrapper<>();
         historyWrapper.eq(ListenHistory::getUserId, userId)
                 .eq(ListenHistory::getSongId, contentId)
@@ -219,13 +219,13 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
         long timeDiff = currentTime - contentTime;          
         double daysDiff = timeDiff / (24.0 * 3600.0);         
 
-                                 
+
         double decayFactor = Math.exp(-daysDiff / halfLife);
 
         return score * decayFactor;
     }
 
-                                                       
+
 
     @Override
     public Double getVipWeight(Long userId) {
@@ -233,14 +233,14 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return 1.0;
         }
 
-                
+
         String cacheKey = VIP_WEIGHT_CACHE_PREFIX + userId;
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached != null) {
             return (Double) cached;
         }
 
-                  
+
         LambdaQueryWrapper<UserVip> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserVip::getUserId, userId)
                 .eq(UserVip::getDeleted, CommonConstants.NOT_DELETED);
@@ -250,7 +250,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
         if (userVip != null && userVip.getVipLevel() != null) {
             Integer vipLevel = userVip.getVipLevel();
             if (userVip.getVipExpireTime() != null && userVip.getVipExpireTime().isAfter(LocalDateTime.now())) {
-                        
+
                 if (vipLevel != null) {
                     if (vipLevel == 1) {                
                         weight = 1.1;
@@ -267,7 +267,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             }
         }
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, weight, CACHE_EXPIRE_SECONDS, TimeUnit.SECONDS);
 
         return weight;
@@ -279,14 +279,14 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return 1.0;
         }
 
-                
+
         String cacheKey = ROLE_WEIGHT_CACHE_PREFIX + userId;
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached != null) {
             return (Double) cached;
         }
 
-                 
+
         User user = userMapper.selectById(userId);
         double weight = 1.0;
         if (user != null && user.getRole() != null) {
@@ -308,7 +308,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             }
         }
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, weight, CACHE_EXPIRE_SECONDS, TimeUnit.SECONDS);
 
         return weight;
@@ -320,14 +320,14 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return 1.0;
         }
 
-                
+
         String cacheKey = CREDIT_WEIGHT_CACHE_PREFIX + userId;
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached != null) {
             return (Double) cached;
         }
 
-                
+
         LambdaQueryWrapper<UserCredit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserCredit::getUserId, userId);
         UserCredit userCredit = userCreditMapper.selectOne(wrapper);
@@ -348,7 +348,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             }
         }
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, weight, CACHE_EXPIRE_SECONDS, TimeUnit.SECONDS);
 
         return weight;
@@ -360,14 +360,14 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return 1.0;
         }
 
-                
+
         String cacheKey = DECORATION_WEIGHT_CACHE_PREFIX + userId;
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached != null) {
             return (Double) cached;
         }
 
-                         
+
         LambdaQueryWrapper<UserDecoration> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserDecoration::getUserId, userId)
                 .eq(UserDecoration::getIsEquipped, 1)
@@ -388,7 +388,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             }
         }
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, weight, CACHE_EXPIRE_SECONDS, TimeUnit.SECONDS);
 
         return weight;
@@ -402,7 +402,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
 
         double weight = 1.0;         
 
-                              
+
         LambdaQueryWrapper<UserFollow> followWrapper1 = new LambdaQueryWrapper<>();
         followWrapper1.eq(UserFollow::getFollowerId, userId)
                 .eq(UserFollow::getFolloweeId, creatorId)
@@ -432,16 +432,16 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return 1.0;
         }
 
-                
+
         String cacheKey = CREATOR_TYPE_CACHE_PREFIX + creatorId;
         Object cached = redisTemplate.opsForValue().get(cacheKey);
         if (cached != null) {
             return (Double) cached;
         }
 
-                  
-                                                 
-                                       
+
+
+
         LambdaQueryWrapper<Creator> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Creator::getUserId, creatorId)
                 .eq(Creator::getDeleted, CommonConstants.NOT_DELETED);
@@ -461,7 +461,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             }
         }
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, weight, CACHE_EXPIRE_SECONDS, TimeUnit.SECONDS);
 
         return weight;
@@ -474,10 +474,10 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             return result;
         }
 
-                         
+
         Double userCoefficient = getUserRecommendCoefficient(userId);
 
-                      
+
         for (Long contentId : contentIds) {
             Double weight = calculateRecommendWeight(userId, contentId, null);
             if (weight != null && weight > 0) {
@@ -488,11 +488,11 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
         return result;
     }
 
-                                                       
 
-       
-               
-       
+
+
+
+
     private Double calculateSongBaseScore(Long songId) {
         Song song = songMapper.selectById(songId);
         if (song == null || !CommonConstants.STATUS_NORMAL.equals(song.getStatus())) {
@@ -501,22 +501,22 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
 
         double score = 0.0;
 
-                   
+
         if (song.getAvgRating() != null) {
             score += song.getAvgRating().doubleValue() * 0.4;
         }
 
-                                        
+
         if (song.getPlayCount() != null) {
             score += Math.min(20.0, song.getPlayCount() / 100.0);
         }
 
-                    
+
         if (song.getHotScore() != null) {
             score += Math.min(20.0, song.getHotScore() / 1000.0);
         }
 
-                    
+
         if (song.getReleaseDate() != null) {
             long daysSinceRelease = ChronoUnit.DAYS.between(song.getReleaseDate(), LocalDateTime.now());
             if (daysSinceRelease <= 30) {
@@ -524,16 +524,16 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
             }
         }
 
-                                        
+
         if (song.getFavoriteCount() != null) {
             score += Math.min(15.0, song.getFavoriteCount() / 10.0);
         }
 
         return score;
     }
-       
-               
-       
+
+
+
     private Double calculateAlbumBaseScore(Long albumId) {
         Album album = albumMapper.selectById(albumId);
         if (album == null) {
@@ -542,22 +542,22 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
 
         double score = 0.0;
 
-                                      
+
         if (album.getPlayCount() != null) {
             score += Math.min(30.0, album.getPlayCount() / 100.0);
         }
 
-                                     
+
         if (album.getFavoriteCount() != null) {
             score += Math.min(40.0, album.getFavoriteCount() / 10.0);
         }
 
-                                     
+
         if (album.getSongCount() != null) {
             score += Math.min(20.0, album.getSongCount() * 0.5);
         }
 
-                               
+
         if (album.getCreateTime() != null) {
             long daysSinceRelease = ChronoUnit.DAYS.between(
                     album.getCreateTime(), LocalDateTime.now());
@@ -570,9 +570,9 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
     }
 
 
-       
-               
-       
+
+
+
     private Double calculatePlaylistBaseScore(Long playlistId) {
         Playlist playlist = playlistMapper.selectById(playlistId);
         if (playlist == null) {
@@ -581,22 +581,22 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
 
         double score = 0.0;
 
-              
+
         if (playlist.getPlayCount() != null) {
             score += Math.min(30.0, playlist.getPlayCount() / 100.0);
         }
 
-              
+
         if (playlist.getFavoriteCount() != null) {
             score += Math.min(40.0, playlist.getFavoriteCount() / 10.0);
         }
 
-               
+
         if (playlist.getSongCount() != null) {
             score += Math.min(20.0, playlist.getSongCount() * 2.0);
         }
 
-               
+
         if (playlist.getIsFeatured() != null && playlist.getIsFeatured() == 1) {
             score += 30.0;
         }
@@ -604,14 +604,14 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
         return score;
     }
 
-       
-                 
-                            
-      
-                         
-                         
-                              
-       
+
+
+
+
+
+
+
+
     @Override
     public Double getCollaborativePlaylistWeight(Long userId, Long songId) {
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(songId)) {
@@ -622,7 +622,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
         }
 
         try {
-                                   
+
             LambdaQueryWrapper<com.haoran.music.entity.PlaylistCollaborator> collaboratorWrapper =
                     new LambdaQueryWrapper<>();
             collaboratorWrapper.eq(com.haoran.music.entity.PlaylistCollaborator::getUserId, userId)
@@ -636,7 +636,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
                 return 1.0;              
             }
 
-                            
+
             List<Long> playlistIds = collaborators.stream()
                     .map(com.haoran.music.entity.PlaylistCollaborator::getPlaylistId)
                     .collect(Collectors.toList());
@@ -645,7 +645,7 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
                 return 1.0;
             }
 
-                               
+
             LambdaQueryWrapper<com.haoran.music.entity.PlaylistSong> songWrapper = new LambdaQueryWrapper<>();
             songWrapper.in(com.haoran.music.entity.PlaylistSong::getPlaylistId, publicPlaylistIds)
                     .eq(com.haoran.music.entity.PlaylistSong::getSongId, songId)
@@ -653,8 +653,8 @@ public class RecommendWeightServiceImpl implements RecommendWeightService {
 
             Long count = playlistSongMapper.selectCount(songWrapper);
             if (count != null && count > 0 && canExposeSongUploader(songId)) {
-                                      
-                                       
+
+
                 double bonus = 1.1 + Math.min(publicPlaylistIds.size() * 0.02, 0.2);
                 log.debug("协作歌单推荐加成: userId={}, songId={}, collaborators={}, bonus={}",
                         userId, songId, publicPlaylistIds.size(), bonus);

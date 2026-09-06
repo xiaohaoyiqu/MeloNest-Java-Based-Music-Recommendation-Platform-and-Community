@@ -6,112 +6,112 @@ import com.haoran.music.common.dto.PageQuery;
 import com.haoran.music.entity.MusicSquareWork;
 import com.haoran.music.common.util.AudioQualityDetector;
 
-   
-                      
-                          
-   
+
+
+
+
 public interface MusicSquareWorkService extends IService<MusicSquareWork> {
 
-       
-           
-                         
-                      
-                   
-       
+
+
+
+
+
+
     Long submitWork(Long userId, MusicSquareWorkDTO dto);
 
-       
-           
-                         
-                              
-                                   
-                               
-       
+
+
+
+
+
+
+
     void reviewWork(Long workId, Long reviewerId, Integer status, String reviewReason);
 
-       
-             
-                            
-                               
-                           
-                   
-       
+
+
+
+
+
+
+
     IPage<MusicSquareWork> pageWorks(PageQuery pageQuery, Integer workType, Integer status);
 
-       
-                                                               
-       
+
+
+
     MusicSquareWork getVisibleWorkDetail(Long workId, Long viewerId);
 
-       
-               
-                         
-                            
-                     
-       
+
+
+
+
+
+
     IPage<MusicSquareWork> getMyWorks(Long userId, PageQuery pageQuery);
 
-       
-              
-                    
-       
+
+
+
+
     Long getPendingCount();
 
-       
-           
-                         
-                         
-       
+
+
+
+
+
     void likeWork(Long workId, Long userId);
 
-       
-           
-                         
-                         
-       
+
+
+
+
+
     void unlikeWork(Long workId, Long userId);
 
-       
-            
-                         
-                             
-       
+
+
+
+
+
     void incrementViewCount(Long workId, Long userId);
 
-       
-           
-                         
-                         
-       
+
+
+
+
+
     void deleteWork(Long workId, Long userId);
 
-       
-                      
-                         
-                         
-                      
-       
+
+
+
+
+
+
     void updateWork(Long workId, Long userId, MusicSquareWorkDTO dto);
 
-       
-             
-                           
-                              
-                     
-       
+
+
+
+
+
+
     AudioQualityDetector.AudioInfo detectAudioInfo(Long userId, String audioUrl);
 
-       
-             
-                           
-                              
-                     
-       
+
+
+
+
+
+
     VideoInfo detectVideoInfo(Long userId, String videoUrl);
 
-       
-             
-       
+
+
+
     class VideoInfo {
         private Long fileSize;
         private Integer duration;
@@ -134,9 +134,9 @@ public interface MusicSquareWorkService extends IService<MusicSquareWork> {
         public void setHeight(Integer height) { this.height = height; }
     }
 
-       
-                
-       
+
+
+
     class MusicSquareWorkDTO {
         private Integer workType;                                          
         private String title;                   

@@ -37,10 +37,10 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements AlbumService {
@@ -120,7 +120,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         AlbumVO vo = convertToVO(album);
 
-                   
+
         LambdaQueryWrapper<Song> songWrapper = new LambdaQueryWrapper<>();
         songWrapper.eq(Song::getAlbumId, albumId)
                 .eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
@@ -133,7 +133,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             throw new BusinessException(ResultCode.NOT_FOUND, "专辑暂无可公开歌曲");
         }
 
-                    
+
         List<AlbumVO.SongSimpleVO> songSimpleList = ConvertHelper.toVOList(songs, song -> {
             AlbumVO.SongSimpleVO simpleVO = new AlbumVO.SongSimpleVO();
             simpleVO.setId(song.getId());
@@ -166,17 +166,17 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return vo;
     }
 
-       
-                        
-      
-                            
-                           
-                       
-                        
-                                         
-                         
-                     
-       
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public IPage<AlbumVO> pageAlbums(PageQuery pageQuery, String keyword, String language, String area, String genre, String sortBy, Long userId) {
         Page<Album> page = new Page<>(pageQuery.getPage(), pageQuery.getSize());
@@ -192,14 +192,14 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
                     .like(Album::getArtistNames, safeKeyword));
         }
 
-               
+
         if (StrUtil.isNotBlank(language)) {
             wrapper.eq(Album::getLanguage, language);
         }
 
-                                    
+
         if (StrUtil.isNotBlank(area)) {
-                                               
+
             if ("内地".equals(area) || "港台".equals(area)) {
                 List<String> chineseCountries = CountryCode.getNamesByRegion(area);
                 wrapper.and(group -> group.eq(Album::getRegion, area)
@@ -217,33 +217,33 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             }
         }
 
-               
+
         if (StrUtil.isNotBlank(genre)) {
             wrapper.like(Album::getGenres, genre);
         }
 
-                                 
+
         if ("new".equals(sortBy)) {
-                           
+
             wrapper.orderByDesc(Album::getReleaseDate);
         } else if ("hot".equals(sortBy)) {
-                              
+
             wrapper.orderByDesc(Album::getPlayCount, Album::getFavoriteCount);
         } else {
-                   
+
             handleSort(wrapper, pageQuery.getSortField(), pageQuery.getSortOrder());
         }
 
         IPage<Album> albumPage = page(page, wrapper);
         albumPage.setRecords(filterAlbumsWithPublicSongs(albumPage.getRecords()));
 
-                   
+
         Set<Long> favoriteAlbumIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !albumPage.getRecords().isEmpty()) {
             favoriteAlbumIds = getFavoriteAlbumIds(userId, albumPage.getRecords());
         }
 
-                                     
+
         IPage<AlbumVO> voPage = ConvertHelper.toVOPage(albumPage, this::convertToVO);
         ConvertHelper.setFieldFromSet(voPage.getRecords(), AlbumVO::getId, favoriteAlbumIds, AlbumVO::setIsFavorite);
 
@@ -256,7 +256,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             return new ArrayList<>();
         }
 
-                               
+
         LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<>();
         wrapper.and(artist -> artist.eq(Album::getArtistId, artistId)
                         .or()
@@ -267,13 +267,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         List<Album> albums = filterAlbumsWithPublicSongs(list(wrapper));
 
-                   
+
         Set<Long> favoriteAlbumIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !albums.isEmpty()) {
             favoriteAlbumIds = getFavoriteAlbumIds(userId, albums);
         }
 
-                                     
+
         List<AlbumVO> voList = ConvertHelper.toVOList(albums, this::convertToVO);
         ConvertHelper.setFieldFromSet(voList, AlbumVO::getId, favoriteAlbumIds, AlbumVO::setIsFavorite);
 
@@ -284,7 +284,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
     public IPage<AlbumVO> getNewAlbums(PageQuery pageQuery, Long userId) {
         Page<Album> page = new Page<>(pageQuery.getPage(), pageQuery.getSize());
 
-                        
+
         LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Album::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Album::getDeleted, CommonConstants.NOT_DELETED)
@@ -294,13 +294,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         IPage<Album> albumPage = page(page, wrapper);
         albumPage.setRecords(filterAlbumsWithPublicSongs(albumPage.getRecords()));
 
-                   
+
         Set<Long> favoriteAlbumIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !albumPage.getRecords().isEmpty()) {
             favoriteAlbumIds = getFavoriteAlbumIds(userId, albumPage.getRecords());
         }
 
-                                     
+
         IPage<AlbumVO> voPage = ConvertHelper.toVOPage(albumPage, this::convertToVO);
         ConvertHelper.setFieldFromSet(voPage.getRecords(), AlbumVO::getId, favoriteAlbumIds, AlbumVO::setIsFavorite);
 
@@ -312,12 +312,12 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Album::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Album::getDeleted, CommonConstants.NOT_DELETED);
-        
-                                     
+
+
         if (StrUtil.isNotBlank(type)) {
             wrapper.eq(Album::getType, type);
         }
-        
+
         int actualLimit = limit != null && limit > 0 ? limit : 20;
         wrapper.orderByDesc(Album::getPlayCount, Album::getFavoriteCount)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
@@ -326,31 +326,31 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
                 .limit(actualLimit)
                 .collect(Collectors.toList());
 
-                   
+
         Set<Long> favoriteAlbumIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !albums.isEmpty()) {
             favoriteAlbumIds = getFavoriteAlbumIds(userId, albums);
         }
 
-                                     
+
         List<AlbumVO> voList = ConvertHelper.toVOList(albums, this::convertToVO);
         ConvertHelper.setFieldFromSet(voList, AlbumVO::getId, favoriteAlbumIds, AlbumVO::setIsFavorite);
 
         return voList;
     }
 
-       
-           
-      
-             
-                               
-                            
-                                            
-      
-                         
-                          
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean favoriteAlbum(Long userId, Long albumId) {
@@ -360,13 +360,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         User user = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(user, "收藏专辑");
 
-                   
+
         Album album = getById(albumId);
         if (ObjectUtils.isEmpty(album)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "专辑不存在");
         }
 
-                           
+
         LambdaQueryWrapper<AlbumFavorite> activeWrapper = new LambdaQueryWrapper<>();
         activeWrapper.eq(AlbumFavorite::getUserId, userId)
                 .eq(AlbumFavorite::getAlbumId, albumId)
@@ -374,12 +374,12 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         AlbumFavorite activeRecord = albumFavoriteMapper.selectOne(activeWrapper);
         if (activeRecord != null) {
-                       
+
             log.debug("专辑已收藏，跳过: userId={}, albumId={}", userId, albumId);
             return true;
         }
 
-                                  
+
         LambdaQueryWrapper<AlbumFavorite> deletedWrapper = new LambdaQueryWrapper<>();
         deletedWrapper.eq(AlbumFavorite::getUserId, userId)
                 .eq(AlbumFavorite::getAlbumId, albumId)
@@ -388,12 +388,12 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         AlbumFavorite deletedRecord = albumFavoriteMapper.selectOne(deletedWrapper);
 
         if (deletedRecord != null) {
-                                               
+
             String restoreSql = "UPDATE album_favorite SET deleted = 0, update_time = NOW() WHERE id = ?";
             jdbcTemplate.update(restoreSql, deletedRecord.getId());
             log.info("恢复专辑收藏记录: userId={}, albumId={}, id={}", userId, albumId, deletedRecord.getId());
         } else {
-                          
+
             AlbumFavorite albumFavorite = new AlbumFavorite();
             albumFavorite.setUserId(userId);
             albumFavorite.setAlbumId(albumId);
@@ -403,7 +403,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         }
 
         if (UserAccountStatusUtil.canContributePublicStats(user)) {
-                      
+
             album.setFavoriteCount((album.getFavoriteCount() != null ? album.getFavoriteCount() : 0) + 1);
             updateById(album);
         }
@@ -412,19 +412,19 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return true;
     }
 
-       
-             
-      
-             
-                        
-                            
-                             
-                     
-      
-                         
-                          
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean unfavoriteAlbum(Long userId, Long albumId) {
@@ -432,7 +432,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             throw new BusinessException(ResultCode.PARAM_ERROR);
         }
 
-                             
+
         LambdaQueryWrapper<AlbumFavorite> activeWrapper = new LambdaQueryWrapper<>();
         activeWrapper.eq(AlbumFavorite::getUserId, userId)
                 .eq(AlbumFavorite::getAlbumId, albumId)
@@ -441,12 +441,12 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         AlbumFavorite activeRecord = albumFavoriteMapper.selectOne(activeWrapper);
         if (activeRecord == null) {
             removeFavoriteGrouping(userId, "album", albumId);
-                       
+
             log.debug("专辑未收藏，跳过: userId={}, albumId={}", userId, albumId);
             return true;
         }
 
-                                       
+
         LambdaQueryWrapper<AlbumFavorite> deletedWrapper = new LambdaQueryWrapper<>();
         deletedWrapper.eq(AlbumFavorite::getUserId, userId)
                 .eq(AlbumFavorite::getAlbumId, albumId)
@@ -455,18 +455,18 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         AlbumFavorite deletedRecord = albumFavoriteMapper.selectOne(deletedWrapper);
 
         if (deletedRecord != null) {
-                                
+
             String physicalDeleteSql = "DELETE FROM album_favorite WHERE id = ?";
             jdbcTemplate.update(physicalDeleteSql, deletedRecord.getId());
             log.info("物理删除旧的历史记录: userId={}, albumId={}, deletedId={}", userId, albumId, deletedRecord.getId());
         }
 
-                                                      
+
         albumFavoriteMapper.deleteById(activeRecord.getId());
         removeFavoriteGrouping(userId, "album", albumId);
         log.info("逻辑删除专辑收藏记录: userId={}, albumId={}, id={}", userId, albumId, activeRecord.getId());
 
-                  
+
         Album album = getById(albumId);
         if (ObjectUtils.isNotEmpty(album)
                 && UserAccountStatusUtil.canContributePublicStats(userId, userMapper::selectById)) {
@@ -499,32 +499,32 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         List<Song> songs = filterPublicUploaderSongs(songMapper.selectList(wrapper));
 
-                   
+
         Set<Long> favoriteSongIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId) && !songs.isEmpty()) {
             favoriteSongIds = getFavoriteSongIdsForSongs(userId, songs);
         }
 
-                                     
+
         List<SongVO> voList = ConvertHelper.toVOList(songs, this::convertSongToVO);
         ConvertHelper.setFieldFromSet(voList, SongVO::getId, favoriteSongIds, SongVO::setIsFavorite);
 
         return voList;
     }
 
-       
-                  
-      
-                         
-                      
-       
+
+
+
+
+
+
     @Override
     public List<AlbumVO> getUserFavoriteAlbums(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return new ArrayList<>();
         }
 
-                                         
+
         LambdaQueryWrapper<AlbumFavorite> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AlbumFavorite::getUserId, userId)
                 .eq(AlbumFavorite::getDeleted, 0)
@@ -535,12 +535,12 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             return new ArrayList<>();
         }
 
-                 
+
         List<Long> albumIds = favorites.stream()
                 .map(AlbumFavorite::getAlbumId)
                 .collect(Collectors.toList());
 
-                   
+
         LambdaQueryWrapper<Album> albumWrapper = new LambdaQueryWrapper<>();
         albumWrapper.in(Album::getId, albumIds)
                 .eq(Album::getStatus, CommonConstants.STATUS_NORMAL)
@@ -549,26 +549,26 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         List<Album> albums = filterAlbumsWithPublicSongs(list(albumWrapper));
 
-                          
+
         List<AlbumVO> voList = ConvertHelper.toVOList(albums, this::convertToVO);
         voList.forEach(vo -> vo.setIsFavorite(true));
 
         return voList;
     }
 
-       
-                      
-      
-                         
-                         
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteAlbumIds(Long userId, List<Album> albums) {
         if (ObjectUtils.isEmpty(userId) || albums.isEmpty()) {
             return Collections.emptySet();
         }
 
-                                   
+
         List<Long> albumIds = ConvertHelper.extractIds(albums, Album::getId);
 
         LambdaQueryWrapper<AlbumFavorite> wrapper = new LambdaQueryWrapper<>();
@@ -581,13 +581,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return ConvertHelper.extractIdSet(favorites, AlbumFavorite::getAlbumId);
     }
 
-       
-                                
-      
-                         
-                        
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteSongIdsForSongs(Long userId, List<Song> songs) {
         Long favoritePlaylistId = getFavoritePlaylistId(userId);
         if (favoritePlaylistId == null) {
@@ -598,7 +598,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             return Collections.emptySet();
         }
 
-                              
+
         List<Long> songIds = ConvertHelper.extractIds(songs, Song::getId);
 
         LambdaQueryWrapper<com.haoran.music.entity.PlaylistSong> wrapper = new LambdaQueryWrapper<>();
@@ -613,12 +613,12 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
                 com.haoran.music.entity.PlaylistSong::getSongId);
     }
 
-       
-                 
-      
-                         
-                     
-       
+
+
+
+
+
+
     private Long getFavoritePlaylistId(Long userId) {
         LambdaQueryWrapper<com.haoran.music.entity.Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.Playlist::getUserId, userId)
@@ -630,19 +630,19 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return favoritePlaylist != null ? favoritePlaylist.getId() : null;
     }
 
-       
-                              
-      
-                          
-                          
-                                 
-       
+
+
+
+
+
+
+
     private Boolean checkIsFavorite(Long userId, Long albumId) {
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(albumId)) {
             return false;
         }
 
-                                   
+
         LambdaQueryWrapper<AlbumFavorite> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AlbumFavorite::getUserId, userId)
                 .eq(AlbumFavorite::getAlbumId, albumId)
@@ -652,13 +652,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return count != null && count > 0;
     }
 
-       
-           
-      
-                            
-                            
-                            
-       
+
+
+
+
+
+
+
     private void handleSort(LambdaQueryWrapper<Album> wrapper, String sortField, String sortOrder) {
         if (StrUtil.isBlank(sortField)) {
             wrapper.orderByDesc(Album::getCreateTime);
@@ -689,31 +689,31 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         }
     }
 
-       
-            
-      
-                        
-                   
-       
+
+
+
+
+
+
     private AlbumVO convertToVO(Album album) {
         AlbumVO vo = BeanUtil.copyProperties(album, AlbumVO.class);
-                                    
-                     
+
+
         if (ObjectUtils.isNotEmpty(vo.getCover())) {
             vo.setCover(UrlHelper.buildRelativeCoverUrl(vo.getCover()));
         } else {
             vo.setCover("/default-cover.png");
         }
 
-                                
-           
+
+
         if (StrUtil.isNotBlank(album.getArtistIds())) {
             String[] ids = album.getArtistIds().split(",");
             if (ids.length > 0) {
                 try {
                     Long artistId = Long.valueOf(ids[0].trim());
                     vo.setArtistId(artistId);
-                              
+
                     com.haoran.music.entity.Artist artist = artistMapper.selectById(artistId);
                     if (artist != null) {
                         if (StrUtil.isNotBlank(artist.getAvatar())) {
@@ -731,27 +731,27 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return vo;
     }
 
-       
-                   
-      
-                       
-                   
-       
+
+
+
+
+
+
     private SongVO convertSongToVO(Song song) {
         SongVO vo = BeanUtil.copyProperties(song, SongVO.class);
-                                    
+
         if (ObjectUtils.isNotEmpty(vo.getCover())) {
             vo.setCover(UrlHelper.buildRelativeCoverUrl(vo.getCover()));
         }
         return vo;
     }
 
-       
-                   
-      
-                        
-                    
-       
+
+
+
+
+
+
     @Override
     public List<AlbumVO> getNewAlbums(Integer limit) {
         int actualLimit = limit != null ? limit : 50;
@@ -770,14 +770,14 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return ConvertHelper.toVOList(albums, this::convertToVO);
     }
 
-       
-               
-                            
-      
-                          
-                          
-                     
-       
+
+
+
+
+
+
+
+
     @Override
     public List<AlbumVO> getSimilarAlbums(Long albumId, Integer limit) {
         if (ObjectUtils.isEmpty(albumId)) {
@@ -786,7 +786,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         int actualLimit = limit != null && limit > 0 ? limit : 10;
 
-                  
+
         Album originalAlbum = getById(albumId);
         if (originalAlbum == null) {
             return new ArrayList<>();
@@ -794,7 +794,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         Set<Long> albumIds = new LinkedHashSet<>();
 
-                            
+
         if (StrUtil.isNotBlank(originalAlbum.getLanguage()) && albumIds.size() < actualLimit) {
             LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Album::getStatus, CommonConstants.STATUS_NORMAL)
@@ -811,7 +811,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             }
         }
 
-                            
+
         if (StrUtil.isNotBlank(originalAlbum.getGenres()) && albumIds.size() < actualLimit) {
             String[] genres = originalAlbum.getGenres().split(",");
             for (String genre : genres) {
@@ -834,7 +834,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             }
         }
 
-                               
+
         if (StrUtil.isNotBlank(originalAlbum.getArtistIds()) && albumIds.size() < actualLimit) {
             String[] artistIds = originalAlbum.getArtistIds().split(",");
             for (String artistId : artistIds) {
@@ -861,7 +861,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             return new ArrayList<>();
         }
 
-                 
+
         LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Album::getId, albumIds)
                 .eq(Album::getStatus, CommonConstants.STATUS_NORMAL)
@@ -871,13 +871,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
         return ConvertHelper.toVOList(albums, this::convertToVO);
     }
 
-       
-                   
-      
-                          
-                          
-                        
-       
+
+
+
+
+
+
+
     @Override
     public List<AlbumVO> getArtistOtherAlbums(Long albumId, Integer limit) {
         if (ObjectUtils.isEmpty(albumId)) {
@@ -886,13 +886,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
         int actualLimit = limit != null && limit > 0 ? limit : 10;
 
-                  
+
         Album originalAlbum = getById(albumId);
         if (originalAlbum == null || StrUtil.isBlank(originalAlbum.getArtistIds())) {
             return new ArrayList<>();
         }
 
-                           
+
         String[] artistIds = originalAlbum.getArtistIds().split(",");
         if (artistIds.length == 0) {
             return new ArrayList<>();
@@ -905,7 +905,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             return new ArrayList<>();
         }
 
-                      
+
         LambdaQueryWrapper<Album> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Album::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Album::getDeleted, CommonConstants.NOT_DELETED)

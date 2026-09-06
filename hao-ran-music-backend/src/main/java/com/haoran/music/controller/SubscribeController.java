@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-   
-          
-                      
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/subscribe")
@@ -28,9 +28,9 @@ public class SubscribeController {
         this.subscribeService = subscribeService;
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("设置歌单订阅")
     @PostMapping("/set")
     public Result setPlaylistSubscribe(HttpServletRequest request,
@@ -42,9 +42,9 @@ public class SubscribeController {
                 playlistId, price, period));
     }
 
-       
-           
-       
+
+
+
     @ApiLog("订阅歌单")
     @PostMapping("/{playlistId}")
     public Result subscribePlaylist(HttpServletRequest request,
@@ -57,9 +57,9 @@ public class SubscribeController {
                 subscribeType, autoRenew, idempotencyKey));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("检查订阅状态")
     @GetMapping("/check/{id}")
     public Result checkSubscribed(HttpServletRequest request,
@@ -68,9 +68,9 @@ public class SubscribeController {
         return Result.success(subscribeService.checkSubscribed(userId, id));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取订阅列表")
     @GetMapping("/my")
     public Result getMySubscribes(HttpServletRequest request,
@@ -81,9 +81,9 @@ public class SubscribeController {
         return Result.success(subscribeService.getMySubscribes(userId, status, page, size));
     }
 
-       
-                       
-       
+
+
+
     @GetMapping("/subscribers")
     public Result getPlaylistSubscribers(HttpServletRequest request,
                                         @RequestParam Long playlistId,
@@ -93,18 +93,18 @@ public class SubscribeController {
         return Result.success(subscribeService.getPlaylistSubscribers(creatorId, playlistId, page, size));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取订阅统计")
     @GetMapping("/stats")
     public Result getPlaylistSubscribeStats(@RequestParam Long playlistId) {
         return Result.success(subscribeService.getPlaylistSubscribeStats(playlistId));
     }
 
-       
-           
-       
+
+
+
     @ApiLog("取消订阅")
     @PostMapping("/{playlistId}/cancel")
     public Result cancelSubscribe(HttpServletRequest request,
@@ -113,9 +113,9 @@ public class SubscribeController {
         return Result.success(subscribeService.cancelSubscribe(userId, playlistId));
     }
 
-       
-           
-       
+
+
+
     @ApiLog("续费订阅")
     @PostMapping("/{playlistId}/renew")
     public Result renewSubscribe(HttpServletRequest request,
@@ -127,9 +127,9 @@ public class SubscribeController {
                 userId, playlistId, subscribeType, false, idempotencyKey));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("取消自动续费")
     @PostMapping("/{playlistId}/auto-renew/disable")
     public Result cancelAutoRenew(HttpServletRequest request,
@@ -138,9 +138,9 @@ public class SubscribeController {
         return Result.success(subscribeService.cancelAutoRenew(userId, playlistId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("启用自动续费")
     @PostMapping("/{playlistId}/auto-renew/enable")
     public Result enableAutoRenew(HttpServletRequest request,
@@ -149,9 +149,9 @@ public class SubscribeController {
         return Result.success(subscribeService.enableAutoRenew(userId, playlistId));
     }
 
-       
-                    
-       
+
+
+
     @ApiLog("取消歌单付费")
     @DeleteMapping("/{playlistId}")
     public Result cancelPlaylistSubscribe(HttpServletRequest request,
@@ -160,18 +160,18 @@ public class SubscribeController {
         return Result.success(subscribeService.cancelPlaylistSubscribe(creatorId, playlistId));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取即将到期订阅")
     @GetMapping("/expiring")
     public Result getExpiringSubscribes(@RequestParam(defaultValue = "3") Integer days) {
         return Result.success(subscribeService.getExpiringSubscribes(days));
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("获取订阅的歌单列表")
     @GetMapping("/subscribed-playlists")
     public Result getMySubscribedPlaylists(HttpServletRequest request,

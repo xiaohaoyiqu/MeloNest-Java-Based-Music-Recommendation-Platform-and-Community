@@ -1,7 +1,7 @@
-   
-                      
-                     
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-   
-        
-                    
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/report")
@@ -35,9 +35,9 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-       
-           
-       
+
+
+
     @ApiLog("提交举报")
     @PostMapping("/submit")
     public Result submitReport(HttpServletRequest request,
@@ -59,9 +59,9 @@ public class ReportController {
                 reportRequest.getAttachmentAssetIds()));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取举报记录")
     @GetMapping("/my")
     public Result getMyReports(HttpServletRequest request,
@@ -72,13 +72,13 @@ public class ReportController {
         return Result.success(reportService.getMyReports(reporterId, status, page, size));
     }
 
-       
-                  
-      
-                          
-                           
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("撤回举报")
     @PostMapping("/withdraw/{reportId}")
     public Result withdrawReport(HttpServletRequest request, @PathVariable Long reportId) {
@@ -89,9 +89,9 @@ public class ReportController {
         return Result.success(reportService.withdrawReport(reportId, reporterId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取举报统计")
     @GetMapping("/statistics")
     public Result getReportStatistics(HttpServletRequest request) {
@@ -99,9 +99,9 @@ public class ReportController {
         return Result.success(reportService.getReportStatistics(reporterId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取举报详情")
     @GetMapping("/{reportId}")
     public Result getReportDetail(HttpServletRequest request,
@@ -110,9 +110,9 @@ public class ReportController {
         return Result.success(reportService.getReportDetail(reportId, viewerId));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取对象举报")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/target")
@@ -125,9 +125,9 @@ public class ReportController {
         return Result.success(reportService.getTargetReports(targetType, targetId, page, size, viewerId));
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("获取待审核举报")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending")
@@ -136,9 +136,9 @@ public class ReportController {
         return Result.success(reportService.getPendingReports(page, size));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("审核举报")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/review/{reportId}")
@@ -154,9 +154,9 @@ public class ReportController {
                 approved, reviewReason, action));
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("发放举报奖励")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{reportId}/reward")
@@ -164,9 +164,9 @@ public class ReportController {
         return Result.success(reportService.grantReportReward(reportId));
     }
 
-       
-              
-       
+
+
+
     @ApiLog("获取举报信用分")
     @GetMapping("/credit")
     public Result getReportCredit(HttpServletRequest request) {
@@ -175,9 +175,9 @@ public class ReportController {
         return Result.success(credit);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取举报奖励配置")
     @GetMapping("/reward-config")
     public Result getReportRewardPoints() {

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.config;
 
 import com.haoran.music.service.impl.ContentStatisticReconcileService;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-   
-                                                             
-   
+
+
+
 @Slf4j
 @Component
 @Order(100)

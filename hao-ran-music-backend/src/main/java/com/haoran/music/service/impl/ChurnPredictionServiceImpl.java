@@ -20,10 +20,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class ChurnPredictionServiceImpl implements ChurnPredictionService {
@@ -37,14 +37,14 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-       
-                   
-       
+
+
+
     private static final Integer CHURN_CACHE_HOURS = 2;
 
-       
-               
-       
+
+
+
     private static final Integer LOW_RISK_DAYS = 7;
     private static final Integer MEDIUM_RISK_DAYS = 14;
     private static final Integer HIGH_RISK_DAYS = 30;
@@ -57,14 +57,14 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
             return null;
         }
 
-                  
+
         String cacheKey = "churn:prediction:" + userId;
         ChurnPredictionVO cached = (ChurnPredictionVO) redisTemplate.opsForValue().get(cacheKey);
         if (ObjectUtils.isNotEmpty(cached)) {
             return cached;
         }
 
-                 
+
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             return null;
@@ -75,47 +75,47 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         prediction.setUsername(user.getUsername());
         prediction.setPredictTime(LocalDateTime.now());
 
-                                                  
+
         RFMVO rfm = rfmAnalysisService.calculateUserRFM(userId);
         LocalDateTime lastActiveTime = rfm == null ? null : rfm.getLastActiveTime();
         prediction.setLastActiveTime(lastActiveTime);
 
-                  
+
         int inactiveDays = calculateInactiveDays(lastActiveTime);
         prediction.setInactiveDays(inactiveDays);
 
-                 
+
         ChurnPredictionVO.RiskLevel riskLevel = determineRiskLevel(inactiveDays);
         prediction.setRiskLevel(riskLevel.getCode());
         prediction.setRiskDescription(riskLevel.getDescription());
 
-                 
+
         int churnProbability = calculateChurnProbability(rfm, riskLevel);
         prediction.setChurnProbability(churnProbability);
 
-                   
+
         ChurnPredictionVO.UserValueLevel valueLevel = determineUserValueLevel(rfm);
         prediction.setValueLevel(valueLevel.getName());
 
-                 
+
         List<ChurnPredictionVO.RiskFactor> riskFactors = analyzeRiskFactors(userId, inactiveDays);
         prediction.setRiskFactors(riskFactors);
 
-                 
+
         List<String> recallActions = generateRecallActionsByRisk(riskLevel, valueLevel);
         prediction.setRecallActions(recallActions);
 
-                 
+
         prediction.setSuggestedBudget(determineSuggestedBudget(valueLevel, riskLevel));
 
-                 
+
         if (inactiveDays >= HIGH_RISK_DAYS) {
             prediction.setPredictedChurnTime(LocalDateTime.now().plusDays(30));
         } else {
             prediction.setPredictedChurnTime(LocalDateTime.now().plusDays(60));
         }
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, prediction, CHURN_CACHE_HOURS, TimeUnit.HOURS);
 
         log.info("用户流失预测完成: userId={}, riskLevel={}, probability={}", userId, riskLevel.getCode(), churnProbability);
@@ -146,9 +146,9 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         for (User user : candidateUsers) {
             ChurnPredictionVO prediction = predictUserChurn(user.getId());
             if (ObjectUtils.isNotEmpty(prediction)) {
-                                        
+
                 if (ObjectUtils.isEmpty(riskLevel) || prediction.getRiskLevel().equals(riskLevel)) {
-                                   
+
                     if (!ChurnPredictionVO.RiskLevel.NO_RISK.getCode().equals(prediction.getRiskLevel())) {
                         highRiskUsers.add(prediction);
                         if (highRiskUsers.size() >= maxUsers) {
@@ -159,7 +159,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
             }
         }
 
-                  
+
         highRiskUsers.sort((a, b) -> b.getChurnProbability().compareTo(a.getChurnProbability()));
 
         return highRiskUsers;
@@ -170,20 +170,20 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
     public Map<String, Object> getChurnStatistics() {
         Map<String, Object> stats = new LinkedHashMap<>();
 
-                  
+
         String cacheKey = "churn:stats:overall";
         Map<String, Object> cached = (Map<String, Object>) redisTemplate.opsForValue().get(cacheKey);
         if (ObjectUtils.isNotEmpty(cached)) {
             return cached;
         }
 
-                      
+
         Map<String, Integer> riskLevelStats = new LinkedHashMap<>();
         for (ChurnPredictionVO.RiskLevel level : ChurnPredictionVO.RiskLevel.values()) {
             riskLevelStats.put(level.getCode(), 0);
         }
 
-                   
+
         int totalProbability = 0;
         int userCount = 0;
         int publicUsers = 0;
@@ -227,7 +227,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         stats.put("churnedUsers", riskLevelStats.get(ChurnPredictionVO.RiskLevel.CHURNED.getCode()));
         stats.put("generateTime", LocalDateTime.now());
 
-                    
+
         redisTemplate.opsForValue().set(cacheKey, stats, 1, TimeUnit.HOURS);
 
         return stats;
@@ -242,7 +242,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
             return reasons;
         }
 
-                     
+
         if (ObjectUtils.isNotEmpty(prediction.getRiskFactors())) {
             for (ChurnPredictionVO.RiskFactor factor : prediction.getRiskFactors()) {
                 reasons.add(factor.getFactorDescription());
@@ -277,7 +277,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
             Map<String, Object> dayData = new LinkedHashMap<>();
             dayData.put("date", dayTime.toLocalDate());
 
-                            
+
             Map<String, Integer> dayStats = new LinkedHashMap<>();
             for (ChurnPredictionVO.RiskLevel level : ChurnPredictionVO.RiskLevel.values()) {
                 dayStats.put(level.getCode(), 0);
@@ -308,12 +308,12 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
             return false;
         }
 
-                         
+
         if (ChurnPredictionVO.RiskLevel.NO_RISK.getCode().equals(prediction.getRiskLevel())) {
             return false;
         }
 
-                       
+
         String alertKey = "churn:alert:" + userId;
         Map<String, Object> alert = new LinkedHashMap<>();
         alert.put("userId", userId);
@@ -351,7 +351,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
             return false;
         }
 
-                 
+
         String recordKey = "churn:recall:" + userId;
         Map<String, Object> record = new LinkedHashMap<>();
         record.put("userId", userId);
@@ -359,7 +359,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         record.put("cost", ObjectUtils.isNotEmpty(cost) ? cost : 0.0);
         record.put("actionTime", LocalDateTime.now());
 
-                     
+
         redisTemplate.opsForList().rightPush(recordKey + ":list", record);
         redisTemplate.expire(recordKey + ":list", 30, TimeUnit.DAYS);
 
@@ -384,21 +384,21 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         return effectiveness;
     }
 
-       
-                                  
-      
-                          
-                       
-       
+
+
+
+
+
+
     private LambdaQueryWrapper<User> buildRecallCandidateQuery(int limit) {
         return UserAccountStatusUtil.publicStatsUserQuery()
                 .orderByAsc(User::getLastLoginTime)
                 .last("LIMIT " + limit);
     }
 
-       
-             
-       
+
+
+
     private ChurnPredictionVO.RiskLevel determineRiskLevel(int inactiveDays) {
         if (inactiveDays >= CHURNED_DAYS) {
             return ChurnPredictionVO.RiskLevel.CHURNED;
@@ -413,32 +413,32 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         }
     }
 
-       
-             
-       
+
+
+
     private int calculateChurnProbability(RFMVO rfm, ChurnPredictionVO.RiskLevel riskLevel) {
-                     
+
         int baseProbability = riskLevel.getBaseProbability();
 
-                      
+
         if (rfm != null) {
             int rfmProbability = calculateRfmChurnProbability(rfm);
-                   
+
             baseProbability = (baseProbability + rfmProbability) / 2;
         }
 
         return Math.min(100, Math.max(0, baseProbability));
     }
 
-       
-               
-       
+
+
+
     private ChurnPredictionVO.UserValueLevel determineUserValueLevel(RFMVO rfm) {
         if (rfm == null) {
             return ChurnPredictionVO.UserValueLevel.LOW;
         }
 
-                        
+
         int totalScore = ObjectUtils.isNotEmpty(rfm.getTotalScore()) ? rfm.getTotalScore() : 0;
 
         if (totalScore >= 12) {
@@ -489,13 +489,13 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         return Math.min(100, Math.max(0, probability));
     }
 
-       
-             
-       
+
+
+
     private List<ChurnPredictionVO.RiskFactor> analyzeRiskFactors(Long userId, int inactiveDays) {
         List<ChurnPredictionVO.RiskFactor> factors = new ArrayList<>();
 
-                     
+
         ChurnPredictionVO.RiskFactor inactiveFactor = new ChurnPredictionVO.RiskFactor();
         inactiveFactor.setFactorName("未活跃天数");
         inactiveFactor.setFactorDescription("最近" + inactiveDays + "天未活跃");
@@ -504,7 +504,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         inactiveFactor.setNormalRange("7天内");
         factors.add(inactiveFactor);
 
-                     
+
         ChurnPredictionVO.RiskFactor activityFactor = new ChurnPredictionVO.RiskFactor();
         activityFactor.setFactorName("活跃度变化");
         activityFactor.setFactorDescription("近期活跃度明显下降");
@@ -516,9 +516,9 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         return factors;
     }
 
-       
-                        
-       
+
+
+
     private List<String> generateRecallActionsByRisk(ChurnPredictionVO.RiskLevel riskLevel,
                                                       ChurnPredictionVO.UserValueLevel valueLevel) {
         List<String> actions = new ArrayList<>();
@@ -552,7 +552,7 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
                 break;
         }
 
-                       
+
         if (valueLevel == ChurnPredictionVO.UserValueLevel.HIGH) {
             actions.add("专属客服跟进");
             actions.add("定制化回归方案");
@@ -561,9 +561,9 @@ public class ChurnPredictionServiceImpl implements ChurnPredictionService {
         return actions;
     }
 
-       
-               
-       
+
+
+
     private String determineSuggestedBudget(ChurnPredictionVO.UserValueLevel valueLevel,
                                            ChurnPredictionVO.RiskLevel riskLevel) {
         if (valueLevel == ChurnPredictionVO.UserValueLevel.HIGH) {

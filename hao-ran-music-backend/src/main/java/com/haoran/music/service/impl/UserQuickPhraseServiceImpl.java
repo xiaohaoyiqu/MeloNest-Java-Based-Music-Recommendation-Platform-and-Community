@@ -1,7 +1,7 @@
-   
-                      
-                         
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -26,9 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-   
-            
-   
+
+
+
 @Slf4j
 @Service
 public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
@@ -42,12 +42,12 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
     @Resource
     private UserMapper userMapper;
 
-       
-                       
-      
-                         
-                    
-       
+
+
+
+
+
+
     @Override
     public List<UserQuickPhrase> getUserPhrases(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -62,13 +62,13 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
         return userQuickPhraseMapper.selectList(wrapper);
     }
 
-       
-            
-      
-                         
-                          
-                     
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserQuickPhrase addPhrase(Long userId, String phrase) {
@@ -76,11 +76,11 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
             throw new IllegalArgumentException("用户ID和常用语内容不能为空");
         }
 
-                 
+
         String trimmedPhrase = normalizePhrase(phrase);
         lockUserForWrite(userId);
 
-                  
+
         LambdaQueryWrapper<UserQuickPhrase> checkWrapper = new LambdaQueryWrapper<>();
         checkWrapper.eq(UserQuickPhrase::getUserId, userId)
                 .eq(UserQuickPhrase::getPhrase, trimmedPhrase);
@@ -89,7 +89,7 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
             throw new IllegalArgumentException("该常用语已存在");
         }
 
-                 
+
         LambdaQueryWrapper<UserQuickPhrase> countWrapper = new LambdaQueryWrapper<>();
         countWrapper.eq(UserQuickPhrase::getUserId, userId);
         Long currentCount = userQuickPhraseMapper.selectCount(countWrapper);
@@ -97,7 +97,7 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
             throw new IllegalArgumentException("常用语数量已达上限（10条）");
         }
 
-                    
+
         LambdaQueryWrapper<UserQuickPhrase> maxSortWrapper = new LambdaQueryWrapper<>();
         maxSortWrapper.eq(UserQuickPhrase::getUserId, userId)
                 .orderByDesc(UserQuickPhrase::getSortOrder)
@@ -105,7 +105,7 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
         UserQuickPhrase lastPhrase = userQuickPhraseMapper.selectOne(maxSortWrapper);
         Integer nextSort = (lastPhrase != null) ? lastPhrase.getSortOrder() + 1 : 0;
 
-                 
+
         UserQuickPhrase newPhrase = new UserQuickPhrase();
         newPhrase.setUserId(userId);
         newPhrase.setPhrase(trimmedPhrase);
@@ -119,14 +119,14 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
         return newPhrase;
     }
 
-       
-            
-      
-                            
-                           
-                           
-                   
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updatePhrase(Long phraseId, Long userId, String newPhrase) {
@@ -137,7 +137,7 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
         String trimmedPhrase = normalizePhrase(newPhrase);
         lockUserForWrite(userId);
 
-                       
+
         LambdaQueryWrapper<UserQuickPhrase> ownerWrapper = new LambdaQueryWrapper<>();
         ownerWrapper.eq(UserQuickPhrase::getId, phraseId)
                 .eq(UserQuickPhrase::getUserId, userId);
@@ -146,7 +146,7 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
             throw new IllegalArgumentException("常用语不存在或无权修改");
         }
 
-                       
+
         LambdaQueryWrapper<UserQuickPhrase> checkWrapper = new LambdaQueryWrapper<>();
         checkWrapper.eq(UserQuickPhrase::getUserId, userId)
                 .eq(UserQuickPhrase::getPhrase, trimmedPhrase)
@@ -156,7 +156,7 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
             throw new IllegalArgumentException("该常用语已存在");
         }
 
-             
+
         LambdaUpdateWrapper<UserQuickPhrase> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(UserQuickPhrase::getId, phraseId)
                 .eq(UserQuickPhrase::getUserId, userId)
@@ -170,13 +170,13 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
         return true;
     }
 
-       
-            
-      
-                            
-                           
-                   
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean deletePhrase(Long phraseId, Long userId) {
@@ -197,13 +197,13 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
         return rows == 1;
     }
 
-       
-              
-      
-                            
-                                     
-                   
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateSortOrder(Long userId, List<Long> phraseIds) {
@@ -231,7 +231,7 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
             throw new IllegalArgumentException("常用语不存在或不属于当前用户");
         }
 
-                 
+
         LocalDateTime updateTime = LocalDateTime.now();
         for (int i = 0; i < phraseIds.size(); i++) {
             Long phraseId = phraseIds.get(i);
@@ -274,12 +274,12 @@ public class UserQuickPhraseServiceImpl implements UserQuickPhraseService {
                 userId, normalizedPhrases.size());
     }
 
-       
-                
-      
-                         
-                   
-       
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int clearUserPhrases(Long userId) {

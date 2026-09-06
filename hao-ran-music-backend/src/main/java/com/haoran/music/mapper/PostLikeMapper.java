@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -12,9 +12,9 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-   
-             
-   
+
+
+
 @Mapper
 public interface PostLikeMapper extends BaseMapper<PostLike> {
 

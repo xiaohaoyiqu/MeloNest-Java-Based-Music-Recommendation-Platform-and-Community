@@ -35,10 +35,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMusic> implements LocalMusicService {
@@ -63,15 +63,15 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
     @Resource
     private SecurityConfig securityConfig;
 
-       
-                                 
-                                      
-       
+
+
+
+
     @Override
     public IPage<LocalMusicVO> scanSongsByPath(String path, Long userId, PageQuery pageQuery, String nginxUrlPrefix) {
         log.info("event=local_song_scan_started userId={}", userId);
 
-                                      
+
         LambdaQueryWrapper<LocalMusic> userMusicWrapper = new LambdaQueryWrapper<>();
         userMusicWrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getDeleted, CommonConstants.NOT_DELETED);
@@ -80,7 +80,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
                 .map(LocalMusic::getFilePath)
                 .collect(Collectors.toSet());
 
-                                           
+
         Page<Song> page = new Page<>(pageQuery.getPage(), pageQuery.getSize());
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.and(w -> w.isNotNull(Song::getUrlStandard)
@@ -92,7 +92,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
 
         IPage<Song> songPage = songMapper.selectPage(page, wrapper);
 
-                
+
         final Set<String> finalAddedPaths = addedPaths;
         return songPage.convert(song -> {
             LocalMusicVO vo = new LocalMusicVO();
@@ -101,39 +101,39 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             vo.setArtistName(song.getArtistNames());
             vo.setAlbumName(song.getAlbumName());
             vo.setDuration(song.getDuration());
-                                                     
+
             String songUrl = song.getUrlLossless() != null ? song.getUrlLossless() :
                             song.getUrlHigh() != null ? song.getUrlHigh() :
                             song.getUrlStandard();
-            
-                                
+
+
             String relativePath = extractRelativePathFromUrl(songUrl);
             vo.setFileSize(localProxyService.getFileSize(relativePath));
             vo.setFileFormat(getFileExtensionFromUrl(songUrl));
             vo.setPlayCount(song.getPlayCount() != null ? song.getPlayCount().intValue() : 0);
             vo.setCreateTime(song.getCreateTime());
 
-                      
+
             vo.setPlayUrl(nginxUrlPrefix + relativePath);
 
-                   
+
             vo.setCoverUrl(song.getCover());
 
-                        
+
             vo.setAdded(finalAddedPaths.contains(relativePath));
 
             return vo;
         });
     }
 
-       
-                                        
-      
-                         
-                            
-                                        
-                        
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<LocalMusicVO> addBySongIds(Long userId, List<Long> songIds, String nginxUrlPrefix) {
@@ -144,12 +144,12 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
         requireBatchSize(songIds.size());
 
-                      
+
         List<Song> songs = songMapper.selectBatchIds(songIds);
         Map<Long, Song> songMap = songs.stream()
                 .collect(Collectors.toMap(Song::getId, s -> s, (a, b) -> a));
 
-                           
+
         LambdaQueryWrapper<LocalMusic> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getDeleted, CommonConstants.NOT_DELETED);
@@ -168,16 +168,16 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
                     continue;
                 }
 
-                         
+
                 String relativePath = extractRelativePathFromUrl(song.getUrlStandard());
 
-                          
+
                 if (existingPaths.contains(relativePath)) {
                     log.info("歌曲已添加，跳过: songId={}", songId);
                     continue;
                 }
 
-                            
+
                 LocalMusic localMusic = new LocalMusic();
                 localMusic.setUserId(userId);
                 localMusic.setName(song.getName());
@@ -186,7 +186,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
                 localMusic.setFileFormat(getFileExtensionFromUrl(song.getUrlStandard()));
                 localMusic.setFilePath(relativePath);
                 localMusic.setFileSize(localProxyService.getFileSize(relativePath));
-                                            
+
                 Integer duration = song.getDuration();
                 if (duration == null || duration == 0) {
                     duration = localProxyService.getAudioDuration(relativePath);
@@ -195,7 +195,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
                 localMusic.setPlayCount(0);
                 localMusic.setSongId(songId);
                 localMusic.setResourceType(MusicConstants.ResourceType.SONG);
-                                 
+
                 localMusic.setQuality(determineQualityFromFileFormat(getFileExtensionFromUrl(song.getUrlStandard())));
 
                 newLocalMusicList.add(localMusic);
@@ -206,11 +206,11 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             }
         }
 
-                  
+
         if (!newLocalMusicList.isEmpty()) {
             saveBatch(newLocalMusicList);
 
-                     
+
             for (LocalMusic localMusic : newLocalMusicList) {
                 LocalMusicVO vo = new LocalMusicVO();
                 vo.setId(localMusic.getId());
@@ -235,13 +235,13 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LocalMusicVO addLocalMusic(Long userId, String filePath, String name, String artist, String album, String nginxUrlPrefix) {
-               
+
         if (StrUtil.isBlank(filePath)) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "文件路径不能为空");
         }
         validateStoredLocalMediaPath(filePath);
 
-                         
+
         LambdaQueryWrapper<LocalMusic> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getFilePath, filePath)
@@ -249,19 +249,19 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         LocalMusic existing = getOne(existWrapper);
         if (existing != null) {
             log.info("event=local_music_add_skipped userId={} reason=already_exists", userId);
-                                              
+
             return convertToVO(existing, nginxUrlPrefix);
         }
 
-                         
+
         boolean isNetworkUrl = filePath.startsWith("http://") || filePath.startsWith("https://");
 
-                     
+
         String fileName = extractFileName(filePath);
         String fileExtension = extractFileExtension(fileName);
 
-                    
-                       
+
+
         List<String> allowedFormats = Arrays.asList(
             "mp3", "flac", "wav", "aac", "ogg", "m4a", "wma", "ape",
             "mp4", "m4p", "aiff", "aif", "aifc", "caf", "wv", "tta",
@@ -273,7 +273,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.PARAM_ERROR, "不支持的音频格式：" + fileExtension);
         }
 
-                 
+
         LocalMusic localMusic = new LocalMusic();
         localMusic.setUserId(userId);
         localMusic.setName(StrUtil.blankToDefault(name, extractFileNameWithoutExt(fileName)));
@@ -284,9 +284,9 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         localMusic.setFileSize(0L);                     
         localMusic.setDuration(0);
         localMusic.setPlayCount(0);
-                  
+
         localMusic.setResourceType(MusicConstants.ResourceType.SONG);
-                         
+
         localMusic.setQuality(determineQualityFromFileFormat(fileExtension));
 
         save(localMusic);
@@ -296,14 +296,14 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return convertToVO(localMusic, nginxUrlPrefix);
     }
 
-       
-                         
-      
-                         
-                              
-                                        
-                        
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<LocalMusicVO> addBatchLocalMusic(Long userId, List<String> filePaths, String nginxUrlPrefix) {
@@ -316,7 +316,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.PARAM_ERROR, "单次最多添加50首本地音乐");
         }
 
-                                                      
+
         List<String> normalizedPaths = new ArrayList<>(filePaths.size());
         int totalBytes = 0;
         for (String filePath : filePaths) {
@@ -332,7 +332,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             normalizedPaths.add(normalizedPath);
         }
 
-                     
+
         LambdaQueryWrapper<LocalMusic> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getDeleted, CommonConstants.NOT_DELETED);
@@ -345,13 +345,13 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
 
         for (String filePath : normalizedPaths) {
             try {
-                          
+
                 if (existingPaths.contains(filePath)) {
                     log.info("event=local_music_batch_item_skipped reason=already_exists");
                     continue;
                 }
 
-                                               
+
                 String fileName = extractFileName(filePath);
                 String name = null;
                 String artist = null;
@@ -363,7 +363,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
                     name = parts[1].trim();
                 }
 
-                           
+
                 LocalMusic localMusic = new LocalMusic();
                 localMusic.setUserId(userId);
                 localMusic.setName(StrUtil.blankToDefault(name, extractFileNameWithoutExt(fileName)));
@@ -375,7 +375,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
                 localMusic.setDuration(0);
                 localMusic.setPlayCount(0);
                 localMusic.setResourceType(MusicConstants.ResourceType.SONG);
-                                 
+
                 localMusic.setQuality(determineQualityFromFileFormat(extractFileExtension(fileName)));
 
                 newLocalMusicList.add(localMusic);
@@ -386,11 +386,11 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             }
         }
 
-                  
+
         if (!newLocalMusicList.isEmpty()) {
             saveBatch(newLocalMusicList);
 
-                     
+
             for (LocalMusic localMusic : newLocalMusicList) {
                 results.add(convertToVO(localMusic, nginxUrlPrefix));
             }
@@ -401,14 +401,14 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return results;
     }
 
-       
-                               
-      
-                         
-                            
-                                        
-                       
-       
+
+
+
+
+
+
+
+
     @Override
     public IPage<LocalMusicVO> getUserLocalMusic(Long userId, PageQuery pageQuery, String nginxUrlPrefix, Integer resourceType) {
         Page<LocalMusic> page = new Page<>(pageQuery.getPage(), pageQuery.getSize());
@@ -417,7 +417,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         wrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getDeleted, CommonConstants.NOT_DELETED);
 
-                                         
+
         if (resourceType != null) {
             wrapper.eq(LocalMusic::getResourceType, resourceType);
         }
@@ -433,8 +433,8 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
 
         IPage<LocalMusic> localMusicPage = page(page, wrapper);
 
-                                                                                               
-                                                                                                  
+
+
         List<LocalMusic> toRemove = new ArrayList<>();
         for (LocalMusic music : localMusicPage.getRecords()) {
             if (isClientManagedLocalPath(music.getFilePath())) {
@@ -448,19 +448,19 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             }
         }
 
-                    
+
         for (LocalMusic music : toRemove) {
             removeById(music.getId());
             localMusicPage.getRecords().remove(music);
         }
 
-                 
+
         localMusicPage.setTotal(localMusicPage.getTotal() - toRemove.size());
 
-                            
+
         IPage<LocalMusicVO> voPage = localMusicPage.convert(music -> convertToVO(music, nginxUrlPrefix));
 
-                      
+
         List<Long> songIds = voPage.getRecords().stream()
                 .map(LocalMusicVO::getSongId)
                 .filter(Objects::nonNull)
@@ -472,7 +472,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
 
         final Set<Long> finalFavoriteSongIds = favoriteSongIds;
-                           
+
         for (LocalMusicVO vo : voPage.getRecords()) {
             if (vo.getSongId() != null) {
                 vo.setIsFavorite(finalFavoriteSongIds.contains(vo.getSongId()));
@@ -482,9 +482,9 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return voPage;
     }
 
-       
-                                             
-       
+
+
+
     private void applyLocalMusicSort(
             LambdaQueryWrapper<LocalMusic> wrapper,
             String sortField,
@@ -518,20 +518,20 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
     }
 
-       
-                      
-      
-                         
-                            
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteSongIdsBatch(Long userId, List<Long> songIds) {
         if (songIds.isEmpty()) {
             return Collections.emptySet();
         }
 
         try {
-                                                 
+
             return songLikeService.getFavoriteSongIdsBatch(userId, songIds);
         } catch (Exception e) {
             log.warn("批量查询收藏状态失败: userId={}, songIds={}", userId, songIds.size());
@@ -565,22 +565,22 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.FORBIDDEN, "无权删除该音乐");
         }
 
-                                            
+
         return removeById(id);
     }
 
-       
 
-       
-               
-      
-                       
-                         
-                     
-                             
-                            
-                       
-       
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public LocalMusicVO updateLocalMusic(Long id, Long userId, String name, String artistName, String albumName, String versionType, String versionName, String nginxUrlPrefix) {
         LocalMusic localMusic = getById(id);
@@ -592,7 +592,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.FORBIDDEN, "无权修改该音乐");
         }
 
-               
+
         localMusic.setName(name);
         localMusic.setArtistName(artistName);
         if (albumName != null) {
@@ -612,13 +612,13 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
 
         log.info("event=local_music_updated userId={} localMusicId={}", userId, id);
 
-                   
+
         return getLocalMusicDetail(id, userId, nginxUrlPrefix);
     }
 
-       
-                       
-       
+
+
+
     @Override
     public Boolean updateLocalMusicLyric(Long id, Long userId, String lyric) {
         if (lyric == null || lyric.trim().isEmpty()) {
@@ -639,7 +639,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.FORBIDDEN, "无权修改该音乐");
         }
 
-                 
+
         localMusic.setLyricText(safeLyric);
         boolean updated = updateById(localMusic);
 
@@ -653,13 +653,13 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return true;
     }
 
-       
-                         
-      
-                              
-                         
-                     
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer batchDeleteLocalMusic(List<Long> ids, Long userId) {
@@ -668,7 +668,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
         requireBatchSize(ids.size());
 
-                               
+
         LambdaQueryWrapper<LocalMusic> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(LocalMusic::getId, ids)
                 .eq(LocalMusic::getUserId, userId);
@@ -680,12 +680,12 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             return 0;
         }
 
-                     
+
         List<Long> validIds = toDelete.stream()
                 .map(LocalMusic::getId)
                 .collect(Collectors.toList());
 
-                  
+
         boolean success = removeByIds(validIds);
 
         if (success) {
@@ -699,7 +699,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean clearUserLocalMusic(Long userId) {
-                  
+
         LambdaQueryWrapper<LocalMusic> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(LocalMusic::getUserId, userId);
         return remove(wrapper);
@@ -715,32 +715,32 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             return false;
         }
 
-                               
+
         Integer newQuality = null;
         if (localMusic.getQuality() == null || localMusic.getQuality() == 0) {
             newQuality = determineQualityFromFileFormat(localMusic.getFileFormat());
         }
 
-                           
+
         int rows;
         if (newQuality != null) {
             rows = baseMapper.incrementPlayCountWithQuality(userId, id, newQuality);
         } else {
             rows = baseMapper.incrementPlayCount(userId, id);
         }
-        
+
         boolean success = rows > 0;
         log.info("本地音乐播放次数更新: userId={}, id={}, rows={}, success={}", userId, id, rows, success);
         return success;
     }
 
-       
-            
-      
-                               
-                                         
-                           
-       
+
+
+
+
+
+
+
     private LocalMusicVO convertToVO(LocalMusic localMusic, String nginxUrlPrefix) {
         LocalMusicVO vo = new LocalMusicVO();
         vo.setId(localMusic.getId());
@@ -753,34 +753,34 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         vo.setPlayCount(localMusic.getPlayCount());
         vo.setCreateTime(localMusic.getCreateTime());
 
-                  
+
         String filePath = localMusic.getFilePath();
 
         if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
-                                    
+
             if (securityConfig.isHideIp()) {
-                                         
+
                 vo.setPlayUrl(UrlHelper.toRelativePath(filePath));
             } else {
                 vo.setPlayUrl(filePath);
             }
         } else {
-                   
+
             if (securityConfig.isHideIp()) {
-                                            
+
                 vo.setPlayUrl(filePath.startsWith("/") ? filePath : "/" + filePath);
             } else {
-                               
+
                 String normalizedPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
                 String prefix = nginxUrlPrefix.endsWith("/") ? nginxUrlPrefix : nginxUrlPrefix + "/";
                 vo.setPlayUrl(prefix + normalizedPath);
             }
         }
 
-                         
+
         vo.setSongId(localMusic.getSongId());
 
-                                       
+
         if (localMusic.getResourceType() != null) {
             vo.setResourceType(localMusic.getResourceType());
         } else if ("MV".equals(localMusic.getAlbumName())) {
@@ -789,7 +789,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             vo.setResourceType(MusicConstants.ResourceType.SONG);
         }
 
-                               
+
         vo.setFilePath(filePath);
 
         return vo;
@@ -798,14 +798,14 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         if (StrUtil.isBlank(filePath)) {
             return "";
         }
-                            
+
         int lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
         return lastSlash >= 0 ? filePath.substring(lastSlash + 1) : filePath;
     }
 
-       
-                  
-       
+
+
+
     private String extractFileExtension(String fileName) {
         if (StrUtil.isBlank(fileName)) {
             return "";
@@ -814,9 +814,9 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return lastDot >= 0 ? fileName.substring(lastDot + 1) : "";
     }
 
-       
-                 
-       
+
+
+
     private String extractFileNameWithoutExt(String fileName) {
         if (StrUtil.isBlank(fileName)) {
             return "";
@@ -825,15 +825,15 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return lastDot >= 0 ? fileName.substring(0, lastDot) : fileName;
     }
 
-       
-                  
-       
+
+
+
     private String extractRelativePathFromUrl(String url) {
         if (StrUtil.isBlank(url)) {
             return "";
         }
-                      
-                                                                                       
+
+
         try {
             int idx = url.indexOf("/songs/");
             if (idx > 0) {
@@ -845,9 +845,9 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
     }
 
-       
-                   
-       
+
+
+
     private String getFileExtensionFromUrl(String url) {
         if (StrUtil.isBlank(url)) {
             return "";
@@ -860,11 +860,11 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return "";
     }
 
-       
-                   
-                                    
-                                
-       
+
+
+
+
+
     private boolean isClientManagedLocalPath(String path) {
         if (StrUtil.isBlank(path)) {
             return false;
@@ -911,7 +911,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             return true;
         }
 
-                             
+
         if (value.startsWith("/local:")) {
             return true;
         }
@@ -922,14 +922,14 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         if (!ExternalUrlGuard.validate(value).isAllowed()) {
             return false;
         }
-                                                                                                      
+
         return true;
     }
 
-       
-                          
-                               
-       
+
+
+
+
     @Override
     public IPage<LocalMusicVO> scanMVsByPath(String path, Long userId, PageQuery pageQuery, String nginxUrlPrefix) {
         log.info("event=local_mv_scan_started userId={}", userId);
@@ -942,7 +942,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
                 .map(LocalMusic::getFilePath)
                 .collect(Collectors.toSet());
 
-                                  
+
         Page<MV> page = new Page<>(pageQuery.getPage(), pageQuery.getSize());
         LambdaQueryWrapper<MV> wrapper = new LambdaQueryWrapper<>();
         wrapper.and(w -> w.isNotNull(MV::getUrl360p)
@@ -963,7 +963,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             vo.setArtistName(mv.getArtistNames());
             vo.setAlbumName("MV");
             vo.setDuration(mv.getDuration());
-                                               
+
             String mvUrl = mv.getUrl1080p() != null ? mv.getUrl1080p() :
                           mv.getUrl720p() != null ? mv.getUrl720p() :
                           mv.getUrl360p();
@@ -974,7 +974,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             vo.setPlayCount(mv.getPlayCount() != null ? mv.getPlayCount().intValue() : 0);
             vo.setCreateTime(mv.getCreateTime());
 
-                      
+
             vo.setPlayUrl(nginxUrlPrefix + relativePath);
             vo.setCoverUrl(mv.getCover());
             vo.setAdded(finalAddedPaths.contains(relativePath));
@@ -983,14 +983,14 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         });
     }
 
-       
-                                         
-      
-                         
-                           
-                                        
-                        
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<LocalMusicVO> addMVsByMvIds(Long userId, List<Long> mvIds, String nginxUrlPrefix) {
@@ -1001,12 +1001,12 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
         requireBatchSize(mvIds.size());
 
-                      
+
         List<MV> mvs = mvMapper.selectBatchIds(mvIds);
         Map<Long, MV> mvMap = mvs.stream()
                 .collect(Collectors.toMap(MV::getId, s -> s, (a, b) -> a));
 
-                           
+
         LambdaQueryWrapper<LocalMusic> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getDeleted, CommonConstants.NOT_DELETED);
@@ -1033,7 +1033,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
 
                 String relativePath = extractRelativePathFromUrl(mvUrl);
 
-                          
+
                 if (existingPaths.contains(relativePath)) {
                     log.info("MV已添加，跳过: mvId={}", mvId);
                     continue;
@@ -1060,11 +1060,11 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             }
         }
 
-                  
+
         if (!newLocalMusicList.isEmpty()) {
             saveBatch(newLocalMusicList);
 
-                     
+
             for (LocalMusic localMusic : newLocalMusicList) {
                 LocalMusicVO vo = new LocalMusicVO();
                 vo.setId(localMusic.getId());
@@ -1086,21 +1086,21 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return results;
     }
 
-       
-               
-      
-                         
-                       
-                         
-                       
-                             
-                                         
-                       
-       
+
+
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LocalMusicVO addManualMV(Long userId, String name, String artist, String url, String cover, String nginxUrlPrefix, Long fileSize, Integer duration, Integer quality) {
-               
+
         if (StrUtil.isBlank(name)) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "MV名称不能为空");
         }
@@ -1112,13 +1112,13 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
         validateStoredLocalMediaPath(url);
 
-                         
+
         boolean isNetworkUrl = url.startsWith("http://") || url.startsWith("https://");
 
-                  
+
         String fileExtension = extractFileExtension(extractFileName(url));
 
-                    
+
         List<String> allowedFormats = Arrays.asList(
             "mp4", "flv", "avi", "mkv", "mov", "wmv", "webm", "m4v",
             "3gp", "3g2", "mpeg", "mpg", "ts", "m2ts", "f4v"
@@ -1127,7 +1127,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.PARAM_ERROR, "不支持的视频格式：" + fileExtension);
         }
 
-                  
+
         LambdaQueryWrapper<LocalMusic> checkWrapper = new LambdaQueryWrapper<>();
         checkWrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getFilePath, url)
@@ -1138,7 +1138,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.PARAM_ERROR, "该MV已添加");
         }
 
-                   
+
         LocalMusic localMusic = new LocalMusic();
         localMusic.setUserId(userId);
         localMusic.setName(name);
@@ -1149,9 +1149,9 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         localMusic.setFileSize(fileSize != null ? fileSize : 0L);
         localMusic.setDuration(duration != null ? duration : 0);
         localMusic.setPlayCount(0);
-                  
+
         localMusic.setResourceType(MusicConstants.ResourceType.MV);
-                          
+
         if (quality != null) {
             localMusic.setQuality(quality);
         } else {
@@ -1165,21 +1165,21 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return convertToVO(localMusic, nginxUrlPrefix);
     }
 
-       
-             
-      
-                         
-                       
-                         
-                       
-                             
-                                         
-                       
-       
+
+
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LocalMusicVO addManualSong(Long userId, String name, String artist, String url, String cover, String nginxUrlPrefix, Long fileSize, Integer duration, Integer quality) {
-               
+
         if (StrUtil.isBlank(name)) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "歌曲名称不能为空");
         }
@@ -1191,13 +1191,13 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         }
         validateStoredLocalMediaPath(url);
 
-                         
+
         boolean isNetworkUrl = url.startsWith("http://") || url.startsWith("https://");
 
-                  
+
         String fileExtension = extractFileExtension(extractFileName(url));
 
-                    
+
         List<String> allowedFormats = Arrays.asList(
             "mp3", "flac", "wav", "aac", "ogg", "m4a", "wma", "ape",
             "mp4", "m4p", "aiff", "aif", "aifc", "caf", "wv", "tta",
@@ -1209,7 +1209,7 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.PARAM_ERROR, "不支持的音频格式：" + fileExtension);
         }
 
-                  
+
         LambdaQueryWrapper<LocalMusic> checkWrapper = new LambdaQueryWrapper<>();
         checkWrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getFilePath, url)
@@ -1220,21 +1220,21 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
             throw new BusinessException(ResultCode.PARAM_ERROR, "该歌曲已添加");
         }
 
-                   
+
         LocalMusic localMusic = new LocalMusic();
         localMusic.setUserId(userId);
         localMusic.setName(name);
         localMusic.setArtistName(artist);
-                                                      
+
         localMusic.setAlbumName(StrUtil.isBlank(cover) ? "本地音乐" : cover.trim());
         localMusic.setFileFormat(fileExtension.isEmpty() ? "mp3" : fileExtension);
         localMusic.setFilePath(url);
         localMusic.setFileSize(fileSize != null ? fileSize : 0L);
         localMusic.setDuration(duration != null ? duration : 0);
         localMusic.setPlayCount(0);
-                  
+
         localMusic.setResourceType(MusicConstants.ResourceType.SONG);
-                                        
+
         localMusic.setQuality(quality != null ? quality : determineQualityFromFileFormat(fileExtension));
 
         save(localMusic);
@@ -1244,37 +1244,37 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         return convertToVO(localMusic, nginxUrlPrefix);
     }
 
-     
-               
-                               
-                                           
-     
+
+
+
+
+
   private Integer determineQualityFromFileFormat(String fileExtension) {
     if (StrUtil.isBlank(fileExtension)) {
       return 0;
     }
     String ext = fileExtension.toLowerCase();
-           
+
     if (ext.matches("flac|wav|ape|wv|tta|aiff|aif|aifc|caf|dsf|dff")) {
       return 2;             
     }
-                            
+
     if (ext.matches("m4a")) {
       return 1;                      
     }
     return 0;             
   }
 
-       
-                      
-      
-                                         
-                                 
-                         
-                            
-                                         
-                     
-       
+
+
+
+
+
+
+
+
+
+
     @Override
     public IPage<LocalMusicVO> searchBySongName(String songName, Long excludeId, Long userId, PageQuery pageQuery, String nginxUrlPrefix) {
         log.info("[LocalMusicService] 按歌曲名搜索版本: songName={}, excludeId={}, userId={}", songName, excludeId, userId);
@@ -1284,20 +1284,20 @@ public class LocalMusicServiceImpl extends ServiceImpl<LocalMusicMapper, LocalMu
         LambdaQueryWrapper<LocalMusic> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(LocalMusic::getUserId, userId)
                 .eq(LocalMusic::getDeleted, CommonConstants.NOT_DELETED)
-                                       
+
                 .like(LocalMusic::getName, songName)
-                         
+
                 .ne(excludeId != null, LocalMusic::getId, excludeId)
-                          
+
                 .eq(LocalMusic::getResourceType, MusicConstants.ResourceType.SONG)
                 .orderByDesc(LocalMusic::getCreateTime);
 
         IPage<LocalMusic> localMusicPage = page(page, wrapper);
 
-                
+
         IPage<LocalMusicVO> voPage = localMusicPage.convert(music -> {
             LocalMusicVO vo = convertToVO(music, nginxUrlPrefix);
-                     
+
             if (StrUtil.isNotBlank(music.getLyricText())) {
                 vo.setLyric(music.getLyricText());
             }

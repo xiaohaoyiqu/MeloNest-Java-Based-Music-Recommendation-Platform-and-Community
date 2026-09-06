@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service;
 
@@ -12,26 +12,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class SearchCorrectionService {
 
-       
-                     
-       
+
+
+
     private static final Map<String, List<String>> ARTIST_ALIAS_MAP = new HashMap<>();
 
-       
-                
-       
+
+
+
     private static final Map<String, String> PINYIN_COMMON_ERROR = new HashMap<>();
 
-       
-                     
-       
+
+
+
     private static final List<String> COMMON_SEARCH_KEYWORDS = Arrays.asList(
         "周杰伦", "林俊杰", "邓紫棋", "陈奕迅", "薛之谦",
         "李荣浩", "毛不易", "华晨宇", "张杰", "汪苏泷",
@@ -41,7 +41,7 @@ public class SearchCorrectionService {
     );
 
     static {
-                  
+
         addAlias("周杰伦", Arrays.asList("zhoujielun", "zjl", "杰伦", "周董"));
         addAlias("林俊杰", Arrays.asList("linjunjie", "ljj", "jj", "俊杰"));
         addAlias("邓紫棋", Arrays.asList("dengziqi", "dzq", "棋哥", "gem"));
@@ -53,7 +53,7 @@ public class SearchCorrectionService {
         addAlias("汪苏泷", Arrays.asList("wang.sulong", "wsl", "苏泷"));
         addAlias("薛之谦", Arrays.asList("xue zhiqian", "xuezq", "薛薛"));
 
-                   
+
         PINYIN_COMMON_ERROR.put("zoujielun", "周杰伦");          
         PINYIN_COMMON_ERROR.put("linjunjie", "林俊杰");          
         PINYIN_COMMON_ERROR.put("dengziqi", "邓紫棋");
@@ -70,11 +70,11 @@ public class SearchCorrectionService {
         PINYIN_COMMON_ERROR.put("wsl", "汪苏泷");
     }
 
-       
-             
-                       
-                          
-       
+
+
+
+
+
     private static void addAlias(String artistName, List<String> aliases) {
         ARTIST_ALIAS_MAP.put(artistName.toLowerCase(), aliases);
         for (String alias : aliases) {
@@ -82,12 +82,12 @@ public class SearchCorrectionService {
         }
     }
 
-       
-                
-      
-                            
-                                      
-  
+
+
+
+
+
+
     public String getCorrectedQuery(String userInput) {
         if (userInput == null || userInput.trim().isEmpty()) {
             return userInput;
@@ -95,14 +95,14 @@ public class SearchCorrectionService {
 
         String input = userInput.trim().toLowerCase();
 
-                          
+
         if (PINYIN_COMMON_ERROR.containsKey(input)) {
             String corrected = PINYIN_COMMON_ERROR.get(input);
             log.info("拼音纠错: {} -> {}", input, corrected);
             return corrected;
         }
 
-                        
+
         if (ARTIST_ALIAS_MAP.containsKey(input)) {
             List<String> originals = ARTIST_ALIAS_MAP.get(input);
             if (originals != null && !originals.isEmpty()) {
@@ -112,24 +112,24 @@ public class SearchCorrectionService {
             }
         }
 
-                    
+
         String corrected = correctByEditDistance(input, COMMON_SEARCH_KEYWORDS);
         if (corrected != null) {
             log.info("编辑距离纠错: {} -> {}", input, corrected);
             return corrected;
         }
 
-                   
+
         return userInput;
     }
 
-       
-                
-      
-                        
-                                
-                                   
-  
+
+
+
+
+
+
+
     public String correctByEditDistance(String input, List<String> candidates) {
         if (candidates == null || candidates.isEmpty()) {
             return null;
@@ -144,7 +144,7 @@ public class SearchCorrectionService {
             }
             int distance = levenshteinDistance(input, candidate.toLowerCase());
 
-                                           
+
             if (distance == 1 || distance <= input.length() * 0.3) {
                 if (distance < minDistance) {
                     minDistance = distance;
@@ -156,13 +156,13 @@ public class SearchCorrectionService {
         return bestMatch;
     }
 
-       
-                            
-      
-                     
-                     
-                   
-  
+
+
+
+
+
+
+
     private int levenshteinDistance(String s1, String s2) {
         if (s1 == null || s1.isEmpty()) {
             return s2 == null ? 0 : s2.length();
@@ -174,10 +174,10 @@ public class SearchCorrectionService {
         int len1 = s1.length();
         int len2 = s2.length();
 
-                 
+
         int[][] dp = new int[len1 + 1][len2 + 1];
 
-                     
+
         for (int i = 0; i <= len1; i++) {
             dp[i][0] = i;
         }
@@ -185,7 +185,7 @@ public class SearchCorrectionService {
             dp[0][j] = j;
         }
 
-                 
+
         for (int i = 1; i <= len1; i++) {
             for (int j = 1; j <= len2; j++) {
                 if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
@@ -202,13 +202,13 @@ public class SearchCorrectionService {
         return dp[len1][len2];
     }
 
-       
-             
-      
-                            
-                        
-                   
-  
+
+
+
+
+
+
+
     public List<String> getSearchSuggestions(String userInput, int limit) {
         int safeLimit = SearchLimitUtil.normalize(limit);
         List<String> suggestions = new ArrayList<>();
@@ -221,7 +221,7 @@ public class SearchCorrectionService {
 
         String input = userInput.trim().toLowerCase();
 
-                             
+
         if (PinyinUtil.isPinyin(input)) {
             for (String keyword : COMMON_SEARCH_KEYWORDS) {
                 String pinyin = PinyinUtil.toPinyin(keyword).replace(" ", "");
@@ -236,7 +236,7 @@ public class SearchCorrectionService {
             }
         }
 
-                               
+
         if (PinyinUtil.containsChinese(input)) {
             for (String keyword : COMMON_SEARCH_KEYWORDS) {
                 if (keyword.contains(input) && !keyword.equals(input)) {
@@ -248,7 +248,7 @@ public class SearchCorrectionService {
             }
         }
 
-                              
+
         if (suggestions.size() < safeLimit) {
             for (String keyword : COMMON_SEARCH_KEYWORDS) {
                 if (!suggestions.contains(keyword)) {
@@ -265,12 +265,12 @@ public class SearchCorrectionService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-       
-                    
-      
-                        
-                       
-  
+
+
+
+
+
+
     public boolean isPossibleTypo(String input) {
         if (input == null || input.trim().isEmpty()) {
             return false;
@@ -278,17 +278,17 @@ public class SearchCorrectionService {
 
         String trimmed = input.trim();
 
-                          
+
         if (PinyinUtil.isPinyin(trimmed) && trimmed.length() == 1) {
             return true;
         }
 
-                                  
+
         if (trimmed.matches(".*[0-9].*") && PinyinUtil.containsChinese(trimmed)) {
             return true;
         }
 
-                                 
+
         String corrected = correctByEditDistance(trimmed, COMMON_SEARCH_KEYWORDS);
         return corrected != null && !corrected.equals(trimmed);
     }

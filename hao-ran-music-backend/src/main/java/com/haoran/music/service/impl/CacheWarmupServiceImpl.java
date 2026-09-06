@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -24,9 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 
-   
-           
-   
+
+
+
 @Service
 public class CacheWarmupServiceImpl implements CacheWarmupService {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheWarmupServiceImpl.class);
@@ -39,7 +39,7 @@ public class CacheWarmupServiceImpl implements CacheWarmupService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final MusicIntelligenceCacheService musicIntelligenceCacheService;
 
-            
+
     private static final String HOT_SONGS_KEY = "cache:hot_songs";
     private static final String NEW_SONGS_KEY = "cache:new_songs";
     private static final String HOT_ALBUMS_KEY = "cache:hot_albums";

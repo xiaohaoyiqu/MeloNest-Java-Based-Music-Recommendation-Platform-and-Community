@@ -7,11 +7,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("payment_proof_asset")
 public class PaymentProofAsset {

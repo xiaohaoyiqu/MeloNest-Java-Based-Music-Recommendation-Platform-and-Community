@@ -1,30 +1,30 @@
-   
-                      
-                           
-                   
-  
-                               
-             
-                                         
-                      
-                                        
-                    
-                     
-  
-        
-                                                 
-                                                 
-                                                             
-   
 
-                                                  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $breakpoint-xs: 375px !default;
 $breakpoint-sm: 480px !default;
 $breakpoint-md: 768px !default;
 $breakpoint-lg: 1200px !default;
 $breakpoint-xl: 1440px !default;
 
-       
+
 $breakpoints: (
   'xs': $breakpoint-xs,
   'sm': $breakpoint-sm,
@@ -33,10 +33,10 @@ $breakpoints: (
   'xl': $breakpoint-xl
 ) !default;
 
-                                                        
 
-                 
-                                     
+
+
+
 @mixin respond-above($breakpoint) {
   $min: map-get($breakpoints, $breakpoint);
   @if $min {
@@ -48,8 +48,8 @@ $breakpoints: (
   }
 }
 
-                 
-                                     
+
+
 @mixin respond-below($breakpoint) {
   $max: map-get($breakpoints, $breakpoint);
   @if $max {
@@ -61,8 +61,8 @@ $breakpoints: (
   }
 }
 
-                  
-                                           
+
+
 @mixin respond-between($lower, $upper) {
   $min: map-get($breakpoints, $lower);
   $max: map-get($breakpoints, $upper);
@@ -82,8 +82,8 @@ $breakpoints: (
   }
 }
 
-                    
-                                    
+
+
 @mixin respond-only($breakpoint) {
   $min: map-get($breakpoints, $breakpoint);
   $max: null;
@@ -109,89 +109,89 @@ $breakpoints: (
   }
 }
 
-                                                     
 
-                 
+
+
 @mixin mobile-xs {
   @media (max-width: $breakpoint-xs) {
     @content;
   }
 }
 
-                  
+
 @mixin mobile {
   @media (max-width: $breakpoint-sm) {
     @content;
   }
 }
 
-                   
+
 @mixin tablet {
   @media (max-width: $breakpoint-md) {
     @content;
   }
 }
 
-                    
+
 @mixin desktop {
   @media (max-width: $breakpoint-lg) {
     @content;
   }
 }
 
-                    
+
 @mixin desktop-up {
   @media (min-width: ($breakpoint-lg + 1px)) {
     @content;
   }
 }
 
-                     
+
 @mixin wide {
   @media (min-width: ($breakpoint-xl + 1px)) {
     @content;
   }
 }
 
-                                                     
 
-       
+
+
 @mixin landscape {
   @media (orientation: landscape) {
     @content;
   }
 }
 
-       
+
 @mixin portrait {
   @media (orientation: portrait) {
     @content;
   }
 }
 
-                  
+
 @mixin retina {
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     @content;
   }
 }
 
-            
+
 @mixin hover {
   @media (hover: hover) and (pointer: fine) {
     @content;
   }
 }
 
-       
+
 @mixin touch {
   @media (hover: none) and (pointer: coarse) {
     @content;
   }
 }
 
-                                                              
-                        
+
+
 :root {
   --breakpoint-xs: #{$breakpoint-xs};
   --breakpoint-sm: #{$breakpoint-sm};

@@ -8,10 +8,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-   
-                      
-                     
-   
+
+
+
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("album")
@@ -43,43 +43,43 @@ public class Album extends BaseEntity implements Serializable {
     private Long paidResourceId;
     private BigDecimal price;
 
-       
-          
-       
+
+
+
     private Long songCount;
 
-       
-           
-       
+
+
+
     private Long playCount;
 
-       
-           
-       
+
+
+
     private Long favoriteCount;
 
-       
-           
-       
+
+
+
     private Long commentCount;
 
     private Integer status;
 
-                                                       
 
-       
-                      
-       
+
+
+
+
     private Integer allowDownload;
 
-       
-                      
-       
+
+
+
     private Integer allowComment;
 
-       
-                      
-       
+
+
+
     private Integer allowShare;
 
     @TableLogic

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.aspect.ApiLog;
@@ -16,9 +16,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-   
-                                               
-   
+
+
+
 @RestController
 @RequestMapping("/user")
 public class UserCheckinController {

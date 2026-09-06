@@ -1,7 +1,7 @@
-   
-                      
-                             
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -27,9 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.*;
 
-   
-                
-   
+
+
+
 @Slf4j
 @Service
 public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementMapper, SigninAchievement>
@@ -65,7 +65,7 @@ public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementM
         User user = ObjectUtils.isEmpty(userId) ? null : userMapper.selectById(userId);
         boolean canInteract = UserAccountStatusUtil.canInteract(user);
 
-                   
+
         Map<Integer, UserSigninAchievement> userAchievementMap = new HashMap<>();
         for (UserSigninAchievement ua : userAchievements) {
             userAchievementMap.put(ua.getDays(), ua);
@@ -97,7 +97,7 @@ public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementM
                 item.put("accountUnavailableMessage", UserAccountStatusUtil.currentUnavailableMessage(user));
             }
 
-                   
+
             if (continuousDays >= achievement.getDays()) {
                 item.put("progress", 100);
             } else {
@@ -126,13 +126,13 @@ public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementM
             return false;
         }
 
-                  
+
         UserSigninAchievement userAchievement = userSigninAchievementMapper.selectByUserIdAndDays(userId, continuousDays);
         if (userAchievement != null) {
             return false;
         }
 
-                     
+
         userAchievement = new UserSigninAchievement();
         userAchievement.setUserId(userId);
         userAchievement.setAchievementId(achievement.getId());
@@ -172,8 +172,8 @@ public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementM
         UserSigninAchievement userAchievement =
                 userSigninAchievementMapper.selectByUserIdAndAchievementId(userId, achievementId);
         if (userAchievement == null) {
-                                                 
-                                               
+
+
             userAchievement = new UserSigninAchievement();
             userAchievement.setUserId(userId);
             userAchievement.setAchievementId(achievementId);
@@ -190,23 +190,23 @@ public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementM
             return result;
         }
 
-               
+
         List<String> rewards = new ArrayList<>();
 
-                
+
         if (achievement.getRewardPoints() != null && achievement.getRewardPoints() > 0) {
             activityPointsService.addPoints(userId, achievement.getRewardPoints(), "achievement",
                     "签到成就奖励：" + achievement.getAchievementName());
             rewards.add(achievement.getRewardPoints() + "活跃值");
         }
 
-                  
+
         if (achievement.getRewardVipDays() != null && achievement.getRewardVipDays() > 0) {
             userVipService.grantVip(userId, 1, achievement.getRewardVipDays(), "achievement");
             rewards.add(achievement.getRewardVipDays() + "天VIP");
         }
 
-                                            
+
         if (achievement.getRewardBadgeId() != null && achievement.getRewardBadgeId() > 0) {
             String badgeType = "signin_" + achievement.getDays();
             String badgeName = achievement.getDays() + "天签到成就";
@@ -217,7 +217,7 @@ public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementM
             log.info("发放签到成就徽章: userId={}, days={}", userId, achievement.getDays());
         }
 
-                                               
+
         if (achievement.getRewardDecorationId() != null && achievement.getRewardDecorationId() > 0) {
             if (!userDecorationService.addDecoration(
                     userId, String.valueOf(achievement.getRewardDecorationId()), "achievement")) {
@@ -226,7 +226,7 @@ public class SigninAchievementServiceImpl extends ServiceImpl<SigninAchievementM
             rewards.add("成就装饰");
         }
 
-                                           
+
         if (userSigninAchievementMapper.markRewarded(
                 userAchievement.getId(), userId, achievementId) != 1) {
             throw new IllegalStateException("签到成就领取状态更新失败");

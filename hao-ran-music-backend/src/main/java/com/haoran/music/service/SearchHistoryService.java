@@ -7,73 +7,73 @@ import com.haoran.music.entity.SearchHistory;
 
 import java.util.List;
 
-   
-                      
-                        
-   
+
+
+
+
 public interface SearchHistoryService extends IService<SearchHistory> {
 
-       
-             
-      
-                             
-                              
-                                                                 
-                              
-                   
-       
+
+
+
+
+
+
+
+
+
     Boolean addSearchHistory(Long userId, String keyword, Integer searchType, Integer resultCount);
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     Boolean clearSearchHistory(Long userId);
 
-       
-               
-      
-                         
-                           
-                   
-       
+
+
+
+
+
+
+
     Boolean deleteSearchHistory(Long userId, Long id);
 
-       
-                   
-      
-                            
-                            
-                     
-       
+
+
+
+
+
+
+
     IPage<SearchHistory> getSearchHistory(Long userId, PageQuery pageQuery);
 
-       
-                
-      
-                        
-                      
-       
+
+
+
+
+
+
     List<String> getHotKeywords(Integer limit);
 
-       
-                       
-      
-                          
-                           
-                          
-                      
-       
+
+
+
+
+
+
+
+
     List<String> getSearchSuggestions(Long userId, String keyword, Integer limit);
 
-       
-                 
-      
-                         
-                         
-                     
-       
+
+
+
+
+
+
+
     List<SearchHistory> getRecentSearch(Long userId, Integer limit);
 }

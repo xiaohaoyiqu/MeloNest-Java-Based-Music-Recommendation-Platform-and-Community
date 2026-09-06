@@ -7,40 +7,40 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-   
-           
-                            
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 public final class UrlHelper {
 
     private UrlHelper() {
-                    
+
     }
 
-       
-                    
-                                                                
-      
-                            
-                                      
-       
+
+
+
+
+
+
+
     public static String toRelativePath(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return null;
         }
 
-                            
+
         if ("NULL".equals(url)) {
             return null;
         }
 
-                                
+
         if (url.startsWith("http://") || url.startsWith("https://")) {
             try {
-                                        
+
                 int protocolEnd = url.indexOf("://");
                 if (protocolEnd == -1) {
                     return url;
@@ -60,73 +60,73 @@ public final class UrlHelper {
             }
         }
 
-                         
+
         return url;
     }
 
-       
-                    
-                                                                
-      
-                               
-                                                      
-                    
-       
+
+
+
+
+
+
+
+
     public static String toFullUrl(String relativePath, String baseUrl) {
         if (ObjectUtils.isEmpty(relativePath)) {
             return null;
         }
 
-                          
+
         if (relativePath.startsWith("http://") || relativePath.startsWith("https://")) {
             return relativePath;
         }
 
-                             
+
         if (ObjectUtils.isEmpty(baseUrl)) {
             return relativePath;
         }
 
-                         
+
         String prefix = baseUrl.endsWith("/") ?
                 baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
 
-                              
+
         String path = relativePath.startsWith("/") ?
                 relativePath.substring(1) : relativePath;
 
         return prefix + "/" + path;
     }
 
-       
-               
-                             
-      
-                                        
-                   
-       
+
+
+
+
+
+
+
     public static String buildRelativeCoverUrl(String coverUrl) {
         return toRelativePath(coverUrl);
     }
 
-       
-               
-                           
-      
-                                        
-                   
-       
+
+
+
+
+
+
+
     public static String buildRelativeAudioUrl(String audioUrl) {
         return toRelativePath(audioUrl);
     }
 
-       
-             
-                                  
-      
-                        
-                       
-       
+
+
+
+
+
+
+
     public static String normalizeUrl(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return null;
@@ -135,13 +135,13 @@ public final class UrlHelper {
         return "NULL".equals(trimmed) ? null : trimmed;
     }
 
-       
-                    
-                       
-      
-                       
-                      
-       
+
+
+
+
+
+
+
     public static String encodePath(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return url;
@@ -153,11 +153,11 @@ public final class UrlHelper {
                 return url;
             }
 
-                        
+
             String protocol = url.substring(0, protocolEnd + 3);
             String remaining = url.substring(protocolEnd + 3);
 
-                                 
+
             int hostPathSep = remaining.indexOf('/');
             String hostPort;
             String path = "";
@@ -169,15 +169,15 @@ public final class UrlHelper {
                 path = remaining.substring(hostPathSep);
             }
 
-                   
+
             String encodedPath = encodePathSegments(path);
 
             String result = protocol + hostPort + encodedPath;
 
-                      
+
             result = result.replace("://", ":/").replace(":/", "://");
 
-                                     
+
             result = result.replace("+", "%20");
 
             log.debug("event=url_path_encoding_succeeded");
@@ -188,18 +188,18 @@ public final class UrlHelper {
         }
     }
 
-       
-                    
-      
-                     
-                     
-       
+
+
+
+
+
+
     private static String encodePathSegments(String path) {
         if (ObjectUtils.isEmpty(path) || path.length() == 0) {
             return path;
         }
 
-                    
+
         String[] segments = path.split("/", -1);
         StringBuilder pathBuilder = new StringBuilder();
 
@@ -207,8 +207,8 @@ public final class UrlHelper {
             String segment = segments[i];
             if (segment.length() > 0) {
                 try {
-                                                                                  
-                                                                                             
+
+
                     String decoded = URLDecoder.decode(segment.replace("+", "%2B"), StandardCharsets.UTF_8.name());
                     String encoded = URLEncoder.encode(decoded, StandardCharsets.UTF_8.name());
                     if (pathBuilder.length() > 0 && pathBuilder.charAt(pathBuilder.length() - 1) != '/') {
@@ -229,12 +229,12 @@ public final class UrlHelper {
         return pathBuilder.toString();
     }
 
-       
-            
-      
-                                
-                      
-       
+
+
+
+
+
+
     public static String decodeUrl(String encodedUrl) {
         if (ObjectUtils.isEmpty(encodedUrl)) {
             return encodedUrl;
@@ -248,31 +248,31 @@ public final class UrlHelper {
         }
     }
 
-       
-                   
-                                                   
-      
-                        
-                                     
-       
+
+
+
+
+
+
+
     public static String getExtension(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return "";
         }
 
-                 
+
         String path = url.split("\\?")[0];
 
-                  
+
         int lastDotIndex = path.lastIndexOf('.');
         if (lastDotIndex == -1 || lastDotIndex == path.length() - 1) {
             return "";
         }
 
-                   
+
         int lastSlashIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
 
-                   
+
         if (lastDotIndex > lastSlashIndex) {
             return path.substring(lastDotIndex + 1);
         }
@@ -280,12 +280,12 @@ public final class UrlHelper {
         return "";
     }
 
-       
-                    
-      
-                        
-                                  
-       
+
+
+
+
+
+
     public static boolean isAudioUrl(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return false;
@@ -296,12 +296,12 @@ public final class UrlHelper {
                 "aac".equals(ext) || "ogg".equals(ext);
     }
 
-       
-                    
-      
-                        
-                                  
-       
+
+
+
+
+
+
     public static boolean isVideoUrl(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return false;
@@ -312,12 +312,12 @@ public final class UrlHelper {
                 "mov".equals(ext) || "flv".equals(ext);
     }
 
-       
-                    
-      
-                        
-                                  
-       
+
+
+
+
+
+
     public static boolean isImageUrl(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return false;
@@ -329,13 +329,13 @@ public final class UrlHelper {
                 "svg".equals(ext);
     }
 
-       
-              
-                                                                   
-      
-                        
-                     
-       
+
+
+
+
+
+
+
     public static String mergePaths(String... paths) {
         if (paths == null || paths.length == 0) {
             return "";
@@ -349,19 +349,19 @@ public final class UrlHelper {
                 continue;
             }
 
-                               
+
             if (i > 0 && path.startsWith("/")) {
                 path = path.substring(1);
             }
 
-                      
+
             if (path.endsWith("/")) {
                 path = path.substring(0, path.length() - 1);
             }
 
             result.append(path);
 
-                                
+
             if (i < paths.length - 1 && !path.isEmpty()) {
                 result.append("/");
             }
@@ -370,13 +370,13 @@ public final class UrlHelper {
         return result.toString();
     }
 
-       
-                
-                                                     
-      
-                        
-                             
-       
+
+
+
+
+
+
+
     public static String getHost(String url) {
         if (ObjectUtils.isEmpty(url)) {
             return null;
@@ -391,13 +391,13 @@ public final class UrlHelper {
         }
     }
 
-       
-               
-      
-                                 
-                                            
-                  
-       
+
+
+
+
+
+
+
     public static int getPort(String url, int defaultPort) {
         if (ObjectUtils.isEmpty(url)) {
             return defaultPort;

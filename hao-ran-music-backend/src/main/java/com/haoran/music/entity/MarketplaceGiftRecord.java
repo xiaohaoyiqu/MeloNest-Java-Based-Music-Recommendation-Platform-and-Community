@@ -10,10 +10,10 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                      
-                            
-   
+
+
+
+
 @Data
 @TableName("marketplace_gift_record")
 public class MarketplaceGiftRecord {
@@ -33,9 +33,9 @@ public class MarketplaceGiftRecord {
 
     private Long sellerId;
 
-       
-                                  
-       
+
+
+
     private String status;
 
     private LocalDateTime applyTime;

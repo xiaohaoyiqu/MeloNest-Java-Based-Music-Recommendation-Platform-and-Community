@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -25,9 +25,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class HotEventServiceImpl extends ServiceImpl<HotEventMapper, HotEvent> implements HotEventService {
@@ -138,9 +138,9 @@ public class HotEventServiceImpl extends ServiceImpl<HotEventMapper, HotEvent> i
                 .collect(Collectors.toList());
     }
 
-       
-              
-       
+
+
+
     private Map<String, Object> convertToVO(HotEvent event) {
         Map<String, Object> vo = new HashMap<>();
         vo.put("id", event.getId());
@@ -155,7 +155,7 @@ public class HotEventServiceImpl extends ServiceImpl<HotEventMapper, HotEvent> i
         vo.put("sourceType", StringUtils.defaultIfBlank(event.getSourceType(), SOURCE_EXTERNAL));
         vo.put("viewCount", event.getViewCount() != null ? event.getViewCount() : 0);
 
-                   
+
         if (!ObjectUtils.isEmpty(event.getRelatedArtists())) {
             vo.put("relatedArtists", event.getRelatedArtists());
         }

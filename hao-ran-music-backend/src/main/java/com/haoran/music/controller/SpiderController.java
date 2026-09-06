@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-   
-                      
-                                         
-  
-                                    
-   
+
+
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/spider")
@@ -50,9 +50,9 @@ public class SpiderController {
     @Resource
     private SpiderRateLimiter spiderRateLimiter;
 
-       
-           
-       
+
+
+
     @ApiLog("爬取歌曲数据")
     @PostMapping("/songs")
     public Result<String> spiderSongs(
@@ -60,7 +60,7 @@ public class SpiderController {
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "false") Boolean save) {
 
-                            
+
         if (!spiderRateLimiter.checkRateLimit()) {
             return Result.error(429, "今日爬取次数已达上限（2000次），请明天再试");
         }
@@ -94,9 +94,9 @@ public class SpiderController {
         }
     }
 
-       
-           
-       
+
+
+
     @ApiLog("爬取歌手数据")
     @PostMapping("/artists")
     public Result<String> spiderArtists(
@@ -137,9 +137,9 @@ public class SpiderController {
         }
     }
 
-       
-           
-       
+
+
+
     @ApiLog("爬取专辑数据")
     @PostMapping("/albums")
     public Result<String> spiderAlbums(
@@ -180,9 +180,9 @@ public class SpiderController {
         }
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("根据歌手ID爬取歌曲")
     @PostMapping("/songs/artist/{artistId}")
     public Result<String> spiderSongsByArtist(
@@ -223,9 +223,9 @@ public class SpiderController {
         }
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("根据专辑ID爬取歌曲")
     @PostMapping("/songs/album/{albumId}")
     public Result<String> spiderSongsByAlbum(
@@ -266,9 +266,9 @@ public class SpiderController {
         }
     }
 
-       
-                 
-       
+
+
+
     @GetMapping("/stats")
     public Result<Map<String, Object>> getSpiderStats() {
         int currentCount = spiderRateLimiter.getCurrentCount();

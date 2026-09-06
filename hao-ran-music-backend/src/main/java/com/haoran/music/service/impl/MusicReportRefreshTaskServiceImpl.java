@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,10 +29,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.springframework.dao.DuplicateKeyException;
 
-   
-                
-                                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class MusicReportRefreshTaskServiceImpl implements MusicReportRefreshTaskService {

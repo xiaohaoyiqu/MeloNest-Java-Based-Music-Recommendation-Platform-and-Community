@@ -1,18 +1,18 @@
-   
-                      
-                                         
-  
-           
-                                           
-                                  
-                                   
-                         
-  
-        
-                                                            
-                                
-                                           
-   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -24,67 +24,67 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-   
-          
-  
-        
-        
-          
-                                                                                                          
-  
-          
-                                                                                                   
-  
-          
-                                                                                      
-         
-   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 public class CompressUtil {
 
-                                                     
 
-       
-                        
-       
+
+
+
+
     private static final float DEFAULT_IMAGE_QUALITY = 0.85f;
 
-       
-                             
-       
+
+
+
     private static final int DEFAULT_VIDEO_CRF = 26;
 
-       
-                    
-       
+
+
+
     private static final int DEFAULT_AUDIO_BITRATE = 128;
 
-       
-              
-       
+
+
+
     private static final Set<String> IMAGE_FORMATS = new HashSet<>(Arrays.asList(
             "jpg", "jpeg", "png", "gif", "bmp", "webp"
     ));
 
-       
-              
-       
+
+
+
     private static final Set<String> VIDEO_FORMATS = new HashSet<>(Arrays.asList(
             "mp4", "mov", "avi", "mkv", "flv", "wmv"
     ));
 
-       
-              
-       
+
+
+
     private static final Set<String> AUDIO_FORMATS = new HashSet<>(Arrays.asList(
             "mp3", "aac", "flac", "wav", "ogg", "m4a"
     ));
 
-                                                      
 
-       
-             
-       
+
+
+
+
     public static class CompressResult {
         private final boolean success;
         private final String inputPath;
@@ -126,27 +126,27 @@ public class CompressUtil {
         }
     }
 
-                                                     
 
-       
-                   
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult compressImage(String inputPath, String outputPath) {
         return compressImage(inputPath, outputPath, DEFAULT_IMAGE_QUALITY);
     }
 
-       
-                 
-      
-                             
-                             
-                                      
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult compressImage(String inputPath, String outputPath, float quality) {
         long startTime = System.currentTimeMillis();
         File inputFile = new File(inputPath);
@@ -159,7 +159,7 @@ public class CompressUtil {
         long originalSize = inputFile.length();
 
         try {
-                        
+
             EnhancedImageCompressUtil.CompressResult result =
                     EnhancedImageCompressUtil.compress(inputPath, outputPath, quality);
 
@@ -183,14 +183,14 @@ public class CompressUtil {
         }
     }
 
-       
-                     
-      
-                             
-                                    
-                                      
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult convertToWebP(String inputPath, String outputPath, float quality) {
         long startTime = System.currentTimeMillis();
         File inputFile = new File(inputPath);
@@ -226,15 +226,15 @@ public class CompressUtil {
         }
     }
 
-       
-               
-      
-                             
-                             
-                              
-                             
-                    
-       
+
+
+
+
+
+
+
+
+
     public static Map<String, CompressResult> generateImageVersions(
             String inputPath, String outputDir, String baseName,
             EnhancedImageCompressUtil.ImageSize... sizes) {
@@ -263,27 +263,27 @@ public class CompressUtil {
         return results;
     }
 
-                                                     
 
-       
-                   
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult compressVideo(String inputPath, String outputPath) {
         return compressVideo(inputPath, outputPath, DEFAULT_VIDEO_CRF);
     }
 
-       
-                   
-      
-                             
-                             
-                                           
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult compressVideo(String inputPath, String outputPath, int crf) {
         long startTime = System.currentTimeMillis();
         File inputFile = new File(inputPath);
@@ -296,7 +296,7 @@ public class CompressUtil {
         long originalSize = inputFile.length();
 
         try {
-                       
+
             VideoCompressUtil.CompressConfig config = new VideoCompressUtil.CompressConfig()
                     .setCrf(crf)
                     .setGenerateThumbnail(false);
@@ -324,14 +324,14 @@ public class CompressUtil {
         }
     }
 
-       
-                
-      
-                                  
-                                  
-                                    
-                           
-       
+
+
+
+
+
+
+
+
     public static CompressResult compressVideoWithThumbnail(
             String inputPath, String outputPath, String thumbnailOutput) {
 
@@ -354,7 +354,7 @@ public class CompressUtil {
             VideoCompressUtil.CompressResult result =
                     VideoCompressUtil.compress(inputPath, outputPath, config);
 
-                   
+
             if (result.isSuccess()) {
                 String thumbnailPath = VideoCompressUtil.generateThumbnail(
                         outputPath, thumbnailOutput, config.getThumbnailTime());
@@ -378,14 +378,14 @@ public class CompressUtil {
         }
     }
 
-       
-             
-      
-                               
-                                 
-                                   
-                            
-       
+
+
+
+
+
+
+
+
     public static String generateVideoThumbnail(String videoPath, String outputPath, int timeSeconds) {
         try {
             return VideoCompressUtil.generateThumbnail(videoPath, outputPath, timeSeconds);
@@ -395,38 +395,38 @@ public class CompressUtil {
         }
     }
 
-       
-             
-      
-                            
-                   
-       
+
+
+
+
+
+
     public static VideoCompressUtil.VideoInfo getVideoInfo(String videoPath) {
         return VideoCompressUtil.getVideoInfo(videoPath);
     }
 
-                                                     
 
-       
-                       
-      
-                             
-                             
-                                  
-                   
-       
-       
-                       
-      
-                             
-                             
-                                  
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static CompressResult compressAudio(String inputPath, String outputPath, int bitrate) {
         long startTime = System.currentTimeMillis();
 
-                         
+
         if (!WorkProcessingUtil.isPathSafe(inputPath) || !WorkProcessingUtil.isPathSafe(outputPath)) {
             return new CompressResult(false, inputPath, outputPath, 0, 0, "audio",
                     "文件路径包含非法字符", System.currentTimeMillis() - startTime);
@@ -441,17 +441,17 @@ public class CompressUtil {
         long originalSize = inputFile.length();
 
         try {
-                           
+
             if (!VideoCompressUtil.isFFmpegAvailable()) {
                 return new CompressResult(false, inputPath, outputPath,
                         originalSize, 0, "audio",
                         "FFmpeg不可用", System.currentTimeMillis() - startTime);
             }
 
-                       
+
             Files.createDirectories(Paths.get(outputPath).getParent());
 
-                         
+
             List<String> commands = new ArrayList<>();
             commands.add(MediaToolPathResolver.ffmpeg());
             commands.add("-i");
@@ -461,8 +461,8 @@ public class CompressUtil {
             commands.add("-y");
             commands.add(outputPath);
 
-                                                                         
-                                                  
+
+
             ProcessExecutionUtil.Result processResult =
                     ProcessExecutionUtil.execute(commands, 1800);
             int exitCode = processResult.isTimedOut() ? -1 : processResult.getExitCode();
@@ -487,26 +487,26 @@ public class CompressUtil {
         }
     }
 
-       
-                      
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
     public static CompressResult compressAudio(String inputPath, String outputPath) {
         return compressAudio(inputPath, outputPath, DEFAULT_AUDIO_BITRATE);
     }
 
-                                                       
 
-       
-                                
-      
-                             
-                             
-                   
-       
+
+
+
+
+
+
+
+
     public static CompressResult smartCompress(String inputPath, String outputPath) {
         String extension = getFileExtension(inputPath).toLowerCase();
 
@@ -523,15 +523,15 @@ public class CompressUtil {
         }
     }
 
-                                                     
 
-       
-             
-      
-                               
-                             
-                     
-       
+
+
+
+
+
+
+
+
     public static Map<String, CompressResult> batchCompress(File[] inputFiles, String outputDir) {
         Map<String, CompressResult> results = new HashMap<>();
 
@@ -546,14 +546,14 @@ public class CompressUtil {
         return results;
     }
 
-       
-                   
-      
-                               
-                             
-                                     
-                     
-       
+
+
+
+
+
+
+
+
     public static Map<String, CompressResult> batchCompressWithQuality(
             File[] inputFiles, String outputDir, float quality) {
 
@@ -578,14 +578,14 @@ public class CompressUtil {
         return results;
     }
 
-                                                     
 
-       
-              
-      
-                           
-                       
-       
+
+
+
+
+
+
+
     private static String getFileExtension(String filePath) {
         int lastDotIndex = filePath.lastIndexOf('.');
         if (lastDotIndex > 0 && lastDotIndex < filePath.length() - 1) {
@@ -594,12 +594,12 @@ public class CompressUtil {
         return "";
     }
 
-       
-              
-      
-                       
-                       
-       
+
+
+
+
+
+
     private static String formatSize(long bytes) {
         if (bytes < 1024) {
             return bytes + " B";
@@ -612,22 +612,22 @@ public class CompressUtil {
         }
     }
 
-       
-                  
-      
-                                 
-                      
-       
+
+
+
+
+
+
     public static float getRecommendedImageQuality(long fileSize) {
         return ImageCompressUtil.getRecommendedQuality(fileSize);
     }
 
-       
-                  
-      
-                                 
-                      
-       
+
+
+
+
+
+
     public static int getRecommendedVideoCrf(long fileSize) {
         if (fileSize < 10 * 1024 * 1024) {
             return 23;               
@@ -640,20 +640,20 @@ public class CompressUtil {
         }
     }
 
-       
-                   
-      
-                   
-       
+
+
+
+
+
     public static boolean isFFmpegAvailable() {
         return VideoCompressUtil.isFFmpegAvailable();
     }
 
-                                                     
 
-       
-             
-       
+
+
+
+
     public static class CompressStats {
         private final int totalFiles;
         private final int successCount;
@@ -699,12 +699,12 @@ public class CompressUtil {
         }
     }
 
-       
-             
-      
-                            
-                   
-       
+
+
+
+
+
+
     public static CompressStats calculateStats(Map<String, CompressResult> results) {
         int totalFiles = results.size();
         int successCount = 0;

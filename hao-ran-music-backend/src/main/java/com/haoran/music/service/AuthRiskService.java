@@ -1,14 +1,14 @@
-   
-                      
-                                            
-   
+
+
+
+
 package com.haoran.music.service;
 
 import java.util.Map;
 
-   
-                                                                                             
-   
+
+
+
 public interface AuthRiskService {
 
     boolean needCaptcha(String account, String clientIp, String userAgent);

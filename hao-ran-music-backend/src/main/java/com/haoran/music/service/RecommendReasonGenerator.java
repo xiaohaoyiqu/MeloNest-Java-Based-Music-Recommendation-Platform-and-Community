@@ -14,10 +14,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Random;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Component
 public class RecommendReasonGenerator {
@@ -30,14 +30,14 @@ public class RecommendReasonGenerator {
 
     private static final Random random = new Random();
 
-       
-                
-      
-                         
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
+
     public String generateReason(Long userId, Long songId, String source) {
         if (ObjectUtils.isEmpty(source)) {
             source = "discovery";
@@ -59,16 +59,16 @@ public class RecommendReasonGenerator {
         }
     }
 
-       
-              
-      
-                         
-                         
-                         
-                         
-       
+
+
+
+
+
+
+
+
     public Integer calculateConfidence(Long userId, Long songId, String source) {
-                      
+
         int baseConfidence = 70;
         switch (source) {
             case "collaborative":
@@ -87,13 +87,13 @@ public class RecommendReasonGenerator {
                 baseConfidence = 60;
                 break;
         }
-                 
+
         return Math.min(100, Math.max(50, baseConfidence + random.nextInt(15) - 7));
     }
 
-       
-               
-       
+
+
+
     private String generateSimilarReason(Long songId) {
         try {
             Song song = songMapper.selectById(songId);
@@ -106,30 +106,30 @@ public class RecommendReasonGenerator {
         return "相似推荐";
     }
 
-       
-               
-       
+
+
+
     private String generateHotReason() {
         return RecommendReason.POPULAR_NOW.format();
     }
 
-       
-               
-       
+
+
+
     private String generateNewReason(Long songId) {
         return "新歌速递";
     }
 
-       
-               
-       
+
+
+
     private String generateDiscoveryReason(Long userId) {
         return RecommendReason.DISCOVERY.format();
     }
 
-       
-               
-       
+
+
+
     public String getSourceName(String source) {
         if (ObjectUtils.isEmpty(source)) {
             return "推荐";

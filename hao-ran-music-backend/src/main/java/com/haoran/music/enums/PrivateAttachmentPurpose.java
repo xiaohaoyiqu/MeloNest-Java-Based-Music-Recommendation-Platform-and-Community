@@ -6,11 +6,11 @@ import com.haoran.music.common.util.ObjectUtils;
 
 import java.util.Locale;
 
-   
-                  
-  
-                      
-   
+
+
+
+
+
 public enum PrivateAttachmentPurpose {
 
     MESSAGE_IMAGE("PRIVATE_MESSAGE", 1),
@@ -27,18 +27,18 @@ public enum PrivateAttachmentPurpose {
         this.maxFiles = maxFiles;
     }
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     public static PrivateAttachmentPurpose require(String value) {
         if (ObjectUtils.isNotEmpty(value)) {
             try {
                 return valueOf(value.trim().toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException ignored) {
-                                        
+
             }
         }
         throw new BusinessException(ResultCode.PARAM_ERROR, "不支持的私有附件用途");

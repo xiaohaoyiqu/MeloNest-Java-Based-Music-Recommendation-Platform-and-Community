@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -24,9 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTopic> implements MusicTopicService {
@@ -81,7 +81,7 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
             Map<String, Object> vo = convertToVO(topic);
             vo.put("isFollowed", followedTopicIds.contains(topic.getId()));
 
-                     
+
             String recommendReason = generateTopicRecommendReason(topic);
             vo.put("recommendReason", recommendReason);
 
@@ -119,16 +119,16 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
                 .collect(Collectors.toSet());
     }
 
-       
-               
-      
-                      
-                   
-       
+
+
+
+
+
+
     private String generateTopicRecommendReason(MusicTopic topic) {
         List<String> reasons = new ArrayList<>();
 
-               
+
         Integer postCount = topic.getPostCount() != null ? topic.getPostCount() : 0;
         if (postCount >= 100) {
             reasons.add("热门话题");
@@ -136,18 +136,18 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
             reasons.add("活跃话题");
         }
 
-               
+
         Integer followerCount = topic.getFollowerCount() != null ? topic.getFollowerCount() : 0;
         if (followerCount >= 100) {
             reasons.add("多人关注");
         }
 
-               
+
         if (!ObjectUtils.isEmpty(topic.getCategory())) {
             reasons.add(topic.getCategory());
         }
 
-                 
+
         if (reasons.isEmpty()) {
             return "推荐话题";
         } else if (reasons.size() == 1) {
@@ -167,7 +167,7 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
         User user = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(user, "关注话题");
 
-                   
+
         MusicTopic topic = musicTopicMapper.selectById(topicId);
         if (ObjectUtils.isEmpty(topic) || Boolean.TRUE.equals(topic.getIsDeleted())) {
             log.warn("话题不存在或已删除: topicId={}", topicId);
@@ -176,7 +176,7 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
 
         int result = topicFollowMapper.insertIgnore(topicId, userId);
 
-                  
+
         if (result > 0 && UserAccountStatusUtil.canContributePublicStats(user)) {
             musicTopicMapper.adjustFollowerCount(topicId, 1);
         }
@@ -198,7 +198,7 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
 
         int result = topicFollowMapper.deleteByTopicAndUser(topicId, userId);
 
-                  
+
         if (result > 0 && UserAccountStatusUtil.canContributePublicStats(userId, userMapper::selectById)) {
             musicTopicMapper.adjustFollowerCount(topicId, -1);
         }
@@ -220,7 +220,7 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
 
         Map<String, Object> result = convertToVO(topic);
 
-                      
+
         if (!ObjectUtils.isEmpty(userId)) {
             LambdaQueryWrapper<TopicFollow> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(TopicFollow::getTopicId, topicId)
@@ -235,9 +235,9 @@ public class MusicTopicServiceImpl extends ServiceImpl<MusicTopicMapper, MusicTo
         return result;
     }
 
-       
-              
-       
+
+
+
     private Map<String, Object> convertToVO(MusicTopic topic) {
         Map<String, Object> vo = new HashMap<>();
         vo.put("id", topic.getId());

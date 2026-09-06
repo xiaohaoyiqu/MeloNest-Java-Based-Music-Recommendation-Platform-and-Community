@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 
 public class CommentVO implements Serializable {
@@ -74,71 +74,71 @@ public class CommentVO implements Serializable {
     private List<CommentVO> replies;
 
 
-       
-                 
-       
+
+
+
     private Integer editCount;
 
 
-       
-             
-       
+
+
+
     private Integer remainingEditCount;
 
 
-       
-                                 
-       
+
+
+
     private String userRole;
 
 
-       
-              
-       
+
+
+
     private Boolean isVip;
 
 
-       
-             
-       
+
+
+
     private Boolean isOfficial;
 
 
-       
-             
-       
+
+
+
     private Boolean canEdit;
 
 
-       
-           
-       
+
+
+
     private List<CommentEditHistoryVO> editHistory;
 }
 
-   
-                       
-   
+
+
+
 @Data
 class CommentEditHistoryVO {
 
-       
-             
-       
+
+
+
     private Long id;
 
-       
-            
-       
+
+
+
     private String content;
 
-       
-           
-       
+
+
+
     private LocalDateTime editTime;
 
-       
-            
-       
+
+
+
     private String editorName;
 }

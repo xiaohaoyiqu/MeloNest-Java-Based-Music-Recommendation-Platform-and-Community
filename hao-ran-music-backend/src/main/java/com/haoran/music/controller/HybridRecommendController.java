@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-   
-          
-  
-                      
-   
+
+
+
+
+
 @RestController
 @RequestMapping("/hybrid")
 public class HybridRecommendController {
@@ -25,13 +25,13 @@ public class HybridRecommendController {
     @Resource
     private HybridRecommendService hybridRecommendService;
 
-       
-             
-      
-                         
-                        
-                   
-       
+
+
+
+
+
+
+
     @GetMapping("/recommend")
     public Result<RecommendVO> getHybridRecommend(
             @RequestAttribute(value = "userId", required = false) Long userId,
@@ -41,13 +41,13 @@ public class HybridRecommendController {
         return Result.success(result);
     }
 
-       
-                
-      
-                         
-                        
-                     
-       
+
+
+
+
+
+
+
     @GetMapping("/recommend-with-reason")
     public Result<List<RecommendedSongVO>> getHybridRecommendWithReason(
             @RequestAttribute("userId") Long userId,
@@ -57,13 +57,13 @@ public class HybridRecommendController {
         return Result.success(result);
     }
 
-       
-            
-      
-                         
-                        
-                   
-       
+
+
+
+
+
+
+
     @GetMapping("/cold-start")
     public Result<RecommendVO> getColdStartRecommend(
             @RequestAttribute("userId") Long userId,
@@ -73,13 +73,13 @@ public class HybridRecommendController {
         return Result.success(result);
     }
 
-       
-             
-      
-                         
-                        
-                   
-       
+
+
+
+
+
+
+
     @GetMapping("/discovery")
     public Result<RecommendVO> getDiscoveryRecommend(
             @RequestAttribute("userId") Long userId,
@@ -89,14 +89,14 @@ public class HybridRecommendController {
         return Result.success(result);
     }
 
-       
-            
-      
-                         
-                                                
-                        
-                   
-       
+
+
+
+
+
+
+
+
     @GetMapping("/mood/{mood}")
     public Result<RecommendVO> getMoodBasedRecommend(
             @RequestAttribute("userId") Long userId,
@@ -107,23 +107,23 @@ public class HybridRecommendController {
         return Result.success(result);
     }
 
-       
-               
-      
-                             
-                
-       
+
+
+
+
+
+
     @PostMapping("/refresh-profile/{userId}")
     public Result<Void> refreshUserProfile(@RequestAttribute("userId") Long userId) {
         hybridRecommendService.refreshUserRecommendProfile(userId);
         return Result.success();
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @GetMapping("/weights")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     public Result<Map<String, Double>> getRecommendWeights() {
@@ -131,12 +131,12 @@ public class HybridRecommendController {
         return Result.success(weights);
     }
 
-       
-               
-      
-                            
-                
-       
+
+
+
+
+
+
     @PostMapping("/weights")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     public Result<Void> updateRecommendWeights(@RequestBody Map<String, Double> weights) {

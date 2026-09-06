@@ -11,10 +11,10 @@ import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
@@ -30,24 +30,24 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT COUNT(*) FROM `user` WHERE deleted = 0")
     int countActiveUsers();
 
-       
-                                                                                           
-       
+
+
+
     @Select("SELECT * FROM `user` WHERE id = #{userId} FOR UPDATE")
     User selectByIdForUpdate(@Param("userId") Long userId);
 
-       
-                                                                               
-                                                                       
-       
+
+
+
+
     @Select("SELECT id, status, deleted, is_banned AS isBanned, user_type AS userType "
             + "FROM `user` WHERE id = #{userId} LIMIT 1")
     User selectAccountAccessStateById(@Param("userId") Long userId);
 
-       
-                                                                              
-                                                                         
-       
+
+
+
+
     @Update("UPDATE `user` SET deleted = 1, update_time = NOW() WHERE id = #{userId} AND deleted = 0")
     int softDeleteActiveById(@Param("userId") Long userId);
 

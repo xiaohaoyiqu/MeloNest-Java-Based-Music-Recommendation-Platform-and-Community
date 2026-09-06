@@ -30,11 +30,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisService {
@@ -59,7 +59,7 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
 
     @Override
     public PlaylistAudioAnalysis analyzePlaylist(Long playlistId) {
-               
+
         String cacheKey = PLAYLIST_AUDIO_CACHE_PREFIX + playlistId;
         Object cachedObj = redisUtils.get(cacheKey);
         PlaylistAudioAnalysis cached = (cachedObj instanceof PlaylistAudioAnalysis) ? (PlaylistAudioAnalysis) cachedObj : null;
@@ -70,7 +70,7 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         PlaylistAudioAnalysis analysis = new PlaylistAudioAnalysis();
         analysis.setPlaylistId(playlistId);
 
-                       
+
         String sql = "SELECT danceability, energy, valence, tempo, acousticness, " +
                 "instrumentalness, speechiness, liveness, audio_key, mode, s.uploader_id " +
                 "FROM playlist_song ps " +
@@ -88,7 +88,7 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         analysis.setHasAudioData(true);
         analysis.setSongCount(features.size());
 
-                
+
         analysis.setAvgEnergy(calculateAverage(features, "energy"));
         analysis.setAvgValence(calculateAverage(features, "valence"));
         analysis.setAvgDanceability(calculateAverage(features, "danceability"));
@@ -96,28 +96,28 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         analysis.setAvgAcousticness(calculateAverage(features, "acousticness"));
         analysis.setAvgInstrumentalness(calculateAverage(features, "instrumentalness"));
 
-                 
+
         analysis.setEnergyDistribution(getDistribution(features, "energy"));
         analysis.setValenceDistribution(getDistribution(features, "valence"));
         analysis.setTempoDistribution(getTempoDistribution(features));
 
-                 
+
         List<String> styleTags = generateStyleTags(analysis);
         analysis.setStyleTags(styleTags);
 
-                 
+
         List<String> scenarioTags = generateScenarioTags(analysis);
         analysis.setScenarioTags(scenarioTags);
 
-                 
+
         String moodTag = generateMoodTag(analysis);
         analysis.setMoodTag(moodTag);
 
-                
+
         double consistency = checkPlaylistConsistency(playlistId);
         analysis.setConsistencyScore(consistency);
 
-               
+
         redisUtils.set(cacheKey, analysis, CACHE_HOURS * 3600, java.util.concurrent.TimeUnit.SECONDS);
         return analysis;
     }
@@ -127,18 +127,18 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         PlaylistAudioAnalysis analysis = analyzePlaylist(playlistId);
         List<String> tags = new ArrayList<>();
 
-                 
+
         tags.addAll(analysis.getScenarioTags());
 
-                 
+
         tags.addAll(analysis.getStyleTags());
 
-                 
+
         if (analysis.getMoodTag() != null) {
             tags.add(analysis.getMoodTag());
         }
 
-                   
+
         if (analysis.getAvgEnergy() != null && analysis.getAvgEnergy() > 0.7) {
             tags.add("高能");
         }
@@ -152,7 +152,7 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
             tags.add("纯音乐");
         }
 
-                
+
         return tags.stream().distinct().collect(Collectors.toList());
     }
 
@@ -162,7 +162,7 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
 
         List<String> autoTags = generateAutoTags(playlistId);
 
-                     
+
         String tagsJson = String.join(",", autoTags);
         int updated = jdbcTemplate.update(
                 "UPDATE playlist SET tags = ?, tags_source = 'audio_analysis', " +
@@ -173,7 +173,7 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         result.put("tags", autoTags);
         result.put("tagsCount", autoTags.size());
 
-               
+
         redisUtils.delete(PLAYLIST_AUDIO_CACHE_PREFIX + playlistId);
 
         return result;
@@ -230,13 +230,13 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
             return 1.0;             
         }
 
-                    
+
         double energyStd = calculateStdDev(features, "energy");
         double valenceStd = calculateStdDev(features, "valence");
         double danceStd = calculateStdDev(features, "danceability");
         double tempoStd = calculateStdDev(features, "tempo") / 200;       
 
-                            
+
         double avgStd = (energyStd + valenceStd + danceStd + tempoStd) / 4;
         double consistency = Math.max(0, 1 - avgStd);
 
@@ -327,7 +327,7 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         return jdbcTemplate;
     }
 
-                                                     
+
 
     private Long toLong(Object value) {
         if (value instanceof Number) {
@@ -472,28 +472,28 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         Double instrumentalness = analysis.getAvgInstrumentalness();
         Double valence = analysis.getAvgValence();
 
-               
+
         if (energy != null) {
             if (energy >= 0.7) tags.add("高能燃曲");
             else if (energy <= 0.3) tags.add("舒缓轻音");
         }
 
-               
+
         if (danceability != null && danceability >= 0.7) {
             tags.add("动感舞曲");
         }
 
-               
+
         if (acousticness != null && acousticness >= 0.6) {
             tags.add("原声民谣");
         }
 
-                
+
         if (instrumentalness != null && instrumentalness >= 0.5) {
             tags.add("纯音乐");
         }
 
-               
+
         if (valence != null) {
             if (valence >= 0.7) tags.add("阳光积极");
             else if (valence <= 0.3) tags.add("低沉伤感");
@@ -512,27 +512,27 @@ public class PlaylistAudioAnalysisServiceImpl implements PlaylistAudioAnalysisSe
         Double valence = analysis.getAvgValence();
         Double tempo = analysis.getAvgTempo();
 
-               
+
         if (energy != null && danceability != null && energy >= 0.7 && danceability >= 0.6) {
             tags.add("运动健身");
         }
 
-               
+
         if (energy != null && acousticness != null && energy <= 0.3 && acousticness >= 0.5) {
             tags.add("助眠放松");
         }
 
-               
+
         if (instrumentalness != null && instrumentalness >= 0.5) {
             tags.add("专注学习");
         }
 
-               
+
         if (valence != null && danceability != null && valence >= 0.6 && danceability >= 0.7) {
             tags.add("派对狂欢");
         }
 
-               
+
         if (tempo != null && energy != null && tempo >= 120 && tempo <= 150 && energy >= 0.6) {
             tags.add("跑步伴侣");
         }

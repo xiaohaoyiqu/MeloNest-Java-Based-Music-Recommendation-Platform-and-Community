@@ -9,21 +9,21 @@ import org.apache.ibatis.annotations.Select;
 import java.time.LocalDateTime;
 import java.util.List;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Mapper
 public interface BadgeRuleMapper extends BaseMapper<BadgeRule> {
 
-       
-                           
-      
-                            
-                      
-                   
-       
+
+
+
+
+
+
+
     @Select("SELECT * FROM badge_rule WHERE badge_type = #{badgeType} AND status = 'published' "
             + "AND (valid_from IS NULL OR valid_from <= #{now}) "
             + "AND (valid_to IS NULL OR valid_to > #{now}) "
@@ -31,12 +31,12 @@ public interface BadgeRuleMapper extends BaseMapper<BadgeRule> {
     BadgeRule selectActiveByType(@Param("badgeType") String badgeType,
                                  @Param("now") LocalDateTime now);
 
-       
-                             
-      
-                      
-                     
-       
+
+
+
+
+
+
     @Select("SELECT r.* FROM badge_rule r WHERE r.status = 'published' "
             + "AND (r.valid_from IS NULL OR r.valid_from <= #{now}) "
             + "AND (r.valid_to IS NULL OR r.valid_to > #{now}) "
@@ -47,12 +47,12 @@ public interface BadgeRuleMapper extends BaseMapper<BadgeRule> {
             + "ORDER BY r.category, r.badge_type LIMIT 200")
     List<BadgeRule> selectActiveRules(@Param("now") LocalDateTime now);
 
-       
-                        
-      
-                            
-                   
-       
+
+
+
+
+
+
     @Select("SELECT * FROM badge_rule WHERE replacement_of = #{ruleId} AND status = 'published' "
             + "ORDER BY rule_version DESC, id DESC LIMIT 1")
     BadgeRule selectPublishedReplacement(@Param("ruleId") Long ruleId);

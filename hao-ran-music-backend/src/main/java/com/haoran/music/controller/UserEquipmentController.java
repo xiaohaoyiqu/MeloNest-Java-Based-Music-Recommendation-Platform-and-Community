@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.aspect.ApiLog;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Map;
 
-   
-                                                         
-   
+
+
+
 @RestController
 @RequestMapping("/user")
 public class UserEquipmentController {

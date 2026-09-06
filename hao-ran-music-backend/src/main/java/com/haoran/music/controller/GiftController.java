@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-   
-                      
-                     
-   
+
+
+
+
 @RestController
 @RequestMapping("/gift")
 public class GiftController {
@@ -30,13 +30,13 @@ public class GiftController {
         this.vipGiftService = vipGiftService;
     }
 
-       
-                 
-      
-                         
-                           
-                          
-       
+
+
+
+
+
+
+
     @ApiLog("创建VIP赠礼")
     @PostMapping("/vip")
     public Result createVipGift(@Valid @RequestBody VipGiftCreateDTO dto,
@@ -47,13 +47,13 @@ public class GiftController {
         return Result.success(vipGiftService.createVipGift(userId, dto));
     }
 
-       
-                    
-      
-                         
-                           
-                          
-       
+
+
+
+
+
+
+
     @ApiLog("创建交易市场商品赠礼")
     @PostMapping("/marketplace")
     public Result createMarketplaceGift(@Valid @RequestBody MarketplaceGiftCreateDTO dto,
@@ -64,13 +64,13 @@ public class GiftController {
         return Result.success(vipGiftService.createMarketplaceGift(userId, dto));
     }
 
-       
-              
-      
-                                
-                                
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取赠礼详情")
     @GetMapping("/{giftOrderId}")
     public Result getGiftDetail(@PathVariable Long giftOrderId,
@@ -81,15 +81,15 @@ public class GiftController {
         return Result.success(vipGiftService.getGiftDetail(userId, giftOrderId));
     }
 
-       
-                
-      
-                         
-                       
-                         
-                           
-                   
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("获取我送出的赠礼")
     @GetMapping("/sent")
     public Result getSentGifts(@RequestParam(required = false) String status,
@@ -102,15 +102,15 @@ public class GiftController {
         return Result.success(vipGiftService.getSentGifts(userId, status, page, size));
     }
 
-       
-                
-      
-                         
-                       
-                         
-                           
-                   
-       
+
+
+
+
+
+
+
+
+
     @ApiLog("获取我收到的赠礼")
     @GetMapping("/received")
     public Result getReceivedGifts(@RequestParam(required = false) String status,

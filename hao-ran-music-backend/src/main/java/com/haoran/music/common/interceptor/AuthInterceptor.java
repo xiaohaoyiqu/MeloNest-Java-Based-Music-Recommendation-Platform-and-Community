@@ -19,10 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
-   
-                      
-                                          
-   
+
+
+
+
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
@@ -63,14 +63,14 @@ public class AuthInterceptor implements HandlerInterceptor {
             "/api/decoration/types",
             "/api/decoration/detail/",
             "/api/curated-content/carousel",
-                                       
+
             "/api/artist/info",
             "/api/comment/page",
             "/api/comment/hot",
             "/api/album/info",
             "/api/mv/info",
             "/api/song/info",
-                                     
+
             "/api/audio-feature/scenario/",
             "/api/audio-feature/scenarios",
             "/api/audio-feature/mood",
@@ -79,13 +79,13 @@ public class AuthInterceptor implements HandlerInterceptor {
             "/api/audio-feature/features/",
             "/api/audio-feature/features/batch",
             "/api/audio-feature/similarity",
-                                     
+
             "/api/playlist-audio/analyze/",
             "/api/playlist-audio/tags/",
             "/api/playlist-audio/distribution/",
             "/api/playlist-audio/consistency/",
             "/api/playlist-audio/recommend",
-                                     
+
             "/api/audio-extended/map",
             "/api/audio-extended/map/nearby",
             "/api/audio-extended/timemachine/that-day",

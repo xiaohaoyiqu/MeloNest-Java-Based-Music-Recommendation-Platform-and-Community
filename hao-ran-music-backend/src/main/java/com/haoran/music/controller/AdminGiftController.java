@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-   
-                      
-                         
-   
+
+
+
+
 @RestController
 @RequestMapping("/admin/gift")
 @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -28,14 +28,14 @@ public class AdminGiftController {
         this.vipGiftService = vipGiftService;
     }
 
-       
-                  
-      
-                         
-                       
-                         
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取后台赠礼订单")
     @GetMapping("/orders")
     public Result getGiftOrders(@RequestParam(required = false) String status,
@@ -44,13 +44,13 @@ public class AdminGiftController {
         return Result.success(vipGiftService.getAdminGiftOrders(status, page, size));
     }
 
-       
-                   
-      
-                                
-                                 
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("重试VIP赠礼权益发放")
     @PostMapping("/vip/{giftOrderId}/retry")
     public Result retryVipGift(@PathVariable Long giftOrderId,
@@ -61,13 +61,13 @@ public class AdminGiftController {
         return Result.success(vipGiftService.retryVipGift(giftOrderId, operatorId));
     }
 
-       
-                        
-      
-                                
-                                 
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("重试赠礼交付")
     @PostMapping("/{giftOrderId}/retry")
     public Result retryGift(@PathVariable Long giftOrderId,

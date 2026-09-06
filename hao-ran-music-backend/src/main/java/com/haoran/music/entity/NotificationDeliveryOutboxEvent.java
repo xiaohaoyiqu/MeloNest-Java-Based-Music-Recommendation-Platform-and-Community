@@ -9,11 +9,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                                                  
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("notification_delivery_outbox")
 public class NotificationDeliveryOutboxEvent {

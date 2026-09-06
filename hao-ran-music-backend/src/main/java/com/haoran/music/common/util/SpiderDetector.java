@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-   
-                      
-                                  
-   
+
+
+
+
 @Slf4j
 @Component
 public class SpiderDetector {
@@ -20,9 +20,9 @@ public class SpiderDetector {
     @Resource
     private SecurityConfig securityConfig;
 
-       
-                        
-       
+
+
+
     private static final Set<String> BLOCKED_AGENTS = new HashSet<>(Arrays.asList(
         "python-requests",               
         "scrapy",                         
@@ -43,9 +43,9 @@ public class SpiderDetector {
         "scraper"                        
     ));
 
-       
-                            
-       
+
+
+
     private static final Set<String> WHITELIST_AGENTS = new HashSet<>(Arrays.asList(
         "mozilla",                        
         "chrome",                        
@@ -64,12 +64,12 @@ public class SpiderDetector {
         "opr"                        
     ));
 
-       
-                        
-      
-                                     
-                                        
-       
+
+
+
+
+
+
     public boolean isSpider(String userAgent) {
         if (!securityConfig.isUserAgentCheckEnabled()) {
             return false;          
@@ -82,7 +82,7 @@ public class SpiderDetector {
 
         String ua = userAgent.toLowerCase();
 
-                
+
         for (String whitelist : WHITELIST_AGENTS) {
             if (ua.contains(whitelist)) {
                 log.debug("[SpiderDetector] User-Agent在白名单中: {}", userAgent);
@@ -90,7 +90,7 @@ public class SpiderDetector {
             }
         }
 
-                
+
         for (String blocked : BLOCKED_AGENTS) {
             if (ua.contains(blocked)) {
                 log.warn("[SpiderDetector] 检测到爬虫User-Agent: {}, 关键词: {}", userAgent, blocked);
@@ -98,17 +98,17 @@ public class SpiderDetector {
             }
         }
 
-                                
+
         log.debug("[SpiderDetector] 未识别的User-Agent: {}", userAgent);
         return false;
     }
 
-       
-                             
-      
-                                     
-                             
-       
+
+
+
+
+
+
     public String getUserAgentType(String userAgent) {
         if (userAgent == null || userAgent.isEmpty()) {
             return "Unknown";
@@ -116,7 +116,7 @@ public class SpiderDetector {
 
         String ua = userAgent.toLowerCase();
 
-                  
+
         if (ua.contains("chrome") && !ua.contains("edge")) {
             return "Chrome";
         } else if (ua.contains("safari") && !ua.contains("chrome")) {
@@ -136,21 +136,21 @@ public class SpiderDetector {
         }
     }
 
-       
-                  
-      
-                         
-       
+
+
+
+
+
     public void addBlockedKeyword(String keyword) {
         BLOCKED_AGENTS.add(keyword.toLowerCase());
         log.info("[SpiderDetector] 添加黑名单关键词: {}", keyword);
     }
 
-       
-                  
-      
-                         
-       
+
+
+
+
+
     public void addWhitelistKeyword(String keyword) {
         WHITELIST_AGENTS.add(keyword.toLowerCase());
         log.info("[SpiderDetector] 添加白名单关键词: {}", keyword);

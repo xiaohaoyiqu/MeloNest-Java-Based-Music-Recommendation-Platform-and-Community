@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -12,9 +12,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                    
-   
+
+
+
 @Data
 @TableName("paid_entitlement_grant")
 public class PaidEntitlementGrant {

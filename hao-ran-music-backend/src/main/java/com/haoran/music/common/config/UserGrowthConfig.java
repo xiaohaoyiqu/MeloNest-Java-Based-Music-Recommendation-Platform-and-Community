@@ -1,7 +1,7 @@
-   
-                      
-                                                                                 
-   
+
+
+
+
 package com.haoran.music.common.config;
 
 import lombok.Data;
@@ -14,32 +14,32 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                                                                                 
-   
+
+
+
 @Data
 @Component
 @ConfigurationProperties(prefix = "user.growth")
 public class UserGrowthConfig {
 
-       
-                                   
-       
+
+
+
     private Checkin checkin = new Checkin();
 
-       
-                                   
-       
+
+
+
     private Points points = new Points();
 
-       
-                                        
-       
+
+
+
     private Activity activity = new Activity();
 
-       
-                                                   
-       
+
+
+
     private Statistics statistics = new Statistics();
 
     @Data
@@ -66,10 +66,10 @@ public class UserGrowthConfig {
         ));
         private Map<Integer, String> levelTitles = defaultLevelTitles();
 
-           
-                                                                                                  
-          
-  
+
+
+
+
         public int resolveNextLevelExp(int level) {
             int step = extendedLevelStepExp == null || extendedLevelStepExp <= 0 ? 1000 : extendedLevelStepExp;
             if (levelExpThresholds == null || levelExpThresholds.isEmpty()) {
@@ -82,10 +82,10 @@ public class UserGrowthConfig {
             return lastThreshold + (level - levelExpThresholds.size()) * step;
         }
 
-           
-                                                                     
-          
-  
+
+
+
+
         public String resolveLevelTitle(int level) {
             if (levelTitles == null || levelTitles.isEmpty()) {
                 return "expert";

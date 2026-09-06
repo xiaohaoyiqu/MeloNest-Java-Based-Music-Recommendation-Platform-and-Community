@@ -1,14 +1,14 @@
 #!/bin/bash
-                                                                               
-                 
-                     
-                  
-                                        
-                                                                               
+
+
+
+
+
+
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-        
+
 if [ -f "${SCRIPT_DIR}/env.sh" ]; then
     source "${SCRIPT_DIR}/env.sh"
 else
@@ -16,7 +16,7 @@ else
     exit 1
 fi
 
-      
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -28,14 +28,14 @@ log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 log_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
-      
+
 exec_on_node() {
     local node=$1 cmd=$2
     local env_sh=$(get_node_env_sh $node)
     ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} "source ${env_sh} 2>/dev/null; ${cmd}"
 }
 
-      
+
 compress_logs() {
     local node=$1 log_dir=$2 days=$3
 
@@ -44,16 +44,16 @@ compress_logs() {
     " 2>/dev/null
 }
 
-      
+
 clean_logs() {
     local node=$1 log_dir=$2 days=$3 size=$4
 
     local find_cmd="find ${log_dir} -type f -name '*.log*'"
 
-           
+
     [ -n "$days" ] && find_cmd="${find_cmd} -mtime +${days}"
 
-           
+
     [ -n "$size" ] && find_cmd="${find_cmd} -size +${size}"
 
     exec_on_node $node "
@@ -61,7 +61,7 @@ clean_logs() {
     " 2>/dev/null
 }
 
-          
+
 get_log_status() {
     local node=$1
     local env_sh=$(get_node_env_sh $node)
@@ -85,7 +85,7 @@ get_log_status() {
     " 2>/dev/null
 }
 
-      
+
 show_help() {
     echo ""
     echo "=========================================="
@@ -120,7 +120,7 @@ show_help() {
     echo "=========================================="
 }
 
-     
+
 main() {
     local nodes=()
     local components=()
@@ -130,7 +130,7 @@ main() {
     local status_only=false
     local assume_yes=false
 
-          
+
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -a|--all)
@@ -189,12 +189,12 @@ main() {
         esac
     done
 
-            
+
     [ ${#nodes[@]} -eq 0 ] && nodes=("${ALL_NODES[@]}")
-            
+
     [ ${#components[@]} -eq 0 ] && components=("hadoop" "hive" "spark" "kafka" "redis" "zookeeper" "mysql" "backend" "nginx")
 
-          
+
     if [ "$status_only" = true ]; then
         echo ""
         echo "=========================================="
@@ -208,7 +208,7 @@ main() {
         exit 0
     fi
 
-          
+
     echo ""
     log_warn "即将执行以下操作:"
     echo "  节点: ${nodes[@]}"
@@ -225,7 +225,7 @@ main() {
         fi
     fi
 
-             
+
     echo ""
     echo "=========================================="
     echo "  日志清理"

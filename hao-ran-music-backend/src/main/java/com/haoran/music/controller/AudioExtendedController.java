@@ -32,11 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                                                                                
-  
-                      
-   
+
+
+
+
+
 @RestController
 @RequestMapping("/audio-extended")
 public class AudioExtendedController {
@@ -65,9 +65,9 @@ public class AudioExtendedController {
         this.djMixService = djMixService;
     }
 
-       
-                                                                               
-       
+
+
+
     @ApiLog
     @GetMapping("/mood-curve")
     public Result<List<Map<String, Object>>> getMoodCurve(@RequestParam(defaultValue = "30") Integer days) {
@@ -75,9 +75,9 @@ public class AudioExtendedController {
         return Result.success(userMoodDiaryService.getMoodCurve(userId, days));
     }
 
-       
-                                                  
-       
+
+
+
     @ApiLog
     @GetMapping("/mood-diary")
     public Result<?> getMoodDiary(@RequestParam String startDate,
@@ -90,9 +90,9 @@ public class AudioExtendedController {
         ));
     }
 
-       
-                                                
-       
+
+
+
     @ApiLog
     @GetMapping("/mood-analysis")
     public Result<Map<String, Object>> getMoodAnalysis() {
@@ -100,9 +100,9 @@ public class AudioExtendedController {
         return Result.success(userMoodDiaryService.analyzeMoodTrend(userId));
     }
 
-       
-                                                          
-       
+
+
+
     @ApiLog
     @GetMapping("/map")
     public Result<List<Map<String, Object>>> getMusicMap(@RequestParam(defaultValue = "all") String region,
@@ -110,9 +110,9 @@ public class AudioExtendedController {
         return Result.success(musicMapService.getMusicMapData(region, limit));
     }
 
-       
-                                                                     
-       
+
+
+
     @ApiLog
     @GetMapping("/map/nearby")
     public Result<List<Map<String, Object>>> getNearbySongs(@RequestParam Double valence,
@@ -122,9 +122,9 @@ public class AudioExtendedController {
         return Result.success(musicMapService.getNearbySongs(valence, energy, radius, limit));
     }
 
-       
-                                                    
-       
+
+
+
     @ApiLog
     @GetMapping("/map/exploration/{userId}")
     public Result<Map<String, Object>> getUserExplorationMap(@PathVariable Long userId) {
@@ -135,9 +135,9 @@ public class AudioExtendedController {
         return Result.success(musicMapService.getUserExplorationMap(userId));
     }
 
-       
-                                                                
-       
+
+
+
     @ApiLog
     @GetMapping("/health-report")
     public Result<Map<String, Object>> getHealthReport() {
@@ -145,9 +145,9 @@ public class AudioExtendedController {
         return Result.success(musicHealthReportService.generateReport(userId));
     }
 
-       
-                                                              
-       
+
+
+
     @ApiLog
     @GetMapping("/listening-summary")
     public Result<Map<String, Object>> getListeningSummary() {
@@ -155,9 +155,9 @@ public class AudioExtendedController {
         return Result.success(musicHealthReportService.getListeningSummary(userId));
     }
 
-       
-                                                       
-       
+
+
+
     @ApiLog
     @GetMapping("/music-fingerprint")
     public Result<Map<String, Object>> getMusicFingerprint() {
@@ -165,9 +165,9 @@ public class AudioExtendedController {
         return Result.success(musicHealthReportService.getMusicFingerprint(userId));
     }
 
-       
-                                         
-       
+
+
+
     @ApiLog
     @GetMapping("/yearly-report")
     public Result<Map<String, Object>> getYearlyReport(@RequestParam(required = false) Integer year) {
@@ -175,9 +175,9 @@ public class AudioExtendedController {
         return Result.success(musicHealthReportService.getYearlyReport(userId, resolveYear(year)));
     }
 
-       
-                                                   
-       
+
+
+
     @ApiLog
     @GetMapping("/dj/mixable/{songId}")
     public Result<List<Map<String, Object>>> getMixableSongs(@PathVariable Long songId,
@@ -186,7 +186,7 @@ public class AudioExtendedController {
         return Result.success(djMixService.getMixableSongs(songId, bpmTolerance, limit));
     }
 
-                                                                       
+
     @ApiLog
     @PostMapping("/dj/generate-mix")
     @RateLimit(maxRequests = 12, timeWindowSeconds = 60, operation = "djMixGenerate",
@@ -202,9 +202,9 @@ public class AudioExtendedController {
                 songId, durationMinutes, getOptionalUserId(), data.getSelectedSongIds()));
     }
 
-       
-                                                      
-       
+
+
+
     @ApiLog
     @GetMapping("/dj/check-mixable")
     public Result<Map<String, Object>> checkMixable(@RequestParam Long songId1,
@@ -212,18 +212,18 @@ public class AudioExtendedController {
         return Result.success(djMixService.checkMixable(songId1, songId2));
     }
 
-       
-                                                               
-       
+
+
+
     @ApiLog
     @GetMapping("/dj/mix-info/{songId}")
     public Result<Map<String, Object>> getSongMixInfo(@PathVariable Long songId) {
         return Result.success(djMixService.getSongMixInfo(songId));
     }
 
-       
-                                                               
-       
+
+
+
     @ApiLog
     @GetMapping("/timemachine/that-day")
     public Result<Map<String, Object>> getThatDayRecommendation(@RequestParam(required = false) Integer month,
@@ -241,9 +241,9 @@ public class AudioExtendedController {
         return Result.success(buildThatDayResult(recommendations));
     }
 
-       
-                                                
-       
+
+
+
     @ApiLog
     @GetMapping("/timemachine/timeline")
     public Result<List<Map<String, Object>>> getMusicTimeline(@RequestParam(defaultValue = "12") Integer months) {
@@ -254,9 +254,9 @@ public class AudioExtendedController {
         return Result.success(timeMachineRecommendService.getMusicTimeline(userId, months));
     }
 
-       
-                                                           
-       
+
+
+
     @ApiLog
     @GetMapping("/timemachine/yearly-memory")
     public Result<Map<String, Object>> getYearlyMemory(@RequestParam(required = false) Integer year) {
@@ -264,9 +264,9 @@ public class AudioExtendedController {
         return Result.success(timeMachineRecommendService.getYearlyMemory(userId, resolveYear(year)));
     }
 
-       
-                                                                                     
-       
+
+
+
     @ApiLog
     @PostMapping("/smart-playlist/generate")
     public Result<Map<String, Object>> generateSmartPlaylist(@RequestBody Map<String, Object> data) {
@@ -281,9 +281,9 @@ public class AudioExtendedController {
         return Result.success(smartPlaylistService.generatePlaylistByPrompt(getOptionalUserId(), prompt, durationMinutes));
     }
 
-       
-                                                                    
-       
+
+
+
     @ApiLog
     @PostMapping("/smart-playlist/by-activity")
     public Result<Map<String, Object>> generatePlaylistByActivity(@RequestBody Map<String, Object> data) {
@@ -295,9 +295,9 @@ public class AudioExtendedController {
         return Result.success(smartPlaylistService.generatePlaylistByActivity(getOptionalUserId(), activity, durationMinutes));
     }
 
-       
-                                                       
-       
+
+
+
     @ApiLog
     @PostMapping("/smart-playlist/save")
     public Result<Map<String, Object>> saveGeneratedPlaylist(@Valid @RequestBody SmartPlaylistSaveDTO data) {
@@ -306,9 +306,9 @@ public class AudioExtendedController {
                 userId, data.getName(), data.getDescription(), data.getSongIds()));
     }
 
-       
-                                                        
-       
+
+
+
     @ApiLog
     @GetMapping("/smart-playlist/name-suggestions")
     public Result<List<String>> getPlaylistNameSuggestions(@RequestParam(defaultValue = "default") String activity) {

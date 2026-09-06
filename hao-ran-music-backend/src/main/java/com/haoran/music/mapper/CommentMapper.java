@@ -11,16 +11,16 @@ import org.apache.ibatis.annotations.Update;
 import java.util.Collection;
 import java.util.List;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface CommentMapper extends BaseMapper<Comment> {
 
-       
-                                      
-       
+
+
+
     @Select({
             "<script>",
             "SELECT user_id AS user_id, COUNT(*) AS comment_count",

@@ -19,13 +19,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-   
-                                          
-  
-                                                       
-  
-                      
-   
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class RedisUserSessionRevocationService implements UserSessionRevocationService, MessageListener {
@@ -45,24 +45,24 @@ public class RedisUserSessionRevocationService implements UserSessionRevocationS
     private final String instanceId = UUID.randomUUID().toString();
     private final Map<String, Long> processedEventIds = new ConcurrentHashMap<>();
 
-       
-                   
-      
-                                                  
-                                       
-       
+
+
+
+
+
+
     public RedisUserSessionRevocationService(WebSocketService webSocketService,
                                              StringRedisTemplate redisTemplate) {
         this.webSocketService = webSocketService;
         this.redisTemplate = redisTemplate;
     }
 
-       
-                    
-      
-                         
-                               
-       
+
+
+
+
+
+
     @Override
     public void revokeWebSocketSessions(Long userId, String reason) {
         if (userId == null || userId <= 0) {
@@ -83,12 +83,12 @@ public class RedisUserSessionRevocationService implements UserSessionRevocationS
         revokeNow(userId, normalizedReason);
     }
 
-       
-                                
-      
-                              
-                                       
-       
+
+
+
+
+
+
     @Override
     public void onMessage(Message message, byte[] pattern) {
         if (message == null || message.getBody() == null
@@ -122,9 +122,9 @@ public class RedisUserSessionRevocationService implements UserSessionRevocationS
         }
     }
 
-       
-                                          
-       
+
+
+
     private void revokeNow(Long userId, String reason) {
         boolean disconnected = false;
         try {
@@ -151,9 +151,9 @@ public class RedisUserSessionRevocationService implements UserSessionRevocationS
         }
     }
 
-       
-                                          
-       
+
+
+
     private boolean isValidEvent(JSONObject event) {
         if (event == null || !Integer.valueOf(MESSAGE_VERSION).equals(event.getInteger("version"))) {
             return false;
@@ -171,9 +171,9 @@ public class RedisUserSessionRevocationService implements UserSessionRevocationS
                 && isUuid(event.getString("originInstanceId"));
     }
 
-       
-                                         
-       
+
+
+
     private boolean markEventProcessed(String eventId, long now) {
         Long existing = processedEventIds.putIfAbsent(eventId, now);
         if (existing != null) {
@@ -191,9 +191,9 @@ public class RedisUserSessionRevocationService implements UserSessionRevocationS
         return true;
     }
 
-       
-                                     
-       
+
+
+
     private boolean isUuid(String value) {
         if (value == null || value.length() != 36) {
             return false;
@@ -205,9 +205,9 @@ public class RedisUserSessionRevocationService implements UserSessionRevocationS
         }
     }
 
-       
-                         
-       
+
+
+
     private String normalizeReason(String reason) {
         if (reason == null || reason.trim().isEmpty()) {
             return "unspecified";

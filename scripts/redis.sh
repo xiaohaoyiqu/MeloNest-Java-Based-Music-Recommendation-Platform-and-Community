@@ -1,16 +1,16 @@
 #!/bin/bash
-                                                                               
-                      
-                     
-                  
-                 
-                                      
-                                                                               
 
-               
+
+
+
+
+
+
+
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-        
+
 if [ -f "${SCRIPT_DIR}/env.sh" ]; then
     source "${SCRIPT_DIR}/env.sh"
 else
@@ -18,51 +18,51 @@ else
     exit 1
 fi
 
-                                                                               
-      
-                                                                               
+
+
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-                                                                               
-        
-                                                                               
+
+
+
 log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 log_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
-                                                                               
-               
-                                                                               
-                                 
-       
-               
-           
-                                
+
+
+
+
+
+
+
+
 run_as_hdfs() {
     if [ "$(whoami)" = "${CLUSTER_USER}" ]; then
-                        
+
         eval "$@"
     else
-                                    
+
         sudo -u ${CLUSTER_USER} bash -c "source /etc/profile >/dev/null 2>&1; $*"
     fi
 }
 
-                                                                               
-             
-                                                                               
-                                 
+
+
+
+
 REDIS_CONF="${REDIS_HOME}/conf/redis.conf"
 REDIS_SENTINEL_CONF="${REDIS_HOME}/conf/sentinel.conf"
 
-                                                                               
-           
-                                                                               
+
+
+
 start() {
     echo ""
     echo "=========================================="
@@ -70,7 +70,7 @@ start() {
     echo "=========================================="
     echo ""
 
-          
+
     local current_user=$(whoami)
     if [ "$current_user" != "${CLUSTER_USER}" ]; then
         log_warn "当前用户: ${current_user}，自动切换到 ${CLUSTER_USER} 用户执行"
@@ -91,27 +91,27 @@ start() {
         echo -n "  ${node_name} (${node}, ${role}): "
 
         if [ "$node" = "$(get_current_ip)" ]; then
-                  
-                    
+
+
             if [ ! -f "${REDIS_CONF}" ]; then
                 echo -e "${RED}配置文件不存在${NC}"
                 continue
             fi
 
-                                 
+
             if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
                 echo -e "${YELLOW}已运行${NC}"
                 continue
             fi
 
-                    
+
             run_as_hdfs "mkdir -p /sdb1/haoranmusicData/redis ${REDIS_HOME}/logs ${REDIS_HOME}/data"
 
-                                         
+
             run_as_hdfs "rm -f /sdb1/haoranmusicData/redis/appendonly.aof /usr/local/soft/redis5.0.14/data/appendonly.aof 2>/dev/null"
             run_as_hdfs "sed -i 's/^appendonly yes/appendonly no/' ${REDIS_CONF} 2>/dev/null || true"
 
-                                     
+
             local auth_args=""
             if [ -n "${REDIS_PASSWORD:-}" ]; then
                 printf -v auth_args -- "--requirepass %q" "$REDIS_PASSWORD"
@@ -123,7 +123,7 @@ start() {
             if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
                 echo -e "${GREEN}启动成功${NC}"
 
-                                   
+
                 if is_redis_master && [ -f "${REDIS_SENTINEL_CONF}" ]; then
                     run_as_hdfs "${REDIS_HOME}/bin/redis-sentinel ${REDIS_SENTINEL_CONF} --daemonize yes" >/dev/null 2>&1
                 fi
@@ -134,36 +134,36 @@ start() {
                 run_as_hdfs "tail -20 \${REDIS_HOME}/logs/redis-node1.log 2>/dev/null || echo '    日志文件不存在'"
             fi
         else
-                                    
-                               
+
+
             if [ "$is_master" = "true" ]; then
                 local result=$(ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} '
                     source /etc/profile 2>/dev/null
                     source '$(get_node_env_sh $node)' 2>/dev/null
 
-                            
+
                     if [ ! -f ${REDIS_HOME}/conf/redis.conf ]; then
                         echo "no_config"
                         exit 0
                     fi
 
-                                         
+
                     if netstat -an 2>/dev/null | grep -q ":6379.*LISTEN"; then
                         echo "already_running"
                         exit 0
                     fi
 
-                            
+
                     mkdir -p /sdb1/haoranmusicData/redis ${REDIS_HOME}/logs ${REDIS_HOME}/data 2>/dev/null
 
-                             
+
                     ${REDIS_HOME}/bin/redis-server ${REDIS_HOME}/conf/redis.conf
                     sleep 2
 
                     if netstat -an 2>/dev/null | grep -q ":6379.*LISTEN"; then
                         echo "started"
 
-                                       
+
                         if [ -f ${REDIS_HOME}/conf/sentinel.conf ]; then
                             ${REDIS_HOME}/bin/redis-sentinel ${REDIS_HOME}/conf/sentinel.conf --daemonize yes >/dev/null 2>&1
                         fi
@@ -177,22 +177,22 @@ start() {
                     source /etc/profile 2>/dev/null
                     source '$(get_node_env_sh $node)' 2>/dev/null
 
-                            
+
                     if [ ! -f ${REDIS_HOME}/conf/redis.conf ]; then
                         echo "no_config"
                         exit 0
                     fi
 
-                                         
+
                     if netstat -an 2>/dev/null | grep -q ":6379.*LISTEN"; then
                         echo "already_running"
                         exit 0
                     fi
 
-                            
+
                     mkdir -p /sdb1/haoranmusicData/redis ${REDIS_HOME}/logs ${REDIS_HOME}/data 2>/dev/null
 
-                             
+
                     ${REDIS_HOME}/bin/redis-server ${REDIS_HOME}/conf/redis.conf
                     sleep 2
 
@@ -227,44 +227,44 @@ start() {
     echo ""
 }
 
-                                                                               
-                 
-                                                                               
-                                   
-                                
-       
-                          
-                           
-                          
+
+
+
+
+
+
+
+
+
 graceful_shutdown_redis() {
     local node_ip="$1"
     local is_remote="$2"
     local shutdown_result=""
 
-                                                                         
+
     local redis_password="${REDIS_PASSWORD:-}"
 
     if [ "$is_remote" = "remote" ]; then
-                  
+
         shutdown_result=$(ssh ${SSH_OPTS} ${CLUSTER_USER}@${node_ip} "
             source /etc/profile 2>/dev/null
             source '${SCRIPT_DIR}/env.sh' 2>/dev/null
 
-                                
+
             if netstat -an 2>/dev/null | grep -q ':26379.*LISTEN'; then
                 \${REDIS_HOME}/bin/redis-cli -p 26379 shutdown 2>/dev/null || true
                 sleep 1
             fi
 
-                                 
+
             if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
                 \${REDIS_HOME}/bin/redis-cli -a '${redis_password}' --no-auth-warning shutdown 2>/dev/null || true
                 sleep 2
             fi
 
-                         
+
             if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
-                      
+
                 pkill -9 -f redis-sentinel 2>/dev/null || true
                 pkill -9 -f redis-server 2>/dev/null || true
                 echo 'forced'
@@ -273,22 +273,22 @@ graceful_shutdown_redis() {
             fi
         " 2>/dev/null)
     else
-                  
-                            
+
+
         if netstat -an 2>/dev/null | grep -q ':26379.*LISTEN'; then
             run_as_hdfs "${REDIS_HOME}/bin/redis-cli -p 26379 shutdown" 2>/dev/null || true
             sleep 1
         fi
 
-                             
+
         if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
             run_as_hdfs "${REDIS_HOME}/bin/redis-cli -a ${redis_password} --no-auth-warning shutdown" 2>/dev/null || true
             sleep 2
         fi
 
-                     
+
         if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
-                  
+
             run_as_hdfs "pkill -9 -f redis-sentinel" 2>/dev/null || true
             run_as_hdfs "pkill -9 -f redis-server" 2>/dev/null || true
             shutdown_result="forced"
@@ -300,9 +300,9 @@ graceful_shutdown_redis() {
     echo "$shutdown_result"
 }
 
-                                                                               
-                      
-                                                                               
+
+
+
 stop() {
     echo ""
     echo "=========================================="
@@ -317,7 +317,7 @@ stop() {
         echo -n "  ${node_name} (${node}): "
 
         if [ "$node" = "$(get_current_ip)" ]; then
-                  
+
             local shutdown_type=$(graceful_shutdown_redis "" "local")
             if [ "$shutdown_type" = "graceful" ]; then
                 echo -e "${GREEN}已停止（优雅）${NC}"
@@ -325,7 +325,7 @@ stop() {
                 echo -e "${YELLOW}已停止（强制）${NC}"
             fi
         else
-                  
+
             local shutdown_type=$(graceful_shutdown_redis "$node" "remote")
             if [ "$shutdown_type" = "graceful" ]; then
                 echo -e "${GREEN}已停止（优雅）${NC}"
@@ -340,9 +340,9 @@ stop() {
     status
 }
 
-                                                                               
-                        
-                                                                               
+
+
+
 force_stop() {
     echo ""
     echo "=========================================="
@@ -371,18 +371,18 @@ force_stop() {
     status
 }
 
-                                                                               
-           
-                                                                               
+
+
+
 restart() {
     stop
     sleep 3
     start
 }
 
-                                                                               
-             
-                                                                               
+
+
+
 status() {
     echo ""
     echo "=========================================="
@@ -390,7 +390,7 @@ status() {
     echo "=========================================="
     echo ""
 
-            
+
     local current_ip=$(get_current_ip)
     local current_node=$(hostname)
     local current_user=$(whoami)
@@ -411,7 +411,7 @@ status() {
         echo -n "  ${node_name} (${node}, ${role}): "
 
         if [ "$node" = "$current_ip" ]; then
-                           
+
             if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
                 local pid=$(pgrep -f "redis-server" | head -1)
                 echo -e "${GREEN}[RUNNING]${NC} (PID: ${pid})"
@@ -420,7 +420,7 @@ status() {
                 echo -e "${YELLOW}[STOPPED]${NC}"
             fi
 
-                              
+
             if [ "$node" = "$NODE1_IP" ]; then
                 echo -n "    Sentinel: "
                 if netstat -an 2>/dev/null | grep -q ':26379.*LISTEN'; then
@@ -431,7 +431,7 @@ status() {
                 fi
             fi
         else
-                           
+
             local result=$(ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} "
                 source /etc/profile 2>/dev/null
                 if netstat -an 2>/dev/null | grep -q ':6379.*LISTEN'; then
@@ -446,7 +446,7 @@ status() {
                 echo -e "${YELLOW}[STOPPED]${NC}"
             fi
 
-                              
+
             if [ "$node" = "$NODE1_IP" ]; then
                 echo -n "    Sentinel: "
                 local sentinel_result=$(ssh ${SSH_OPTS} ${CLUSTER_USER}@${node} "
@@ -473,9 +473,9 @@ status() {
     echo "=========================================="
 }
 
-                                                                               
-       
-                                                                               
+
+
+
 COMMAND="${1:-start}"
 
 case "${COMMAND}" in

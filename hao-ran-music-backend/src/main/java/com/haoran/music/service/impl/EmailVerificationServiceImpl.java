@@ -1,7 +1,7 @@
-   
-                      
-                                                                       
-   
+
+
+
+
 package com.haoran.music.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -32,9 +32,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-   
-                                                                                                         
-   
+
+
+
 @Slf4j
 @Service
 public class EmailVerificationServiceImpl implements EmailVerificationService {
@@ -74,7 +74,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
             throw new BusinessException("验证码已锁定，请稍后再试");
         }
 
-                                                                                               
+
         reserveSendWindow(normalizedEmail, verificationType, clientIp);
 
         String code = generateNumericCode(safeInt(verifyCodeConfig.getEmailLength(), 6));

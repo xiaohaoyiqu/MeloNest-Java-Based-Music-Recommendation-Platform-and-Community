@@ -1,7 +1,7 @@
-   
-                      
-                                      
-   
+
+
+
+
 package com.haoran.music.common.filter;
 
 import com.haoran.music.common.config.SecurityConfig;
@@ -24,14 +24,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-        
-  
-                 
-                                
-                     
-                   
-   
+
+
+
+
+
+
+
+
 @Slf4j
 @Component
 @Order(1)
@@ -60,7 +60,7 @@ public class SecurityFilter implements Filter {
         "/api/v3/api-docs", "/api/favicon.ico", "/api/error",
         "/actuator", "/static", "/health",
         "/ws/",                                
-                                       
+
         "/api/song/hot", "/api/song/new", "/api/song/page",
         "/api/album/list", "/api/album/hot", "/api/album/page", "/api/album/info", "/api/album/new",
         "/api/artist/page", "/api/artist/list", "/api/artist/hot", "/api/artist/new", "/api/artist/info",
@@ -90,17 +90,17 @@ public class SecurityFilter implements Filter {
         String ip = clientIpResolver.resolve(req);
         String userAgent = req.getHeader("User-Agent");
 
-               
+
         if (isExcludePath(uri, req.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
 
-                 
+
         boolean isLoggedIn = isLoggedIn(req);
         String userType = isLoggedIn ? "登录用户" : "未登录";
 
-                              
+
         if (securityConfig.isIpRateLimitEnabled()) {
             if (!ipRateLimiter.checkIpLimit(ip, isLoggedIn)) {
                 log.warn("event=security_rate_limit_exceeded userType={}", userType);
@@ -113,7 +113,7 @@ public class SecurityFilter implements Filter {
             }
         }
 
-                            
+
         if (securityConfig.isUserAgentCheckEnabled()) {
             if (spiderDetector.isSpider(userAgent)) {
                 log.warn("event=security_crawler_request_blocked");
@@ -125,9 +125,9 @@ public class SecurityFilter implements Filter {
             }
         }
 
-                                  
+
         if (securityConfig.isBehaviorCheckEnabled() && securityConfig.isCaptchaEnabled()) {
-                       
+
             if (!isLoggedIn && ipRateLimiter.needCaptcha(ip)) {
                 log.warn("event=security_captcha_required");
                 writeJsonResponse(resp, 429, new HashMap<String, Object>() {{
@@ -139,7 +139,7 @@ public class SecurityFilter implements Filter {
             }
         }
 
-                      
+
         if (securityConfig.isSensitiveLogEnabled() && isSensitiveOperation(uri)) {
             log.info("event=security_sensitive_operation method={} userType={}",
                 req.getMethod(), userType);
@@ -148,15 +148,15 @@ public class SecurityFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-       
-                
-       
+
+
+
     private boolean isLoggedIn(HttpServletRequest request) {
         Object userId = request.getAttribute("userId");
         if (userId != null) {
             return true;
         }
-                                                                 
+
         return isCurrentToken(extractToken(request));
     }
 
@@ -187,9 +187,9 @@ public class SecurityFilter implements Filter {
         }
     }
 
-       
-                                                                               
-       
+
+
+
     private void writeJsonResponse(HttpServletResponse resp, int status, Map<String, Object> data)
             throws IOException {
         resp.setStatus(status);

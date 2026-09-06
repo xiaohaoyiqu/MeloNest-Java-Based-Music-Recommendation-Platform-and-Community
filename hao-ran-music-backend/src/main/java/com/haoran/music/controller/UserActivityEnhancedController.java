@@ -13,12 +13,12 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                          
-  
-                        
-   
+
+
+
+
+
+
 @RestController
 @RequestMapping("/user/activity-enhanced")
 public class UserActivityEnhancedController {
@@ -29,14 +29,14 @@ public class UserActivityEnhancedController {
     @Resource
     private ActivityRewardService activityRewardService;
 
-                                                        
 
-       
-                         
-                             
-      
-                      
-       
+
+
+
+
+
+
+
     @ApiLog("获取综合活跃度评分")
     @GetMapping("/score")
     public Result<Integer> getEnhancedActivityScore() {
@@ -45,12 +45,12 @@ public class UserActivityEnhancedController {
         return Result.success(score);
     }
 
-       
-                  
-                     
-      
-                      
-       
+
+
+
+
+
+
     @ApiLog("获取活跃度维度详情")
     @GetMapping("/detail")
     public Result<Map<String, Object>> getActivityDimensionDetail() {
@@ -59,13 +59,13 @@ public class UserActivityEnhancedController {
         return Result.success(detail);
     }
 
-                                                         
 
-       
-                     
-      
-                    
-       
+
+
+
+
+
+
     @ApiLog("获取签到活跃度")
     @GetMapping("/checkin-score")
     public Result<Integer> getCheckinActivityScore() {
@@ -74,11 +74,11 @@ public class UserActivityEnhancedController {
         return Result.success(score);
     }
 
-       
-                     
-      
-                    
-       
+
+
+
+
+
     @ApiLog("获取社交活跃度")
     @GetMapping("/social-score")
     public Result<Integer> getSocialActivityScore() {
@@ -87,11 +87,11 @@ public class UserActivityEnhancedController {
         return Result.success(score);
     }
 
-       
-                     
-      
-                    
-       
+
+
+
+
+
     @ApiLog("获取消费活跃度")
     @GetMapping("/consumption-score")
     public Result<Integer> getConsumptionActivityScore() {
@@ -100,11 +100,11 @@ public class UserActivityEnhancedController {
         return Result.success(score);
     }
 
-       
-                     
-      
-                    
-       
+
+
+
+
+
     @ApiLog("获取创作活跃度")
     @GetMapping("/creation-score")
     public Result<Integer> getCreationActivityScore() {
@@ -113,11 +113,11 @@ public class UserActivityEnhancedController {
         return Result.success(score);
     }
 
-       
-                     
-      
-                    
-       
+
+
+
+
+
     @ApiLog("获取内容活跃度")
     @GetMapping("/content-score")
     public Result<Integer> getContentActivityScore() {
@@ -126,15 +126,15 @@ public class UserActivityEnhancedController {
         return Result.success(score);
     }
 
-                                                        
 
-       
-                 
-                       
-      
-                                                              
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("检查行为异常")
     @GetMapping("/check-abnormal")
     public Result<Map<String, Object>> checkBehaviorAbnormal(
@@ -144,13 +144,13 @@ public class UserActivityEnhancedController {
         return Result.success(result);
     }
 
-       
-               
-                     
-      
-                               
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("检查频率限制")
     @GetMapping("/check-rate-limit")
     public Result<Map<String, Object>> checkRateLimit(
@@ -160,14 +160,14 @@ public class UserActivityEnhancedController {
         return Result.success(result);
     }
 
-       
-                  
-                      
-      
-                               
-                            
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("计算行为得分")
     @GetMapping("/calculate-score")
     public Result<Double> calculateBehaviorScore(
@@ -178,14 +178,14 @@ public class UserActivityEnhancedController {
         return Result.success(score);
     }
 
-                                                       
 
-       
-                 
-                           
-      
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("获取行为分析报告")
     @GetMapping("/behavior-analysis")
     public Result<Map<String, Object>> getUserBehaviorAnalysis() {
@@ -194,11 +194,11 @@ public class UserActivityEnhancedController {
         return Result.success(analysis);
     }
 
-       
-                 
-      
-                   
-       
+
+
+
+
+
     @ApiLog("获取信用分层权重")
     @GetMapping("/credit-weight")
     public Result<Double> getCreditWeight() {
@@ -207,15 +207,15 @@ public class UserActivityEnhancedController {
         return Result.success(weight);
     }
 
-                                                      
 
-       
-               
-      
-                                                                             
-                        
-                    
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取活跃度排行榜")
     @GetMapping("/ranking")
     public Result<List<Map<String, Object>>> getActivityRanking(
@@ -225,12 +225,12 @@ public class UserActivityEnhancedController {
         return Result.success(ranking);
     }
 
-       
-                   
-      
-                             
-                 
-       
+
+
+
+
+
+
     @ApiLog("获取用户排名")
     @GetMapping("/my-ranking")
     public Result<Integer> getUserRanking(
@@ -240,14 +240,14 @@ public class UserActivityEnhancedController {
         return Result.success(ranking);
     }
 
-                                                      
 
-       
-              
-                      
-      
-                      
-       
+
+
+
+
+
+
+
     @ApiLog("获取活跃度奖励")
     @GetMapping("/rewards")
     public Result<Map<String, Object>> getActivityRewards() {
@@ -256,12 +256,12 @@ public class UserActivityEnhancedController {
         return Result.success(rewards);
     }
 
-       
-              
-      
-                           
-                     
-       
+
+
+
+
+
+
     @ApiLog("领取活跃度奖励")
     @PostMapping("/claim-reward")
     public Result<Boolean> claimActivityReward(@RequestParam Long rewardId) {
@@ -270,11 +270,11 @@ public class UserActivityEnhancedController {
         return Result.success(result);
     }
 
-       
-                
-      
-                     
-       
+
+
+
+
+
     @ApiLog("获取活跃度等级进度")
     @GetMapping("/level-progress")
     public Result<Map<String, Object>> getActivityLevelProgress() {
@@ -283,15 +283,15 @@ public class UserActivityEnhancedController {
         return Result.success(progress);
     }
 
-                                                     
 
-       
-                    
-      
-                         
-                         
-                     
-       
+
+
+
+
+
+
+
+
     @ApiLog("标记可疑用户")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/admin/mark-suspicious")
@@ -302,12 +302,12 @@ public class UserActivityEnhancedController {
         return Result.success(result);
     }
 
-       
-                      
-      
-                         
-                     
-       
+
+
+
+
+
+
     @ApiLog("取消可疑用户标记")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/admin/unmark-suspicious")
@@ -316,12 +316,12 @@ public class UserActivityEnhancedController {
         return Result.success(result);
     }
 
-       
-                           
-      
-                         
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取指定用户行为分析")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/admin/behavior-analysis/{userId}")
@@ -331,12 +331,12 @@ public class UserActivityEnhancedController {
         return Result.success(analysis);
     }
 
-       
-                          
-      
-                         
-                    
-       
+
+
+
+
+
+
     @ApiLog("获取指定用户活跃度详情")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/admin/detail/{userId}")

@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-   
-                    
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class NotificationDeliveryOutboxServiceImpl implements NotificationDeliveryOutboxService {
@@ -187,9 +187,9 @@ public class NotificationDeliveryOutboxServiceImpl implements NotificationDelive
         }
     }
 
-       
-                                         
-       
+
+
+
     private boolean markTerminalFailure(NotificationDeliveryOutboxEvent event, String workerId,
                                         String category, String message) {
         int marked = outboxMapper.markTerminalFailed(
@@ -216,9 +216,9 @@ public class NotificationDeliveryOutboxServiceImpl implements NotificationDelive
         return Math.min(900L, 15L * (1L << Math.min(6, Math.max(0, attempt - 1))));
     }
 
-       
-                     
-       
+
+
+
     private static class DeliveryException extends RuntimeException {
         private final String category;
 

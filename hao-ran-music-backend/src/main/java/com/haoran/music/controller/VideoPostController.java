@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.aspect.ApiLog;
@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.Map;
 
-   
-                         
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/video-post")
@@ -38,9 +38,9 @@ public class VideoPostController {
     @Autowired
     private MusicVideoConfig musicVideoConfig;
 
-       
-                              
-       
+
+
+
     @PostMapping("/upload")
     @ApiLog("upload video post")
     @RateLimit(maxRequests = 3, timeWindowSeconds = 3600, operation = "uploadVideoPostLegacy",
@@ -61,18 +61,18 @@ public class VideoPostController {
         return Result.success(result);
     }
 
-       
-                       
-       
+
+
+
     @GetMapping("/status/{postId}")
     public Result getUploadStatus(@PathVariable Long postId, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         return Result.success(videoPostService.getVideoPostStatus(postId, userId));
     }
 
-       
-                   
-       
+
+
+
     @GetMapping("/my")
     @ApiLog("list my video posts")
     public Result getMyVideoPosts(@RequestParam(value = "status", required = false) Integer status,
@@ -84,9 +84,9 @@ public class VideoPostController {
         return Result.success(musicPostService.getMyVideoPosts(userId, status));
     }
 
-       
-                     
-       
+
+
+
     @GetMapping("/stats")
     @ApiLog("get video post statistics")
     public Result getVideoPostStats(HttpServletRequest request) {
@@ -97,9 +97,9 @@ public class VideoPostController {
         return Result.success(musicPostService.getVideoPostStats(userId));
     }
 
-       
-                     
-       
+
+
+
     @DeleteMapping("/{postId}")
     @ApiLog("delete video post")
     public Result deleteVideoPost(@PathVariable Long postId, HttpServletRequest request) {
@@ -112,9 +112,9 @@ public class VideoPostController {
                 : Result.error("delete failed");
     }
 
-       
-                                
-       
+
+
+
     @PostMapping("/cleanup-temp")
     @ApiLog("cleanup temporary video files")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})

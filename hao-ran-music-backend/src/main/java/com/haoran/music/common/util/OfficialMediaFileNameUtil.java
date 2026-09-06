@@ -8,11 +8,11 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
-   
-                
-  
-                      
-   
+
+
+
+
+
 public final class OfficialMediaFileNameUtil {
 
     private static final int MAX_FILE_NAME_BYTES = 240;
@@ -21,16 +21,16 @@ public final class OfficialMediaFileNameUtil {
     private OfficialMediaFileNameUtil() {
     }
 
-       
-                                     
-                               
-      
-                          
-                                               
-                             
-                               
-                                    
-       
+
+
+
+
+
+
+
+
+
+
     public static String build(String songName, String artistNames, String versionName, String extension) {
         String title = sanitizeSegment(songName, "未命名歌曲");
         String version = sanitizeSegment(versionName, "");

@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-   
-                      
-  
-                      
-   
+
+
+
+
+
 @TableName("music_paid_resource")
 public class PaidResource extends BaseEntity implements Serializable {
 
@@ -43,46 +43,46 @@ public class PaidResource extends BaseEntity implements Serializable {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    
+
     public String getResourceType() { return resourceType; }
     public void setResourceType(String resourceType) { this.resourceType = resourceType; }
-    
+
     public Long getResourceId() { return resourceId; }
     public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
-    
+
     public Long getOwnerId() { return ownerId; }
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
-    
+
     public String getOwnerType() { return ownerType; }
     public void setOwnerType(String ownerType) { this.ownerType = ownerType; }
-    
+
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
-    
+
     public String getPriceType() { return priceType; }
     public void setPriceType(String priceType) { this.priceType = priceType; }
-    
+
     public Integer getIsEnabled() { return isEnabled; }
     public void setIsEnabled(Integer isEnabled) { this.isEnabled = isEnabled; }
-    
+
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-    
+
     public Integer getSalesCount() { return salesCount; }
     public void setSalesCount(Integer salesCount) { this.salesCount = salesCount; }
-    
+
     public BigDecimal getTotalEarnings() { return totalEarnings; }
     public void setTotalEarnings(BigDecimal totalEarnings) { this.totalEarnings = totalEarnings; }
-    
+
     public Integer getSubscribePeriod() { return subscribePeriod; }
     public void setSubscribePeriod(Integer subscribePeriod) { this.subscribePeriod = subscribePeriod; }
-    
+
     public BigDecimal getPlatformFeeRate() { return platformFeeRate; }
     public void setPlatformFeeRate(BigDecimal platformFeeRate) { this.platformFeeRate = platformFeeRate; }
-    
+
     public String getChangeType() { return changeType; }
     public void setChangeType(String changeType) { this.changeType = changeType; }
-    
+
     public String getChangeReason() { return changeReason; }
     public void setChangeReason(String changeReason) { this.changeReason = changeReason; }
 

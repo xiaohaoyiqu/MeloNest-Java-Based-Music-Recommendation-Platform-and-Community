@@ -1,21 +1,21 @@
 #!/bin/bash
-                                          
-               
-                     
-                  
-                                          
+
+
+
+
+
 
 echo "========================================"
 echo "浩然音乐后端重启脚本"
 echo "========================================"
 
-       
+
 SERVER_HOST="192.168.153.131"
 SERVER_USER="hdfs"
 SERVER_DIR="/sdb1/myprojoct/haoranmusic"
 SSH_CONFIG="D:/ideaproject/HaoRanMusic/scripts/ssh/config"
 
-       
+
 echo "正在连接服务器 $SERVER_HOST..."
 ssh -F "$SSH_CONFIG" -o ConnectTimeout=10 node1 << 'ENDSSH'
     cd /sdb1/myprojoct/haoranmusic

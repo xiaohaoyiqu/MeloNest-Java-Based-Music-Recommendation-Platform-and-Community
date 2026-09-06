@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import com.haoran.music.common.config.SecurityConfig;
@@ -10,9 +10,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
-   
-                                                                     
-   
+
+
+
 @Component
 public class ClientIpResolver {
 

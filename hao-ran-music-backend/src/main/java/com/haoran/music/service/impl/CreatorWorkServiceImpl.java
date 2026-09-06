@@ -39,17 +39,17 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                          
-  
-                                                      
-                    
-                            
-                         
-                 
-                                                               
-   
+
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, CreatorWork> implements CreatorWorkService {
@@ -120,19 +120,19 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
     public Long submitWork(Long userId, CreatorWorkDTO dto) throws Exception {
         creatorEligibilityService.requireEligible(userId, "提交创作者作品");
 
-                 
+
         if (!canSubmit(userId)) {
             throw new BusinessException(ResultCode.TOO_MANY_REQUESTS,
                     "creator work daily submit limit reached: " + workSubmissionConfig.getCreatorWorkDailyLimit());
         }
 
-                                     
+
         checkForXSS(dto);
         validatePaidSettings(dto.getIsPaid() == null ? 0 : dto.getIsPaid(),
                 dto.getPrice(), dto.getSubscribePeriod());
         validateSubmissionFiles(userId, dto.getWorkType(), dto.getFileUrl(), dto.getFileUrls(), false);
 
-               
+
         AudioQualityDetector.AudioInfo audioInfo = null;
         if (StrUtil.isNotBlank(dto.getFileUrl())) {
             try {
@@ -161,12 +161,12 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         work.setLikeCount(0);
         work.setCollectCount(0);
 
-               
+
         work.setAllowDownload(dto.getAllowDownload() != null ? dto.getAllowDownload() : 1);
         work.setAllowComment(dto.getAllowComment() != null ? dto.getAllowComment() : 1);
         work.setAllowShare(dto.getAllowShare() != null ? dto.getAllowShare() : 1);
 
-               
+
         int paidFlag = dto.getIsPaid() != null ? dto.getIsPaid() : 0;
         work.setIsPaid(paidFlag);
         if (paidFlag == 1) {
@@ -177,7 +177,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             work.setSubscribePeriod(null);
         }
 
-                 
+
         if (audioInfo != null) {
             work.setDetectedQuality(audioInfo.getQualityLevel());
             work.setFileSize(audioInfo.getFileSize());
@@ -187,7 +187,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             work.setAudioFormat(audioInfo.getFormat());
         }
 
-                  
+
         work.setUploadType(resolveUploadType(dto));
         work.setFileUrls(dto.getFileUrls());
         work.setZipFileUrl(dto.getZipFileUrl());
@@ -199,7 +199,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         moderationIntegrationService.submitForModeration(
                 "creator_work", work.getId(), userId, "creator");
 
-                 
+
         String submitKey = workSubmissionConfig.getCreatorWorkPrefix() + userId;
         Long count = redisTemplate.opsForValue().increment(submitKey);
         if (count != null && count == 1) {
@@ -240,7 +240,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         if (claimed != 1) {
             throw new BusinessException(409, "作品已被其他审核人处理");
         }
-                      
+
         if (status.equals(1)) {
             work.setPublishTime(LocalDateTime.now());
 
@@ -277,9 +277,9 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
                 workId, reviewerId, status, work.getAutoSongId());
     }
 
-       
-                
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateWork(Long workId, Long userId, CreatorWorkDTO dto) {
@@ -415,9 +415,9 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         return true;
     }
 
-       
-                     
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeById(Serializable id) {
@@ -468,12 +468,12 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             Artist artist = artistProfileService.resolveOwnedProfile(
                     work.getUserId(), artistName, "creator_work");
 
-                     
+
             Song song = new Song();
             song.setName(work.getWorkName());
             song.setCover(StrUtil.isNotBlank(work.getCoverUrl()) ? work.getCoverUrl() : "/default-cover.png");
 
-                                         
+
             Integer quality = work.getDetectedQuality() != null ? work.getDetectedQuality() : 2;
             WorkProcessingUtil.setSongQualityField(song, quality, work.getFileUrl(), work.getFileSize());
 
@@ -495,8 +495,8 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             song.setAvgRating(BigDecimal.ZERO);
             song.setPriority(0);
             song.setIsVipOnly(CommonConstants.NO);
-                                                                                     
-                                                                            
+
+
             song.setIsPaid(CommonConstants.NO);
             song.setIsSingle(CommonConstants.YES);
             song.setIsNew(CommonConstants.YES);
@@ -511,7 +511,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             officialMediaDerivativeService.submitSongDerivativeJob(song.getId(), work.getFileUrl(),
                     work.getFileSize(), work.getDetectedQuality());
 
-                                         
+
             workProcessingUtil.createSongArtistRelation(song.getId(), artist.getId(), artist.getName());
 
             log.info("event=creator_work_song_published workId={} songId={} quality={}",
@@ -611,9 +611,9 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         return true;
     }
 
-       
-                                   
-       
+
+
+
     private void checkForXSS(CreatorWorkDTO dto) {
         if (SecurityCheckUtil.containsXSS(dto.getWorkName())) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "作品名称包含非法字符，请检查输入");
@@ -697,11 +697,11 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
                 CommonConstants.LYRIC_TYPE_ORIGINAL, CommonConstants.LYRIC_SOURCE_CREATOR, reviewerId);
     }
 
-                                                                           
 
-       
-              
-       
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> setWorkPaid(Long creatorId, Long workId, BigDecimal price, Integer subscribePeriod) {
@@ -738,9 +738,9 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         return result;
     }
 
-       
-             
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean cancelWorkPaid(Long creatorId, Long workId) {
@@ -783,9 +783,9 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         }
     }
 
-       
-                 
-       
+
+
+
     @Override
     public Map<String, Object> getMyPaidWorks(Long creatorId, Integer page, Integer size) {
         Page<CreatorWork> pageParam = new Page<>(page, size);
@@ -807,27 +807,27 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         return result;
     }
 
-       
-               
-       
+
+
+
     @Override
     public Map<String, Object> getWorkEarnings(Long creatorId, Long workId) {
         Map<String, Object> result = new HashMap<>();
 
         if (workId != null) {
-                        
+
             CreatorWork work = creatorWorkMapper.selectById(workId);
             if (work == null || !work.getUserId().equals(creatorId)) {
                 throw new BusinessException(ResultCode.NOT_FOUND, "作品不存在或无权限查看");
             }
 
-                           
+
             LambdaQueryWrapper<CreatorWorkPurchase> purchaseWrapper = new LambdaQueryWrapper<>();
             purchaseWrapper.eq(CreatorWorkPurchase::getWorkId, workId)
                     .eq(CreatorWorkPurchase::getStatus, "success");
             Long purchaseCount = creatorWorkPurchaseMapper.selectCount(purchaseWrapper);
 
-                    
+
             List<CreatorWorkPurchase> purchases = creatorWorkPurchaseMapper.selectList(purchaseWrapper);
             BigDecimal totalRevenue = BigDecimal.ZERO;
             for (CreatorWorkPurchase purchase : purchases) {
@@ -836,7 +836,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
                 }
             }
 
-                                                    
+
             LambdaQueryWrapper<CreatorEarnings> earningsWrapper = new LambdaQueryWrapper<>();
             earningsWrapper.eq(CreatorEarnings::getUserId, creatorId)
                     .eq(CreatorEarnings::getWorkId, workId);
@@ -845,12 +845,12 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             BigDecimal actualEarnings = BigDecimal.ZERO;
             for (CreatorEarnings earnings : earningsList) {
                 if (earnings.getEarningsAmount() != null) {
-                                                                
+
                     actualEarnings = actualEarnings.add(BigDecimal.valueOf(earnings.getEarningsAmount()).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP));
                 }
             }
 
-                                 
+
             BigDecimal platformFees = totalRevenue.subtract(actualEarnings);
 
             result.put("workId", workId);
@@ -861,7 +861,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             result.put("actualEarnings", actualEarnings);
             result.put("platformFees", platformFees);
         } else {
-                        
+
             List<CreatorWork> works = creatorWorkMapper.selectList(
                     new LambdaQueryWrapper<CreatorWork>()
                             .eq(CreatorWork::getUserId, creatorId)
@@ -869,7 +869,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
                             .eq(CreatorWork::getDeleted, 0)
             );
 
-                         
+
             BigDecimal totalRevenue = BigDecimal.ZERO;
             int totalPurchases = 0;
 
@@ -890,7 +890,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
                 }
             }
 
-                                                     
+
             LambdaQueryWrapper<CreatorEarnings> earningsWrapper = new LambdaQueryWrapper<>();
             earningsWrapper.eq(CreatorEarnings::getUserId, creatorId);
             List<CreatorEarnings> earningsList = creatorEarningsMapper.selectList(earningsWrapper);
@@ -898,7 +898,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             BigDecimal actualEarnings = BigDecimal.ZERO;
             for (CreatorEarnings earnings : earningsList) {
                 if (earnings.getEarningsAmount() != null) {
-                                                                
+
                     actualEarnings = actualEarnings.add(BigDecimal.valueOf(earnings.getEarningsAmount()).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP));
                 }
             }
@@ -912,21 +912,21 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         return result;
     }
 
-       
-                 
-                             
-                   
-       
+
+
+
+
+
     @Override
     public Map<String, Object> getCreatorTotalEarnings(Long creatorId) {
-                                
+
         LambdaQueryWrapper<CreatorEarnings> allWrapper = new LambdaQueryWrapper<>();
         allWrapper.eq(CreatorEarnings::getUserId, creatorId);
 
-                     
+
         List<CreatorEarnings> allEarnings = creatorEarningsMapper.selectList(allWrapper);
 
-                         
+
         Map<String, Long> earningsByType = new HashMap<>();
         for (CreatorEarnings earnings : allEarnings) {
             String type = earnings.getEarningsType();
@@ -936,7 +936,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
             }
         }
 
-              
+
         Long totalEarnings = earningsByType.values().stream()
                 .mapToLong(Long::longValue).sum();
 
@@ -944,7 +944,7 @@ public class CreatorWorkServiceImpl extends ServiceImpl<CreatorWorkMapper, Creat
         result.put("creatorId", creatorId);
         result.put("totalEarnings", totalEarnings);
         result.put("earningsByType", earningsByType);
-                              
+
         result.put("availableBalance", totalEarnings);
         result.put("pendingWithdrawal", 0L);
         result.put("totalWithdrawn", 0L);

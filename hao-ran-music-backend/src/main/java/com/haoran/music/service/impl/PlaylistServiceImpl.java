@@ -39,10 +39,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> implements PlaylistService {
@@ -146,9 +146,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             throw new BusinessException(ResultCode.NOT_FOUND, "歌单不存在");
         }
 
-                   
+
         if (playlist.getIsPublic() == CommonConstants.PUBLIC_PRIVATE) {
-                            
+
             String playlistUserIdStr = String.valueOf(playlist.getUserId());
             String requestUserIdStr = userId != null ? String.valueOf(userId) : null;
 
@@ -182,16 +182,16 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         vo.setContentAccessible(contentAccessible);
 
 
-                                
+
         if (ObjectUtils.isNotEmpty(userId)) {
             String visitKey = RedisConstants.PLAYLIST_VISIT_PREFIX + playlistId + ":user:" + userId;
             Boolean hasVisited = redisUtils.hasKey(visitKey);
             if (!hasVisited) {
-                                    
+
                 playlist.setVisitCount((long)((playlist.getVisitCount() != null ? playlist.getVisitCount().intValue() : 0) + 1));
                 updateById(playlist);
                 vo.setVisitCount(playlist.getVisitCount() != null ? playlist.getVisitCount().intValue() : 0);
-                           
+
                 redisUtils.set(visitKey, "1", RedisConstants.VISIT_EXPIRE, RedisConstants.VISIT_TIME_UNIT);
                 log.info("歌单访问量+1: playlistId={}, userId, visitCount={}", playlistId, userId, playlist.getVisitCount());
             } else {
@@ -239,7 +239,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         vo.setTotalPages((int) relationPage.getPages());
 
         if (CollUtil.isNotEmpty(playlistSongs)) {
-                     
+
             List<Long> songIds = playlistSongs.stream()
                     .map(PlaylistSong::getSongId)
                     .collect(Collectors.toList());
@@ -253,7 +253,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             Map<Long, Song> songMap = songs.stream()
                     .collect(Collectors.toMap(Song::getId, s -> s));
 
-                             
+
             Set<Long> favoriteSongIds = Collections.emptySet();
             if (ObjectUtils.isNotEmpty(userId)) {
                 favoriteSongIds = getFavoriteSongIds(userId, songs);
@@ -278,7 +278,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                     simpleVO.setUrlLossless(UrlHelper.buildRelativeAudioUrl(song.getUrlLossless()));
                     simpleVO.setSortOrder(ps.getSortOrder());
                     simpleVO.setPlayCount(song.getPlayCount());
-                                     
+
                     simpleVO.setIsFavorite(favoriteSongIds.contains(song.getId()));
                     simpleVO.setVersionType(song.getVersionType());
                     simpleVO.setVersionName(song.getVersionName());
@@ -291,7 +291,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             vo.setSongs(new ArrayList<>());
         }
 
-                 
+
         if (ObjectUtils.isNotEmpty(userId) && !userId.equals(playlist.getUserId())) {
             vo.setIsFavorite(checkIsFavorite(userId, playlistId));
         }
@@ -300,16 +300,16 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     }
 
     @Override
-       
-                     
-      
-                            
-                           
-                           
-                      
-                         
-                     
-       
+
+
+
+
+
+
+
+
+
+
     public IPage<PlaylistVO> pagePlaylists(PageQuery pageQuery, String keyword, String language,
                                            List<String> languages, String languageMode, String tag, String category,
                                            Integer minSongCount, Integer maxSongCount, String paymentType, Long userId) {
@@ -339,7 +339,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         wrapper.eq(Playlist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Playlist::getDeleted, CommonConstants.NOT_DELETED);
 
-                                                          
+
         wrapper.and(group -> {
             if (!retainedCreatorIds.isEmpty()) {
                 group.and(publicGroup -> publicGroup
@@ -359,16 +359,16 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             }
         });
 
-                          
+
         if (StrUtil.isNotBlank(safeKeyword)) {
             wrapper.like(Playlist::getName, safeKeyword);
         }
 
-               
+
         List<String> requestedLanguages = normalizeLanguages(language, languages);
         applyContentLanguageFilter(wrapper, requestedLanguages, languageMode);
 
-               
+
         if (StrUtil.isNotBlank(tag)) {
             wrapper.like(Playlist::getTags, tag);
         }
@@ -387,13 +387,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             wrapper.eq(Playlist::getIsPaid, 1);
         }
 
-               
+
         handleSort(wrapper, pageQuery.getSortField(), pageQuery.getSortOrder());
 
         IPage<Playlist> playlistPage = page(page, wrapper);
         playlistPage.setRecords(filterPublicCreatorPlaylists(playlistPage.getRecords(), userId, 0));
 
-                 
+
         if (!playlistPage.getRecords().isEmpty()) {
             return convertToVOBatch(playlistPage, userId);
         }
@@ -478,9 +478,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
     }
 
-       
-                                           
-       
+
+
+
     private Set<Long> getRetainedPublicPlaylistCreatorIds() {
         List<Long> creatorIds = baseMapper.selectPublicCreatorIds();
         if (creatorIds == null || creatorIds.isEmpty()) {
@@ -510,7 +510,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             return new ArrayList<>();
         }
 
-                                               
+
         List<PlaylistVO> playlistVOs = convertToVOBatch(playlists, userId);
         applyVisibleSongCounts(playlistVOs);
         return playlistVOs;
@@ -522,7 +522,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             throw new BusinessException(ResultCode.UNAUTHORIZED);
         }
 
-                    
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getUserId, userId)
                 .eq(Playlist::getType, MusicConstants.PlaylistType.FAVORITE)
@@ -530,7 +530,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         Playlist favoritePlaylist = getOne(wrapper);
 
-                         
+
         if (ObjectUtils.isEmpty(favoritePlaylist)) {
             favoritePlaylist = new Playlist();
             favoritePlaylist.setUserId(userId);
@@ -561,11 +561,11 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         List<String> normalizedTags = normalizePlaylistTags(dto.getTags());
         validatePlaylistCover(dto.getCover());
 
-                               
+
         int vipLevelCode = userVipService.getVipLevel(userId).getCode();
         int maxPlaylists = VipLevel.getMaxPlaylistsByLevel(vipLevelCode);
 
-                     
+
         LambdaQueryWrapper<Playlist> countWrapper = new LambdaQueryWrapper<>();
         countWrapper.eq(Playlist::getUserId, userId)
                 .eq(Playlist::getType, MusicConstants.PlaylistType.CUSTOM)
@@ -576,18 +576,18 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             throw new BusinessException("歌单数量已达上限（" + maxPlaylists + "个），升级VIP可创建更多歌单");
         }
 
-               
+
         Playlist playlist = new Playlist();
         playlist.setUserId(userId);
 
-                    
+
         SecurityCheckUtil.CheckResult nameCheck = SecurityCheckUtil.checkName(dto.getName(), "歌单名称");
         if (!nameCheck.isSafe()) {
             throw new BusinessException(ResultCode.PARAM_ERROR, nameCheck.getMessage());
         }
         playlist.setName(nameCheck.getCleanedValue());
 
-                    
+
         if (StrUtil.isNotBlank(dto.getDescription())) {
             SecurityCheckUtil.CheckResult descCheck = SecurityCheckUtil.checkDescription(dto.getDescription());
             if (!descCheck.isSafe()) {
@@ -605,14 +605,14 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         playlist.setPlayCount(0L);
         playlist.setFavoriteCount(0L);
 
-               
+
         if (!normalizedTags.isEmpty()) {
             playlist.setTags(JSON.toJSONString(normalizedTags));
         }
 
         save(playlist);
 
-                          
+
         if (CollUtil.isNotEmpty(dto.getSongIds())) {
             addSongsToPlaylist(userId, playlist.getId(), dto.getSongIds());
         }
@@ -645,7 +645,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             throw new BusinessException(ResultCode.FORBIDDEN, "只有歌单所有者可以修改资料和公开性");
         }
 
-                        
+
         boolean isFavorite = isFavoritePlaylistType(playlist);
         if (isFavorite && StrUtil.isNotBlank(dto.getName())) {
             throw new BusinessException("收藏歌单名称不可修改");
@@ -653,7 +653,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         String beforeMetadataSummary = playlistMetadataSummary(playlist);
 
         if (StrUtil.isNotBlank(dto.getName()) && !isFavorite) {
-                        
+
             SecurityCheckUtil.CheckResult nameCheck = SecurityCheckUtil.checkName(dto.getName(), "歌单名称");
             if (!nameCheck.isSafe()) {
                 throw new BusinessException(ResultCode.PARAM_ERROR, nameCheck.getMessage());
@@ -661,7 +661,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             playlist.setName(nameCheck.getCleanedValue());
         }
         if (StrUtil.isNotBlank(dto.getDescription())) {
-                        
+
             SecurityCheckUtil.CheckResult descCheck = SecurityCheckUtil.checkDescription(dto.getDescription());
             if (!descCheck.isSafe()) {
                 throw new BusinessException(ResultCode.PARAM_ERROR, descCheck.getMessage());
@@ -707,7 +707,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             throw new BusinessException(ResultCode.FORBIDDEN, "无权删除此歌单");
         }
 
-                   
+
         if (isFavoritePlaylistType(playlist)) {
             throw new BusinessException("收藏歌单不可删除");
         }
@@ -725,10 +725,10 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             }
         }
 
-               
+
         removeById(playlistId);
 
-               
+
         String cacheKey = RedisConstants.PLAYLIST_PREFIX + playlistId;
         redisUtils.delete(cacheKey);
 
@@ -759,14 +759,14 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         requirePlaylistPermission(playlist, userId, "add", "无权修改此歌单");
 
-                                       
+
         boolean isFavoritePlaylist = isFavoritePlaylistType(playlist);
         long currentSongCount = playlist.getSongCount() != null ? playlist.getSongCount() : 0L;
 
         Integer maxSortOrder = playlistSongMapper.selectMaxSortOrder(playlistId);
         int nextSortOrder = maxSortOrder != null ? maxSortOrder + 1 : 0;
 
-                    
+
         LambdaQueryWrapper<PlaylistSong> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(PlaylistSong::getPlaylistId, playlistId)
                 .in(PlaylistSong::getSongId, distinctSongIds)
@@ -781,7 +781,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         Map<Long, Song> candidateSongs = filterPublicSongs(songMapper.selectBatchIds(distinctSongIds)).stream()
                 .collect(Collectors.toMap(Song::getId, song -> song, (left, right) -> left));
 
-                  
+
         List<PlaylistSong> toAdd = new ArrayList<>();
         for (int i = 0; i < distinctSongIds.size(); i++) {
             Long songId = distinctSongIds.get(i);
@@ -818,13 +818,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                         playlistId, userId, "add_song", ps.getSongId(), "添加了歌曲");
             }
 
-                       
+
             if (addedCount > 0) {
                 baseMapper.adjustSongCount(playlistId, addedCount);
                 syncPlaylistIndex(playlistId);
             }
 
-                   
+
             String cacheKey = RedisConstants.PLAYLIST_PREFIX + playlistId;
             redisUtils.delete(cacheKey);
 
@@ -856,7 +856,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         requirePlaylistPermission(playlist, userId, "remove", "无权修改此歌单");
 
-                   
+
         playlistSongMapper.deleteDeletedHistoryBySongIds(playlistId, distinctSongIds);
         int deletedCount = playlistSongMapper.deleteActiveBySongIds(playlistId, distinctSongIds);
         if (deletedCount > 0) {
@@ -866,13 +866,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             }
         }
 
-                   
+
         if (deletedCount > 0) {
             baseMapper.adjustSongCount(playlistId, -deletedCount);
             syncPlaylistIndex(playlistId);
         }
 
-               
+
         String cacheKey = RedisConstants.PLAYLIST_PREFIX + playlistId;
         redisUtils.delete(cacheKey);
 
@@ -918,7 +918,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 "调整了" + songIds.size() + "首歌曲的顺序",
                 beforeOrderSummary, playlistOrderSummary(playlistId));
 
-               
+
         String cacheKey = RedisConstants.PLAYLIST_PREFIX + playlistId;
         redisUtils.delete(cacheKey);
 
@@ -953,7 +953,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
 
         if (playlistFavoriteMapper.selectActive(userId, playlistId) != null) {
-                       
+
             log.info("用户已收藏该歌单: userId={}, playlistId={}", userId, playlistId);
             return true;
         }
@@ -975,7 +975,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean unfavoritePlaylist(Long userId, Long playlistId) {
-                           
+
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(playlistId)) {
             throw new BusinessException(ResultCode.PARAM_ERROR);
         }
@@ -987,7 +987,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         if (playlistFavoriteMapper.selectActive(userId, playlistId) == null) {
             removeFavoriteGrouping(userId, "playlist", playlistId);
-                       
+
             log.info("用户未收藏该歌单: userId={}, playlistId={}", userId, playlistId);
             return true;
         }
@@ -1017,10 +1017,10 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .eq(Playlist::getIsPublic, CommonConstants.PUBLIC_PUBLIC)
                 .eq(Playlist::getType, MusicConstants.PlaylistType.CUSTOM);
 
-                         
-                                    
+
+
         if (StrUtil.isNotBlank(type) && !"all".equalsIgnoreCase(type)) {
-                                     
+
             wrapper.like(Playlist::getTags, type);
         }
 
@@ -1034,17 +1034,17 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             return new ArrayList<>();
         }
 
-                 
+
         return convertToVOBatch(playlists, userId);
     }
 
-       
-                         
-      
-                            
-                           
-                   
-       
+
+
+
+
+
+
+
     private List<PlaylistVO> convertToVOBatch(List<Playlist> playlists, Long userId) {
         if (playlists.isEmpty()) {
             return new ArrayList<>();
@@ -1052,13 +1052,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         List<PlaylistVO> voList = new ArrayList<>();
 
-                      
+
         Set<Long> creatorIds = playlists.stream()
                 .map(Playlist::getUserId)
                 .collect(Collectors.toSet());
         Map<Long, User> userMap = getUserInfos(creatorIds);
 
-                                  
+
         Set<Long> favoritePlaylistIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId)) {
             favoritePlaylistIds = getFavoritePlaylistIds(userId, playlists);
@@ -1066,18 +1066,18 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         Map<Long, Map<String, Integer>> languageStats = getPlaylistLanguageStats(playlists);
 
-                   
+
         for (Playlist playlist : playlists) {
             PlaylistVO vo = convertToVO(playlist);
 
-                      
+
             User creator = userMap.get(playlist.getUserId());
             if (creator != null) {
                 vo.setCreatorName(creator.getNickname());
                 vo.setCreatorAvatar(creator.getAvatar());
             }
 
-                     
+
             vo.setIsFavorite(favoritePlaylistIds.contains(playlist.getId()));
             vo.setPrimaryLanguage(playlist.getLanguage());
             Map<String, Integer> counts = languageStats.getOrDefault(playlist.getId(), Collections.emptyMap());
@@ -1131,13 +1131,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         playlists.forEach(playlist -> playlist.setSongCount(counts.getOrDefault(playlist.getId(), 0)));
     }
 
-       
-                         
-      
-                                 
-                           
-                     
-       
+
+
+
+
+
+
+
     private IPage<PlaylistVO> convertToVOBatch(IPage<Playlist> playlistPage, Long userId) {
         List<Playlist> playlists = playlistPage.getRecords();
         if (playlists.isEmpty()) {
@@ -1167,12 +1167,12 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return java.math.BigDecimal.ZERO;
     }
 
-       
-               
-      
-                            
-                              
-       
+
+
+
+
+
+
     private Map<Long, User> getUserInfos(Set<Long> userIds) {
         if (userIds == null || userIds.isEmpty()) {
             return Collections.emptyMap();
@@ -1214,9 +1214,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return UserAccountStatusUtil.canRetainPublicContent(userId, userMapper::selectById);
     }
 
-       
-                                    
-       
+
+
+
     private List<Song> filterPublicSongs(Collection<Song> songs) {
         if (songs == null || songs.isEmpty()) {
             return Collections.emptyList();
@@ -1242,9 +1242,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .collect(Collectors.toList());
     }
 
-       
-                           
-       
+
+
+
     private Set<Long> selectPublicSongIds(Collection<Long> songIds) {
         if (songIds == null || songIds.isEmpty()) {
             return Collections.emptySet();
@@ -1254,9 +1254,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .collect(Collectors.toSet());
     }
 
-       
-                            
-       
+
+
+
     private List<Long> validatePlaylistMutationSongIds(List<Long> songIds) {
         if (songIds == null || songIds.isEmpty() || songIds.size() > 200
                 || songIds.stream().anyMatch(songId -> songId == null || songId <= 0L)) {
@@ -1269,9 +1269,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return distinctSongIds;
     }
 
-       
-                              
-       
+
+
+
     private void validatePlaylistVisibility(Integer visibility) {
         if (visibility != null
                 && !CommonConstants.PUBLIC_PRIVATE.equals(visibility)
@@ -1280,9 +1280,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
     }
 
-       
-                       
-       
+
+
+
     private List<String> normalizePlaylistTags(List<String> tags) {
         if (tags == null || tags.isEmpty()) {
             return Collections.emptyList();
@@ -1305,9 +1305,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return new ArrayList<>(normalized);
     }
 
-       
-                                         
-       
+
+
+
     private void validatePlaylistCover(String cover) {
         if (StrUtil.isBlank(cover)) {
             return;
@@ -1355,25 +1355,25 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return limit > 0 ? limit * 3 : limit;
     }
 
-       
-                      
-      
-                         
-                            
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoritePlaylistIds(Long userId, List<Playlist> playlists) {
         if (userId == null || playlists == null || playlists.isEmpty()) {
             return Collections.emptySet();
         }
 
-                       
+
         Set<Long> playlistIds = playlists.stream()
                 .map(Playlist::getId)
                 .collect(Collectors.toSet());
 
         try {
-                                                              
+
             LambdaQueryWrapper<PlaylistFavorite> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(PlaylistFavorite::getUserId, userId)
                     .in(PlaylistFavorite::getPlaylistId, playlistIds)
@@ -1390,25 +1390,25 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
     }
 
-       
-                      
-      
-                         
-                        
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteSongIds(Long userId, List<Song> songs) {
         if (userId == null || songs == null || songs.isEmpty()) {
             return Collections.emptySet();
         }
 
         try {
-                     
+
             List<Long> songIds = songs.stream()
                     .map(Song::getId)
                     .collect(Collectors.toList());
 
-                                                   
+
             LambdaQueryWrapper<com.haoran.music.entity.SongLike> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(com.haoran.music.entity.SongLike::getUserId, userId)
                     .eq(com.haoran.music.entity.SongLike::getIsFavorite, 1)
@@ -1425,15 +1425,15 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
     }
 
-       
-               
-      
-                             
-                             
-                                 
-       
+
+
+
+
+
+
+
     private Boolean checkIsFavorite(Long userId, Long playlistId) {
-                                            
+
         LambdaQueryWrapper<PlaylistFavorite> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PlaylistFavorite::getUserId, userId)
                 .eq(PlaylistFavorite::getPlaylistId, playlistId)
@@ -1443,31 +1443,31 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return favorite != null;
     }
 
-       
-                          
-      
-                      
-                                    
-       
+
+
+
+
+
+
     private boolean isFavoritePlaylistType(Playlist playlist) {
         return playlist != null && MusicConstants.PlaylistType.FAVORITE.equals(playlist.getType());
     }
 
-       
-                  
-                                                
-                                                              
-      
-                    
-                         
-                                 
-       
+
+
+
+
+
+
+
+
+
     public Boolean checkSongIsFavorited(Long userId, Long songId) {
         if (ObjectUtils.isEmpty(userId)) {
             return false;
         }
 
-                      
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getUserId, userId)
                 .eq(Playlist::getType, MusicConstants.PlaylistType.FAVORITE)
@@ -1479,7 +1479,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             return false;
         }
 
-                       
+
         LambdaQueryWrapper<PlaylistSong> songWrapper = new LambdaQueryWrapper<>();
         songWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                 .eq(PlaylistSong::getSongId, songId)
@@ -1490,13 +1490,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     }
 
 
-       
-           
-      
-                            
-                            
-                            
-       
+
+
+
+
+
+
+
     private void handleSort(LambdaQueryWrapper<Playlist> wrapper, String sortField, String sortOrder) {
         if (StrUtil.isBlank(sortField)) {
             wrapper.orderByDesc(Playlist::getCreateTime)
@@ -1532,21 +1532,21 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
     }
 
-       
-                             
-       
-                            
-                           
-                       
-       
-       
-                
-                     
-      
-                       
-                                         
-                       
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public List<Playlist> filterPlaylistsByLanguage(List<Playlist> playlists, String language) {
         if (playlists == null || playlists.isEmpty() || StrUtil.isBlank(language)) {
             return playlists;
@@ -1554,7 +1554,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         List<Playlist> filtered = new ArrayList<>();
         for (Playlist playlist : playlists) {
-                      
+
             LambdaQueryWrapper<PlaylistSong> psWrapper = new LambdaQueryWrapper<>();
             psWrapper.eq(PlaylistSong::getPlaylistId, playlist.getId())
                     .eq(PlaylistSong::getDeleted, CommonConstants.NOT_DELETED)
@@ -1569,7 +1569,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                     .map(PlaylistSong::getSongId)
                     .collect(Collectors.toList());
 
-                     
+
             LambdaQueryWrapper<Song> songWrapper = new LambdaQueryWrapper<>();
             songWrapper.in(Song::getId, songIds)
                     .eq(Song::getLanguage, language)
@@ -1586,15 +1586,15 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
     }
 
 
-       
-                 
-      
-                               
-                                    
-                                     
-                                     
-                      
-       
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PlaylistCopyMoveResult copySongsToPlaylist(Long userId, Long sourcePlaylistId, List<Long> songIds, Long targetPlaylistId) {
@@ -1619,7 +1619,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         requirePlaylistReadable(sourcePlaylist, userId, "无权操作源歌单");
         requirePlaylistPermission(targetPlaylist, userId, "add", "无权操作目标歌单");
 
-                      
+
         LambdaQueryWrapper<PlaylistSong> sourceWrapper = new LambdaQueryWrapper<>();
         sourceWrapper.eq(PlaylistSong::getPlaylistId, sourcePlaylistId)
                 .in(PlaylistSong::getSongId, distinctSongIds)
@@ -1631,7 +1631,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .filter(relation -> deliverableSongIds.contains(relation.getSongId()))
                 .collect(Collectors.toList());
 
-                  
+
         PlaylistCopyMoveResult result = new PlaylistCopyMoveResult();
         result.setTotalRequested(distinctSongIds.size());
 
@@ -1644,7 +1644,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         Integer maxSortOrder = playlistSongMapper.selectMaxSortOrder(targetPlaylistId);
         int nextSortOrder = maxSortOrder != null ? maxSortOrder + 1 : 0;
 
-                        
+
         LambdaQueryWrapper<PlaylistSong> targetWrapper = new LambdaQueryWrapper<>();
         targetWrapper.eq(PlaylistSong::getPlaylistId, targetPlaylistId)
                 .in(PlaylistSong::getSongId, distinctSongIds)
@@ -1655,7 +1655,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .map(PlaylistSong::getSongId)
                 .collect(Collectors.toSet());
 
-                 
+
         int duplicateCount = 0;
         List<PlaylistSong> songsToAdd = new ArrayList<>();
         for (PlaylistSong ps : existingSongs) {
@@ -1701,15 +1701,15 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return result;
     }
 
-       
-                                 
-      
-                               
-                                    
-                                     
-                                     
-                      
-       
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PlaylistCopyMoveResult moveSongsToPlaylist(Long userId, Long sourcePlaylistId, List<Long> songIds, Long targetPlaylistId) {
@@ -1734,7 +1734,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         requirePlaylistPermission(sourcePlaylist, userId, "remove", "无权操作源歌单");
         requirePlaylistPermission(targetPlaylist, userId, "add", "无权操作目标歌单");
 
-                      
+
         LambdaQueryWrapper<PlaylistSong> sourceWrapper = new LambdaQueryWrapper<>();
         sourceWrapper.eq(PlaylistSong::getPlaylistId, sourcePlaylistId)
                 .in(PlaylistSong::getSongId, distinctSongIds)
@@ -1746,7 +1746,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .filter(relation -> deliverableSongIds.contains(relation.getSongId()))
                 .collect(Collectors.toList());
 
-                  
+
         PlaylistCopyMoveResult result = new PlaylistCopyMoveResult();
         result.setTotalRequested(distinctSongIds.size());
 
@@ -1759,7 +1759,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         Integer maxSortOrder = playlistSongMapper.selectMaxSortOrder(targetPlaylistId);
         int nextSortOrder = maxSortOrder != null ? maxSortOrder + 1 : 0;
 
-                        
+
         LambdaQueryWrapper<PlaylistSong> targetWrapper = new LambdaQueryWrapper<>();
         targetWrapper.eq(PlaylistSong::getPlaylistId, targetPlaylistId)
                 .in(PlaylistSong::getSongId, distinctSongIds)
@@ -1770,7 +1770,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .map(PlaylistSong::getSongId)
                 .collect(Collectors.toSet());
 
-                        
+
         int duplicateCount = 0;
         List<PlaylistSong> songsToAdd = new ArrayList<>();
         Map<Long, Long> sourceRowIdBySongId = new HashMap<>();
@@ -1779,13 +1779,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             if (targetExistingSongIds.contains(ps.getSongId())) {
                 duplicateCount++;
             } else {
-                          
+
                 PlaylistSong newPs = new PlaylistSong();
                 newPs.setPlaylistId(targetPlaylistId);
                 newPs.setSongId(ps.getSongId());
                 newPs.setSortOrder(nextSortOrder++);
                 songsToAdd.add(newPs);
-                         
+
                 sourceRowIdBySongId.put(ps.getSongId(), ps.getId());
             }
         }
@@ -1841,17 +1841,17 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return result;
     }
 
-       
-                   
-      
-                           
-                           
-                   
-       
+
+
+
+
+
+
+
     private PlaylistVO convertToVOWithUser(Playlist playlist, Long userId) {
         PlaylistVO vo = convertToVO(playlist);
 
-                                                   
+
         if (ObjectUtils.isNotEmpty(playlist.getUserId())) {
             User creator = userMapper.selectById(playlist.getUserId());
             if (ObjectUtils.isNotEmpty(creator)) {
@@ -1861,46 +1861,46 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
 
         if (ObjectUtils.isNotEmpty(userId)) {
-                     
+
             vo.setIsFavorite(checkIsFavorite(userId, playlist.getId()));
         }
 
         return vo;
     }
 
-       
-            
-      
-                           
-                   
-       
-       
-                            
-                           
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
     private PlaylistVO convertToVO(Playlist playlist) {
         PlaylistVO vo = BeanUtil.copyProperties(playlist, PlaylistVO.class);
-                                        
+
         if (ObjectUtils.isEmpty(vo.getCover())) {
             vo.setCover("/images/default-cover.png");
         }
         return vo;
     }
 
-       
-                           
-      
-                         
-                      
-       
+
+
+
+
+
+
     @Override
     public List<PlaylistVO> getFavoritePlaylists(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return new ArrayList<>();
         }
 
-                      
+
         LambdaQueryWrapper<PlaylistFavorite> favWrapper = new LambdaQueryWrapper<>();
         favWrapper.eq(PlaylistFavorite::getUserId, userId)
                 .eq(PlaylistFavorite::getDeleted, 0)                  
@@ -1911,12 +1911,12 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             return new ArrayList<>();
         }
 
-                 
+
         List<Long> playlistIds = favorites.stream()
                 .map(PlaylistFavorite::getPlaylistId)
                 .collect(Collectors.toList());
 
-                 
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Playlist::getId, playlistIds)
                 .eq(Playlist::getDeleted, CommonConstants.NOT_DELETED);
@@ -1926,16 +1926,16 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             return new ArrayList<>();
         }
 
-                
+
         return convertToVOBatch(playlists, userId);
     }
 
-       
-                           
-      
-                         
-                              
-       
+
+
+
+
+
+
     @Override
     public List<PlaylistVO> getAllUserPlaylists(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -1944,11 +1944,11 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
         List<PlaylistVO> result = new ArrayList<>();
 
-                       
+
         List<PlaylistVO> myPlaylists = getUserPlaylists(userId);
         result.addAll(myPlaylists);
 
-                       
+
         List<PlaylistVO> favoritePlaylists = getFavoritePlaylists(userId);
         result.addAll(favoritePlaylists);
 
@@ -1957,61 +1957,61 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
 
 
 
-       
-             
-      
-                        
-                     
-       
+
+
+
+
+
+
     @Override
     public List<PlaylistVO> getFeaturedPlaylists(Integer limit) {
         int actualLimit = limit != null ? limit : 10;
-        
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Playlist::getDeleted, CommonConstants.NOT_DELETED)
                 .eq(Playlist::getIsFeatured, 1)            
                 .orderByDesc(Playlist::getCreateTime)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
-        
+
         List<Playlist> playlists = filterPublicCreatorPlaylists(list(wrapper), null, actualLimit);
         return convertToVOBatch(playlists, null);
     }
 
-       
-                 
-      
-                         
-                        
-                   
-       
+
+
+
+
+
+
+
     @Override
     public List<PlaylistVO> getPlaylistsByCategory(String category, Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Playlist::getDeleted, CommonConstants.NOT_DELETED);
-        
+
         if (StrUtil.isNotBlank(category)) {
             wrapper.like(Playlist::getTags, category);
         }
-        
+
         wrapper.orderByDesc(Playlist::getCreateTime)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
-        
+
         List<Playlist> playlists = filterPublicCreatorPlaylists(list(wrapper), null, actualLimit);
         return convertToVOBatch(playlists, null);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @Override
     public List<String> getPlaylistCategories() {
-                     
+
         List<String> categories = new ArrayList<>();
         categories.add("流行");
         categories.add("摇滚");
@@ -2030,65 +2030,65 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return categories;
     }
 
-       
-           
-      
-                         
-                            
-                   
-       
+
+
+
+
+
+
+
     @Override
     public IPage<PlaylistVO> searchPlaylists(String keyword, PageQuery pageQuery) {
         Page<Playlist> page = new Page<>(pageQuery.getPage(), pageQuery.getSize());
-        
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Playlist::getDeleted, CommonConstants.NOT_DELETED);
-        
+
         if (StrUtil.isNotBlank(keyword)) {
             wrapper.and(w -> w.like(Playlist::getName, keyword)
                               .or()
                               .like(Playlist::getDescription, keyword));
         }
-        
+
         wrapper.orderByDesc(Playlist::getCreateTime);
-        
+
         IPage<Playlist> playlistPage = page(page, wrapper);
         playlistPage.setRecords(filterPublicCreatorPlaylists(playlistPage.getRecords(), null, 0));
         return convertToVOBatch(playlistPage, null);
     }
 
-       
-             
-      
-                        
-                     
-       
+
+
+
+
+
+
     @Override
     public List<PlaylistVO> getLatestPlaylists(Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Playlist::getDeleted, CommonConstants.NOT_DELETED)
                 .eq(Playlist::getIsPublic, CommonConstants.YES)
                 .orderByDesc(Playlist::getCreateTime)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
-        
+
         List<Playlist> playlists = filterPublicCreatorPlaylists(list(wrapper), null, actualLimit);
         return convertToVOBatch(playlists, null);
     }
 
-       
-                
-      
-                        
-                        
-       
+
+
+
+
+
+
     @Override
     public List<PlaylistVO> getUserCreatedPlaylists(Integer limit) {
         int actualLimit = limit != null ? limit : 50;
-        
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Playlist::getDeleted, CommonConstants.NOT_DELETED)
@@ -2096,24 +2096,24 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .ne(Playlist::getType, MusicConstants.PlaylistType.FAVORITE)
                 .orderByDesc(Playlist::getCreateTime)
                 .last("LIMIT " + expandedPublicQueryLimit(actualLimit));
-        
+
         List<Playlist> playlists = filterPublicCreatorPlaylists(list(wrapper), null, actualLimit);
         return convertToVOBatch(playlists, null);
     }
-       
-               
-       
+
+
+
     @Override
     public com.haoran.music.vo.playlist.PlaylistSubscriptionDataVO getSubscriptionData(Long playlistId, Long userId) {
         com.haoran.music.vo.playlist.PlaylistSubscriptionDataVO vo = new com.haoran.music.vo.playlist.PlaylistSubscriptionDataVO();
 
-                   
+
         Playlist playlist = getById(playlistId);
         if (ObjectUtils.isEmpty(playlist)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌单不存在");
         }
 
-                             
+
         if (ObjectUtils.isEmpty(userId) || !userId.equals(playlist.getUserId())) {
             throw new BusinessException(ResultCode.FORBIDDEN, "只有歌单创建者可以查看订阅数据");
         }
@@ -2155,28 +2155,28 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return vo;
     }
 
-       
-                
-       
+
+
+
     @Override
     public java.util.List<com.haoran.music.vo.playlist.PlaylistSubscriberVO> getSubscribers(Long playlistId, Long userId, Integer limit) {
-                   
+
         Playlist playlist = getById(playlistId);
         if (ObjectUtils.isEmpty(playlist)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌单不存在");
         }
 
-                              
+
         if (ObjectUtils.isEmpty(userId) || !userId.equals(playlist.getUserId())) {
             throw new BusinessException(ResultCode.FORBIDDEN, "只有歌单创建者可以查看订阅者列表");
         }
 
-                 
+
         if (limit == null || limit <= 0 || limit > 100) {
             limit = 20;
         }
 
-                 
+
         LambdaQueryWrapper<com.haoran.music.entity.PlaylistSubscribe> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.PlaylistSubscribe::getPlaylistId, playlistId)
                 .orderByDesc(com.haoran.music.entity.PlaylistSubscribe::getStartTime)
@@ -2190,7 +2190,7 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 .collect(Collectors.toSet());
         Map<Long, User> subscriberMap = getUserInfos(subscriberIds);
 
-                 
+
         java.util.List<com.haoran.music.vo.playlist.PlaylistSubscriberVO> result = new java.util.ArrayList<>();
         for (com.haoran.music.entity.PlaylistSubscribe subscribe : subscribes) {
             com.haoran.music.vo.playlist.PlaylistSubscriberVO vo = new com.haoran.music.vo.playlist.PlaylistSubscriberVO();
@@ -2199,20 +2199,20 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
             vo.setSubscribeType(subscribe.getSubscribeType());
             vo.setPrice(subscribe.getAmount() != null ? subscribe.getAmount().multiply(new java.math.BigDecimal("100")).intValue() : 0);
 
-                            
+
             User user = subscriberMap.get(subscribe.getUserId());
             if (user != null) {
                 vo.setNickname(user.getNickname());
                 vo.setAvatar(user.getAvatar());
             }
 
-                   
+
             if (subscribe.getStartTime() != null) {
                 vo.setSubscribeTime(java.sql.Timestamp.valueOf(subscribe.getStartTime()));
             }
             if (subscribe.getEndTime() != null) {
                 vo.setExpireTime(java.sql.Timestamp.valueOf(subscribe.getEndTime()));
-                         
+
                 vo.setStatus(subscribe.getEndTime().isAfter(java.time.LocalDateTime.now()) ? "active" : "expired");
             } else {
                 vo.setStatus("active");
@@ -2226,13 +2226,13 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return result;
     }
 
-       
-               
-      
-                         
-                      
-                   
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean updatePaidSettings(Long userId, com.haoran.music.dto.playlist.PlaylistPaidSettingsDTO dto) {
@@ -2396,15 +2396,15 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         log.info("event=playlist_paid_application_submitted playlistId={} userId={} price={} status=pending",
             dto.getPlaylistId(), userId, dto.getMonthlyPrice());
 
-                                               
-                      
+
+
         LambdaQueryWrapper<User> adminWrapper = new LambdaQueryWrapper<>();
         adminWrapper.eq(User::getRole, "admin")
             .or()
             .eq(User::getIsModerator, 1);
         java.util.List<User> admins = userMapper.selectList(adminWrapper);
 
-                     
+
         for (User admin : admins) {
             try {
                 notificationService.sendSystemNotification(
@@ -2424,11 +2424,11 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return true;
     }
 
-       
-                              
-                               
-                                            
-       
+
+
+
+
+
     private void validateMonthlyPrice(Integer monthlyPrice) {
         if (monthlyPrice == null || monthlyPrice < 5 || monthlyPrice > 30) {
             throw new BusinessException(ResultCode.PARAM_ERROR,
@@ -2500,9 +2500,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 collaborationStateSummary(operationType, songId, false));
     }
 
-       
-                               
-       
+
+
+
     private String recordCollaborationOperationIfEnabled(Long playlistId, Long userId,
                                                          String operationType, Long songId, String description,
                                                          String beforeSummary, String afterSummary) {
@@ -2523,9 +2523,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return eventId;
     }
 
-       
-                                
-       
+
+
+
     private String playlistMetadataSummary(Playlist playlist) {
         Map<String, Object> state = new LinkedHashMap<>();
         state.put("name", playlist.getName());
@@ -2536,9 +2536,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         return "summaryVersion=v1;metadataSha256=" + sha256(JSON.toJSONString(state));
     }
 
-       
-                             
-       
+
+
+
     private String playlistOrderSummary(Long playlistId) {
         List<String> tokens = playlistSongMapper.selectActiveOrderTokens(playlistId);
         List<String> safeTokens = ObjectUtils.isEmpty(tokens) ? Collections.emptyList() : tokens;
@@ -2546,9 +2546,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 + ";songCount=" + safeTokens.size();
     }
 
-       
-                            
-       
+
+
+
     private String playlistOrderSummary(List<PlaylistSong> playlistSongs) {
         List<String> tokens = new ArrayList<>();
         if (playlistSongs != null) {
@@ -2560,9 +2560,9 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
                 + ";songCount=" + tokens.size();
     }
 
-       
-                             
-       
+
+
+
     private String sha256(String value) {
         try {
             byte[] digest = MessageDigest.getInstance("SHA-256")
@@ -2603,18 +2603,18 @@ public class PlaylistServiceImpl extends ServiceImpl<PlaylistMapper, Playlist> i
         }
     }
 
-       
-                                            
-      
-                            
-                                           
-       
+
+
+
+
+
+
     @Override
     public Integer getCollaboratePlaylistCount(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return 0;
         }
-                                                              
+
         LambdaQueryWrapper<com.haoran.music.entity.PlaylistCollaborator> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(com.haoran.music.entity.PlaylistCollaborator::getUserId, userId)
                 .eq(com.haoran.music.entity.PlaylistCollaborator::getStatus, "accepted")

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -11,9 +11,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                                                         
-   
+
+
+
 @Data
 @TableName("user_reward_claim")
 public class UserRewardClaim {

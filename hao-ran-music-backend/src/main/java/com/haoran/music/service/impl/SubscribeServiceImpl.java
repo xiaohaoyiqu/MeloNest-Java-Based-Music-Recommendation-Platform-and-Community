@@ -25,10 +25,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-           
-                      
-   
+
+
+
+
 @Service
 public class SubscribeServiceImpl implements SubscribeService {
 
@@ -411,7 +411,7 @@ public class SubscribeServiceImpl implements SubscribeService {
             return result;
         }
 
-                    
+
         Set<Long> playlistIds = resultPage.getRecords().stream()
                 .map(PlaylistSubscribe::getPlaylistId)
                 .collect(Collectors.toSet());
@@ -419,14 +419,14 @@ public class SubscribeServiceImpl implements SubscribeService {
                 .map(PlaylistSubscribe::getCreatorId)
                 .collect(Collectors.toSet());
 
-                 
+
         LambdaQueryWrapper<Playlist> playlistWrapper = new LambdaQueryWrapper<>();
         playlistWrapper.in(Playlist::getId, playlistIds);
         List<Playlist> playlists = playlistMapper.selectList(playlistWrapper);
         Map<Long, Playlist> playlistMap = playlists.stream()
                 .collect(Collectors.toMap(Playlist::getId, p -> p));
 
-                  
+
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.in(User::getId, creatorIds)
                 .select(User::getId, User::getNickname);
@@ -497,7 +497,7 @@ public class SubscribeServiceImpl implements SubscribeService {
             return result;
         }
 
-                      
+
         Set<Long> userIds = resultPage.getRecords().stream()
                 .map(PlaylistSubscribe::getUserId)
                 .collect(Collectors.toSet());
@@ -617,7 +617,7 @@ public class SubscribeServiceImpl implements SubscribeService {
         if (subscribe.getAutoRenew() != 1) {
             throw new BusinessException("未开启自动续费");
         }
-                                            
+
         subscribe.setAutoRenew(0);
         if (subscribe.getEndTime() == null || !subscribe.getEndTime().isAfter(LocalDateTime.now())) {
             subscribe.setStatus("expired");
@@ -750,7 +750,7 @@ public class SubscribeServiceImpl implements SubscribeService {
             return result;
         }
 
-                    
+
         Set<Long> playlistIds = resultPage.getRecords().stream()
                 .map(PlaylistSubscribe::getPlaylistId)
                 .collect(Collectors.toSet());
@@ -758,14 +758,14 @@ public class SubscribeServiceImpl implements SubscribeService {
                 .map(PlaylistSubscribe::getCreatorId)
                 .collect(Collectors.toSet());
 
-                 
+
         LambdaQueryWrapper<Playlist> playlistWrapper = new LambdaQueryWrapper<>();
         playlistWrapper.in(Playlist::getId, playlistIds);
         List<Playlist> playlists = playlistMapper.selectList(playlistWrapper);
         Map<Long, Playlist> playlistMap = playlists.stream()
                 .collect(Collectors.toMap(Playlist::getId, p -> p));
 
-                  
+
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.in(User::getId, creatorIds)
                 .select(User::getId, User::getNickname, User::getAvatar);

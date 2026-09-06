@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.annotation.RequireRole;
@@ -36,9 +36,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-   
-                                                        
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -62,9 +62,9 @@ public class UserProfileController {
     @Resource
     private StoreProductPolicyService storeProductPolicyService;
 
-       
-                                         
-       
+
+
+
     @ApiLog("获取用户公开陈列")
     @GetMapping("/profile/public-showcase/{userId}")
     public Result<Map<String, Object>> getPublicShowcase(
@@ -83,9 +83,9 @@ public class UserProfileController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取用户画像")
     @GetMapping("/profile/{userId}")
     public Result<UserProfileVO> getUserProfile(
@@ -96,9 +96,9 @@ public class UserProfileController {
         return Result.success(profile);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取用户偏好标签")
     @GetMapping("/profile/preferences/{userId}")
     public Result<Map<String, Object>> getUserPreferenceTags(
@@ -109,9 +109,9 @@ public class UserProfileController {
         return Result.success(tags);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("更新用户偏好")
     @PostMapping("/profile/preferences/update")
     public Result<Void> updatePreferences(
@@ -127,9 +127,9 @@ public class UserProfileController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @ApiLog("刷新用户画像")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/profile/refresh/{userId}")
@@ -138,9 +138,9 @@ public class UserProfileController {
         return Result.success();
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("批量刷新用户画像")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @RateLimit(maxRequests = 4, timeWindowSeconds = 3600, operation = "batchRefreshUserProfiles",
@@ -176,9 +176,9 @@ public class UserProfileController {
         return Result.success(result);
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("刷新最近活跃用户画像")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @RateLimit(maxRequests = 1, timeWindowSeconds = 3600, operation = "refreshAllUserProfiles",
@@ -189,9 +189,9 @@ public class UserProfileController {
         return Result.success("用户画像批量刷新任务已执行");
     }
 
-       
-             
-       
+
+
+
     @ApiLog("记录用户行为")
     @RateLimit(maxRequests = 120, timeWindowSeconds = 3600, operation = "recordProfileBehavior",
             message = "行为上报过于频繁，请稍后再试")
@@ -209,9 +209,9 @@ public class UserProfileController {
         return Result.success();
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("获取用户分层统计")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/profile/segment/stats")
@@ -220,9 +220,9 @@ public class UserProfileController {
         return Result.success(stats);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("预测用户流失概率")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/profile/churn/predict/{userId}")

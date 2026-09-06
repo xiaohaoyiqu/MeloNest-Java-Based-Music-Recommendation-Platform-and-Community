@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-   
-                      
-                                
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/admin/sync")
@@ -24,14 +24,14 @@ public class SyncFavoriteController {
     @Autowired
     private SyncFavoriteService syncFavoriteService;
 
-       
-                  
-                                          
-      
-                                   
-                            
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("同步收藏数据")
     @PostMapping("/favorite")
     public Result<Long> syncFavoriteData(@RequestParam(required = false) Long userId,
@@ -42,14 +42,14 @@ public class SyncFavoriteController {
         return syncFavoriteService.syncFavoriteData(userId);
     }
 
-       
-                     
-                              
-      
-                         
-                            
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("修复收藏歌单")
     @PostMapping("/fix-favorite/{userId}")
     public Result<Long> fixFavoritePlaylist(@PathVariable Long userId,
@@ -60,13 +60,13 @@ public class SyncFavoriteController {
         return syncFavoriteService.fixFavoritePlaylist(userId);
     }
 
-       
-                           
-                          
-      
-                            
-                      
-       
+
+
+
+
+
+
+
     @ApiLog("更新歌单歌曲数量")
     @PostMapping("/update-song-count")
     public Result<Integer> updateAllPlaylistSongCount(HttpServletRequest request) {

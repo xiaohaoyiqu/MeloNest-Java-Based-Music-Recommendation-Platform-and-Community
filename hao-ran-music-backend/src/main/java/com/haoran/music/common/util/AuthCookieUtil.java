@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-                                                                                           
+
 public final class AuthCookieUtil {
 
     public static final String COOKIE_NAME = "HAORAN_SESSION";

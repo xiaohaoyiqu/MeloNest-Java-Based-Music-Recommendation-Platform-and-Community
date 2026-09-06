@@ -1,7 +1,7 @@
-   
-                      
-                            
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-   
-               
-   
+
+
+
 @Mapper
 public interface UserFeedbackMapper extends BaseMapper<UserFeedback> {
 

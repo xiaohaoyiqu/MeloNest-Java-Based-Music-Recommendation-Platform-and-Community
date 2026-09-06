@@ -1,7 +1,7 @@
-   
-                      
-                            
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -14,18 +14,18 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-   
-               
-   
+
+
+
 @Mapper
 public interface UserPointsMapper extends BaseMapper<UserPoints> {
 
-       
-                       
-      
-                          
-                          
-       
+
+
+
+
+
+
     @Select("SELECT p.* FROM user_points p"
             + " INNER JOIN `user` u ON u.id = p.user_id"
             + " WHERE 1 = 1"

@@ -13,10 +13,10 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
-   
-                      
-                            
-   
+
+
+
+
 @Mapper
 public interface PlaylistSongMapper extends BaseMapper<PlaylistSong> {
 
@@ -58,9 +58,9 @@ public interface PlaylistSongMapper extends BaseMapper<PlaylistSong> {
             @Param("publicPlaylist") boolean publicPlaylist,
             @Param("allowedUploaderIds") java.util.Collection<Long> allowedUploaderIds);
 
-       
-                                                                                                  
-       
+
+
+
     Long countVisibleSongs(@Param("playlistId") Long playlistId,
                            @Param("publicPlaylist") boolean publicPlaylist,
                            @Param("allowedUploaderIds") java.util.Collection<Long> allowedUploaderIds);
@@ -81,12 +81,12 @@ public interface PlaylistSongMapper extends BaseMapper<PlaylistSong> {
     int updateSortOrdersBatch(@Param("playlistId") Long playlistId,
                               @Param("songIds") List<Long> songIds);
 
-       
-                         
-      
-                             
-                                 
-       
+
+
+
+
+
+
     @Select("SELECT CONCAT(song_id, ':', sort_order) FROM playlist_song "
             + "WHERE playlist_id = #{playlistId} AND deleted = 0 ORDER BY sort_order, id")
     List<String> selectActiveOrderTokens(@Param("playlistId") Long playlistId);

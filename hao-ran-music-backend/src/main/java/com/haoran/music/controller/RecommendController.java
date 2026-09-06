@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 
 @RestController
 @RequestMapping("/recommend")
@@ -24,11 +24,11 @@ public class RecommendController {
     @Resource
     private RecommendService recommendService;
 
-       
-                  
-      
-                   
-       
+
+
+
+
+
     @ApiLog("获取每日推荐")
     @DetectCrawler(operation = "每日推荐", checkReferer = true, checkBehavior = false)
     @GetMapping("/daily")
@@ -38,12 +38,12 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-              
-      
-                        
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取个性化推荐")
     @GetMapping("/personal")
     public Result<RecommendVO> getPersonalRecommend(
@@ -53,12 +53,12 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-                   
-      
-                        
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取发现音乐")
     @GetMapping("/discover")
     public Result<RecommendVO> getDiscoverRecommend(
@@ -68,13 +68,13 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                         
-                          
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取相似歌曲推荐")
     @GetMapping("/song/{songId}/similar")
     public Result<RecommendVO> getSimilarSongs(
@@ -85,13 +85,13 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-               
-      
-                           
-                            
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取歌手推荐")
     @GetMapping("/artist/{artistId}")
     public Result<RecommendVO> getArtistRecommend(
@@ -102,11 +102,11 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-               
-      
-                 
-       
+
+
+
+
+
     @ApiLog("刷新推荐画像")
     @PostMapping("/refresh")
     public Result<Void> refreshRecommendProfile(@RequestAttribute("userId") Long userId) {
@@ -114,11 +114,11 @@ public class RecommendController {
         return Result.success();
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @ApiLog("获取用户偏好标签")
     @GetMapping("/preferences/tags")
     public Result<List<String>> getUserPreferenceTags(@RequestAttribute("userId") Long userId) {
@@ -126,14 +126,14 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-             
-      
-                                                         
-                             
-                             
-                 
-       
+
+
+
+
+
+
+
+
     @ApiLog("记录用户行为")
     @PostMapping("/action")
     public Result<Void> recordAction(
@@ -145,15 +145,15 @@ public class RecommendController {
         return Result.success();
     }
 
-                                                           
 
-       
-                   
-      
-                         
-                         
-                            
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取个性化推荐（带理由）")
     @GetMapping("/personal/reason")
     public Result<List<RecommendedSongVO>> getPersonalRecommendWithReason(
@@ -163,13 +163,13 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-                  
-      
-                         
-                         
-                            
-       
+
+
+
+
+
+
+
     @ApiLog("获取每日发现（带理由）")
     @GetMapping("/discovery/reason")
     public Result<List<RecommendedSongVO>> getDailyDiscoveryWithReason(
@@ -179,14 +179,14 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-                  
-      
-                         
-                         
-                         
-                            
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取相似推荐（带理由）")
     @GetMapping("/similar/{songId}/reason")
     public Result<List<RecommendedSongVO>> getSimilarRecommendWithReason(
@@ -197,15 +197,15 @@ public class RecommendController {
         return Result.success(result);
     }
 
-                                                            
 
-       
-                
-      
-                         
-                         
-                       
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取个性化歌单推荐")
     @GetMapping("/playlists")
     public Result<List<Long>> getPersonalizedPlaylists(
@@ -215,13 +215,13 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-                
-      
-                         
-                         
-                       
-       
+
+
+
+
+
+
+
     @ApiLog("获取个性化专辑推荐")
     @GetMapping("/albums")
     public Result<List<Long>> getPersonalizedAlbums(
@@ -231,13 +231,13 @@ public class RecommendController {
         return Result.success(result);
     }
 
-       
-                
-      
-                         
-                         
-                        
-       
+
+
+
+
+
+
+
     @ApiLog("获取个性化MV推荐")
     @GetMapping("/mvs")
     public Result<List<Long>> getPersonalizedMVs(

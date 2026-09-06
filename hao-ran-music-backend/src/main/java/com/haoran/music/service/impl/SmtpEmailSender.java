@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.haoran.music.common.config.EmailConfig;
@@ -15,9 +15,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-   
-                                                                                
-   
+
+
+
 @Slf4j
 @Service
 @ConditionalOnProperty(prefix = "email", name = "enabled", havingValue = "true")

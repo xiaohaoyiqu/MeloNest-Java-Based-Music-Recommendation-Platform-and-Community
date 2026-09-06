@@ -1,16 +1,16 @@
 #!/bin/bash
-                                                                               
-                    
-                     
-                  
-                                             
-                     
-                                                                               
 
-               
+
+
+
+
+
+
+
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-        
+
 if [ -f "${SCRIPT_DIR}/env.sh" ]; then
     source "${SCRIPT_DIR}/env.sh"
 else
@@ -18,10 +18,10 @@ else
     exit 1
 fi
 
-          
+
 CURRENT_IP=$(hostname -I | awk '{print $1}')
 
-                                              
+
 if [ "$CURRENT_IP" != "$NODE1_IP" ]; then
     echo "[ERROR] nginx.sh只能在node1执行，当前节点: $CURRENT_IP"
     exit 1
@@ -32,9 +32,9 @@ NGINX_PORT="${NGINX_HTTP_PORT:-3223}"
 NODE_NAME="node1"
 NODE_ROLE="统一入口/反向代理"
 
-                                                                               
-      
-                                                                               
+
+
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -46,7 +46,7 @@ log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 log_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
-                                              
+
 remote_nginx() {
     local node=$1
     local action=$2
@@ -61,7 +61,7 @@ remote_nginx() {
             port="${NODE2_NGINX_PORT:-8082}"
             ;;
         "$NODE3_IP")
-                                            
+
             conf="/usr/local/soft/nginx-1.28.0/conf/nginx.conf"
             port="${NODE3_NGINX_PORT:-8081}"
             ;;
@@ -175,9 +175,9 @@ remote_nginx() {
     "
 }
 
-                                                                               
-             
-                                                                               
+
+
+
 check_nginx() {
     if [ ! -d "$NGINX_HOME" ]; then
         log_error "Nginx未安装: $NGINX_HOME"
@@ -185,9 +185,9 @@ check_nginx() {
     fi
 }
 
-                                                                               
-               
-                                                                               
+
+
+
 ensure_nginx_config() {
     local conf_file="$NGINX_HOME/conf/nginx.conf"
     local staged_file="${conf_file}.new.$$"
@@ -206,7 +206,7 @@ ensure_nginx_config() {
         return 1
     fi
 
-                                                      
+
     if [ ! -f "$conf_file" ] || ! cmp -s "$NGINX_CONF" "$conf_file"; then
         cp -f "$NGINX_CONF" "$staged_file" || return 1
         if ! candidate_result=$(${NGINX_HOME}/sbin/nginx -t -c "$staged_file" 2>&1); then
@@ -228,7 +228,7 @@ ensure_nginx_config() {
         log_info "已同步节点配置: $NGINX_CONF -> $conf_file"
     fi
 
-                    
+
     if [ ! -f "$NGINX_HOME/conf/mime.types" ]; then
         local mime_conf="$PROJECT_DIR/ee/nginx/mime.types"
         if [ "$CURRENT_IP" != "$NODE1_IP" ]; then
@@ -241,13 +241,13 @@ ensure_nginx_config() {
             log_warn "mime.types不存在，使用默认配置"
         fi
     fi
-                     
+
     if [ "$CURRENT_IP" = "$NODE1_IP" ]; then
         local frontend_root="/sdb1/myprojoct/haoranmusic/hao-ran-music-frontend/dist"
         if [ ! -d "$frontend_root" ]; then
             log_warn "前端静态文件目录不存在: $frontend_root"
             mkdir -p "$frontend_root" 2>/dev/null
-                               
+
             cat > "$frontend_root/index.html" 2>/dev/null << 'EOF'
 <!DOCTYPE html>
 <html>
@@ -267,31 +267,31 @@ EOF
     fi
 }
 
-                                                                               
-       
-                                                                               
+
+
+
 init_dirs() {
     log_step "初始化Nginx目录..."
 
-            
+
     mkdir -p ${NGINX_HOME}/logs 2>/dev/null
     mkdir -p ${NGINX_HOME}/cache 2>/dev/null
 
-                     
+
     if [ ! -d "/sdb1/myprojoct/haoranmusic/hao-ran-music-frontend/dist" ]; then
         mkdir -p /sdb1/myprojoct/haoranmusic/hao-ran-music-frontend/dist 2>/dev/null
     fi
 
-          
+
     chown -R hdfs:hdfs ${NGINX_HOME}/logs 2>/dev/null
     chown -R hdfs:hdfs ${NGINX_HOME}/cache 2>/dev/null
 
     log_info "目录初始化完成"
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 test_config() {
     log_step "测试Nginx配置..."
 
@@ -317,9 +317,9 @@ verify_local_http() {
     log_info "node1:${NGINX_PORT} HTTP ${http_code}"
 }
 
-                                                                               
-         
-                                                                               
+
+
+
 start() {
     echo ""
     echo "=========================================="
@@ -332,16 +332,16 @@ start() {
 
     check_nginx
 
-              
+
     if ! ensure_nginx_config; then
         log_error "配置同步失败，取消启动"
         return 1
     fi
 
-           
+
     init_dirs
 
-          
+
     if ! test_config; then
         log_error "配置测试失败，取消启动"
         return 1
@@ -378,9 +378,9 @@ start() {
     status
 }
 
-                                                                               
-         
-                                                                               
+
+
+
 stop() {
     echo ""
     echo "=========================================="
@@ -404,18 +404,18 @@ stop() {
     log_info "三节点Nginx已停止"
 }
 
-                                                                               
-         
-                                                                               
+
+
+
 restart() {
     stop || return 1
     sleep 1
     start
 }
 
-                                                                               
-        
-                                                                               
+
+
+
 reload() {
     echo ""
     echo "=========================================="
@@ -428,7 +428,7 @@ reload() {
         return 1
     fi
 
-          
+
     if ! test_config; then
         log_error "配置测试失败，取消重载"
         return 1
@@ -451,9 +451,9 @@ reload() {
     log_info "三节点Nginx配置重新加载完成"
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 status() {
     echo ""
     echo "=========================================="
@@ -512,9 +512,9 @@ status() {
     return "$has_error"
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 logs() {
     local lines="${1:-50}"
 
@@ -543,9 +543,9 @@ logs() {
     fi
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 benchmark() {
     echo ""
     echo "=========================================="
@@ -561,14 +561,14 @@ benchmark() {
     log_step "使用ab进行压力测试..."
     echo ""
 
-            
+
     if ! command -v ab &>/dev/null; then
         log_warn "ab工具未安装，跳过性能测试"
         log_info "安装命令: yum install httpd-tools"
         return 0
     fi
 
-                 
+
     local test_url="http://localhost:${NGINX_PORT}/"
 
     echo "  测试URL: ${test_url}"
@@ -579,9 +579,9 @@ benchmark() {
     ab -n 10000 -c 100 ${test_url} 2>&1 | tail -20
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 diagnose() {
     echo ""
     echo "=========================================="
@@ -591,7 +591,7 @@ diagnose() {
 
     local has_error=0
 
-               
+
     echo -n "  [1/7] 安装目录检查: "
     if [ -d "$NGINX_HOME" ]; then
         echo -e "${GREEN}OK${NC} ($NGINX_HOME)"
@@ -600,7 +600,7 @@ diagnose() {
         has_error=1
     fi
 
-               
+
     echo -n "  [2/7] 配置文件检查: "
     if [ -f "$NGINX_HOME/conf/nginx.conf" ]; then
         echo -e "${GREEN}OK${NC}"
@@ -609,7 +609,7 @@ diagnose() {
         has_error=1
     fi
 
-                     
+
     echo -n "  [3/7] mime.types检查: "
     if [ -f "$NGINX_HOME/conf/mime.types" ]; then
         echo -e "${GREEN}OK${NC}"
@@ -617,7 +617,7 @@ diagnose() {
         echo -e "${YELLOW}WARN${NC} - mime.types缺失"
     fi
 
-                  
+
     echo -n "  [4/7] 进程检查: "
     if pgrep -f "^nginx: master process " > /dev/null; then
         local pid=$(pgrep -f "^nginx: master process ")
@@ -627,7 +627,7 @@ diagnose() {
         has_error=1
     fi
 
-               
+
     echo -n "  [5/7] 端口${NGINX_HTTP_PORT}监听: "
     if netstat -tln 2>/dev/null | grep -q ":${NGINX_HTTP_PORT}.*LISTEN"; then
         echo -e "${GREEN}OK${NC}"
@@ -636,7 +636,7 @@ diagnose() {
         has_error=1
     fi
 
-                 
+
     echo -n "  [6/7] HTTP连接测试: "
     local http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${NGINX_HTTP_PORT}/health 2>/dev/null)
     if [ "$http_code" = "200" ]; then
@@ -646,7 +646,7 @@ diagnose() {
         has_error=1
     fi
 
-               
+
     echo -n "  [7/7] 日志目录检查: "
     if [ -d "$NGINX_HOME/logs" ]; then
         echo -e "${GREEN}OK${NC}"
@@ -659,11 +659,11 @@ diagnose() {
     echo "  详细信息:"
     echo "----------------------------------------"
 
-             
+
     echo "  监听端口:"
     netstat -tlnp 2>/dev/null | grep nginx | awk '{print "    " $4 " -> " $7}' || echo "    无"
 
-               
+
     if [ -f "$NGINX_HOME/logs/error.log" ]; then
         local error_count=$(grep -c "error" "$NGINX_HOME/logs/error.log" 2>/dev/null || echo "0")
         echo "  错误日志: 最近有 ${error_count} 条错误记录"
@@ -688,9 +688,9 @@ diagnose() {
     echo "=========================================="
 }
 
-                                                                               
-      
-                                                                               
+
+
+
 info() {
     echo ""
     echo "=========================================="
@@ -711,7 +711,7 @@ info() {
     grep "client_max_body_size" ${NGINX_HOME}/conf/nginx.conf | grep -v "#"
     echo ""
 
-            
+
     local workers=$(grep "worker_processes" ${NGINX_HOME}/conf/nginx.conf | grep "auto" | wc -l)
     local connections=$(grep "worker_connections" ${NGINX_HOME}/conf/nginx.conf | awk '{print $2}' | tr -d ';')
 
@@ -727,9 +727,9 @@ info() {
     echo ""
 }
 
-                                                                               
-       
-                                                                               
+
+
+
 COMMAND="${1:-start}"
 
 case "${COMMAND}" in

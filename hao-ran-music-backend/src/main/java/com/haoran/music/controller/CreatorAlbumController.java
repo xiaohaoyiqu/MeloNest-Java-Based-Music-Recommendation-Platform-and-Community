@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-   
-                      
-                        
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/creator/album")
@@ -30,9 +30,9 @@ public class CreatorAlbumController {
         this.creatorAlbumService = creatorAlbumService;
     }
 
-       
-           
-       
+
+
+
     @ApiLog("创建专辑")
     @PostMapping
     public Result createAlbum(HttpServletRequest request,
@@ -60,7 +60,7 @@ public class CreatorAlbumController {
                 album.setReleaseDate(java.time.LocalDate.parse(releaseDate));
                 album.setIsPublishDateSet(1);
             } catch (Exception e) {
-                         
+
             }
         }
 
@@ -68,9 +68,9 @@ public class CreatorAlbumController {
         return Result.success(albumId);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("更新专辑")
     @PutMapping("/{id}")
     public Result updateAlbum(@PathVariable Long id,
@@ -91,9 +91,9 @@ public class CreatorAlbumController {
         return Result.success();
     }
 
-       
-           
-       
+
+
+
     @ApiLog("发布专辑")
     @PostMapping("/{id}/publish")
     public Result publishAlbum(@PathVariable Long id, HttpServletRequest request) {
@@ -102,9 +102,9 @@ public class CreatorAlbumController {
         return Result.success();
     }
 
-       
-           
-       
+
+
+
     @ApiLog("删除专辑")
     @DeleteMapping("/{id}")
     public Result deleteAlbum(@PathVariable Long id, HttpServletRequest request) {
@@ -113,9 +113,9 @@ public class CreatorAlbumController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取专辑详情")
     @GetMapping("/{id}")
     public Result getAlbumDetail(@PathVariable Long id,
@@ -124,9 +124,9 @@ public class CreatorAlbumController {
         return Result.success(album);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取我的专辑列表")
     @GetMapping("/my")
     public Result getMyAlbums(HttpServletRequest request,
@@ -138,9 +138,9 @@ public class CreatorAlbumController {
         return Result.success(result);
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取专辑歌曲列表")
     @GetMapping("/{id}/songs")
     public Result getAlbumSongs(@PathVariable Long id,
@@ -149,9 +149,9 @@ public class CreatorAlbumController {
         return Result.success(songs);
     }
 
-       
-              
-       
+
+
+
     @ApiLog("添加歌曲到专辑")
     @PostMapping("/{id}/songs")
     public Result addSongsToAlbum(@PathVariable Long id,
@@ -162,9 +162,9 @@ public class CreatorAlbumController {
         return Result.success();
     }
 
-       
-              
-       
+
+
+
     @ApiLog("从专辑移除歌曲")
     @DeleteMapping("/{albumId}/songs/{songId}")
     public Result removeSongFromAlbum(@PathVariable Long albumId,
@@ -175,9 +175,9 @@ public class CreatorAlbumController {
         return Result.success();
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("更新专辑歌曲位置")
     @PutMapping("/{albumId}/songs/{songId}")
     public Result updateSongPosition(@PathVariable Long albumId,
@@ -189,9 +189,9 @@ public class CreatorAlbumController {
         return Result.success();
     }
 
-       
-              
-       
+
+
+
     @ApiLog("上传歌曲到专辑")
     @PostMapping("/{id}/upload-song")
     public Result uploadSongToAlbum(@PathVariable Long id,

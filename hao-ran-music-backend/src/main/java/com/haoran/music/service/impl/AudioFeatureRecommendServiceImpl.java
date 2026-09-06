@@ -21,11 +21,11 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendService {
@@ -48,10 +48,10 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
     @Autowired
     private MusicIntelligenceCacheService musicIntelligenceCacheService;
 
-             
+
     private static final String SCENARIO_CACHE_KEY = "scenario:presets";
 
-              
+
     private static final String SIMILARITY_CACHE_PREFIX = "audio:similarity:";
 
     private static final Set<String> SCENARIO_SORT_FIELDS = new HashSet<>(Arrays.asList(
@@ -68,14 +68,14 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             return result;
         }
 
-                 
+
         Map<String, Object> scenario = getScenarioByCode(scenarioCode);
         if (scenario == null) {
             result.setSongs(new ArrayList<>());
             return result;
         }
 
-                 
+
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT id, name, artist_names, album_name, duration, cover, ");
         sql.append("uploader_id, ");
@@ -84,7 +84,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
 
         List<Object> params = new ArrayList<>();
 
-                   
+
         BigDecimal minEnergy = (BigDecimal) scenario.get("min_energy");
         BigDecimal maxEnergy = (BigDecimal) scenario.get("max_energy");
         if (minEnergy != null && maxEnergy != null) {
@@ -93,7 +93,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(maxEnergy);
         }
 
-                         
+
         BigDecimal minDanceability = (BigDecimal) scenario.get("min_danceability");
         BigDecimal maxDanceability = (BigDecimal) scenario.get("max_danceability");
         if (minDanceability != null && maxDanceability != null) {
@@ -102,7 +102,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(maxDanceability);
         }
 
-                    
+
         BigDecimal minValence = (BigDecimal) scenario.get("min_valence");
         BigDecimal maxValence = (BigDecimal) scenario.get("max_valence");
         if (minValence != null && maxValence != null) {
@@ -111,7 +111,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(maxValence);
         }
 
-                  
+
         BigDecimal minTempo = (BigDecimal) scenario.get("min_tempo");
         BigDecimal maxTempo = (BigDecimal) scenario.get("max_tempo");
         if (minTempo != null && maxTempo != null) {
@@ -120,7 +120,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(maxTempo);
         }
 
-                             
+
         BigDecimal minInstrumental = (BigDecimal) scenario.get("min_instrumentalness");
         BigDecimal maxInstrumental = (BigDecimal) scenario.get("max_instrumentalness");
         if (minInstrumental != null && maxInstrumental != null) {
@@ -129,7 +129,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(maxInstrumental);
         }
 
-             
+
         String sortField = safeScenarioSortField((String) scenario.get("sort_field"));
         String sortOrder = safeSortOrder((String) scenario.get("sort_order"));
         sql.append("ORDER BY ").append(sortField).append(" ").append(sortOrder);
@@ -137,13 +137,13 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
         sql.append(" LIMIT ?");
         params.add(candidateLimit(safeLimit));
 
-               
+
         List<Map<String, Object>> songs = jdbcTemplate.queryForList(sql.toString(), params.toArray());
 
-               
+
         List<RecommendedSongVO> songVOs = mapPublicSongRows(songs, safeLimit);
 
-                 
+
         String scenarioName = (String) scenario.get("name");
         songVOs.forEach(vo -> vo.setReason("根据【" + scenarioName + "】场景推荐"));
 
@@ -171,14 +171,14 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
 
         List<Object> params = new ArrayList<>();
 
-                        
+
         double valenceMin = Math.max(0, valence - 0.15);
         double valenceMax = Math.min(1, valence + 0.15);
         sql.append("AND valence BETWEEN ? AND ? ");
         params.add(valenceMin);
         params.add(valenceMax);
 
-                      
+
         if (energy != null) {
             double energyMin = Math.max(0, energy - 0.2);
             double energyMax = Math.min(1, energy + 0.2);
@@ -187,7 +187,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(energyMax);
         }
 
-                 
+
         sql.append("ORDER BY ABS(valence - ?) ");
         params.add(valence);
 
@@ -203,7 +203,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
 
         List<RecommendedSongVO> songVOs = mapPublicSongRows(songs, safeLimit);
 
-                 
+
         String moodDesc = getMoodDescription(valence);
         songVOs.forEach(vo -> vo.setReason("根据【" + moodDesc + "】情绪推荐"));
 
@@ -222,7 +222,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             return result;
         }
 
-                      
+
         Map<String, Object> features = getSongAudioFeatures(songId);
         if (features == null || features.isEmpty()) {
             result.setSongs(new ArrayList<>());
@@ -235,7 +235,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
         BigDecimal refTempo = (BigDecimal) features.get("tempo");
         BigDecimal refAcousticness = (BigDecimal) features.get("acousticness");
 
-                   
+
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT id, name, artist_names, album_name, duration, cover, ");
         sql.append("uploader_id, ");
@@ -258,7 +258,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
                 refAcousticness != null ? refAcousticness : 0.25, refAcousticness != null ? refAcousticness : 0.25,
                 songId, candidateLimit(safeLimit));           
 
-                  
+
         List<RecommendedSongVO> songVOs = mapPublicSongRows(songs, safeLimit);
 
         songVOs.forEach(vo -> vo.setReason("根据歌曲音频特征相似度推荐"));
@@ -288,16 +288,16 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
         return publicRows.isEmpty() ? null : stripUploaderId(publicRows.get(0));
     }
 
-       
-                           
-       
+
+
+
     @Override
     public List<Map<String, Object>> batchGetAudioFeatures(List<Long> songIds) {
         if (songIds == null || songIds.isEmpty()) {
             return new ArrayList<>();
         }
 
-                         
+
         String placeholders = songIds.stream()
                 .map(id -> "?")
                 .collect(Collectors.joining(","));
@@ -312,7 +312,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
 
     @Override
     public Double calculateSimilarity(Long songId1, Long songId2) {
-               
+
         String cacheKey = SIMILARITY_CACHE_PREFIX + musicIntelligenceCacheService.recommendVersionSegment()
                 + Math.min(songId1, songId2) + ":" + Math.max(songId1, songId2);
         Object cachedObj = redisUtils.get(cacheKey);
@@ -328,30 +328,30 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             return 0.0;
         }
 
-                    
+
         double diff = 0;
         int weightSum = 0;
 
-                             
+
         diff += getFeatureDiff(features1, features2, "danceability", 0.5) * 2;
         weightSum += 2;
 
-                       
+
         diff += getFeatureDiff(features1, features2, "energy", 0.5) * 2;
         weightSum += 2;
 
-                        
+
         diff += getFeatureDiff(features1, features2, "valence", 0.5) * 3;
         weightSum += 3;
 
-                          
+
         diff += getFeatureDiff(features1, features2, "tempo", 120) / 120;
         weightSum += 1;
 
-                            
+
         double similarity = Math.max(0, 1 - (diff / weightSum));
 
-               
+
         redisUtils.set(cacheKey, similarity, 3600, java.util.concurrent.TimeUnit.SECONDS);
         return similarity;
     }
@@ -365,11 +365,11 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             return result;
         }
 
-                   
+
         List<String> preferredGenres = getUserPreferredGenres(userId);
         List<Object> params = new ArrayList<>();
 
-               
+
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT id, name, artist_names, album_name, duration, cover, ");
         sql.append("uploader_id, ");
@@ -383,7 +383,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.addAll(preferredGenres);
         }
 
-               
+
         if (valence != null) {
             double vMin = Math.max(0, valence - 0.2);
             double vMax = Math.min(1, valence + 0.2);
@@ -392,7 +392,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(vMax);
         }
 
-               
+
         if (energy != null) {
             double eMin = Math.max(0, energy - 0.2);
             double eMax = Math.min(1, energy + 0.2);
@@ -401,7 +401,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             params.add(eMax);
         }
 
-                    
+
         sql.append("ORDER BY ");
         if (valence != null) {
             sql.append("ABS(valence - ?), ");
@@ -428,7 +428,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
     public Map<String, Object> getUserMoodAnalysis(Long userId) {
         Map<String, Object> analysis = new HashMap<>();
 
-                        
+
         String sql = "SELECT AVG(s.valence) as avg_valence, " +
                 "AVG(s.energy) as avg_energy, " +
                 "AVG(s.danceability) as avg_danceability, " +
@@ -444,7 +444,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
             Map<String, Object> row = results.get(0);
             analysis.putAll(row);
 
-                     
+
             BigDecimal avgValence = (BigDecimal) row.get("avg_valence");
             if (avgValence != null) {
                 if (avgValence.compareTo(new BigDecimal("0.7")) >= 0) {
@@ -456,7 +456,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
                 }
             }
 
-                     
+
             BigDecimal avgEnergy = (BigDecimal) row.get("avg_energy");
             if (avgEnergy != null) {
                 if (avgEnergy.compareTo(new BigDecimal("0.7")) >= 0) {
@@ -498,7 +498,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
         return result;
     }
 
-                                                       
+
 
     private Map<String, Object> getScenarioByCode(String code) {
         String sql = "SELECT * FROM scenario_preset WHERE code = ? AND status = 1";
@@ -515,7 +515,7 @@ public class AudioFeatureRecommendServiceImpl implements AudioFeatureRecommendSe
         vo.setDuration(row.get("duration") != null ? ((Number) row.get("duration")).intValue() : null);
         vo.setCover((String) row.get("cover"));
 
-               
+
         Object danceability = row.get("danceability");
         if (danceability instanceof BigDecimal) {
             vo.setDanceability(((BigDecimal) danceability).doubleValue());

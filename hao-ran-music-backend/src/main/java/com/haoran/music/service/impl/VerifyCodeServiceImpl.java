@@ -1,7 +1,7 @@
-   
-                      
-                                     
-   
+
+
+
+
 package com.haoran.music.service.impl;
 
 import cn.hutool.captcha.CaptchaUtil;
@@ -24,12 +24,12 @@ import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-   
-          
-  
-                                               
-                            
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class VerifyCodeServiceImpl implements VerifyCodeService {
@@ -90,8 +90,8 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
             clearVerifyCodeRequirement(target, scene);
             log.info("验证码验证成功: type={}, scene={}", normalizedType, scene);
         } else {
-                                                                                              
-                                                                                          
+
+
             redisUtils.delete(key);
             log.warn("验证码验证失败: type={}, scene={}", normalizedType, scene);
         }
@@ -160,11 +160,11 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
         throw new BusinessException("滑块验证码未配置真实供应商");
     }
 
-                                                     
 
-       
-              
-       
+
+
+
+
     private Map<String, Object> generateArithmeticCode(String target, String scene) {
         int a = random.nextInt(getArithmeticMaxOperand());
         int b = random.nextInt(getArithmeticMaxOperand());
@@ -185,10 +185,10 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
         return result;
     }
 
-       
-                                                   
-      
-  
+
+
+
+
     private int getArithmeticMaxOperand() {
         Integer maxOperand = verifyCodeConfig.getArithmeticMaxOperand();
         return ObjectUtils.isEmpty(maxOperand) || maxOperand <= 0 ? 10 : maxOperand;

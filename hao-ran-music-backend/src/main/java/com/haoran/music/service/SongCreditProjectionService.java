@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-   
-                      
-  
-                                  
-  
-                      
-   
+
+
+
+
+
+
+
 @Service
 @RequiredArgsConstructor
 public class SongCreditProjectionService {
@@ -27,11 +27,11 @@ public class SongCreditProjectionService {
 
     private final SongCreditMapper songCreditMapper;
 
-       
-                                  
-      
-                          
-       
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public void lockForDisplayCreditSync(Long songId) {
         if (ObjectUtils.isEmpty(songId) || songCreditMapper.lockSong(songId) == null) {
@@ -39,14 +39,14 @@ public class SongCreditProjectionService {
         }
     }
 
-       
-                                 
-      
-                          
-                                
-                             
-                         
-       
+
+
+
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public void syncDisplayCredits(Long songId, List<SongArtist> relations,
                                    String sourceType, String reason) {
@@ -86,11 +86,11 @@ public class SongCreditProjectionService {
         }
     }
 
-       
-                            
-      
-                          
-       
+
+
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public void retireDisplayCredits(Long songId) {
         if (ObjectUtils.isEmpty(songId) || songCreditMapper.lockSong(songId) == null) {
@@ -99,12 +99,12 @@ public class SongCreditProjectionService {
         songCreditMapper.retireManagedDisplayCredits(songId);
     }
 
-       
-                       
-      
-                        
-                   
-       
+
+
+
+
+
+
     private String toRoleCode(Integer type) {
         if (type == null) {
             return "legacy_other";

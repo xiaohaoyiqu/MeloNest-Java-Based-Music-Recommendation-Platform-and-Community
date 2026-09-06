@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.entity;
 
@@ -12,7 +12,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-                    
+
 @Data
 @TableName("store_product_policy_log")
 public class StoreProductPolicyLog implements Serializable {

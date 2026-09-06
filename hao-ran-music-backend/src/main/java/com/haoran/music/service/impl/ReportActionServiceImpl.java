@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -25,9 +25,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-             
-   
+
+
+
 @Slf4j
 @Service
 public class ReportActionServiceImpl implements ReportActionService {
@@ -71,7 +71,7 @@ public class ReportActionServiceImpl implements ReportActionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> executeAction(Long reportId, String action, Long reviewerId) {
-                 
+
         Report report = reportMapper.selectById(reportId);
         if (report == null) {
             throw new RuntimeException("举报记录不存在");
@@ -86,7 +86,7 @@ public class ReportActionServiceImpl implements ReportActionService {
 
         switch (action) {
             case "warning":
-                       
+
                 Long warningUserId = getUserIdByType(report.getTargetType(), report.getTargetId());
                 if (warningUserId != null) {
                     requireCanOperateTargetUser(reviewerId, warningUserId, "发送举报警告");
@@ -98,19 +98,19 @@ public class ReportActionServiceImpl implements ReportActionService {
                 break;
 
             case "hidden":
-                       
+
                 success = hideContentByType(report.getTargetType(), report.getTargetId(), "举报处理：隐藏内容");
                 message = success ? "内容已隐藏" : "隐藏失败";
                 break;
 
             case "deleted":
-                       
+
                 success = deleteContentByType(report.getTargetType(), report.getTargetId(), "举报处理：删除内容");
                 message = success ? "内容已删除" : "删除失败";
                 break;
 
             case "banned":
-                       
+
                 Long targetUserId = getUserIdByType(report.getTargetType(), report.getTargetId());
                 if (targetUserId != null) {
                     success = banUser(targetUserId, "违反社区规范", 7, reviewerId);
@@ -121,7 +121,7 @@ public class ReportActionServiceImpl implements ReportActionService {
                 break;
 
             case "none":
-                      
+
                 success = true;
                 message = "无需处理";
                 break;
@@ -205,7 +205,7 @@ public class ReportActionServiceImpl implements ReportActionService {
                 .set("ban_start_time", LocalDateTime.now());
 
         if (banDays == null || banDays == 0) {
-                   
+
             wrapper.set("ban_end_time", (Object) null);
         } else {
             wrapper.set("ban_end_time", LocalDateTime.now().plusDays(banDays));
@@ -217,7 +217,7 @@ public class ReportActionServiceImpl implements ReportActionService {
             if (userClassificationService != null) {
                 userClassificationService.forceLogout(userId);
             }
-                     
+
             notificationService.sendSystemNotification(userId, "账户封禁通知",
                     "您的账户因违反社区规范已被封禁" + (banDays == null || banDays == 0 ? "。" : banDays + "天。"), null);
         }
@@ -323,13 +323,13 @@ public class ReportActionServiceImpl implements ReportActionService {
 
     @Override
     public Boolean validateReportForAction(Long reportId) {
-                                          
+
         Report report = reportMapper.selectById(reportId);
         if (report == null) {
             log.warn("举报记录不存在: reportId={}", reportId);
             return false;
         }
-                                
+
         if ("pending".equals(report.getStatus())) {
             return true;
         }
@@ -337,9 +337,9 @@ public class ReportActionServiceImpl implements ReportActionService {
         return false;
     }
 
-       
-               
-       
+
+
+
     private Boolean hideContentByType(String targetType, Long targetId, String reason) {
         switch (targetType) {
             case "song":
@@ -355,18 +355,18 @@ public class ReportActionServiceImpl implements ReportActionService {
         }
     }
 
-       
-               
-       
+
+
+
     private Boolean deleteContentByType(String targetType, Long targetId, String reason) {
         switch (targetType) {
             case "comment":
                 return deleteComment(targetId, reason);
             case "song":
-                        
+
                 return hideSong(targetId, reason);
             case "mv":
-                        
+
                 return hideMV(targetId, reason);
             case "album":
                 return hideAlbum(targetId, reason);
@@ -389,13 +389,13 @@ public class ReportActionServiceImpl implements ReportActionService {
         }
     }
 
-       
-                 
-      
-                                                                   
-                           
-                                 
-       
+
+
+
+
+
+
+
     private Long getUserIdByType(String targetType, Long targetId) {
         if (targetId == null) {
             return null;
@@ -408,7 +408,7 @@ public class ReportActionServiceImpl implements ReportActionService {
 
             case "mv":
             case "album":
-                                                                  
+
                 return null;
 
             case "playlist":
@@ -429,7 +429,7 @@ public class ReportActionServiceImpl implements ReportActionService {
                 return item != null ? item.getSellerId() : null;
 
             case "user":
-                                   
+
                 return targetId;
 
             default:

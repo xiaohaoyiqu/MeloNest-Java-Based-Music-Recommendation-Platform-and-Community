@@ -3,34 +3,34 @@ package com.haoran.music.dto.user;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
-   
-                      
-                       
-   
+
+
+
+
 public class UserLoginDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-       
-              
-       
+
+
+
     @NotBlank(message = "用户名不能为空")
     private String username;
 
-       
-         
-       
+
+
+
     @NotBlank(message = "密码不能为空")
     private String password;
 
-       
-                
-       
+
+
+
     private String captchaId;
 
-       
-              
-       
+
+
+
     private String captchaCode;
 
     public String getUsername() {

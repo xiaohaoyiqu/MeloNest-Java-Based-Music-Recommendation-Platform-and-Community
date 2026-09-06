@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-   
-                      
-                              
-   
+
+
+
+
 @RestController
 @RequestMapping("/search/enhance")
 public class SearchEnhanceController {
@@ -22,13 +22,13 @@ public class SearchEnhanceController {
     @Resource
     private SearchEnhanceService searchEnhanceService;
 
-       
-           
-      
-                           
-                          
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("搜索联想")
     @GetMapping("/suggest")
     public Result<SearchSuggestVO> getSuggest(
@@ -38,12 +38,12 @@ public class SearchEnhanceController {
         return Result.success(result);
     }
 
-       
-              
-      
-                        
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取热门搜索")
     @GetMapping("/hot")
     public Result<List<HotSearchVO>> getHotSearch(
@@ -52,12 +52,12 @@ public class SearchEnhanceController {
         return Result.success(result);
     }
 
-       
-             
-      
-                           
-                 
-       
+
+
+
+
+
+
     @ApiLog("保存搜索历史")
     @PostMapping("/history")
     public Result<Void> saveSearchHistory(@RequestParam String keyword) {
@@ -65,11 +65,11 @@ public class SearchEnhanceController {
         return Result.success();
     }
 
-       
-               
-      
-                     
-       
+
+
+
+
+
     @ApiLog("获取搜索历史")
     @GetMapping("/history")
     public Result<List<String>> getSearchHistory() {
@@ -77,11 +77,11 @@ public class SearchEnhanceController {
         return Result.success(result);
     }
 
-       
-             
-      
-                 
-       
+
+
+
+
+
     @ApiLog("清空搜索历史")
     @DeleteMapping("/history")
     public Result<Void> clearSearchHistory() {

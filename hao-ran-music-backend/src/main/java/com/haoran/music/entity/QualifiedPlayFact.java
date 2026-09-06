@@ -7,11 +7,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                   
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("qualified_play_fact")
 public class QualifiedPlayFact {

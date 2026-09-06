@@ -9,10 +9,10 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class LocalProxyServiceImpl implements LocalProxyService {
@@ -60,9 +60,9 @@ public class LocalProxyServiceImpl implements LocalProxyService {
         return 0;
     }
 
-       
-              
-       
+
+
+
     private String encodePath(String path) {
         try {
             return java.net.URLEncoder.encode(path, "UTF-8");

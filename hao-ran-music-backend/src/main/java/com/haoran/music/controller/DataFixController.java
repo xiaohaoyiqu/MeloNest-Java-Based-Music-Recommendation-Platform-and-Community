@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/admin/data-fix")
@@ -29,17 +29,17 @@ public class DataFixController {
     @Resource
     private MVService mvService;
 
-       
-                        
-            
-                                         
-                                           
-                                       
-                                       
-                                     
-                                       
-                                     
-       
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("修复MV URL文件名")
     @PostMapping("/fix-mv-urls")
     public Result<MVFixResult> fixMVUrls() {
@@ -51,13 +51,13 @@ public class DataFixController {
         result.setSkippedCount(0);
 
         try {
-                     
+
             List<MV> allMVs = mvService.list();
             result.setTotalCount(allMVs.size());
 
             log.info("[DataFix] 共查询到 {} 个MV", allMVs.size());
 
-                     
+
             Pattern[] patterns = {
                     Pattern.compile("' t\\s"),                                
                     Pattern.compile("' re\\s"),                
@@ -81,7 +81,7 @@ public class DataFixController {
             for (MV mv : allMVs) {
                 boolean needUpdate = false;
 
-                             
+
                 if (mv.getUrl360p() != null && needsFix(mv.getUrl360p())) {
                     String fixed = fixUrl(mv.getUrl360p(), patterns, replacements);
                     if (!fixed.equals(mv.getUrl360p())) {
@@ -91,7 +91,7 @@ public class DataFixController {
                     }
                 }
 
-                             
+
                 if (mv.getUrl720p() != null && needsFix(mv.getUrl720p())) {
                     String fixed = fixUrl(mv.getUrl720p(), patterns, replacements);
                     if (!fixed.equals(mv.getUrl720p())) {
@@ -101,7 +101,7 @@ public class DataFixController {
                     }
                 }
 
-                              
+
                 if (mv.getUrl1080p() != null && needsFix(mv.getUrl1080p())) {
                     String fixed = fixUrl(mv.getUrl1080p(), patterns, replacements);
                     if (!fixed.equals(mv.getUrl1080p())) {
@@ -111,7 +111,7 @@ public class DataFixController {
                     }
                 }
 
-                              
+
                 if (needUpdate) {
                     mvService.updateById(mv);
                     result.setFixedCount(result.getFixedCount() + 1);
@@ -133,23 +133,23 @@ public class DataFixController {
         }
     }
 
-       
-                  
-       
+
+
+
     private boolean needsFix(String url) {
         if (url == null || url.isEmpty()) {
             return false;
         }
-                        
+
         return url.contains("' t ") || url.contains("' re ") ||
                 url.contains("' ll ") || url.contains("' ve ") ||
                 url.contains("' d ") || url.contains("' s ") ||
                 url.contains("' m ");
     }
 
-       
-                  
-       
+
+
+
     private String fixUrl(String url, Pattern[] patterns, String[] replacements) {
         String result = url;
 
@@ -160,15 +160,15 @@ public class DataFixController {
             }
         }
 
-                           
+
         result = result.replaceAll("  ", " ");
 
         return result;
     }
 
-       
-           
-       
+
+
+
     public static class MVFixResult {
         private Integer totalCount;         
         private Integer fixedCount;             

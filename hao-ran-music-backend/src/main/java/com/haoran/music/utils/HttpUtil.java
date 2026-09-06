@@ -13,11 +13,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Locale;
 
-   
-                    
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 public final class HttpUtil {
     private static final int BUFFER_SIZE = 8192;
@@ -26,15 +26,15 @@ public final class HttpUtil {
     private HttpUtil() {
     }
 
-       
-                                      
-      
-                              
-                              
-                                      
-                                   
-                         
-       
+
+
+
+
+
+
+
+
+
     public static String getJson(String urlString, int timeout, int maxResponseBytes,
                                  String... allowedHosts) {
         URI uri = validateTarget(urlString, allowedHosts);
@@ -42,16 +42,16 @@ public final class HttpUtil {
         return executeJson(uri, "GET", null, timeout, maxResponseBytes);
     }
 
-       
-                                             
-      
-                              
-                                     
-                              
-                                      
-                                   
-                         
-       
+
+
+
+
+
+
+
+
+
+
     public static String postJson(String urlString, String jsonBody, int timeout, int maxResponseBytes,
                                   String... allowedHosts) {
         URI uri = validateTarget(urlString, allowedHosts);
@@ -115,14 +115,14 @@ public final class HttpUtil {
         }
     }
 
-       
-                      
-      
-                       
-                                    
-                       
-                                  
-       
+
+
+
+
+
+
+
+
     static String readUtf8(InputStream input, int maxResponseBytes) throws Exception {
         ByteArrayOutputStream output = new ByteArrayOutputStream(Math.min(maxResponseBytes, BUFFER_SIZE));
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -138,13 +138,13 @@ public final class HttpUtil {
         return new String(output.toByteArray(), StandardCharsets.UTF_8);
     }
 
-       
-                          
-      
-                              
-                                   
-                      
-       
+
+
+
+
+
+
+
     private static URI validateTarget(String urlString, String... allowedHosts) {
         if (ObjectUtils.isEmpty(urlString) || allowedHosts == null || allowedHosts.length == 0) {
             throw new IllegalArgumentException("outbound target is empty");

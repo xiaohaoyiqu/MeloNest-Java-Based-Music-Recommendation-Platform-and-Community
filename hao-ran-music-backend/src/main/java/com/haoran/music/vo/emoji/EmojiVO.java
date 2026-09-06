@@ -1,7 +1,7 @@
-   
-                      
-                     
-   
+
+
+
+
 
 package com.haoran.music.vo.emoji;
 
@@ -11,78 +11,78 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-       
-   
+
+
+
 @Data
 public class EmojiVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-       
-           
-       
+
+
+
     private Long id;
 
-       
-                 
-       
+
+
+
     private String emojiId;
 
-       
-           
-       
+
+
+
     private String emojiCode;
 
-       
-           
-       
+
+
+
     private String emojiName;
 
-       
-            
-       
+
+
+
     private Long packageId;
 
-       
-         
-       
+
+
+
     private String category;
 
-       
-               
-       
+
+
+
     private String gifUrl;
 
-       
-              
-       
+
+
+
     private String staticUrl;
 
-       
-             
-       
+
+
+
     private Boolean isSystem;
 
-       
-           
-       
+
+
+
     private Long usageCount;
 
-       
-           
-       
+
+
+
     private Boolean isEnabled;
 
-       
-           
-       
+
+
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
-       
-               
-       
+
+
+
     public static EmojiVO fromEntity(com.haoran.music.entity.Emoji emoji) {
         if (emoji == null) {
             return null;

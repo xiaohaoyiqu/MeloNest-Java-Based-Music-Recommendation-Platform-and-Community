@@ -34,10 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> implements SongLikeService {
@@ -78,21 +78,21 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         User user = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(user, "点赞歌曲");
 
-                   
+
         Song song = songMapper.selectById(songId);
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌曲不存在");
         }
         requireSongOwnerCanReceiveInteraction(song, "点赞歌曲");
 
-                    
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getSongId, songId);
         SongLike songLike = getOne(wrapper);
 
         if (ObjectUtils.isEmpty(songLike)) {
-                    
+
             songLike = new SongLike();
             songLike.setUserId(userId);
             songLike.setSongId(songId);
@@ -100,20 +100,20 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
             songLike.setIsFavorite(0);
             save(songLike);
         } else if (songLike.getIsLike() == 0) {
-                     
+
             songLike.setIsLike(1);
             updateById(songLike);
         } else {
-                        
+
             return true;
         }
 
         if (canContributeSongStats(user, song)) {
-                      
+
             song.setLikeCount(safeLong(song.getLikeCount()) + 1);
             songMapper.updateById(song);
 
-                     
+
             updateHotScore(songId);
             userStatisticsService.incrementInteraction(userId, "like", 1);
         }
@@ -128,20 +128,20 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
             throw new BusinessException(ResultCode.PARAM_ERROR, "用户ID和歌曲ID不能为空");
         }
 
-               
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getSongId, songId);
         SongLike songLike = getOne(wrapper);
 
         if (ObjectUtils.isNotEmpty(songLike) && songLike.getIsLike() == 1) {
-                   
+
             songLike.setIsLike(0);
             updateById(songLike);
 
             User user = userMapper.selectById(userId);
 
-                      
+
             Song song = songMapper.selectById(songId);
             if (ObjectUtils.isNotEmpty(song) && canContributeSongStats(user, song) && safeLong(song.getLikeCount()) > 0) {
                 song.setLikeCount(safeLong(song.getLikeCount()) - 1);
@@ -162,21 +162,21 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         User user = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(user, "收藏歌曲");
 
-                   
+
         Song song = songMapper.selectById(songId);
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌曲不存在");
         }
         requireSongOwnerCanReceiveInteraction(song, "收藏歌曲");
 
-                    
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getSongId, songId);
         SongLike songLike = getOne(wrapper);
 
         if (ObjectUtils.isEmpty(songLike)) {
-                    
+
             songLike = new SongLike();
             songLike.setUserId(userId);
             songLike.setSongId(songId);
@@ -184,28 +184,28 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
             songLike.setIsLike(0);
             save(songLike);
         } else if (songLike.getIsFavorite() == 0) {
-                     
+
             songLike.setIsFavorite(1);
             updateById(songLike);
         } else {
-                        
+
             return true;
         }
 
         boolean canContributeStats = canContributeSongStats(user, song);
         if (canContributeStats) {
-                      
+
             song.setFavoriteCount(safeLong(song.getFavoriteCount()) + 1);
             songMapper.updateById(song);
 
-                     
+
             updateHotScore(songId);
         }
 
-                                   
+
         favoriteHistoryService.recordFavoriteAction(userId, songId, 1);
 
-                    
+
         addSongToFavoritePlaylist(userId, songId);
         if (canContributeStats) {
             userStatisticsService.incrementInteraction(userId, "favorite", 1);
@@ -221,20 +221,20 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
             throw new BusinessException(ResultCode.PARAM_ERROR, "用户ID和歌曲ID不能为空");
         }
 
-               
+
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getSongId, songId);
         SongLike songLike = getOne(wrapper);
 
         if (ObjectUtils.isNotEmpty(songLike) && songLike.getIsFavorite() == 1) {
-                   
+
             songLike.setIsFavorite(0);
             updateById(songLike);
 
             User user = userMapper.selectById(userId);
 
-                      
+
             Song song = songMapper.selectById(songId);
             boolean canContributeStats = ObjectUtils.isNotEmpty(song) && canContributeSongStats(user, song);
             if (canContributeStats && safeLong(song.getFavoriteCount()) > 0) {
@@ -243,10 +243,10 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
                 updateHotScore(songId);
             }
 
-                                           
+
             favoriteHistoryService.recordFavoriteAction(userId, songId, 2);
 
-                       
+
             removeSongFromFavoritePlaylist(userId, songId);
             if (canContributeStats) {
                 userStatisticsService.incrementInteraction(userId, "unfavorite", 1);
@@ -385,10 +385,10 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         return UserAccountStatusUtil.canExposePublicContent(song.getUploaderId(), userMapper::selectById);
     }
 
-       
-                                                                                  
-                                                           
-       
+
+
+
+
     private void requireSongOwnerCanReceiveInteraction(Song song, String action) {
         if (song == null || song.getUploaderId() == null) {
             return;
@@ -400,19 +400,19 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         }
     }
 
-       
-               
-                                        
-      
-                         
-  
+
+
+
+
+
+
     private void updateHotScore(Long songId) {
         Song song = songMapper.selectById(songId);
         if (ObjectUtils.isEmpty(song)) {
             return;
         }
 
-                                            
+
         int favoriteCount = song.getFavoriteCount() != null ? song.getFavoriteCount().intValue() : 0;
         int commentCount = song.getCommentCount() != null ? song.getCommentCount().intValue() : 0;
         int likeCount = song.getLikeCount() != null ? song.getLikeCount().intValue() : 0;
@@ -423,15 +423,15 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         songMapper.updateById(song);
     }
 
-       
-                   
-      
-                         
-                         
-       
+
+
+
+
+
+
     private void addSongToFavoritePlaylist(Long userId, Long songId) {
         try {
-                        
+
             LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Playlist::getUserId, userId)
                     .eq(Playlist::getType, MusicConstants.PlaylistType.FAVORITE)
@@ -439,7 +439,7 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
 
             Playlist favoritePlaylist = playlistMapper.selectOne(wrapper);
 
-                             
+
             if (ObjectUtils.isEmpty(favoritePlaylist)) {
                 favoritePlaylist = new Playlist();
                 favoritePlaylist.setUserId(userId);
@@ -456,8 +456,8 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
                 playlistMapper.insert(favoritePlaylist);
             }
 
-                                              
-                                                            
+
+
             String deleteOldSql = "DELETE FROM playlist_song WHERE playlist_id = ? AND song_id = ? AND deleted = 1";
             int cleanedCount = jdbcTemplate.update(deleteOldSql, favoritePlaylist.getId(), songId);
             if (cleanedCount > 0) {
@@ -465,7 +465,7 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
                     favoritePlaylist.getId(), songId, cleanedCount);
             }
 
-                                    
+
             LambdaQueryWrapper<PlaylistSong> existWrapper = new LambdaQueryWrapper<>();
             existWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                     .eq(PlaylistSong::getSongId, songId)
@@ -473,11 +473,11 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
 
             PlaylistSong existSong = playlistSongMapper.selectOne(existWrapper);
             if (ObjectUtils.isNotEmpty(existSong)) {
-                                    
+
                 return;
             }
 
-                        
+
             LambdaQueryWrapper<PlaylistSong> maxSortWrapper = new LambdaQueryWrapper<>();
             maxSortWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                     .eq(PlaylistSong::getDeleted, CommonConstants.NOT_DELETED)
@@ -487,7 +487,7 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
             PlaylistSong maxSort = playlistSongMapper.selectOne(maxSortWrapper);
             int nextSortOrder = (maxSort != null) ? maxSort.getSortOrder() + 1 : 0;
 
-                        
+
             PlaylistSong playlistSong = new PlaylistSong();
             playlistSong.setPlaylistId(favoritePlaylist.getId());
             playlistSong.setSongId(songId);
@@ -495,10 +495,10 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
             playlistSong.setDeleted(CommonConstants.NOT_DELETED);
             playlistSongMapper.insert(playlistSong);
 
-                       
+
             favoritePlaylist.setSongCount(favoritePlaylist.getSongCount() + 1);
 
-                                     
+
             Song song = songMapper.selectById(songId);
             if (ObjectUtils.isNotEmpty(song) && ObjectUtils.isNotEmpty(song.getCover())) {
                 favoritePlaylist.setCover(song.getCover());
@@ -513,16 +513,16 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         }
     }
 
-       
-                    
-                                       
-      
-                         
-                         
-       
+
+
+
+
+
+
+
     private void removeSongFromFavoritePlaylist(Long userId, Long songId) {
         try {
-                        
+
             LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Playlist::getUserId, userId)
                     .eq(Playlist::getType, MusicConstants.PlaylistType.FAVORITE)
@@ -533,7 +533,7 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
                 return;
             }
 
-                         
+
             LambdaQueryWrapper<PlaylistSong> existWrapper = new LambdaQueryWrapper<>();
             existWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                     .eq(PlaylistSong::getSongId, songId)
@@ -541,11 +541,11 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
 
             PlaylistSong activeSong = playlistSongMapper.selectOne(existWrapper);
             if (ObjectUtils.isEmpty(activeSong)) {
-                                 
+
                 return;
             }
 
-                                          
+
             LambdaQueryWrapper<PlaylistSong> deletedWrapper = new LambdaQueryWrapper<>();
             deletedWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                     .eq(PlaylistSong::getSongId, songId)
@@ -554,27 +554,27 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
             PlaylistSong deletedSong = playlistSongMapper.selectOne(deletedWrapper);
 
             if (ObjectUtils.isNotEmpty(deletedSong)) {
-                                                        
-                                                                     
+
+
                 String physicalDeleteSql = "DELETE FROM playlist_song WHERE id = ?";
                 jdbcTemplate.update(physicalDeleteSql, deletedSong.getId());
                 log.info("【数据留存】物理删除旧的历史记录: playlistId={}, songId={}, deletedId={}",
                     favoritePlaylist.getId(), songId, deletedSong.getId());
             }
 
-                                                             
-                                                    
+
+
             playlistSongMapper.deleteById(activeSong.getId());
             log.info("【数据留存】逻辑删除歌单歌曲记录: playlistId={}, songId={}, id={}",
                 favoritePlaylist.getId(), songId, activeSong.getId());
 
-                       
+
             Long newCount = Math.max(0L, favoritePlaylist.getSongCount() - 1);
             favoritePlaylist.setSongCount(newCount);
 
-                                               
+
             if (newCount > 0) {
-                              
+
                 LambdaQueryWrapper<PlaylistSong> firstSongWrapper = new LambdaQueryWrapper<>();
                 firstSongWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                         .eq(PlaylistSong::getDeleted, CommonConstants.NOT_DELETED)
@@ -590,7 +590,7 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
                     }
                 }
             } else {
-                              
+
                 favoritePlaylist.setCover("/images/default-base.png");
                 log.info("收藏歌单为空，使用默认封面: playlistId={}", favoritePlaylist.getId());
             }
@@ -604,13 +604,13 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         }
     }
 
-       
-                                       
-      
-                         
-                            
-                        
-       
+
+
+
+
+
+
+
     @Override
     public Set<Long> getFavoriteSongIdsBatch(Long userId, List<Long> songIds) {
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(songIds)) {
@@ -618,7 +618,7 @@ public class SongLikeServiceImpl extends ServiceImpl<SongLikeMapper, SongLike> i
         }
 
         try {
-                                   
+
             LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(SongLike::getUserId, userId)
                     .in(SongLike::getSongId, songIds)

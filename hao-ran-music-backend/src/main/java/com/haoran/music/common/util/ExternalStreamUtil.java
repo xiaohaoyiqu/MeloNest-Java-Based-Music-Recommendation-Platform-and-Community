@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import java.io.IOException;
@@ -9,9 +9,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-   
-                                                                        
-   
+
+
+
 public final class ExternalStreamUtil {
 
     public static final int DEFAULT_CONNECT_TIMEOUT_MS = 5000;

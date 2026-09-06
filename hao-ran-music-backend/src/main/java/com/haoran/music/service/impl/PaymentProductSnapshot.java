@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.alibaba.fastjson2.JSON;
@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-   
-                     
-   
+
+
+
 @Data
 public class PaymentProductSnapshot {
 

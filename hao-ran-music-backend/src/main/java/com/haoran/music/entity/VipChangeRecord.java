@@ -7,11 +7,11 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-               
-  
-                      
-   
+
+
+
+
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("vip_change_record")
@@ -22,53 +22,53 @@ public class VipChangeRecord extends BaseEntity implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
-       
-           
-       
+
+
+
     private Long userId;
 
-       
-                                                                               
-       
+
+
+
     private String changeType;
 
-       
-                          
-       
+
+
+
     private Integer changeDays;
 
-       
-              
-       
+
+
+
     private LocalDateTime beforeExpireTime;
 
-       
-              
-       
+
+
+
     private LocalDateTime afterExpireTime;
 
-       
-                  
-       
+
+
+
     private Long relatedId;
 
-       
-           
-       
+
+
+
     private String reason;
 
-       
-               
-       
+
+
+
     private String vipLevelBefore;
 
-       
-               
-       
+
+
+
     private String vipLevelAfter;
 
-       
-                                
-       
+
+
+
     private String operator;
 }

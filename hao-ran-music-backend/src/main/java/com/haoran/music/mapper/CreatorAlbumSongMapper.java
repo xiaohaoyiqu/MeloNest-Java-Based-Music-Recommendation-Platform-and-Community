@@ -7,20 +7,20 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-   
-                      
-                             
-   
+
+
+
+
 @Mapper
 public interface CreatorAlbumSongMapper extends BaseMapper<CreatorAlbumSong> {
 
-       
-                       
-       
+
+
+
     List<CreatorAlbumSong> getSongsByAlbumId(@Param("albumId") Long albumId);
 
-       
-                   
-       
+
+
+
     int updateAlbumStats(@Param("albumId") Long albumId);
 }

@@ -11,10 +11,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-   
-                      
-                                    
-   
+
+
+
+
 @Slf4j
 @Component
 @Order(2)
@@ -28,9 +28,9 @@ public class ApiAccessInterceptor implements HandlerInterceptor {
     private ClientIpResolver clientIpResolver;
 
 
-       
-                  
-       
+
+
+
     private static final String[] SENSITIVE_PATHS = {
         "/api/auth/login",
         "/api/auth/register",
@@ -49,7 +49,7 @@ public class ApiAccessInterceptor implements HandlerInterceptor {
 
         log.debug("event=api_access_check_started");
 
-               
+
         if (spiderDetector.isSpider(userAgent)) {
             if (isSensitivePath(requestUri)) {
                 log.warn("event=api_access_spider_blocked reason=sensitive_path");
@@ -59,15 +59,15 @@ public class ApiAccessInterceptor implements HandlerInterceptor {
                 return false;
             }
         }
-                                                                                                              
+
         return true;
     }
 
-       
-                
-                         
-                                    
-       
+
+
+
+
+
     private boolean isSensitivePath(String requestUri) {
         for (String path : SENSITIVE_PATHS) {
             if (requestUri.contains(path)) {
@@ -77,9 +77,9 @@ public class ApiAccessInterceptor implements HandlerInterceptor {
         return false;
     }
 
-       
-                
-                       
-                      
-       
+
+
+
+
+
 }

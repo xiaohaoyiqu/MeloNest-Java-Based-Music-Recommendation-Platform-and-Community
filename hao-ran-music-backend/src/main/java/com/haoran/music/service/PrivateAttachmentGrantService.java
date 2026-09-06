@@ -14,11 +14,11 @@ import java.security.MessageDigest;
 import java.time.Clock;
 import java.util.Base64;
 
-   
-                                         
-  
-                      
-   
+
+
+
+
+
 @Service
 public class PrivateAttachmentGrantService {
 
@@ -30,12 +30,12 @@ public class PrivateAttachmentGrantService {
     private final long ttlSeconds;
     private final Clock clock;
 
-       
-              
-      
-                              
-                               
-       
+
+
+
+
+
+
     @Autowired
     public PrivateAttachmentGrantService(
             @Value("${jwt.secret}") String secret,
@@ -43,13 +43,13 @@ public class PrivateAttachmentGrantService {
         this(secret, ttlSeconds, Clock.systemUTC());
     }
 
-       
-                    
-      
-                         
-                             
-                      
-       
+
+
+
+
+
+
+
     PrivateAttachmentGrantService(String secret, long ttlSeconds, Clock clock) {
         if (ObjectUtils.isEmpty(secret) || secret.trim().length() < 32) {
             throw new IllegalStateException("private attachment signing secret must contain at least 32 characters");
@@ -62,13 +62,13 @@ public class PrivateAttachmentGrantService {
         this.clock = clock;
     }
 
-       
-                       
-      
-                          
-                             
-                   
-       
+
+
+
+
+
+
+
     public String issue(Long assetId, Long userId) {
         validateClaims(assetId, userId);
         long expiresAt = clock.instant().getEpochSecond() + ttlSeconds;
@@ -77,13 +77,13 @@ public class PrivateAttachmentGrantService {
         return encode(payload.getBytes(StandardCharsets.UTF_8)) + "." + encode(sign(payload));
     }
 
-       
-                    
-      
-                        
-                            
-                      
-       
+
+
+
+
+
+
+
     public Long verify(String grant, Long assetId) {
         try {
             if (ObjectUtils.isEmpty(grant) || grant.length() > 1024) {
@@ -118,12 +118,12 @@ public class PrivateAttachmentGrantService {
         }
     }
 
-       
-              
-      
-                          
-                         
-       
+
+
+
+
+
+
     private void validateClaims(Long assetId, Long userId) {
         if (ObjectUtils.isEmpty(assetId) || assetId <= 0
                 || ObjectUtils.isEmpty(userId) || userId <= 0) {
@@ -131,12 +131,12 @@ public class PrivateAttachmentGrantService {
         }
     }
 
-       
-              
-      
-                          
-                     
-       
+
+
+
+
+
+
     private byte[] sign(String payload) {
         try {
             Mac mac = Mac.getInstance(HMAC_ALGORITHM);
@@ -147,21 +147,21 @@ public class PrivateAttachmentGrantService {
         }
     }
 
-       
-                     
-      
-                        
-                   
-       
+
+
+
+
+
+
     private static String encode(byte[] value) {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(value);
     }
 
-       
-                  
-      
-                   
-       
+
+
+
+
+
     private static BusinessException invalidGrant() {
         return new BusinessException(ResultCode.FORBIDDEN, "私有附件授权无效或已过期，请重新获取");
     }

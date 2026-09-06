@@ -3,11 +3,11 @@ package com.haoran.music.service;
 import java.util.List;
 import java.util.Map;
 
-   
-                    
-  
-                      
-   
+
+
+
+
+
 public interface SearchIndexSyncOutboxService {
 
     String record(String resourceType, Long resourceId);

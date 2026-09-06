@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
@@ -78,18 +78,18 @@ public class FeedbackServiceImpl implements FeedbackService {
                 content, attachmentUrls, null);
     }
 
-       
-                    
-      
-                         
-                               
-                          
-                            
-                      
-                        
-                                         
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> submitFeedbackWithAssets(Long userId, String feedbackType,
@@ -100,25 +100,25 @@ public class FeedbackServiceImpl implements FeedbackService {
                 content, null, attachmentAssetIds);
     }
 
-       
-                             
-      
-                         
-                               
-                          
-                            
-                      
-                        
-                                  
-                                       
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
     private Map<String, Object> submitFeedbackInternal(Long userId, String feedbackType,
                                                        Long orderId, String orderType,
                                                        String title, String content,
                                                        String attachmentUrls,
                                                        List<Long> attachmentAssetIds) {
-               
+
         User user = userMapper.selectById(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
@@ -151,13 +151,13 @@ public class FeedbackServiceImpl implements FeedbackService {
             throw new BusinessException(ResultCode.PARAM_ERROR, "退款反馈必须关联本人订单");
         }
 
-                 
+
         UserFeedback feedback = new UserFeedback();
         feedback.setUserId(userId);
         feedback.setFeedbackType(normalizedFeedbackType);
         feedback.setOrderId(orderId);
         feedback.setOrderType(authoritativeOrderType);
-                                
+
         if (ObjectUtils.isNotEmpty(title)) {
             SecurityCheckUtil.CheckResult titleCheck = SecurityCheckUtil.checkTitle(title);
             if (!titleCheck.isSafe()) {
@@ -167,7 +167,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         } else {
             feedback.setTitle(title);
         }
-                                  
+
         if (ObjectUtils.isNotEmpty(content)) {
             SecurityCheckUtil.CheckResult contentCheck = SecurityCheckUtil.checkDescription(content);
             if (!contentCheck.isSafe()) {
@@ -279,7 +279,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         log.info("处理反馈: feedbackId={}, status={}, handlerId={}",
                 feedbackId, status, handlerId);
 
-                     
+
         if (notificationService != null) {
             notificationService.sendFeedbackResultNotification(
                 feedback.getUserId(),
@@ -390,7 +390,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             throw new BusinessException("反馈已被其他操作处理");
         }
 
-                                 
+
         Map<String, Object> refundResult = refundService.applyRefund(
                 feedback.getUserId(),
                 feedback.getOrderId(),
@@ -513,7 +513,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
     }
 
-                                                     
+
 
     private String normalizeFeedbackType(String feedbackType) {
         return feedbackType == null ? null : feedbackType.trim().toLowerCase(Locale.ROOT);

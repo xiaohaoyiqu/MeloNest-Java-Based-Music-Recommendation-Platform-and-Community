@@ -4,45 +4,45 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Locale;
 
-   
-                      
-                      
-   
+
+
+
+
 public enum UserRole {
 
-       
-           
-       
+
+
+
     USER("USER", "普通用户"),
 
-       
-          
-       
+
+
+
     CREATOR("CREATOR", "创作者"),
 
-       
-          
-       
+
+
+
     MODERATOR("MODERATOR", "审核员"),
 
-       
-          
-       
+
+
+
     ADMIN("ADMIN", "管理员"),
 
-       
-            
-       
+
+
+
     SUPER_ADMIN("SUPER_ADMIN", "超级管理员");
 
-       
-           
-       
+
+
+
     private final String code;
 
-       
-           
-       
+
+
+
     private final String description;
 
     UserRole(String code, String description) {
@@ -59,12 +59,12 @@ public enum UserRole {
         return description;
     }
 
-       
-                 
-      
-                       
-                             
-       
+
+
+
+
+
+
     public static UserRole fromCode(String code) {
         if (code == null) {
             return USER;
@@ -94,23 +94,23 @@ public enum UserRole {
         return false;
     }
 
-       
-                     
-      
-                       
-                     
-       
+
+
+
+
+
+
     public static boolean isAdmin(String role) {
         UserRole userRole = fromCode(role);
         return userRole == ADMIN || userRole == SUPER_ADMIN;
     }
 
-       
-                    
-      
-                       
-                      
-       
+
+
+
+
+
+
     public static boolean canModerate(String role) {
         UserRole userRole = fromCode(role);
         return userRole == MODERATOR || userRole == ADMIN || userRole == SUPER_ADMIN;

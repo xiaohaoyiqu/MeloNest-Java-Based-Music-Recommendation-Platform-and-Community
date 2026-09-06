@@ -8,11 +8,11 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-              
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("media_derivative_task")
 public class MediaDerivativeTask implements Serializable {
@@ -27,79 +27,79 @@ public class MediaDerivativeTask implements Serializable {
     public static final String STATUS_COMPLETED = "COMPLETED";
     public static final String STATUS_FAILED = "FAILED";
 
-       
-            
-       
+
+
+
     @TableId(type = IdType.AUTO)
     private Long id;
 
-       
-                    
-       
+
+
+
     private String mediaType;
 
-       
-              
-       
+
+
+
     private Long mediaId;
 
-       
-                    
-       
+
+
+
     private String sourceUrl;
 
-       
-                    
-       
+
+
+
     private Long sourceSize;
 
-       
-                      
-       
+
+
+
     private Integer sourceQuality;
 
-       
-            
-       
+
+
+
     private String status;
 
-       
-             
-       
+
+
+
     private Integer retryCount;
 
-       
-              
-       
+
+
+
     private Integer maxRetryCount;
 
-       
-                
-       
+
+
+
     private String lastError;
 
-       
-                
-       
+
+
+
     private LocalDateTime nextRetryTime;
 
-       
-              
-       
+
+
+
     private LocalDateTime startedAt;
 
-       
-            
-       
+
+
+
     private LocalDateTime finishedAt;
 
-       
-            
-       
+
+
+
     private LocalDateTime createdAt;
 
-       
-            
-       
+
+
+
     private LocalDateTime updatedAt;
 }

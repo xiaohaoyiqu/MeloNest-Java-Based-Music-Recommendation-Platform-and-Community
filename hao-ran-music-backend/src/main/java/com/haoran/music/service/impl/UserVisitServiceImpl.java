@@ -1,7 +1,7 @@
-   
-                      
-                           
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-   
-              
-   
+
+
+
 @Slf4j
 @Service
 public class UserVisitServiceImpl extends ServiceImpl<UserVisitMapper, UserVisit>
@@ -46,7 +46,7 @@ public class UserVisitServiceImpl extends ServiceImpl<UserVisitMapper, UserVisit
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void recordVisit(Long visitorId, Long visitedUserId, String visitSource, String ipAddress) {
-                    
+
         if (ObjectUtils.isEmpty(visitorId) || ObjectUtils.isEmpty(visitedUserId) || visitorId.equals(visitedUserId)) {
             return;
         }
@@ -146,7 +146,7 @@ public class UserVisitServiceImpl extends ServiceImpl<UserVisitMapper, UserVisit
             item.put("visitTime", visit.getVisitTime());
             item.put("visitSource", visit.getVisitSource());
 
-                     
+
             User visitor = visitorsById.get(visit.getVisitorId());
             if (ObjectUtils.isNotEmpty(visitor)) {
                 item.put("visitorId", visitor.getId());

@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-   
-                      
-                     
-   
+
+
+
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("artist")
@@ -35,34 +35,34 @@ public class Artist extends BaseEntity implements Serializable {
     private String area;
     private String firstLetter;
 
-       
-          
-       
+
+
+
     private Long fansCount;
 
-       
-          
-       
+
+
+
     private Long songCount;
 
-       
-          
-       
+
+
+
     private Long albumCount;
 
-       
-           
-       
+
+
+
     private Long playCount;
 
-       
-          
-       
+
+
+
     private Long commentCount;
 
-       
-                
-       
+
+
+
     private Integer hotScore;
 
     private Integer status;

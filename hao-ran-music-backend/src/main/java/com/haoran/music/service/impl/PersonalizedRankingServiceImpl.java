@@ -15,19 +15,19 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-             
-  
-        
-                      
-                       
-                        
-              
-              
-                     
-  
-                      
-   
+
+
+
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class PersonalizedRankingServiceImpl implements PersonalizedRankingService {
@@ -41,7 +41,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
     private final UserFollowMapper userFollowMapper;
     private final UserMapper userMapper;
 
-             
+
     private static final double PREFERENCE_SCORE_WEIGHT = 0.5;
     private static final double PLAY_COUNT_WEIGHT = 0.2;
     private static final double HOT_SCORE_WEIGHT = 0.2;
@@ -71,14 +71,14 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         Map<String, Object> result = new HashMap<>();
 
-                                 
+
         Map<String, Object> preference = getUserMusicPreferenceWithHistory(userId);
         List<String> favoriteGenres = getStringList(preference, "favoriteGenres", Arrays.asList("Pop"));
 
-                              
+
         Set<Long> userLikedSongIds = getUserLikedSongIds(userId);
 
-                        
+
         Map<Long, Double> songScoreMap = new HashMap<>();
 
         for (String genre : favoriteGenres) {
@@ -100,7 +100,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-                           
+
         Set<Long> friendIds = getMutualFriends(userId);
         for (Long friendId : friendIds) {
             List<Long> friendLikedSongs = getFriendLikedSongs(friendId);
@@ -111,10 +111,10 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-                      
+
         List<Long> rankedSongIds = songScoreMap.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                                             
+
                 .limit(Math.min((long) actualLimit * 3L, Integer.MAX_VALUE))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
@@ -127,7 +127,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             List<Song> songs = filterPublicUploaderSongs(songMapper.selectList(songWrapper));
             songMap.putAll(songs.stream().collect(Collectors.toMap(Song::getId, s -> s)));
         }
-                  
+
         List<Map<String, Object>> rankedSongs = rankedSongIds.stream()
                 .map(id -> {
                     Song song = songMap.get(id);
@@ -163,17 +163,17 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         Map<String, Object> result = new HashMap<>();
 
-                        
+
         Set<Long> followingCreatorUserIds = getFollowingCreatorUserIds(userId);
 
-                        
+
         Set<Long> friendIds = getMutualFriends(userId);
         Set<Long> friendCreatorUserIds = new HashSet<>();
         for (Long friendId : friendIds) {
             friendCreatorUserIds.addAll(getFollowingCreatorUserIds(friendId));
         }
 
-                   
+
         Map<Long, Double> creatorUserScoreMap = new HashMap<>();
 
         for (Long creatorUserId : followingCreatorUserIds) {
@@ -184,7 +184,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             creatorUserScoreMap.merge(creatorUserId, 30.0, Double::sum);
         }
 
-                          
+
         List<Long> creatorUserIds = new ArrayList<>(creatorUserScoreMap.keySet());
         Map<Long, Creator> creatorMap = new HashMap<>();
         Map<Long, User> userMap = new HashMap<>();
@@ -205,7 +205,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
                     !UserAccountStatusUtil.canExposePublicContent(userMap.get(uid)));
         }
 
-                           
+
         for (Map.Entry<Long, Double> entry : creatorUserScoreMap.entrySet()) {
             Creator creator = creatorMap.get(entry.getKey());
             if (creator != null) {
@@ -227,7 +227,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-                      
+
         List<Long> rankedCreatorUserIds = creatorUserScoreMap.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(actualLimit)
@@ -271,15 +271,15 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         Map<String, Object> result = new HashMap<>();
 
-                      
+
         Map<String, Object> preference = getUserMusicPreferenceWithHistory(userId);
         List<String> favoriteGenres = getStringList(preference, "favoriteGenres", Arrays.asList("Pop"));
 
-                           
+
         Set<Long> userLikedSongIds = getUserLikedSongIds(userId);
         Set<Long> userPlaylistSongIds = getUserPlaylistSongIds(userId);
 
-                                
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.ne(Playlist::getUserId, userId)
                 .eq(Playlist::getIsPublic, CommonConstants.PUBLIC_PUBLIC)
@@ -291,17 +291,17 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         List<Playlist> allPlaylists = filterPublicCreatorPlaylists(playlistMapper.selectList(wrapper));
 
-                         
+
         Map<Long, Double> playlistScoreMap = new HashMap<>();
         Set<Long> playlistCreatorUserIds = new HashSet<>();
 
         for (Playlist playlist : allPlaylists) {
             double score = 0.0;
 
-                       
+
             List<Long> playlistSongIdList = getPlaylistSongIds(playlist.getId());
 
-                      
+
             int matchedSongs = 0;
             for (Long sid : playlistSongIdList) {
                 if (userLikedSongIds.contains(sid) || userPlaylistSongIds.contains(sid)) {
@@ -309,17 +309,17 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
                 }
             }
 
-                           
+
             if (!playlistSongIdList.isEmpty()) {
                 double matchRate = (double) matchedSongs / playlistSongIdList.size();
                 score += matchRate * 50;
             }
 
-                           
+
             Long favoriteCount = playlist.getFavoriteCount() != null ? playlist.getFavoriteCount() : 0;
             score += Math.min(Math.log(favoriteCount + 1) * 5, 30);
 
-                           
+
             Long playCount = playlist.getPlayCount() != null ? playlist.getPlayCount() : 0;
             score += Math.min(Math.log(playCount + 1) * 3, 20);
 
@@ -327,7 +327,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             playlistCreatorUserIds.add(playlist.getUserId());
         }
 
-                      
+
         Map<Long, User> userMap = new HashMap<>();
         if (!playlistCreatorUserIds.isEmpty()) {
             LambdaQueryWrapper<User> userWrapper = UserAccountStatusUtil.publicContentUserQuery()
@@ -336,14 +336,14 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             userMap.putAll(users.stream().collect(Collectors.toMap(User::getId, u -> u)));
         }
 
-                      
+
         List<Long> rankedPlaylistIds = playlistScoreMap.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(actualLimit)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-                 
+
         Map<Long, Playlist> playlistMap = new HashMap<>();
         if (!rankedPlaylistIds.isEmpty()) {
             LambdaQueryWrapper<Playlist> playlistWrapper = new LambdaQueryWrapper<>();
@@ -390,7 +390,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
     public Map<String, Object> getUserActiveTimeAnalysis(Long userId) {
         Map<String, Object> result = new HashMap<>();
 
-                  
+
         Map<String, Integer> periodPlayCount = new HashMap<>();
         periodPlayCount.put("morning", 0);
         periodPlayCount.put("afternoon", 0);
@@ -403,7 +403,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
         periodGenreCount.put("evening", new HashMap<>());
         periodGenreCount.put("night", new HashMap<>());
 
-                       
+
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ListenHistory::getUserId, userId)
                 .eq(ListenHistory::getDeleted, CommonConstants.NOT_DELETED)
@@ -412,7 +412,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         List<ListenHistory> histories = listenHistoryMapper.selectList(wrapper);
 
-                   
+
         Set<Long> songIds = histories.stream()
                 .map(ListenHistory::getSongId)
                 .filter(Objects::nonNull)
@@ -436,7 +436,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             String period = getPeriodByHour(hour);
             periodPlayCount.merge(period, 1, Integer::sum);
 
-                         
+
             Song song = songMap.get(history.getSongId());
             if (song != null && ObjectUtils.isNotEmpty(song.getMainType())) {
                 Map<String, Integer> genreMap = periodGenreCount.get(period);
@@ -448,7 +448,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-                  
+
         String mostActivePeriod = periodPlayCount.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
@@ -466,11 +466,11 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
     public Map<String, Object> getUserDeepPreferenceAnalysis(Long userId) {
         Map<String, Object> result = new HashMap<>();
 
-                    
+
         Map<String, Integer> favoriteGenrePreference = new HashMap<>();
         Set<Long> userLikedSongIds = getUserLikedSongIds(userId);
 
-                    
+
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ListenHistory::getUserId, userId)
                 .eq(ListenHistory::getDeleted, CommonConstants.NOT_DELETED)
@@ -479,10 +479,10 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         List<ListenHistory> histories = listenHistoryMapper.selectList(wrapper);
 
-                    
+
         Set<Long> userPlaylistSongIds = getUserPlaylistSongIds(userId);
 
-                     
+
         Set<Long> allSongIds = new HashSet<>();
         allSongIds.addAll(userLikedSongIds);
         allSongIds.addAll(userPlaylistSongIds);
@@ -498,7 +498,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             songMap.putAll(songs.stream().collect(Collectors.toMap(Song::getId, s -> s)));
         }
 
-                 
+
         for (Long sid : userLikedSongIds) {
             Song song = songMap.get(sid);
             if (song != null && ObjectUtils.isNotEmpty(song.getMainType())) {
@@ -506,7 +506,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-                 
+
         Map<String, Integer> playGenrePreference = new HashMap<>();
         for (ListenHistory history : histories) {
             Song song = songMap.get(history.getSongId());
@@ -515,7 +515,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-                 
+
         Map<String, Integer> playlistGenrePreference = new HashMap<>();
         for (Long sid : userPlaylistSongIds) {
             Song song = songMap.get(sid);
@@ -524,13 +524,13 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-                                          
+
         Map<String, Double> comprehensivePreference = new HashMap<>();
         addWeightedPreference(comprehensivePreference, favoriteGenrePreference, 0.4);
         addWeightedPreference(comprehensivePreference, playGenrePreference, 0.4);
         addWeightedPreference(comprehensivePreference, playlistGenrePreference, 0.2);
 
-                     
+
         List<String> topGenres = comprehensivePreference.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(5)
@@ -547,12 +547,12 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
         return result;
     }
 
-                                                       
+
 
     private Map<String, Object> getUserMusicPreferenceWithHistory(Long userId) {
         Map<String, Object> preference = new HashMap<>();
 
-                      
+
         Map<String, Integer> favoriteGenreCount = new HashMap<>();
         LambdaQueryWrapper<SongLike> likeWrapper = new LambdaQueryWrapper<>();
         likeWrapper.eq(SongLike::getUserId, userId)
@@ -562,7 +562,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         List<SongLike> songLikes = songLikeMapper.selectList(likeWrapper);
 
-                      
+
         Map<String, Integer> playGenreCount = new HashMap<>();
         LambdaQueryWrapper<ListenHistory> historyWrapper = new LambdaQueryWrapper<>();
         historyWrapper.eq(ListenHistory::getUserId, userId)
@@ -572,7 +572,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
 
         List<ListenHistory> histories = listenHistoryMapper.selectList(historyWrapper);
 
-                   
+
         Set<Long> allSongIds = new HashSet<>();
         songLikes.stream().map(SongLike::getSongId).filter(Objects::nonNull).forEach(allSongIds::add);
         histories.stream().map(ListenHistory::getSongId).filter(Objects::nonNull).forEach(allSongIds::add);
@@ -601,7 +601,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             }
         }
 
-               
+
         Map<String, Integer> totalGenreCount = new HashMap<>();
         for (Map.Entry<String, Integer> entry : favoriteGenreCount.entrySet()) {
             totalGenreCount.merge(entry.getKey(), entry.getValue(), Integer::sum);
@@ -610,7 +610,7 @@ public class PersonalizedRankingServiceImpl implements PersonalizedRankingServic
             totalGenreCount.merge(entry.getKey(), entry.getValue(), Integer::sum);
         }
 
-                       
+
         List<String> favoriteGenres = totalGenreCount.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(5)

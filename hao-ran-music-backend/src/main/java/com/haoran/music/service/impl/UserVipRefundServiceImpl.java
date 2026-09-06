@@ -33,11 +33,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class UserVipRefundServiceImpl implements UserVipRefundService {
@@ -78,19 +78,19 @@ public class UserVipRefundServiceImpl implements UserVipRefundService {
             return 0;
         }
 
-                  
+
         Integer deductDays = calculateDeductDays(order, refundAmount);
         if (deductDays == null || deductDays <= 0) {
             throw new BusinessException("无法计算VIP退款扣减天数");
         }
 
-                  
+
         VipDeductionResult deduction = deductVipDaysInternal(userId, deductDays);
         if (deduction == null) {
             throw new BusinessException("用户当前没有可扣减的VIP权益");
         }
 
-                  
+
         insertVipChange(userId, "refund", -deductDays, orderId, "VIP退款",
                 deduction.vipLevel, deduction.oldExpireTime, deduction.newExpireTime);
 
@@ -125,13 +125,13 @@ public class UserVipRefundServiceImpl implements UserVipRefundService {
             return 0;
         }
 
-                 
+
         if (refundAmount.compareTo(orderAmount) > 0) {
             return 0;
         }
         BigDecimal refundRatio = refundAmount.divide(orderAmount, 8, RoundingMode.HALF_UP);
 
-                    
+
         Integer orderDays = getDaysFromPurchaseRecord(order.getId(), order.getUserId());
         if (orderDays == null) {
             orderDays = getDaysByAmount(orderAmount);
@@ -142,7 +142,7 @@ public class UserVipRefundServiceImpl implements UserVipRefundService {
             return 0;
         }
 
-                    
+
         Integer deductDays = new BigDecimal(orderDays)
                 .multiply(refundRatio)
                 .setScale(0, RoundingMode.UP)
@@ -169,7 +169,7 @@ public class UserVipRefundServiceImpl implements UserVipRefundService {
             return Collections.emptyList();
         }
 
-                       
+
         LambdaQueryWrapper<PaymentOrder> wrapper = PaymentOrderStatusUtil.applyPaidOrderFilter(new LambdaQueryWrapper<>());
         wrapper.eq(PaymentOrder::getUserId, userId)
                 .eq(PaymentOrder::getBusinessType, "vip")
@@ -240,9 +240,9 @@ public class UserVipRefundServiceImpl implements UserVipRefundService {
                 vipLevel, expireTime, expireTime);
     }
 
-       
-                  
-       
+
+
+
     private Integer getDaysByAmount(BigDecimal amount) {
         if (amount == null) {
             return null;

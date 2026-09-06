@@ -9,11 +9,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                                     
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("search_index_sync_outbox")
 public class SearchIndexSyncOutboxEvent {

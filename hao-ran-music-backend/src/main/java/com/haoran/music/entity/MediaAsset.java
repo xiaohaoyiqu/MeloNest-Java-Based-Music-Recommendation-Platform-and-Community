@@ -9,11 +9,11 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-          
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("media_asset")
 public class MediaAsset implements Serializable {
@@ -30,120 +30,120 @@ public class MediaAsset implements Serializable {
     public static final String VISIBILITY_PUBLIC = "PUBLIC";
     public static final String SCAN_STATUS_CLEAN = "CLEAN";
 
-       
-            
-       
+
+
+
     @TableId(type = IdType.AUTO)
     private Long id;
 
-       
-                        
-       
+
+
+
     private Long ownerId;
 
-       
-                       
-       
+
+
+
     private Long uploadSessionId;
 
-       
-              
-       
+
+
+
     private String purpose;
 
-       
-                          
-       
+
+
+
     private String visibility;
 
-       
-                              
-       
+
+
+
     private String originalName;
 
-       
-                  
-       
+
+
+
     private String contentType;
 
-       
-                                
-       
+
+
+
     private String mediaType;
 
-       
-              
-       
+
+
+
     private String sourceType;
 
-       
-              
-       
+
+
+
     private Long sourceId;
 
-       
-                                       
-       
+
+
+
     private String assetRole;
 
-       
-               
-       
+
+
+
     private String publicUrl;
 
-       
-                        
-       
+
+
+
     private String storageNode;
 
-       
-                 
-       
+
+
+
     private String storagePath;
 
-       
-                      
-       
+
+
+
     private String fileHash;
 
-       
-            
-       
+
+
+
     private Long fileSize;
 
-       
-            
-       
+
+
+
     private String scanStatus;
 
-       
-            
-       
+
+
+
     private String status;
 
-       
-                   
-       
+
+
+
     private LocalDateTime graceUntil;
 
-       
-                
-       
+
+
+
     private String lastError;
 
-       
-              
-       
+
+
+
     private LocalDateTime reclaimedAt;
 
-       
-            
-       
+
+
+
     private LocalDateTime createTime;
 
-       
-            
-       
+
+
+
     @TableField("updated_at")
     private LocalDateTime updateTime;
 }

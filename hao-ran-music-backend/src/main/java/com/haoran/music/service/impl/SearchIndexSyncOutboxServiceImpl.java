@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-   
-                                                
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class SearchIndexSyncOutboxServiceImpl implements SearchIndexSyncOutboxService {

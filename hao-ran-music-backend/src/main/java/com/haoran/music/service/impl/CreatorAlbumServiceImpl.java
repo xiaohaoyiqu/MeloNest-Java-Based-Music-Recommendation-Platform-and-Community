@@ -30,10 +30,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class CreatorAlbumServiceImpl extends ServiceImpl<CreatorAlbumMapper, CreatorAlbum> implements CreatorAlbumService {
@@ -54,13 +54,13 @@ public class CreatorAlbumServiceImpl extends ServiceImpl<CreatorAlbumMapper, Cre
     @Transactional(rollbackFor = Exception.class)
 public Long createAlbum(Long userId, CreatorAlbum album) {
         creatorEligibilityService.requireEligible(userId, "创建创作者专辑");
-                    
+
         SecurityCheckUtil.CheckResult nameCheck = SecurityCheckUtil.checkAlbumName(album.getAlbumName());
         if (!nameCheck.isSafe()) {
             throw new BusinessException(ResultCode.PARAM_ERROR, nameCheck.getMessage());
         }
-        
-                    
+
+
         if (ObjectUtils.isNotEmpty(album.getDescription())) {
             SecurityCheckUtil.CheckResult descCheck = SecurityCheckUtil.checkDescription(album.getDescription());
             if (!descCheck.isSafe()) {
@@ -96,15 +96,15 @@ public Long createAlbum(Long userId, CreatorAlbum album) {
             throw new BusinessException(ResultCode.FORBIDDEN, "无权限修改此专辑");
         }
 
-                    
+
         if (ObjectUtils.isNotEmpty(album.getAlbumName())) {
             SecurityCheckUtil.CheckResult nameCheck = SecurityCheckUtil.checkAlbumName(album.getAlbumName());
             if (!nameCheck.isSafe()) {
                 throw new BusinessException(ResultCode.PARAM_ERROR, nameCheck.getMessage());
             }
         }
-        
-                    
+
+
         if (ObjectUtils.isNotEmpty(album.getDescription())) {
             SecurityCheckUtil.CheckResult descCheck = SecurityCheckUtil.checkDescription(album.getDescription());
             if (!descCheck.isSafe()) {
@@ -120,9 +120,9 @@ public Long createAlbum(Long userId, CreatorAlbum album) {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void publishAlbum(Long albumId, Long userId) {
-                                                                               
-                                                                              
-                                                                             
+
+
+
         throw new BusinessException(ResultCode.FORBIDDEN,
                 "旧版创作者专辑不支持直接发布，请通过作品投稿审核发布");
     }
@@ -144,11 +144,11 @@ public Long createAlbum(Long userId, CreatorAlbum album) {
             throw new BusinessException(ResultCode.FORBIDDEN, "无权限删除此专辑");
         }
 
-                   
+
         albumSongMapper.delete(new LambdaQueryWrapper<CreatorAlbumSong>()
                 .eq(CreatorAlbumSong::getAlbumId, albumId));
 
-               
+
         removeById(albumId);
         log.info("删除专辑成功, albumId: {}, userId: {}", albumId, userId);
     }
@@ -245,7 +245,7 @@ public Long createAlbum(Long userId, CreatorAlbum album) {
             albumSongMapper.insert(albumSong);
         }
 
-                 
+
         if (!newSongIds.isEmpty()) {
             album.setSongCount(currentSongCount + newSongIds.size());
             updateById(album);
@@ -275,7 +275,7 @@ public Long createAlbum(Long userId, CreatorAlbum album) {
                 .eq(CreatorAlbumSong::getAlbumId, albumId)
                 .eq(CreatorAlbumSong::getSongId, songId));
 
-                 
+
         if (album.getSongCount() > 0) {
             album.setSongCount(album.getSongCount() - 1);
             updateById(album);
@@ -366,7 +366,7 @@ public Long createAlbum(Long userId, CreatorAlbum album) {
 
         albumSongMapper.insert(albumSong);
 
-                       
+
         if (albumSong.getDuration() != null) {
             album.setTotalDuration(album.getTotalDuration() + albumSong.getDuration());
         }

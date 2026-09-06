@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.annotation.RequireRole;
@@ -65,13 +65,13 @@ public class ModerationAppealController {
         return Result.success(appealService.canAppeal(userId, moderationId));
     }
 
-       
-                         
-      
-                           
-                            
-                   
-       
+
+
+
+
+
+
+
     @GetMapping("/detail/{appealId}")
     @ApiLog("获取审核申诉详情")
     public Result<Map<String, Object>> getAppealDetail(@PathVariable Long appealId,

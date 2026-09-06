@@ -1,13 +1,13 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.constant;
 
 import com.haoran.music.common.enums.UserType;
 
-   
-                                                                           
-   
+
+
+
 public final class PublicStatsSql {
 
     public static final int HIGH_RISK_SCORE_THRESHOLD = UserAccountPolicyConstants.HIGH_RISK_SCORE_THRESHOLD;
@@ -35,11 +35,11 @@ public final class PublicStatsSql {
     public static final String CREATOR_FILTER_XML = USER_FILTER_XML
             + " AND (u.creator_status IS NULL OR u.creator_status &lt;&gt; '" + UserAccountPolicyConstants.CREATOR_STATUS_SUSPENDED + "')";
 
-       
-                                                                                 
-                                                                                
-                                                                                
-       
+
+
+
+
+
     public static final String RETAINED_PUBLIC_CONTENT_FILTER = " AND u.deleted = 0"
             + " AND (u.status IN (0, 2)"
             + " OR u.is_banned = 1"
@@ -47,7 +47,7 @@ public final class PublicStatsSql {
             + " OR (u.status = 1 AND (u.user_type IS NULL OR u.user_type NOT IN ("
             + UserType.RESTRICTED_CODE_SQL + "))))";
 
-                                                                                                                
+
     public static final String ACTIVE_CREATOR_FILTER = USER_FILTER
             + " AND u.is_creator = 1 AND u.creator_status = 'active'";
 

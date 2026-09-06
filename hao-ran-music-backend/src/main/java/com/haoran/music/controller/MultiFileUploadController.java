@@ -1,13 +1,13 @@
-   
-                      
-                              
-  
-        
-              
-             
-              
-              
-   
+
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -31,9 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-             
-  
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/upload/multi-file")
@@ -45,12 +45,12 @@ public class MultiFileUploadController {
     @Autowired
     private MusicUploadConfig musicUploadConfig;
 
-       
-             
-      
-                               
-                   
-       
+
+
+
+
+
+
     @PostMapping("/batch")
     @ApiLog("批量上传文件")
     @RateLimit(maxRequests = 6, timeWindowSeconds = 60, operation = "submissionBatchUpload",
@@ -78,12 +78,12 @@ public class MultiFileUploadController {
         }
     }
 
-       
-               
-      
-                              
-                       
-       
+
+
+
+
+
+
     @PostMapping("/extract-zip")
     @ApiLog("上传并解压压缩包")
     @RateLimit(maxRequests = 2, timeWindowSeconds = 300, operation = "submissionArchiveUpload",
@@ -110,24 +110,24 @@ public class MultiFileUploadController {
         }
     }
 
-       
-             
-      
-                          
-                                                 
-       
+
+
+
+
+
+
     @GetMapping("/identify-type")
     public Result<String> identifyFileType(@RequestParam String fileName) {
         String type = multiFileUploadService.identifyFileType(fileName);
         return Result.successData(type);
     }
 
-       
-               
-      
-                                            
-                        
-       
+
+
+
+
+
+
     @PostMapping("/detect-audio-batch")
     @ApiLog("批量检测音频质量")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 60, operation = "submissionAudioDetection",
@@ -151,12 +151,12 @@ public class MultiFileUploadController {
         }
     }
 
-       
-               
-      
-                                            
-                        
-       
+
+
+
+
+
+
     @PostMapping("/detect-video-batch")
     @ApiLog("批量检测视频信息")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 60, operation = "submissionVideoDetection",
@@ -180,11 +180,11 @@ public class MultiFileUploadController {
         }
     }
 
-       
-                
-      
-                          
-       
+
+
+
+
+
     @GetMapping("/supported-formats")
     public Result<Map<String, String[]>> getSupportedFormats() {
         Map<String, String[]> formats = new HashMap<>();
@@ -196,11 +196,11 @@ public class MultiFileUploadController {
         return Result.success(Collections.unmodifiableMap(formats));
     }
 
-       
-             
-      
-                     
-       
+
+
+
+
+
     @GetMapping("/limits")
     public Result<Map<String, Object>> getUploadLimits() {
         Map<String, Object> limits = new HashMap<>();

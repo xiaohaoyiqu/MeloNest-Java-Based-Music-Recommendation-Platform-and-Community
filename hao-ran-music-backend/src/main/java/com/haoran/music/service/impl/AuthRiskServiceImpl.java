@@ -1,7 +1,7 @@
-   
-                      
-                                                         
-   
+
+
+
+
 package com.haoran.music.service.impl;
 
 import com.haoran.music.common.config.AuthRiskConfig;
@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-   
-                                                                                                        
-   
+
+
+
 @Slf4j
 @Service
 public class AuthRiskServiceImpl implements AuthRiskService {

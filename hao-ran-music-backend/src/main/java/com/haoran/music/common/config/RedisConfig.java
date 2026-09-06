@@ -1,7 +1,7 @@
-   
-                      
-                                
-   
+
+
+
+
 
 package com.haoran.music.common.config;
 
@@ -30,20 +30,20 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                       
-   
+
+
+
 @Configuration
 @EnableCaching
 public class RedisConfig {
 
-       
-                         
-      
-                                         
-                                
-                          
-       
+
+
+
+
+
+
+
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
             RedisConnectionFactory connectionFactory,
@@ -56,23 +56,23 @@ public class RedisConfig {
         return container;
     }
 
-       
-                      
-      
-                                         
-                            
-       
+
+
+
+
+
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
-                                                      
+
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-                                                       
+
         mapper.registerModule(new JavaTimeModule());
         mapper.activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
@@ -81,7 +81,7 @@ public class RedisConfig {
         );
         serializer.setObjectMapper(mapper);
 
-                                              
+
         StringRedisSerializer stringSerializer = new StringRedisSerializer();
 
         template.setKeySerializer(stringSerializer);
@@ -93,19 +93,19 @@ public class RedisConfig {
         return template;
     }
 
-       
-                                
-      
-                                         
-                           
-       
+
+
+
+
+
+
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-                                                       
+
         mapper.registerModule(new JavaTimeModule());
         mapper.activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
@@ -114,35 +114,35 @@ public class RedisConfig {
         );
         serializer.setObjectMapper(mapper);
 
-                        
+
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(30))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
                 .disableCachingNullValues();
 
-                         
+
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
 
-                      
+
         cacheConfigurations.put("hotSongs", defaultConfig.entryTtl(Duration.ofMinutes(10)));
 
-                      
+
         cacheConfigurations.put("hotKeywords", defaultConfig.entryTtl(Duration.ofMinutes(5)));
 
-                      
+
         cacheConfigurations.put("recommend", defaultConfig.entryTtl(Duration.ofMinutes(15)));
 
-                     
+
         cacheConfigurations.put("artist", defaultConfig.entryTtl(Duration.ofHours(1)));
 
-                     
+
         cacheConfigurations.put("album", defaultConfig.entryTtl(Duration.ofHours(1)));
 
-                      
+
         cacheConfigurations.put("playlist", defaultConfig.entryTtl(Duration.ofMinutes(30)));
 
-                      
+
         cacheConfigurations.put("user", defaultConfig.entryTtl(Duration.ofMinutes(30)));
 
         return RedisCacheManager.builder(connectionFactory)

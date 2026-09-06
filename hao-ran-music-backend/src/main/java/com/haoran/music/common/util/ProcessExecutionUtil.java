@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import java.io.BufferedReader;
@@ -10,13 +10,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-   
-                                                                      
-  
-                                                                           
-                                                                         
-                                                   
-   
+
+
+
+
+
+
+
 public final class ProcessExecutionUtil {
 
     private static final int DEFAULT_MAX_OUTPUT_CHARS = 64 * 1024;
@@ -77,7 +77,7 @@ public final class ProcessExecutionUtil {
                 }
             }
         } catch (IOException ignored) {
-                                                                                
+
         }
     }
 

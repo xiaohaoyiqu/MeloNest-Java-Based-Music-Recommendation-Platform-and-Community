@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -24,12 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-            
-  
-                                       
-                                                  
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class UserPointsServiceImpl implements UserPointsService {
@@ -102,7 +102,7 @@ public class UserPointsServiceImpl implements UserPointsService {
 
         userPointsMapper.insert(points);
 
-                
+
         initUserLevel(userId);
 
         log.info("初始化用户积分: userId={}", userId);
@@ -124,7 +124,7 @@ public class UserPointsServiceImpl implements UserPointsService {
         int beforePoints = safeInt(userPoints.getCurrentPoints());
         int delta = points;
 
-                                              
+
         if (delta > 0 && !isAdminAdjustment(changeType)) {
             int todayEarned = getTodayPoints(userId);
             int remaining = Math.max(getDailyLimit() - todayEarned, 0);
@@ -143,7 +143,7 @@ public class UserPointsServiceImpl implements UserPointsService {
             throw new BusinessException("积分不足");
         }
 
-                                           
+
         UserPointsRecord record = new UserPointsRecord();
         record.setUserId(userId);
         record.setChangeType(changeType);
@@ -164,7 +164,7 @@ public class UserPointsServiceImpl implements UserPointsService {
         userPoints.setLastUpdateTime(LocalDateTime.now());
         userPointsMapper.updateById(userPoints);
 
-                                  
+
         updateUserLevel(userId, userPoints.getTotalPoints());
 
         log.info("变更积分: userId={}, changeType={}, delta={}, newPoints={}",
@@ -214,7 +214,7 @@ public class UserPointsServiceImpl implements UserPointsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer resetDailyPoints() {
-                                          
+
         log.info("每日积分无需重置: 今日积分由 user_points_record 实时汇总");
         return 0;
     }
@@ -309,7 +309,7 @@ public class UserPointsServiceImpl implements UserPointsService {
             level.setCurrentExp(safeInt(level.getCurrentExp()) + exp);
             level.setTotalExp(safeInt(level.getTotalExp()) + exp);
 
-                     
+
             checkLevelUp(level);
 
             userLevelMapper.updateById(level);
@@ -318,7 +318,7 @@ public class UserPointsServiceImpl implements UserPointsService {
         return exp;
     }
 
-                                                     
+
 
     private UserPoints getUserPointsEntity(Long userId) {
         UserPoints points = userPointsMapper.selectOne(
@@ -383,10 +383,10 @@ public class UserPointsServiceImpl implements UserPointsService {
         return wrapper;
     }
 
-       
-                                  
-      
-  
+
+
+
+
     private Integer sumPositivePoints(Long userId, LocalDateTime start, LocalDateTime end) {
         LambdaQueryWrapper<UserPointsRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserPointsRecord::getUserId, userId)

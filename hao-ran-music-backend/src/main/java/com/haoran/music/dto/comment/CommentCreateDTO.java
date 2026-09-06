@@ -6,10 +6,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-   
-                      
-                       
-   
+
+
+
+
 @Data
 
 public class CommentCreateDTO implements Serializable {
@@ -23,9 +23,9 @@ public class CommentCreateDTO implements Serializable {
     private Long targetId;
 
 
-       
-                              
-       
+
+
+
     private Long parentId;
 
     @NotBlank(message = "评论内容不能为空")
@@ -33,8 +33,8 @@ public class CommentCreateDTO implements Serializable {
     private String content;
 
 
-       
-                              
-       
+
+
+
     private Long replyToUserId;
 }

@@ -6,17 +6,17 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
-   
-                      
-                              
-   
+
+
+
+
 @Mapper
 public interface MusicSquareWorkMapper extends BaseMapper<MusicSquareWork> {
 
-       
-            
-                         
-       
+
+
+
+
     @Update("UPDATE music_square_work SET view_count = COALESCE(view_count, 0) + 1, update_time = NOW() WHERE id = #{workId} AND deleted = 0 AND status = 1")
     int incrementViewCount(@Param("workId") Long workId);
 

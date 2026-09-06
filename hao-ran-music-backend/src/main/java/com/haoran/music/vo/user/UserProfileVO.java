@@ -6,10 +6,10 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.List;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 public class UserProfileVO {
 
@@ -27,7 +27,7 @@ public class UserProfileVO {
 
     private Integer churnProbability;
 
-                                                     
+
 
     private List<String> preferredGenres;
 
@@ -35,7 +35,7 @@ public class UserProfileVO {
 
     private List<String> preferredLanguages;
 
-                                                     
+
 
     private Double avgDailyDurationHours;
 
@@ -47,7 +47,7 @@ public class UserProfileVO {
 
     private Integer totalPlayCount;
 
-                                                     
+
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate registerDate;

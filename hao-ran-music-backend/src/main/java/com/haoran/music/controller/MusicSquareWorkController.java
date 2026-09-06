@@ -18,15 +18,15 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-   
-                      
-                         
-  
-        
-                         
-                               
-                  
-   
+
+
+
+
+
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/music-square/work")
@@ -43,9 +43,9 @@ public class MusicSquareWorkController {
         this.musicSquareWorkService = musicSquareWorkService;
     }
 
-       
-           
-       
+
+
+
     @ApiLog("提交音乐广场投稿")
     @PostMapping("/submit")
     public Result submitWork(HttpServletRequest request,
@@ -81,9 +81,9 @@ public class MusicSquareWorkController {
         return Result.success(workId);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("检测音频信息")
     @GetMapping("/detect/audio")
     public Result detectAudio(HttpServletRequest request, @RequestParam String audioUrl) {
@@ -95,9 +95,9 @@ public class MusicSquareWorkController {
         return Result.success(info);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("检测视频信息")
     @GetMapping("/detect/video")
     public Result detectVideo(HttpServletRequest request, @RequestParam String videoUrl) {
@@ -109,10 +109,10 @@ public class MusicSquareWorkController {
         return Result.success(info);
     }
 
-       
-             
-                       
-       
+
+
+
+
     @ApiLog("获取音乐广场投稿列表")
     @GetMapping("/list")
     public Result listWorks(@RequestParam(defaultValue = "1") Integer page,
@@ -124,9 +124,9 @@ public class MusicSquareWorkController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取我的音乐广场投稿")
     @GetMapping("/my")
     public Result getMyWorks(HttpServletRequest request,
@@ -138,25 +138,25 @@ public class MusicSquareWorkController {
         return Result.success(result);
     }
 
-       
-             
-                                
-       
+
+
+
+
     @ApiLog("获取音乐广场投稿详情")
     @GetMapping("/{id}")
     public Result getWorkDetail(@PathVariable Long id, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
 
-                                                                                                  
+
         if (userId != null && !contentAccessLimitService.checkCreatorBatchAccess(userId)) {
             return Result.error(429, "访问过于频繁，请稍后再试");
         }
 
         MusicSquareWork work = musicSquareWorkService.getVisibleWorkDetail(id, userId);
         if (work != null) {
-                    
+
             musicSquareWorkService.incrementViewCount(id, userId);
-                           
+
             if (userId != null) {
                 contentAccessLimitService.recordCreatorContentAccess(userId, id, "music-square-work");
             }
@@ -164,10 +164,10 @@ public class MusicSquareWorkController {
         return Result.success(work);
     }
 
-       
-           
-                 
-       
+
+
+
+
     @ApiLog("点赞音乐广场投稿")
     @PostMapping("/{id}/like")
     public Result likeWork(@PathVariable Long id, HttpServletRequest request) {
@@ -176,10 +176,10 @@ public class MusicSquareWorkController {
         return Result.success();
     }
 
-       
-           
-                 
-       
+
+
+
+
     @ApiLog("取消点赞音乐广场投稿")
     @DeleteMapping("/{id}/like")
     public Result unlikeWork(@PathVariable Long id, HttpServletRequest request) {
@@ -188,9 +188,9 @@ public class MusicSquareWorkController {
         return Result.success();
     }
 
-       
-           
-       
+
+
+
     @ApiLog("删除音乐广场投稿")
     @DeleteMapping("/{id}")
     public Result deleteWork(@PathVariable Long id, HttpServletRequest request) {
@@ -199,9 +199,9 @@ public class MusicSquareWorkController {
         return Result.success();
     }
 
-       
-           
-       
+
+
+
     @ApiLog("编辑音乐广场投稿")
     @PutMapping("/{id}")
     public Result updateWork(@PathVariable Long id,
@@ -232,9 +232,9 @@ public class MusicSquareWorkController {
         return Result.success();
     }
 
-       
-                
-       
+
+
+
     @ApiLog("审核音乐广场投稿")
     @PostMapping("/{id}/review")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -249,9 +249,9 @@ public class MusicSquareWorkController {
         return Result.success();
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("获取音乐广场待审核数量")
     @GetMapping("/pending/count")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})

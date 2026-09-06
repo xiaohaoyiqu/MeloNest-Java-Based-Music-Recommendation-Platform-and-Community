@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -29,9 +29,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, MarketplaceItem>
@@ -85,7 +85,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         LambdaQueryWrapper<MarketplaceItem> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(MarketplaceItem::getIsDeleted, false);
 
-                       
+
         wrapper.in(MarketplaceItem::getStatus, Arrays.asList("available", "reserved"));
         wrapper.apply("EXISTS (SELECT 1 FROM user seller WHERE seller.id = marketplace_item.seller_id "
                         + "AND seller.deleted = 0 AND seller.status = 1 "
@@ -97,7 +97,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
                 UserAccountPolicyConstants.HIGH_RISK_SCORE_THRESHOLD,
                 UserAccountPolicyConstants.PUBLIC_FLOW_CREDIT_MIN_SCORE);
 
-                              
+
         if (!ObjectUtils.isEmpty(keyword) && !keyword.trim().isEmpty()) {
             String searchKeyword = keyword;
             wrapper.and(w -> w
@@ -109,17 +109,17 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
             );
         }
 
-               
+
         if (!ObjectUtils.isEmpty(category) && !"all".equals(category)) {
             wrapper.eq(MarketplaceItem::getCategory, category);
         }
 
-               
+
         if (!ObjectUtils.isEmpty(condition) && !"all".equals(condition)) {
             wrapper.eq(MarketplaceItem::getConditionInfo, condition);
         }
 
-             
+
         if (ObjectUtils.isEmpty(sortBy)) {
             sortBy = "latest";
         }
@@ -144,7 +144,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
                 wrapper
         );
 
-                
+
         IPage<Object> result = new Page<>(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
         MarketplaceVoContext voContext = buildMarketplaceVoContext(pageResult.getRecords(), currentUserId);
         List<Object> records = pageResult.getRecords().stream()
@@ -247,7 +247,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
             return false;
         }
 
-               
+
         if (!item.getSellerId().equals(sellerId)) {
             log.warn("用户无权更新该商品: itemId={}, sellerId={}, itemSellerId={}",
                     itemId, sellerId, item.getSellerId());
@@ -280,7 +280,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
             return false;
         }
 
-               
+
         if (!item.getSellerId().equals(sellerId)) {
             log.warn("用户无权删除该商品: itemId={}, sellerId={}, itemSellerId={}",
                     itemId, sellerId, item.getSellerId());
@@ -371,7 +371,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
                 wrapper
         );
 
-                
+
         IPage<Object> result = new Page<>(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
         List<Object> records = pageResult.getRecords().stream()
                 .map(item -> convertToVO(item, sellerId))
@@ -386,7 +386,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         page = normalizePage(page);
         size = normalizePageSize(size, 10);
 
-                                    
+
         LambdaQueryWrapper<MarketplaceFavorite> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(MarketplaceFavorite::getUserId, userId)
                 .eq(MarketplaceFavorite::getDeleted, 0)
@@ -454,7 +454,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
             return false;
         }
 
-                                            
+
         LambdaQueryWrapper<MarketplaceFavorite> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(MarketplaceFavorite::getItemId, itemId)
                 .eq(MarketplaceFavorite::getUserId, userId)
@@ -464,9 +464,9 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         return count != null && count > 0;
     }
 
-       
-             
-       
+
+
+
     private Map<String, Object> getSellerInfo(Long sellerId) {
         if (ObjectUtils.isEmpty(sellerId)) {
             return getAnonymousSeller();
@@ -482,7 +482,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         sellerInfo.put("nickname", user.getNickname());
         sellerInfo.put("avatar", user.getAvatar());
 
-                  
+
         UserCredit userCredit = userCreditMapper.selectById(sellerId);
         if (userCredit != null) {
             sellerInfo.put("credit", userCredit.getCreditScore());
@@ -493,9 +493,9 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         return sellerInfo;
     }
 
-       
-               
-       
+
+
+
     private Map<String, Object> getAnonymousSeller() {
         Map<String, Object> sellerInfo = new HashMap<>();
         String defaultAvatar = "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
@@ -508,9 +508,9 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         return sellerInfo;
     }
 
-       
-                     
-       
+
+
+
     private List<String> parseImages(String imagesJson) {
         if (ObjectUtils.isEmpty(imagesJson)) {
             return new ArrayList<>();
@@ -527,12 +527,12 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         }
     }
 
-       
-                   
-                  
-                                  
-                   
-       
+
+
+
+
+
+
     private Map<String, Object> convertToVO(MarketplaceItem item, Long currentUserId) {
         return convertToVO(item, currentUserId, null);
     }
@@ -540,7 +540,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
     private Map<String, Object> convertToVO(MarketplaceItem item, Long currentUserId, MarketplaceVoContext context) {
         Map<String, Object> vo = new HashMap<>();
 
-               
+
         vo.put("id", item.getId());
         vo.put("title", item.getTitle());
         vo.put("category", item.getCategory());
@@ -553,10 +553,10 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         vo.put("viewCount", item.getViewCount() == null ? 0 : item.getViewCount());
         vo.put("favoriteCount", item.getFavoriteCount() == null ? 0 : item.getFavoriteCount());
 
-             
+
         vo.put("images", parseImages(item.getImages()));
 
-                                                   
+
         if (!ObjectUtils.isEmpty(item.getResourceType()) && !ObjectUtils.isEmpty(item.getResourceId())) {
             Map<String, Object> resource = new HashMap<>();
             resource.put("type", item.getResourceType());
@@ -564,7 +564,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
             resource.put("name", item.getResourceName());
             resource.put("cover", item.getResourceCover());
 
-                             
+
             if ("song".equals(item.getResourceType())) {
                 Song song = context != null ? context.songs.get(item.getResourceId()) : songMapper.selectById(item.getResourceId());
                 if (song != null) {
@@ -588,10 +588,10 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
                 : isFavorited(item.getId(), currentUserId);
         vo.put("isFavorited", favorited);
 
-             
+
         vo.put("createTime", item.getCreateTime());
 
-                    
+
         Map<String, Object> sellerInfo = new HashMap<>();
         User seller = context != null ? context.sellers.get(item.getSellerId()) : userMapper.selectById(item.getSellerId());
         if (seller != null) {
@@ -908,19 +908,19 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         private String deliveryMethod;
     }
 
-       
-                
-       
+
+
+
     private Map<String, Object> convertToDetailVO(MarketplaceItem item, Long currentUserId) {
         Map<String, Object> vo = convertToVO(item, currentUserId);
 
-                 
+
         vo.put("description", item.getDescription());
 
-                   
+
         vo.put("seller", getSellerInfo(item.getSellerId()));
 
-                 
+
         vo.put("soldTime", item.getSoldTime());
 
         return vo;
@@ -944,7 +944,7 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
             return false;
         }
 
-               
+
         if (!item.getSellerId().equals(sellerId)) {
             log.warn("用户无权编辑该商品: itemId={}, sellerId={}, itemSellerId={}",
                     itemId, sellerId, item.getSellerId());
@@ -980,24 +980,24 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         stats.put("userId", userId);
         stats.put("timeRangeHours", hours);
 
-                     
+
         List<Map<String, Object>> operations = new ArrayList<>();
 
-               
+
         operations.add(getOperationCount(userId, "createPost", 5));
-                 
+
         operations.add(getOperationCount(userId, "createDiary", 5));
-               
+
         operations.add(getOperationCount(userId, "editPost", 5));
-               
+
         operations.add(getOperationCount(userId, "createMarketplaceItem", 3));
-               
+
         operations.add(getOperationCount(userId, "editMarketplaceItem", 5));
-               
+
         operations.add(getOperationCount(userId, "favoriteItem", 30));
-               
+
         operations.add(getOperationCount(userId, "uploadPostImage", 20));
-               
+
         operations.add(getOperationCount(userId, "uploadVideoPost", 3));
 
         stats.put("operations", operations);
@@ -1005,14 +1005,14 @@ public class MarketplaceServiceImpl extends ServiceImpl<MarketplaceItemMapper, M
         return stats;
     }
 
-       
-                
-      
-                            
-                            
-                            
-                   
-       
+
+
+
+
+
+
+
+
     private Map<String, Object> getOperationCount(Long userId, String operation, int limit) {
         Map<String, Object> opStat = new HashMap<>();
         opStat.put("operation", operation);

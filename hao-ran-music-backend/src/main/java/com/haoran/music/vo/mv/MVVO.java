@@ -9,10 +9,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 
 public class MVVO implements Serializable {
@@ -29,21 +29,21 @@ public class MVVO implements Serializable {
     private Long artistId;
 
 
-       
-                    
-       
+
+
+
     private String artistNames;
 
 
-       
-            
-       
+
+
+
     private String artistAvatar;
 
 
-       
-           
-       
+
+
+
     private String albumName;
 
 
@@ -52,9 +52,9 @@ public class MVVO implements Serializable {
 
     private String songName;
 
-       
-              
-       
+
+
+
     private String songLanguage;
 
 
@@ -90,41 +90,41 @@ public class MVVO implements Serializable {
     private Integer duration;
 
 
-       
-                
-       
+
+
+
     private String url360p;
 
 
-       
-                
-       
+
+
+
     private String url720p;
 
 
-       
-                  
-       
+
+
+
     private String url1080p;
 
 
-       
-                            
-       
+
+
+
     private String url2160p;
 
 
-       
-           
-                                                   
-       
+
+
+
+
     @JsonAlias({"isFavorated", "isFavorite"})
     private Boolean isFavorite;
 
-       
-           
-                                           
-       
+
+
+
+
     @JsonAlias({"isLiked", "isLike"})
     private Boolean isLike;
 

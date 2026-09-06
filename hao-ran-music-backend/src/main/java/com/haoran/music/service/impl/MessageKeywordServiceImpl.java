@@ -1,13 +1,13 @@
-   
-                      
-                                       
-  
-            
-                  
-                   
-                    
-                  
-   
+
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -34,19 +34,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-   
-              
-   
+
+
+
 @Slf4j
 @Service
 public class MessageKeywordServiceImpl implements MessageKeywordService {
 
-                 
+
     private static final Pattern ARTIST_PATTERN = Pattern.compile("([\\u4e00-\\u9fa5a-zA-Z]{2,10})(?:唱|的歌|的歌曲|的新歌|的专辑)");
     private static final Pattern SONG_PATTERN = Pattern.compile("《([^《》]{2,20})》|([\\u4e00-\\u9fa5a-zA-Z]{2,10})(?:这首歌|那首歌|好好听|推荐)");
     private static final Pattern GENRE_PATTERN = Pattern.compile("(流行|摇滚|民谣|电子|古典|爵士|说唱|嘻哈|R&B|灵魂|金属|朋克|雷鬼|蓝调)");
 
-              
+
     private static final String HASH_SALT = "haoran2026";
 
     private final SongMapper songMapper;
@@ -59,7 +59,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
     private final ArtistMapper artistMapper;
     private final RedisTemplate<String, Object> redisTemplate;
 
-                  
+
     private static final String SOCIAL_RECOMMEND_KEY = "social_recommend:";
     private static final String USER_KEYWORD_KEY = "user_keywords:";
     private static final String USER_PREFERENCE_KEY = "social_recommend_pref:";
@@ -87,7 +87,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
 
     @Override
     public List<KeywordExtractResult> extractMusicKeywords(String message, Long userId) {
-                        
+
         if (!isSocialRecommendEnabled(userId)) {
             return Collections.emptyList();
         }
@@ -95,16 +95,16 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         List<KeywordExtractResult> results = new ArrayList<>();
 
         try {
-                    
+
             results.addAll(extractArtists(message));
 
-                    
+
             results.addAll(extractSongs(message));
 
-                     
+
             results.addAll(extractGenres(message));
 
-                              
+
             if (!results.isEmpty()) {
                 saveKeywords(userId, results);
             }
@@ -133,11 +133,11 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
 
     @Override
     public List<Long> recommendByKeywords(Long userId, List<String> keywordList, int limit) {
-                    
+
         Set<Long> recommendedSongIds = new HashSet<>();
 
         for (String hashedKeyword : keywordList) {
-                      
+
             String cacheKey = SOCIAL_RECOMMEND_KEY + "keyword:" + hashedKeyword;
             @SuppressWarnings("unchecked")
             List<Long> cachedSongIds = ObjectUtils.castList(redisTemplate.opsForValue().get(cacheKey), Long.class);
@@ -147,22 +147,22 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                 continue;
             }
 
-                          
+
             List<Long> songIds = findSongsByKeyword(hashedKeyword);
 
             if (!songIds.isEmpty()) {
-                       
+
                 redisTemplate.opsForValue().set(cacheKey, songIds, 1, TimeUnit.HOURS);
                 recommendedSongIds.addAll(songIds);
             }
         }
 
-                      
+
         Set<Long> listenedSongIds = getUserListenedSongs(userId);
         recommendedSongIds.removeAll(listenedSongIds);
         List<Long> publicRecommendedSongIds = filterPublicSongIds(recommendedSongIds);
 
-                 
+
         List<Long> result = publicRecommendedSongIds.stream()
                 .limit(limit)
                 .collect(Collectors.toList());
@@ -187,7 +187,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         }
         preference.setEnabled(enabled);
 
-                   
+
         String key = USER_PREFERENCE_KEY + userId;
         redisTemplate.opsForValue().set(key, preference, 30, TimeUnit.DAYS);
 
@@ -196,7 +196,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
 
     @Override
     public void clearExpiredKeywords(int days) {
-                              
+
         log.info("关键词自动清除任务执行，保留天数: {}", days);
     }
 
@@ -220,13 +220,13 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         log.info("清除用户关键词数据: userId={}", userId);
     }
 
-       
-                          
-      
-                         
-                        
-                          
-       
+
+
+
+
+
+
+
     public Map<String, Object> comprehensiveSocialRecommend(Long userId, int limit) {
         if (!isSocialRecommendEnabled(userId)) {
             return Collections.emptyMap();
@@ -234,7 +234,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
 
         Map<Long, RecommendScore> scoreMap = new HashMap<>();
 
-                               
+
         List<String> userKeywords = getUserKeywords(userId);
         if (!userKeywords.isEmpty()) {
             List<Long> keywordSongs = recommendByKeywords(userId, userKeywords, limit * 2);
@@ -243,7 +243,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
             }
         }
 
-                                
+
         List<Long> friendIds = getFollowingIds(userId);
         for (Long friendId : friendIds) {
             List<Long> friendRecentSongs = getFriendRecentSongs(friendId, 20);
@@ -253,7 +253,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
             }
         }
 
-                                 
+
         for (Long friendId : friendIds) {
             List<Long> friendFavorites = getFriendFavorites(friendId, 10);
             for (Long songId : friendFavorites) {
@@ -262,7 +262,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
             }
         }
 
-                               
+
         List<Long> commonArtistIds = getCommonFollowedArtists(userId, friendIds);
         for (Long artistId : commonArtistIds) {
             List<Long> artistSongs = getSongsByArtist(artistId, 5);
@@ -271,7 +271,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
             }
         }
 
-                
+
         Set<Long> publicSongIds = new HashSet<>(filterPublicSongIds(scoreMap.keySet()));
         List<RecommendResult> results = scoreMap.entrySet().stream()
                 .filter(entry -> publicSongIds.contains(entry.getKey()))
@@ -289,12 +289,12 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return response;
     }
 
-       
-                                   
-      
-                         
-                     
-       
+
+
+
+
+
+
     public SocialRecommendPreference getUserPreference(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return null;
@@ -302,7 +302,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         String key = USER_PREFERENCE_KEY + userId;
         SocialRecommendPreference preference = (SocialRecommendPreference) redisTemplate.opsForValue().get(key);
         if (preference == null) {
-                     
+
             preference = new SocialRecommendPreference();
             preference.setEnabled(false);
             preference.setShowSource(true);
@@ -312,11 +312,11 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return preference;
     }
 
-                                                     
 
-       
-            
-       
+
+
+
+
     private List<KeywordExtractResult> extractArtists(String message) {
         List<KeywordExtractResult> results = new ArrayList<>();
         java.util.regex.Matcher matcher = ARTIST_PATTERN.matcher(message);
@@ -330,13 +330,13 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return results;
     }
 
-       
-            
-       
+
+
+
     private List<KeywordExtractResult> extractSongs(String message) {
         List<KeywordExtractResult> results = new ArrayList<>();
 
-                   
+
         java.util.regex.Matcher matcher = SONG_PATTERN.matcher(message);
         while (matcher.find()) {
             String song = matcher.group(1) != null ? matcher.group(1) : matcher.group(2);
@@ -347,9 +347,9 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return results;
     }
 
-       
-             
-       
+
+
+
     private List<KeywordExtractResult> extractGenres(String message) {
         List<KeywordExtractResult> results = new ArrayList<>();
         java.util.regex.Matcher matcher = GENRE_PATTERN.matcher(message);
@@ -363,9 +363,9 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return results;
     }
 
-       
-                  
-       
+
+
+
     private String hashKeyword(String keyword) {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
@@ -374,7 +374,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
             byte[] hash = mac.doFinal(keyword.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(hash);
         } catch (Exception e) {
-                         
+
             try {
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] hash = digest.digest(keyword.getBytes(StandardCharsets.UTF_8));
@@ -385,34 +385,34 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         }
     }
 
-       
-               
-       
+
+
+
     private void saveKeywords(Long userId, List<KeywordExtractResult> keywords) {
         String key = USER_KEYWORD_KEY + userId;
 
-                  
+
         @SuppressWarnings("unchecked")
         Map<String, Long> existingKeywords = (Map<String, Long>) redisTemplate.opsForValue().get(key);
         if (existingKeywords == null) {
             existingKeywords = new HashMap<>();
         }
 
-                   
+
         long now = System.currentTimeMillis();
         for (KeywordExtractResult result : keywords) {
             existingKeywords.put(result.getHashedKeyword(), now);
         }
 
-                          
+
         SocialRecommendPreference preference = getUserPreference(userId);
         int retentionDays = preference != null ? preference.getKeywordRetentionDays() : 7;
         redisTemplate.opsForValue().set(key, existingKeywords, retentionDays, TimeUnit.DAYS);
     }
 
-       
-              
-       
+
+
+
     private List<String> getUserKeywords(Long userId) {
         String key = USER_KEYWORD_KEY + userId;
         @SuppressWarnings("unchecked")
@@ -420,12 +420,12 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return keywords != null ? new ArrayList<>(keywords.keySet()) : Collections.emptyList();
     }
 
-       
-                               
-      
-                                   
-                        
-  
+
+
+
+
+
+
     private List<Long> findSongsByKeyword(String keyword) {
         if (ObjectUtils.isEmpty(keyword)) {
             return Collections.emptyList();
@@ -433,7 +433,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
 
         List<Long> result = new ArrayList<>();
 
-                        
+
         LambdaQueryWrapper<Song> songWrapper = new LambdaQueryWrapper<>();
         songWrapper.eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
                 .eq(Song::getDeleted, CommonConstants.NOT_DELETED)
@@ -444,7 +444,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                 .map(Song::getId)
                 .collect(Collectors.toList()));
 
-                                  
+
         if (result.size() < 20) {
             LambdaQueryWrapper<Artist> artistWrapper = new LambdaQueryWrapper<>();
             artistWrapper.eq(Artist::getDeleted, CommonConstants.NOT_DELETED)
@@ -453,7 +453,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                     .last("LIMIT 10");
             List<Artist> artists = artistMapper.selectList(artistWrapper);
 
-                        
+
             for (Artist artist : artists) {
                 LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(Song::getStatus, CommonConstants.STATUS_NORMAL)
@@ -467,16 +467,16 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
             }
         }
 
-                    
+
         return result.stream()
                 .distinct()
                 .limit(50)
                 .collect(Collectors.toList());
     }
 
-       
-                 
-       
+
+
+
     private Set<Long> getUserListenedSongs(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return Collections.emptySet();
@@ -493,9 +493,9 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                 .collect(Collectors.toList()));
     }
 
-       
-                  
-       
+
+
+
     private List<Long> getFollowingIds(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {
             return Collections.emptyList();
@@ -511,22 +511,22 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                 .collect(Collectors.toList());
     }
 
-       
-                  
-      
-                           
-                        
-                     
-       
+
+
+
+
+
+
+
     private List<Long> getFriendRecentSongs(Long friendId, int limit) {
         if (ObjectUtils.isEmpty(friendId)) {
             return Collections.emptyList();
         }
 
-                         
+
         SocialRecommendPreference preference = getUserPreference(friendId);
         if (preference == null || !preference.getAllowShared()) {
-                                
+
             log.debug("用户 {} 不允许分享听歌记录", friendId);
             return Collections.emptyList();
         }
@@ -542,15 +542,15 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                 .collect(Collectors.toList()));
     }
 
-       
-                
-       
+
+
+
     private List<Long> getFriendFavorites(Long friendId, int limit) {
         if (ObjectUtils.isEmpty(friendId)) {
             return Collections.emptyList();
         }
 
-                    
+
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getUserId, friendId)
                 .eq(Playlist::getType, MusicConstants.PlaylistType.FAVORITE)
@@ -562,7 +562,7 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
             return Collections.emptyList();
         }
 
-                 
+
         LambdaQueryWrapper<PlaylistSong> songWrapper = new LambdaQueryWrapper<>();
         songWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                 .eq(PlaylistSong::getDeleted, CommonConstants.NOT_DELETED)
@@ -574,9 +574,9 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                 .collect(Collectors.toList()));
     }
 
-       
-                 
-       
+
+
+
     private List<Long> getSongsByArtist(Long artistId, int limit) {
         if (ObjectUtils.isEmpty(artistId)) {
             return Collections.emptyList();
@@ -630,18 +630,18 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
                 .collect(Collectors.toList());
     }
 
-       
-               
-       
+
+
+
     private void addScore(Map<Long, RecommendScore> scoreMap, Long songId,
                          Double score, String source, String description) {
         RecommendScore rs = scoreMap.computeIfAbsent(songId, k -> new RecommendScore(k));
         rs.addScore(score, source, description);
     }
 
-       
-           
-       
+
+
+
     private static class RecommendScore {
         @Getter
         private final Long songId;
@@ -661,9 +661,9 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         public Double getScore() { return totalScore; }
     }
 
-       
-           
-       
+
+
+
     @Getter
     public static class ScoreSource {
         private final String source;
@@ -678,9 +678,9 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
 
     }
 
-       
-           
-       
+
+
+
     @Getter
     public static class RecommendResult {
         private final Long songId;
@@ -695,12 +695,12 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
 
     }
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     private String getDisplayName(Long userId) {
         if (userId == null) {
             return "未知用户";
@@ -709,22 +709,22 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return user != null && user.getNickname() != null ? user.getNickname() : "未知用户";
     }
 
-       
-                         
-      
-                         
-                              
-                          
-       
+
+
+
+
+
+
+
     private List<Long> getCommonFollowedArtists(Long userId, List<Long> friendIds) {
         if (userId == null || friendIds == null || friendIds.isEmpty()) {
             return new ArrayList<>();
         }
 
-                    
+
         Set<Long> userArtists = getFollowedArtistIds(userId);
 
-                    
+
         List<Long> commonArtists = new ArrayList<>();
         for (Long friendId : friendIds) {
             Set<Long> friendArtists = getFollowedArtistIds(friendId);
@@ -741,38 +741,38 @@ public class MessageKeywordServiceImpl implements MessageKeywordService {
         return commonArtists;
     }
 
-       
-                    
-      
-                         
-                     
-       
+
+
+
+
+
+
     private Set<Long> getFollowedArtistIds(Long userId) {
         Set<Long> artistIds = new HashSet<>();
         LambdaQueryWrapper<UserFollow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserFollow::getFollowerId, userId)
                 .select(UserFollow::getFolloweeId);
         List<UserFollow> follows = userFollowMapper.selectList(wrapper);
-        
+
         if (ObjectUtils.isEmpty(follows)) {
             return artistIds;
         }
-        
-                      
+
+
         Set<Long> followeeIds = follows.stream()
                 .map(UserFollow::getFolloweeId)
                 .collect(Collectors.toSet());
-        
-                         
+
+
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.in(User::getId, followeeIds)
                 .eq(User::getIsCreator, 1);
         List<User> artists = userMapper.selectList(userWrapper);
-        
+
         for (User artist : artists) {
             artistIds.add(artist.getId());
         }
-        
+
         return artistIds;
     }
 }

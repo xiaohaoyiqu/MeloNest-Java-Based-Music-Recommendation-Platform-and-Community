@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
-   
-           
-  
-        
-                  
-                
-               
-            
-  
-                      
-   
+
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class TopicRecommendServiceImpl implements TopicRecommendService {
@@ -38,7 +38,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
     private final UserMapper userMapper;
     private final UserFollowMapper userFollowMapper;
 
-                            
+
     private static final Map<String, List<String>> GENRE_TOPIC_MAPPING;
 
     static {
@@ -72,16 +72,16 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
     public List<Map<String, Object>> getRecommendedTopics(Long userId, Integer limit) {
         int actualLimit = normalizeLimit(limit);
 
-                         
+
         Set<String> preferredGenres = getUserPreferredGenres(userId);
 
-                       
+
         Set<Long> friendTopicIds = getFriendFollowedTopicIds(userId);
 
-                    
+
         List<MusicTopic> hotTopics = getHotTopics(actualLimit * 2);
 
-                    
+
         List<Map<String, Object>> result = new ArrayList<>();
         Set<Long> addedTopicIds = new HashSet<>();
 
@@ -96,7 +96,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
         }
         Map<String, MusicTopic> topicsByName = getTopicsByNames(genreByTopicName.keySet());
 
-                               
+
         for (String genre : preferredGenres) {
             List<String> topicNames = GENRE_TOPIC_MAPPING.get(genre);
             if (topicNames != null) {
@@ -114,7 +114,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
             }
         }
 
-                             
+
         Map<Long, MusicTopic> friendTopics = friendTopicIds.isEmpty()
                 ? Collections.emptyMap()
                 : musicTopicMapper.selectBatchIds(friendTopicIds).stream()
@@ -134,7 +134,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
             }
         }
 
-                          
+
         for (MusicTopic topic : hotTopics) {
             if (!addedTopicIds.contains(topic.getId())) {
                 Map<String, Object> topicVO = convertToTopicVO(topic, "热门话题");
@@ -153,10 +153,10 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
     public List<Map<String, Object>> getTopicsByGenre(Long userId, String genre, Integer limit) {
         int actualLimit = normalizeLimit(limit);
 
-                       
+
         List<String> topicNames = GENRE_TOPIC_MAPPING.get(genre);
         if (topicNames == null || topicNames.isEmpty()) {
-                                
+
             return getHotTopics(actualLimit).stream()
                     .map(topic -> convertToTopicVO(topic, "热门话题"))
                     .collect(java.util.stream.Collectors.toList());
@@ -175,7 +175,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
             }
         }
 
-                          
+
         if (result.size() < actualLimit) {
             List<MusicTopic> hotTopics = getHotTopics(actualLimit - result.size());
             for (MusicTopic topic : hotTopics) {
@@ -189,14 +189,14 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
         return result;
     }
 
-       
-                  
-                         
-       
+
+
+
+
     private Set<String> getUserPreferredGenres(Long userId) {
         Set<String> genres = new HashSet<>();
 
-                        
+
         LambdaQueryWrapper<SongLike> likeWrapper = new LambdaQueryWrapper<>();
         likeWrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getIsFavorite, 1)
@@ -205,7 +205,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
 
         List<SongLike> songLikes = songLikeMapper.selectList(likeWrapper);
 
-                      
+
         Map<String, Integer> genreCount = new HashMap<>();
         Set<Long> songIds = songLikes.stream()
                 .map(SongLike::getSongId)
@@ -219,7 +219,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
             }
         }
 
-                       
+
         List<Map.Entry<String, Integer>> sortedGenres = new ArrayList<>(genreCount.entrySet());
         sortedGenres.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
@@ -227,7 +227,7 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
             genres.add(sortedGenres.get(i).getKey());
         }
 
-                        
+
         if (genres.isEmpty()) {
             genres.add("Pop");
         }
@@ -235,14 +235,14 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
         return genres;
     }
 
-       
-                    
-                         
-       
+
+
+
+
     private Set<Long> getFriendFollowedTopicIds(Long userId) {
         Set<Long> topicIds = new HashSet<>();
 
-                    
+
         Set<Long> friendIds = getMutualFriends(userId);
 
         if (friendIds.isEmpty()) {
@@ -257,10 +257,10 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
         return topicIds;
     }
 
-       
-             
-                  
-       
+
+
+
+
     private List<MusicTopic> getHotTopics(Integer limit) {
         LambdaQueryWrapper<MusicTopic> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(MusicTopic::getIsDeleted, false)
@@ -293,29 +293,29 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
         return Math.min(limit, MAX_LIMIT);
     }
 
-       
-                
-                   
-       
+
+
+
+
     private Set<Long> getMutualFriends(Long userId) {
         Set<Long> friends = new HashSet<>();
 
-                  
+
         Set<Long> following = getFollowingUsers(userId);
 
-                  
+
         Set<Long> followers = getFollowers(userId);
 
-                 
+
         friends.addAll(following);
         friends.retainAll(followers);
 
         return filterEligibleUserIds(friends);
     }
 
-       
-                  
-       
+
+
+
     private Set<Long> getFollowingUsers(Long userId) {
         LambdaQueryWrapper<UserFollow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserFollow::getFollowerId, userId)
@@ -327,9 +327,9 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
         return filterEligibleUserIds(userIds);
     }
 
-       
-                
-       
+
+
+
     private Set<Long> getFollowers(Long userId) {
         LambdaQueryWrapper<UserFollow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserFollow::getFolloweeId, userId)
@@ -341,10 +341,10 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
         return filterEligibleUserIds(userIds);
     }
 
-       
-              
-                    
-       
+
+
+
+
     private Map<String, Object> convertToTopicVO(MusicTopic topic, String reason) {
         Map<String, Object> vo = new HashMap<>();
         vo.put("id", topic.getId());
@@ -377,9 +377,9 @@ public class TopicRecommendServiceImpl implements TopicRecommendService {
                 .collect(java.util.stream.Collectors.toSet());
     }
 
-       
-                    
-       
+
+
+
     private boolean topicIdsInResult(List<Map<String, Object>> result, Long topicId) {
         for (Map<String, Object> item : result) {
             if (topicId.equals(item.get("id"))) {

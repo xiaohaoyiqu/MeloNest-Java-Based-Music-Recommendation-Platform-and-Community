@@ -46,11 +46,11 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
-   
-                 
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -69,13 +69,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
     private final VirusScanService virusScanService;
     private final MusicUploadConfig uploadConfig;
 
-       
-                     
-      
-                           
-                          
-                   
-       
+
+
+
+
+
+
+
     @Override
     public PrivateAttachmentSessionVO createSession(Long ownerId, String purpose) {
         requireUser(ownerId);
@@ -96,14 +96,14 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return toSessionView(session);
     }
 
-       
-                              
-      
-                           
-                               
-                       
-                   
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PrivateAttachmentAssetVO upload(Long ownerId, String sessionToken, MultipartFile file) {
@@ -172,12 +172,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                                   
-      
-                           
-                               
-       
+
+
+
+
+
+
     @Override
     public void cancelSession(Long ownerId, String sessionToken) {
         requireUser(ownerId);
@@ -194,15 +194,15 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
                 LocalDateTime.now().plusHours(safeReclaimGraceHours()));
     }
 
-       
-                                 
-      
-                           
-                          
-                           
-                             
-                           
-       
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void bindAssets(Long ownerId, String purpose, List<Long> assetIds,
@@ -242,13 +242,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                        
-      
-                             
-                           
-                     
-       
+
+
+
+
+
+
+
     @Override
     public List<Long> listTargetAssetIds(String targetType, Long targetId) {
         if (ObjectUtils.isEmpty(targetType) || ObjectUtils.isEmpty(targetId)) {
@@ -258,13 +258,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return ObjectUtils.isEmpty(assetIds) ? Collections.emptyList() : assetIds;
     }
 
-       
-                          
-      
-                          
-                            
-                   
-       
+
+
+
+
+
+
+
     @Override
     public PrivateAttachmentGrantVO issueGrant(Long assetId, Long viewerId) {
         requireAccessibleAsset(assetId, viewerId);
@@ -273,14 +273,14 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return new PrivateAttachmentGrantVO(assetId, grant, url);
     }
 
-       
-                                    
-      
-                          
-                             
-                        
-                   
-       
+
+
+
+
+
+
+
+
     @Override
     public PrivateAttachmentDownload loadForDownload(Long assetId, Long viewerId, String grant) {
         Long authorizedUserId = viewerId;
@@ -293,39 +293,39 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
                 asset.getContentType(), safeOriginalName(asset.getOriginalName()), asset.getFileSize());
     }
 
-       
-                            
-      
-                             
-                           
-       
+
+
+
+
+
+
     @Override
     public void releaseTargetReferences(String targetType, Long targetId) {
         mediaAssetService.releaseTargetReferences(targetType, targetId);
     }
 
-       
-                                    
-      
-                         
-                  
-       
+
+
+
+
+
+
     @Override
     public int expireSessions(int limit) {
         return mediaUploadSessionMapper.expireSessions(Math.max(1, Math.min(limit, 1000)));
     }
 
-       
-               
-      
-                           
-                          
-                       
-                             
-                           
-                               
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
     private MediaAsset buildAsset(Long ownerId, MediaUploadSession session, MultipartFile file,
                                   Path storedFile, String fileHash, ImageType imageType) throws IOException {
         LocalDateTime now = LocalDateTime.now();
@@ -353,11 +353,11 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return asset;
     }
 
-       
-                      
-      
-                       
-       
+
+
+
+
+
     private void validateClientFile(MultipartFile file) {
         if (ObjectUtils.isEmpty(file) || file.isEmpty()) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "附件不能为空");
@@ -371,13 +371,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                             
-      
-                       
-                           
-                        
-       
+
+
+
+
+
+
+
     private ImageType detectAndValidateImage(MultipartFile file, Path tempFile) throws IOException {
         String declaredType = ObjectUtils.isEmpty(file.getContentType())
                 ? "" : file.getContentType().trim().toLowerCase(Locale.ROOT);
@@ -398,12 +398,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return actualType;
     }
 
-       
-                       
-      
-                       
-                                
-       
+
+
+
+
+
+
     private void scanOrReject(Path file, String originalName) {
         if (!uploadConfig.isVirusScanEnabled()) {
             return;
@@ -421,13 +421,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                  
-      
-                      
-                           
-                          
-       
+
+
+
+
+
+
+
     private void requireBindableAsset(MediaAsset asset, Long ownerId, PrivateAttachmentPurpose purpose) {
         if (ObjectUtils.isEmpty(asset)
                 || !ownerId.equals(asset.getOwnerId())
@@ -439,13 +439,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                                  
-      
-                               
-                             
-                           
-       
+
+
+
+
+
+
+
     private void requireNoConflictingReference(List<MediaAssetReference> references,
                                                String targetType, Long targetId) {
         if (ObjectUtils.isEmpty(references)) {
@@ -458,13 +458,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                                      
-      
-                          
-                            
-                   
-       
+
+
+
+
+
+
+
     private MediaAsset requireAccessibleAsset(Long assetId, Long viewerId) {
         requireUser(viewerId);
         MediaAsset asset = mediaAssetMapper.selectById(assetId);
@@ -489,13 +489,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         throw new BusinessException(ResultCode.FORBIDDEN, "无权访问此私有附件");
     }
 
-       
-                       
-      
-                            
-                            
-                   
-       
+
+
+
+
+
+
+
     private boolean canAccessReference(MediaAssetReference reference, Long viewerId) {
         String targetType = reference.getTargetType();
         if (PrivateAttachmentPurpose.MESSAGE_IMAGE.getTargetType().equals(targetType)) {
@@ -515,12 +515,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return false;
     }
 
-       
-                               
-      
-                        
-                    
-       
+
+
+
+
+
+
     private boolean isOpenPreviewSession(MediaAsset asset) {
         MediaUploadSession session = mediaUploadSessionMapper.selectById(asset.getUploadSessionId());
         return ObjectUtils.isNotEmpty(session)
@@ -528,13 +528,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
                 && LocalDateTime.now().isBefore(session.getExpiresAt());
     }
 
-       
-                    
-      
-                           
-                               
-                   
-       
+
+
+
+
+
+
+
     private MediaUploadSession requireOwnedOpenSession(Long ownerId, String sessionToken) {
         MediaUploadSession session = requireOwnedSession(ownerId, sessionToken);
         if (!MediaUploadSession.STATUS_OPEN.equals(session.getStatus())
@@ -544,13 +544,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return session;
     }
 
-       
-                     
-      
-                           
-                               
-                   
-       
+
+
+
+
+
+
+
     private MediaUploadSession requireOwnedSession(Long ownerId, String sessionToken) {
         if (ObjectUtils.isEmpty(sessionToken) || sessionToken.length() > 64) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "上传会话令牌不合法");
@@ -562,13 +562,13 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return session;
     }
 
-       
-                  
-      
-                             
-                           
-                    
-       
+
+
+
+
+
+
+
     private List<Long> normalizeAssetIds(List<Long> assetIds, int maxFiles) {
         if (ObjectUtils.isEmpty(assetIds)) {
             return Collections.emptyList();
@@ -586,12 +586,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return new ArrayList<>(uniqueIds);
     }
 
-       
-                            
-      
-                      
-                   
-       
+
+
+
+
+
+
     private Path resolveManagedFile(MediaAsset asset) {
         try {
             Path root = ensurePrivateRoot().toRealPath();
@@ -607,11 +607,11 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                       
-      
-                  
-       
+
+
+
+
+
     private Path ensurePrivateRoot() throws IOException {
         String configuredPath = uploadConfig.getPrivateAttachmentPath();
         if (ObjectUtils.isEmpty(configuredPath)) {
@@ -620,12 +620,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return Files.createDirectories(Paths.get(configuredPath).toAbsolutePath().normalize());
     }
 
-       
-                     
-      
-                       
-                   
-       
+
+
+
+
+
+
     private ImageType detectImageType(Path file) throws IOException {
         byte[] header = new byte[12];
         int length;
@@ -651,12 +651,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         throw new BusinessException(ResultCode.PARAM_ERROR, "无法识别附件图片格式");
     }
 
-       
-                   
-      
-                       
-                       
-       
+
+
+
+
+
+
     private String sha256(Path file) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] buffer = new byte[8192];
@@ -675,24 +675,24 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return value.toString();
     }
 
-       
-                
-      
-                          
-                    
-       
+
+
+
+
+
+
     private String originalExtension(String filename) {
         String safeName = safeOriginalName(filename);
         int dot = safeName.lastIndexOf('.');
         return dot < 0 ? "" : safeName.substring(dot + 1).toLowerCase(Locale.ROOT);
     }
 
-       
-                           
-      
-                            
-                    
-       
+
+
+
+
+
+
     private String safeOriginalName(String filename) {
         String value = ObjectUtils.isEmpty(filename) ? "attachment" : filename.replace('\\', '/');
         int slash = value.lastIndexOf('/');
@@ -706,11 +706,11 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return value.length() > 200 ? value.substring(value.length() - 200) : value;
     }
 
-       
-                 
-      
-                       
-       
+
+
+
+
+
     private void deleteQuietly(Path path) {
         if (ObjectUtils.isEmpty(path)) {
             return;
@@ -723,41 +723,41 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         }
     }
 
-       
-                
-      
-                         
-       
+
+
+
+
+
     private void requireUser(Long userId) {
         if (ObjectUtils.isEmpty(userId) || userId <= 0) {
             throw new BusinessException(ResultCode.UNAUTHORIZED);
         }
     }
 
-       
-                    
-      
-                  
-       
+
+
+
+
+
     private int safeSessionMinutes() {
         return Math.max(5, Math.min(uploadConfig.getPrivateAttachmentSessionMinutes(), 120));
     }
 
-       
-                      
-      
-                  
-       
+
+
+
+
+
     private int safeReclaimGraceHours() {
         return Math.max(1, Math.min(uploadConfig.getPrivateAttachmentReclaimGraceHours(), 168));
     }
 
-       
-              
-      
-                        
-                   
-       
+
+
+
+
+
+
     private PrivateAttachmentSessionVO toSessionView(MediaUploadSession session) {
         PrivateAttachmentSessionVO view = new PrivateAttachmentSessionVO();
         view.setSessionToken(session.getSessionToken());
@@ -767,12 +767,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return view;
     }
 
-       
-                           
-      
-                      
-                   
-       
+
+
+
+
+
+
     private PrivateAttachmentAssetVO toAssetView(MediaAsset asset) {
         PrivateAttachmentAssetVO view = new PrivateAttachmentAssetVO();
         view.setAssetId(asset.getId());
@@ -783,20 +783,20 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
         return view;
     }
 
-       
-                     
-      
-                      
-                    
-       
+
+
+
+
+
+
     private int unsigned(byte value) {
         return value & 0xFF;
     }
 
-       
-                  
-      
-  
+
+
+
+
     private static final class ImageType {
         private final String extension;
         private final String contentType;
@@ -806,12 +806,12 @@ public class PrivateAttachmentServiceImpl implements PrivateAttachmentService {
             this.contentType = contentType;
         }
 
-           
-                            
-          
-                                    
-                       
-           
+
+
+
+
+
+
         private boolean matches(String declaredType) {
             return contentType.equals(declaredType)
                     || ("image/jpeg".equals(contentType) && "image/jpg".equals(declaredType));

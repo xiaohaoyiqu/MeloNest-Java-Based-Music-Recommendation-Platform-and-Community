@@ -25,10 +25,10 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/playlist")
@@ -43,9 +43,9 @@ public class PlaylistController {
     @Resource
     private UserService userService;
 
-       
-                   
-       
+
+
+
     @ApiLog("获取歌单详情")
     @DetectCrawler(operation = "获取歌单详情", checkReferer = true, riskThreshold = 60)
     @GetMapping("/info/{id}")
@@ -256,14 +256,14 @@ public class PlaylistController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                                    
-                                     
-                                     
-                      
-       
+
+
+
+
+
+
+
+
     @ApiLog("复制歌曲到歌单")
     @PostMapping("/{sourcePlaylistId}/copy/{targetPlaylistId}")
     public Result<PlaylistCopyMoveResult> copySongsToPlaylist(@PathVariable("sourcePlaylistId") Long sourcePlaylistId,
@@ -277,14 +277,14 @@ public class PlaylistController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                                    
-                                     
-                                     
-                      
-       
+
+
+
+
+
+
+
+
     @ApiLog("移动歌曲到歌单")
     @PostMapping("/{sourcePlaylistId}/move/{targetPlaylistId}")
     public Result<PlaylistCopyMoveResult> moveSongsToPlaylist(@PathVariable("sourcePlaylistId") Long sourcePlaylistId,
@@ -298,12 +298,12 @@ public class PlaylistController {
         return Result.success(result);
     }
 
-       
-               
-      
-                                          
-                   
-       
+
+
+
+
+
+
     @ApiLog("更新歌单歌曲顺序")
     @PutMapping("/order")
     public Result<Void> updatePlaylistOrder(@Valid @RequestBody PlaylistOrderDTO payload,
@@ -317,12 +317,12 @@ public class PlaylistController {
         return Result.success();
     }
 
-       
-               
-                                    
-                        
-                   
-       
+
+
+
+
+
+
     @ApiLog("更新歌单付费设置")
     @PutMapping("/paid-settings")
     public Result<Boolean> updatePaidSettings(@RequestAttribute(value = "userId", required = false) Long userId,
@@ -334,12 +334,12 @@ public class PlaylistController {
         return Result.success(result);
     }
 
-       
-             
-                                    
-                        
-                   
-       
+
+
+
+
+
+
     @ApiLog("设为付费歌单")
     @PostMapping("/set-paid")
     public Result<Boolean> setPlaylistPaid(@RequestAttribute(value = "userId", required = false) Long userId,
@@ -351,12 +351,12 @@ public class PlaylistController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                           
-                     
-       
+
+
+
+
+
+
     @ApiLog("获取协作歌单数量")
     @GetMapping("/collaborate-count")
     public Result<Integer> getCollaboratePlaylistCount(

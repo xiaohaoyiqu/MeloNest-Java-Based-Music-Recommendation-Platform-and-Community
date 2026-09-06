@@ -8,73 +8,73 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Component
 public class IpMaskUtil {
 
-       
-               
-       
+
+
+
     @Value("${music.cluster.enable-ip-mask}")
     private boolean enableMask;
 
-       
-               
-       
+
+
+
     private static final String IPV4_MASK = "***";
 
-       
-               
-       
+
+
+
     private static final String IPV6_MASK = ":***";
 
-       
-             
-       
+
+
+
     private static final String UNKNOWN_IP = "未知";
 
-       
-             
-                                                   
-      
-                       
-                       
-       
+
+
+
+
+
+
+
     public String mask(String ip) {
-                       
+
         if (!enableMask) {
             return ip;
         }
 
-               
+
         if (StrUtil.isBlank(ip)) {
             return UNKNOWN_IP;
         }
 
-                   
+
         if (isIPv4(ip)) {
             return maskIPv4(ip);
         }
 
-                   
+
         if (isIPv6(ip)) {
             return maskIPv6(ip);
         }
 
-                      
+
         return "***.***.***";
     }
 
-       
-               
-      
-                        
-                         
-       
+
+
+
+
+
+
     public List<String> maskList(List<String> ips) {
         if (ips == null || ips.isEmpty()) {
             return ips;
@@ -84,31 +84,31 @@ public class IpMaskUtil {
                 .collect(Collectors.toList());
     }
 
-       
-               
-      
-                       
-                     
-       
+
+
+
+
+
+
     private String maskIPv4(String ip) {
         String[] parts = ip.split("\\.");
         if (parts.length == 4) {
-                     
+
             parts[3] = IPV4_MASK;
             return String.join(".", parts);
         }
-                      
+
         return "***.***.***";
     }
 
-       
-               
-      
-                       
-                     
-       
+
+
+
+
+
+
     private String maskIPv6(String ip) {
-                 
+
         int lastColon = ip.lastIndexOf(":");
         if (lastColon > 0) {
             return ip.substring(0, lastColon) + IPV6_MASK;
@@ -116,12 +116,12 @@ public class IpMaskUtil {
         return ip;
     }
 
-       
-                  
-      
-                     
-                                  
-       
+
+
+
+
+
+
     private boolean isIPv4(String ip) {
         if (StrUtil.isBlank(ip)) {
             return false;
@@ -143,12 +143,12 @@ public class IpMaskUtil {
         }
     }
 
-       
-                  
-      
-                     
-                                  
-       
+
+
+
+
+
+
     private boolean isIPv6(String ip) {
         if (StrUtil.isBlank(ip)) {
             return false;
@@ -156,23 +156,23 @@ public class IpMaskUtil {
         return ip.contains(":");
     }
 
-       
-                
-      
-                     
-                                   
-       
+
+
+
+
+
+
     public boolean isInternalIp(String ip) {
         if (StrUtil.isBlank(ip)) {
             return false;
         }
 
-                                           
+
         if (ip.startsWith("10.")) {
             return true;
         }
 
-                                             
+
         if (ip.startsWith("172.")) {
             String[] parts = ip.split("\\.");
             if (parts.length >= 2) {
@@ -187,12 +187,12 @@ public class IpMaskUtil {
             }
         }
 
-                                               
+
         if (ip.startsWith("192.168.")) {
             return true;
         }
 
-                                             
+
         if (ip.startsWith("127.")) {
             return true;
         }
@@ -200,12 +200,12 @@ public class IpMaskUtil {
         return false;
     }
 
-       
-                  
-      
-                     
-                                 
-       
+
+
+
+
+
+
     public boolean isLoopback(String ip) {
         if (StrUtil.isBlank(ip)) {
             return false;
@@ -213,13 +213,13 @@ public class IpMaskUtil {
         return "127.0.0.1".equals(ip) || "::1".equals(ip) || ip.startsWith("127.");
     }
 
-       
-                
-                                             
-      
-                     
-                   
-       
+
+
+
+
+
+
+
     public String getNetworkSegment(String ip) {
         if (StrUtil.isBlank(ip)) {
             return "";
@@ -234,33 +234,33 @@ public class IpMaskUtil {
         return "";
     }
 
-       
-                    
-      
-                       
-                       
-                                   
-       
+
+
+
+
+
+
+
     public boolean isSameNetwork(String ip1, String ip2) {
         String segment1 = getNetworkSegment(ip1);
         String segment2 = getNetworkSegment(ip2);
         return StrUtil.isNotBlank(segment1) && segment1.equals(segment2);
     }
 
-       
-               
-      
-                                   
-       
+
+
+
+
+
     public boolean isEnableMask() {
         return enableMask;
     }
 
-       
-             
-      
-                                         
-       
+
+
+
+
+
     public void setEnableMask(boolean enableMask) {
         this.enableMask = enableMask;
         log.info("event=ip_mask_setting_updated enabled={}", enableMask);

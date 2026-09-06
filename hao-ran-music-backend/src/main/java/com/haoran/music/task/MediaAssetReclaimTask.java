@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-   
-              
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Component
 public class MediaAssetReclaimTask {
@@ -24,9 +24,9 @@ public class MediaAssetReclaimTask {
         this.mediaAssetService = mediaAssetService;
     }
 
-       
-                               
-       
+
+
+
     @Scheduled(cron = "${schedule.task.media-asset-reclaim-cron:0 0 * * * ?}")
     public void reclaimDueAssets() {
         int reclaimed = mediaAssetService.reclaimOrphanAssets(reclaimLimit);

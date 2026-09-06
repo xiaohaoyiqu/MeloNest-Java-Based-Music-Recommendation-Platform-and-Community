@@ -1,14 +1,14 @@
-   
-                                                                                              
-                                                                                                
-   
+
+
+
+
 :root {
-                                   
+
   --town-font-display: var(--app-font-display);
   --town-font-ui: var(--app-font-body);
   --town-font-display-weight: 400;
 
-                               
+
   --town-lemon-300: #ffe273;
   --town-lemon-500: #f4c93d;
   --town-cyan-400: #64c9dc;
@@ -21,7 +21,7 @@
 }
 
 .basic-layout.town-daily-realm {
-                                                                                   
+
   --town-accent: var(--town-cyan-600);
   --town-accent-soft: rgba(100, 201, 220, 0.2);
   --town-positive: #3f9d68;
@@ -32,7 +32,7 @@
   --town-shadow: 0 14px 34px rgba(22, 47, 58, 0.16);
   --town-sketch-shadow: 4px 5px 0 rgba(244, 201, 61, 0.7);
 
-                        
+
   --town-card-radius: 20px 15px 22px 16px;
   --town-control-radius: 12px 9px 13px 10px;
   --town-pill-radius: 999px;
@@ -176,7 +176,7 @@
   margin-inline: auto;
 }
 
-                                                                        
+
 .basic-layout.town-daily-realm :is(
   h1,
   h2,
@@ -211,7 +211,7 @@
   background: linear-gradient(90deg, var(--town-page-tone, var(--town-coral-400)), var(--town-lemon-300));
 }
 
-                                                                                    
+
 .basic-layout.town-daily-realm .home-page {
   --town-page-tone: var(--town-lemon-300);
 }
@@ -325,7 +325,7 @@
   line-height: 1.65;
 }
 
-                                                                                    
+
 .basic-layout.town-daily-realm .music-catalog-page {
   width: min(100%, 1280px);
   max-width: 1280px !important;
@@ -383,7 +383,7 @@
   line-height: 1.75;
 }
 
-                                                                                            
+
 .basic-layout.town-daily-realm .music-catalog-page :is(
   .album-grid,
   .artist-grid,
@@ -525,7 +525,7 @@
   }
 }
 
-                                                                                  
+
 .basic-layout.town-daily-realm :is(
   .el-card,
   .section,
@@ -552,7 +552,7 @@
   backdrop-filter: blur(14px) saturate(1.05);
 }
 
-                                                                 
+
 .basic-layout.town-daily-realm .external-content-section.is-empty {
   border: 0 !important;
   background: transparent !important;
@@ -560,7 +560,7 @@
   backdrop-filter: none !important;
 }
 
-                                                                         
+
 .basic-layout.town-daily-realm .el-empty__image {
   display: grid;
   place-items: center;
@@ -584,7 +584,7 @@
   filter: drop-shadow(0 6px 9px rgba(63, 45, 39, 0.12));
 }
 
-                                                                         
+
 .basic-layout.town-daily-realm .nav-menu-wrapper.has-open-dropdown .header-menu .el-menu-item.is-active {
   border-color: transparent !important;
   background: transparent !important;
@@ -659,7 +659,7 @@
   border-color: color-mix(in srgb, var(--town-lemon-300) 78%, var(--card-border)) !important;
 }
 
-                                                                       
+
 .basic-layout.town-daily-realm .el-button {
   min-height: var(--town-control-height);
   border-width: 1.5px;
@@ -709,7 +709,7 @@
   color: var(--text-primary) !important;
 }
 
-                                                            
+
 .basic-layout.town-daily-realm :is(.el-input__wrapper, .el-select__wrapper, .el-textarea__inner, .el-input-number) {
   min-height: var(--town-control-height);
   border: 1.5px solid var(--town-border) !important;
@@ -732,7 +732,7 @@ body.town-daily-body :is(.el-input__wrapper.is-focus, .el-select__wrapper.is-foc
   transform: translateY(-1px);
 }
 
-                                                                                                
+
 .basic-layout.town-daily-realm .header-search .el-input__wrapper {
   border-radius: var(--town-pill-radius) !important;
   background:
@@ -857,7 +857,7 @@ body.town-daily-body :is(.el-input__wrapper.is-focus, .el-select__wrapper.is-foc
   color: #fff !important;
 }
 
-                                                                                             
+
 .basic-layout.town-daily-realm .detail-town-header {
   padding: clamp(18px, 2.8vw, 32px) !important;
   border: 1.5px solid var(--town-border) !important;
@@ -931,7 +931,7 @@ body.town-daily-body :is(.el-input__wrapper.is-focus, .el-select__wrapper.is-foc
   color: var(--detail-state-icon) !important;
 }
 
-                                                                                       
+
 .basic-layout.town-daily-realm :is(
   .song-detail-page,
   .album-detail-page,
@@ -947,7 +947,7 @@ body.town-daily-body :is(.el-input__wrapper.is-focus, .el-select__wrapper.is-foc
   color: var(--text-primary);
 }
 
-                                         
+
 .basic-layout.town-daily-realm .mv-detail-page {
   width: min(100%, 1200px);
   max-width: 1200px;
@@ -1010,7 +1010,7 @@ body.town-daily-body :is(.el-input__wrapper.is-focus, .el-select__wrapper.is-foc
   gap: clamp(20px, 2.8vw, 34px);
 }
 
-                                                                             
+
 .basic-layout.town-daily-realm .artist-detail-page .artist-main {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -1145,7 +1145,7 @@ body.town-daily-body :is(.el-input__wrapper.is-focus, .el-select__wrapper.is-foc
   color: var(--town-cyan-600);
 }
 
-                                                                               
+
 .basic-layout.town-daily-realm :is(.bottom-player, .player-bar, .music-player) {
   border-color: var(--town-border) !important;
   background: var(--town-surface-strong) !important;
@@ -1158,7 +1158,7 @@ body.town-daily-body :is(.el-input__wrapper.is-focus, .el-select__wrapper.is-foc
   box-shadow: 3px 4px 0 rgba(255, 226, 115, 0.65) !important;
 }
 
-                                                                                         
+
 body.town-daily-body :is(
   .el-popper,
   .el-select__popper,
@@ -1248,7 +1248,7 @@ body.town-daily-body :focus-visible {
   outline-offset: 3px;
 }
 
-                                                                                                            
+
 .basic-layout.town-daily-realm :is(.el-input__inner, .el-select__input, .el-textarea__inner):focus-visible,
 body.town-daily-body :is(.el-input__inner, .el-select__input, .el-textarea__inner):focus-visible {
   outline: none;

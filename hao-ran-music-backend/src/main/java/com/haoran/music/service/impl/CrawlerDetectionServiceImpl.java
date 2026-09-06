@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -19,15 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-   
-           
-  
-        
-                           
-                               
-                      
-                     
-   
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
@@ -44,7 +44,7 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
     @Resource
     private ClientIpResolver clientIpResolver;
 
-               
+
     private static final String IP_BAN_KEY = "crawler:ban:ip:";
     private static final String BEHAVIOR_KEY = "crawler:behavior:";
     private static final String ACCESS_PATTERN_KEY = "crawler:pattern:";
@@ -61,7 +61,7 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
         List<String> riskFactors = new ArrayList<>();
         int riskScore = 0;
 
-                               
+
         String userAgent = request.getHeader("User-Agent");
         if (userAgent == null || userAgent.isEmpty()) {
             riskFactors.add("无User-Agent");
@@ -71,13 +71,13 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
             riskScore += crawlerDetectionConfig.getSpiderUserAgentRisk();
         }
 
-                            
+
         String referer = request.getHeader("Referer");
         if (referer == null || referer.isEmpty()) {
             riskFactors.add("无Referer（可能是API直接调用）");
             riskScore += crawlerDetectionConfig.getMissingRefererRisk();
         } else {
-                              
+
             boolean validReferer = false;
             for (String allowed : crawlerDetectionConfig.getAllowedReferrers()) {
                 if (referer.contains(allowed)) {
@@ -91,7 +91,7 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
             }
         }
 
-                         
+
         String ip = getClientIp(request);
         String uri = request.getRequestURI();
         if (isSuspiciousAccessPattern(ip, uri)) {
@@ -99,18 +99,18 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
             riskScore += crawlerDetectionConfig.getSuspiciousAccessRisk();
         }
 
-                                
+
         if (userId != null && isReadOnlyUser(userId)) {
             riskFactors.add("只读访问（无互动）");
             riskScore += crawlerDetectionConfig.getReadOnlyRisk();
         }
 
-                    
+
         if (isIpBanned(ip)) {
             return new CrawlerDetectionResult(true, "IP已封禁", 100, new String[]{"IP封禁"});
         }
 
-                            
+
         boolean isCrawler = riskScore >= crawlerDetectionConfig.getCrawlerRiskThreshold();
         String reason = isCrawler ? "风险分数: " + riskScore + "，原因: " + String.join(", ", riskFactors) : "正常访问";
 
@@ -122,12 +122,12 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
         String ip = getClientIp(request);
 
         try {
-                            
+
             String behaviorKey = BEHAVIOR_KEY + ip;
             redisUtils.increment(behaviorKey + ":" + action);
             redisUtils.expire(behaviorKey + ":" + action, crawlerDetectionConfig.getBehaviorExpireSeconds(), TimeUnit.SECONDS);
 
-                             
+
             if (isInteractiveAction(action)) {
                 String patternKey = ACCESS_PATTERN_KEY + ip;
                 redisUtils.delete(patternKey);
@@ -171,35 +171,35 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
         }
     }
 
-       
-               
-       
+
+
+
     private boolean isSuspiciousAccessPattern(String ip, String uri) {
         try {
             String patternKey = ACCESS_PATTERN_KEY + ip;
 
-                      
+
             long timestamp = System.currentTimeMillis();
             String timeKey = patternKey + ":times";
             redisUtils.increment(timeKey);
             redisUtils.expire(timeKey, crawlerDetectionConfig.getAccessWindowSeconds(), TimeUnit.SECONDS);
 
-                     
+
             Object countObj = redisUtils.get(timeKey);
             int count = countObj != null ? Integer.parseInt(countObj.toString()) : 0;
 
-                               
+
             if (count > crawlerDetectionConfig.getAccessBurstThreshold()) {
                 return true;
             }
 
-                          
+
             String behaviorKey = BEHAVIOR_KEY + ip;
             boolean hasInteractiveBehavior = redisUtils.hasKey(behaviorKey + ":play")
                     || redisUtils.hasKey(behaviorKey + ":like")
                     || redisUtils.hasKey(behaviorKey + ":comment");
 
-                            
+
             if (count > crawlerDetectionConfig.getAccessNoInteractionThreshold() && !hasInteractiveBehavior) {
                 return true;
             }
@@ -212,20 +212,20 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
         }
     }
 
-       
-                       
-       
+
+
+
     private boolean isReadOnlyUser(Long userId) {
         try {
             String behaviorKey = BEHAVIOR_KEY + userId;
 
-                        
+
             boolean hasView = redisUtils.hasKey(behaviorKey + ":view");
             boolean hasInteractive = redisUtils.hasKey(behaviorKey + ":play")
                     || redisUtils.hasKey(behaviorKey + ":like")
                     || redisUtils.hasKey(behaviorKey + ":comment");
 
-                                  
+
             if (hasView && !hasInteractive) {
                 Object viewCountObj = redisUtils.get(behaviorKey + ":view");
                 int viewCount = viewCountObj != null ? Integer.parseInt(viewCountObj.toString()) : 0;
@@ -240,9 +240,9 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
         }
     }
 
-       
-                
-       
+
+
+
     private boolean isInteractiveAction(String action) {
         return "play".equals(action)
                 || "like".equals(action)
@@ -252,9 +252,9 @@ public class CrawlerDetectionServiceImpl implements CrawlerDetectionService {
                 || "share".equals(action);
     }
 
-       
-              
-       
+
+
+
     private String getClientIp(HttpServletRequest request) {
         return clientIpResolver.resolve(request);
     }

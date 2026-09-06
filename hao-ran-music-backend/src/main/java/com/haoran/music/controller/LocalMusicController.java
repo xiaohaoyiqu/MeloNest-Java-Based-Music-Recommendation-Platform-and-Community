@@ -24,10 +24,10 @@ import javax.validation.Valid;
 import java.io.File;
 import java.util.List;
 
-   
-                      
-                                                                                                      
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/local-music")
@@ -42,19 +42,19 @@ public class LocalMusicController {
     @Value("${local.upload.path}")
     private String localMusicPath;
 
-                                                     
 
-       
-                   
-      
-                                 
-      
-                                                                     
-                       
-                       
-                                     
-                   
-  
+
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("扫描可用歌曲")
     @GetMapping({"/scan", "/song/scan"})
     public Result<IPage<LocalMusicVO>> scanSongs(
@@ -75,13 +75,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-                             
-      
-                         
-                              
-                       
-       
+
+
+
+
+
+
+
     @ApiLog("添加本地音乐路径")
     @PostMapping({"/add", "/song/add"})
     public Result<LocalMusicVO> addLocalMusic(
@@ -97,16 +97,16 @@ public class LocalMusicController {
             return Result.error("文件路径不能为空");
         }
 
-                 
+
         boolean isNetworkUrl = filePath.startsWith("http://") || filePath.startsWith("https://");
         boolean isAbsolutePath = filePath.contains(":") || filePath.startsWith("/");
 
-                 
+
         if (isAbsolutePath && !isNetworkUrl) {
             return Result.error("不支持绝对路径。请使用相对路径（如 songs/standard/song.mp3）或网络URL");
         }
 
-                 
+
         LocalMusicVO result = localMusicService.addLocalMusic(
                 userId,
                 filePath,
@@ -118,13 +118,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-                            
-      
-                         
-                                
-                        
-  
+
+
+
+
+
+
+
     @ApiLog("批量添加本地音乐")
     @PostMapping({"/add-by-ids", "/song/add-by-ids"})
     public Result<List<LocalMusicVO>> addSongsByIds(
@@ -145,13 +145,13 @@ public class LocalMusicController {
         return Result.success(results);
     }
 
-       
-                           
-      
-                            
-                                              
-                        
-       
+
+
+
+
+
+
+
     @ApiLog("批量添加本地音乐路径")
     @PostMapping({"/add-batch", "/song/add-batch"})
     public Result<List<LocalMusicVO>> addBatch(
@@ -166,13 +166,13 @@ public class LocalMusicController {
         return Result.success(results);
     }
 
-       
-               
-      
-                         
-                              
-                       
-  
+
+
+
+
+
+
+
     @ApiLog("手动添加本地单曲")
     @PostMapping({"/add-song-manual", "/song/add-manual"})
     public Result<LocalMusicVO> addManualSong(
@@ -189,16 +189,16 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-                      
-      
-                                          
-                                          
-                            
-                            
-                            
-                           
-  
+
+
+
+
+
+
+
+
+
+
     @ApiLog("搜索本地音乐版本")
     @GetMapping({"/search-by-name", "/song/search-by-name"})
     public Result<IPage<LocalMusicVO>> searchBySongName(
@@ -223,14 +223,14 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-                     
-      
-                               
-                               
-                                          
-                     
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取本地音乐列表")
     @GetMapping({"/list", "/song/list"})
     public Result<IPage<LocalMusicVO>> getList(
@@ -246,13 +246,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-               
-      
-                           
-                         
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("获取本地音乐详情")
     @GetMapping({"/{id}", "/song/{id}"})
     public Result<LocalMusicVO> getDetail(
@@ -267,13 +267,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-             
-      
-                           
-                         
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("删除本地音乐")
     @DeleteMapping({"/{id}", "/song/{id}"})
     public Result<Boolean> delete(
@@ -288,14 +288,14 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-               
-      
-                           
-                         
-                         
-                       
-  
+
+
+
+
+
+
+
+
     @ApiLog("更新本地音乐信息")
     @PutMapping({"/{id}", "/song/{id}"})
     public Result<LocalMusicVO> update(
@@ -314,14 +314,14 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-               
-      
-                            
-                          
-                            
-                   
-  
+
+
+
+
+
+
+
+
     @ApiLog("更新本地音乐歌词")
     @PutMapping({"/{id}/lyric", "/song/{id}/lyric"})
     public Result<Boolean> updateLyric(
@@ -344,13 +344,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-               
-      
-                             
-                         
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("批量删除本地音乐")
     @DeleteMapping({"/batch", "/song/batch"})
     public Result<Integer> batchDelete(
@@ -365,12 +365,12 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-               
-      
-                         
-                   
-       
+
+
+
+
+
+
     @ApiLog("清空本地音乐")
     @DeleteMapping({"/clear", "/song/clear"})
     public Result<Boolean> clear(
@@ -384,13 +384,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-             
-      
-                           
-                         
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("本地音乐播放")
     @PostMapping({"/{id}/play", "/song/{id}/play"})
     public Result<Boolean> addPlayCount(
@@ -405,19 +405,19 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-                                                     
 
-       
-                   
-      
-                              
-      
-                                                          
-                         
-                         
-                                     
-                   
-  
+
+
+
+
+
+
+
+
+
+
+
+
     @ApiLog("扫描可用MV")
     @GetMapping({"/scan-mv", "/mv/scan"})
     public Result<IPage<LocalMusicVO>> scanMVs(
@@ -438,13 +438,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-       
-                           
-      
-                          
-                                 
-                        
-  
+
+
+
+
+
+
+
     @ApiLog("批量添加本地MV")
     @PostMapping({"/add-mv-by-ids", "/mv/add-by-ids"})
     public Result<List<LocalMusicVO>> addMVsByIds(
@@ -465,13 +465,13 @@ public class LocalMusicController {
         return Result.success(results);
     }
 
-       
-               
-      
-                         
-                              
-                       
-  
+
+
+
+
+
+
+
     @ApiLog("手动添加本地MV")
     @PostMapping({"/add-mv-manual", "/mv/add-manual"})
     public Result<LocalMusicVO> addManualMV(
@@ -488,13 +488,13 @@ public class LocalMusicController {
         return Result.success(result);
     }
 
-                                                     
 
-       
-                  
-      
-                        
-  
+
+
+
+
+
+
     @ApiLog("下载本地代理服务")
     @GetMapping({"/download-proxy", "/proxy/download"})
     public ResponseEntity<org.springframework.core.io.Resource> downloadProxy() {
@@ -548,11 +548,11 @@ public class LocalMusicController {
         }
     }
 
-                                                    
 
-       
-             
-       
+
+
+
+
     public static class LyricUpdateRequest {
         private String lyric;
 
@@ -565,9 +565,9 @@ public class LocalMusicController {
         }
     }
 
-       
-                 
-       
+
+
+
     public static class BatchAddRequest {
         private List<Long> songIds;
 
@@ -580,9 +580,9 @@ public class LocalMusicController {
         }
     }
 
-       
-                 
-       
+
+
+
     public static class MVBatchAddRequest {
         private List<Long> mvIds;
 

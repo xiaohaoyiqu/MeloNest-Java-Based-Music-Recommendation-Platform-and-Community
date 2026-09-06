@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -155,11 +155,11 @@ public class ContentAccessServiceImpl implements ContentAccessService {
         }
     }
 
-       
-                            
-      
-                                   
-       
+
+
+
+
+
     private boolean requirePaidResourceAccess(String resourceType, Long resourceId, boolean markedPaid,
                                               Long ownerHint, Long userId) {
         PaidResource paid = paidResourceMapper.selectByResourceIdentity(resourceType, resourceId);
@@ -191,7 +191,7 @@ public class ContentAccessServiceImpl implements ContentAccessService {
         }
         UserAccountStatusUtil.requireCanInteract(user, "访问付费资源");
 
-                                            
+
         if (Boolean.TRUE.equals(userVipService.isVip(userId))) {
             return true;
         }
@@ -211,11 +211,11 @@ public class ContentAccessServiceImpl implements ContentAccessService {
         return true;
     }
 
-       
-                                                                               
-                                                                               
-                                                                 
-       
+
+
+
+
+
     private void requirePreviewAvailability(String resourceType, Long resourceId, boolean markedPaid) {
         PaidResource paid = paidResourceMapper.selectByResourceIdentity(resourceType, resourceId);
         boolean activeSale = paid != null

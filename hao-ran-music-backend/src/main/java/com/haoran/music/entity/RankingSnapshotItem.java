@@ -8,11 +8,11 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Data
 @TableName("ranking_snapshot_item")
 public class RankingSnapshotItem {

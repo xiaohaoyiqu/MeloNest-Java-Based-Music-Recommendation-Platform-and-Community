@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
 
-   
-                      
-                        
-   
+
+
+
+
 @Slf4j
 @Component
 public class CopyrightCheckJob {
@@ -35,16 +35,16 @@ public class CopyrightCheckJob {
     @Autowired
     private CopyrightCheckConfig copyrightCheckConfig;
 
-       
-                            
-                       
-       
+
+
+
+
     @Scheduled(cron = "${schedule.task.copyright.expiry-check-cron}")
     public void checkCopyrightExpiry() {
         log.info("开始检测版权即将到期内容...");
 
         try {
-                          
+
             LocalDate warningDate = LocalDate.now().plusDays(copyrightCheckConfig.getExpiryWarningDays());
             List<CreatorWork> expiringWorks = workMapper.selectList(
                     new LambdaQueryWrapper<CreatorWork>()
@@ -57,11 +57,11 @@ public class CopyrightCheckJob {
 
             for (CreatorWork work : expiringWorks) {
                 try {
-                                
+
                     work.setCopyrightStatus(2);
                     workMapper.updateById(work);
 
-                                      
+
                     Long existingReaudit = moderationMapper.selectCount(
                             new LambdaQueryWrapper<Moderation>()
                                     .eq(Moderation::getContentType, "creator_work")
@@ -71,7 +71,7 @@ public class CopyrightCheckJob {
                     );
 
                     if (existingReaudit == 0) {
-                                              
+
                         Moderation reauditModeration = new Moderation();
                         reauditModeration.setContentType("creator_work");
                         reauditModeration.setContentId(work.getId());
@@ -100,10 +100,10 @@ public class CopyrightCheckJob {
         }
     }
 
-       
-                    
-                       
-       
+
+
+
+
     @Scheduled(cron = "${schedule.task.copyright.expired-content-cron}")
     public void handleExpiredContent() {
         log.info("开始处理已过期内容...");
@@ -121,12 +121,12 @@ public class CopyrightCheckJob {
 
             for (CreatorWork work : expiredWorks) {
                 try {
-                           
+
                     work.setCopyrightStatus(3);        
                     work.setStatus(0);       
                     workMapper.updateById(work);
 
-                             
+
                     Moderation expireModeration = new Moderation();
                     expireModeration.setContentType("creator_work");
                     expireModeration.setContentId(work.getId());
@@ -156,18 +156,18 @@ public class CopyrightCheckJob {
         }
     }
 
-       
-                            
-                        
-       
+
+
+
+
     @Scheduled(cron = "${schedule.task.copyright.inactive-creators-cron}")
     public void checkInactiveCreators() {
         log.info("开始检查长期无作品的创作者...");
 
         try {
             log.info("inactive creator threshold days: {}", copyrightCheckConfig.getInactiveCreatorDays());
-                                         
-                           
+
+
 
             log.info("长期无作品创作者检查完成");
 
@@ -176,9 +176,9 @@ public class CopyrightCheckJob {
         }
     }
 
-       
-                    
-       
+
+
+
     public void manualCheckCopyright() {
         log.info("手动触发版权检测...");
         checkCopyrightExpiry();

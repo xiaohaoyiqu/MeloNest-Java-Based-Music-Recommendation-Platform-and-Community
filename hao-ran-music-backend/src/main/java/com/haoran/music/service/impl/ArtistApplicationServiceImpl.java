@@ -20,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class ArtistApplicationServiceImpl extends ServiceImpl<ArtistApplicationMapper, ArtistApplication> implements ArtistApplicationService {
@@ -43,7 +43,7 @@ public class ArtistApplicationServiceImpl extends ServiceImpl<ArtistApplicationM
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long submitApplication(Long userId, ArtistApplicationDTO dto) {
-                 
+
         if (!canApply(userId)) {
             throw new RuntimeException("application rate limit reached: " + artistApplicationConfig.getMaxAppliesPerPeriod());
         }
@@ -61,14 +61,14 @@ public class ArtistApplicationServiceImpl extends ServiceImpl<ArtistApplicationM
 
         applicationMapper.insert(application);
 
-                 
+
         String countKey = artistApplicationConfig.getApplyCountPrefix() + userId;
         Long count = redisTemplate.opsForValue().increment(countKey);
         if (count != null && count == 1) {
             redisTemplate.expire(countKey, artistApplicationConfig.getApplyLimitDays(), TimeUnit.DAYS);
         }
 
-                     
+
         String lastApplyKey = artistApplicationConfig.getApplyPrefix() + userId;
         redisTemplate.opsForValue().set(lastApplyKey, String.valueOf(System.currentTimeMillis()), 
                 artistApplicationConfig.getApplyLimitDays(), TimeUnit.DAYS);
@@ -115,7 +115,7 @@ public class ArtistApplicationServiceImpl extends ServiceImpl<ArtistApplicationM
                 .eq(ArtistApplication::getUserId, userId)
                 .eq(ArtistApplication::getDeleted, 0)
                 .orderByDesc(ArtistApplication::getCreateTime)
-                
+
         );
     }
 
@@ -125,24 +125,24 @@ public class ArtistApplicationServiceImpl extends ServiceImpl<ArtistApplicationM
         LambdaQueryWrapper<ArtistApplication> wrapper = new LambdaQueryWrapper<ArtistApplication>()
                 .eq(ArtistApplication::getDeleted, 0)
                 .orderByDesc(ArtistApplication::getCreateTime);
-        
+
         if (status != null) {
             wrapper.eq(ArtistApplication::getStatus, status);
         }
-        
+
         return applicationMapper.selectPage(page, wrapper);
     }
 
     @Override
     public Boolean canApply(Long userId) {
-                 
+
         String countKey = artistApplicationConfig.getApplyCountPrefix() + userId;
         String count = redisTemplate.opsForValue().get(countKey);
         if (count != null && Integer.parseInt(count) >= artistApplicationConfig.getMaxAppliesPerPeriod()) {
             return false;
         }
 
-                          
+
         ArtistApplication existing = getUserApplication(userId);
         if (existing != null && (existing.getStatus().equals(0) || existing.getStatus().equals(1))) {
             return false;

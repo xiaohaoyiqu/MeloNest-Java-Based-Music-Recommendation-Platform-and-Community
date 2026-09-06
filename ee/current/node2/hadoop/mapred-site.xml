@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    
-                                                                 
-                                                                  
-                                         
 
-                                              
 
-                                                                     
-                                                                   
-                                                                          
-                                                                     
-                                                               
-   
 
-                                                                                  
-                         
-                      
-                   
-                 
-                                                                                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <configuration>
 
-                                                                         
+
 
 <property>
     <name>mapreduce.framework.name</name>
@@ -31,7 +31,7 @@
     <description>使用YARN作为执行框架</description>
 </property>
 
-                                                                           
+
 
 <property>
     <name>mapreduce.cluster.local.dir</name>
@@ -39,7 +39,7 @@
     <description>MapReduce本地目录（软件安装目录下）</description>
 </property>
 
-                                                                                 
+
 
 <property>
     <name>mapreduce.jobhistory.address</name>
@@ -65,7 +65,7 @@
     <description>JobHistoryServer principal（如启用Kerberos）</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>mapreduce.jobhistory.done-dir</name>
@@ -91,7 +91,7 @@
     <description>作业列表缓存大小</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>mapreduce.map.memory.mb</name>
@@ -135,7 +135,7 @@
     <description>Reduce并行复制数量</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>mapreduce.map.output.compress</name>
@@ -167,7 +167,7 @@
     <description>压缩类型（BLOCK/RECORD）</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>yarn.app.mapreduce.am.command-opts</name>
@@ -187,7 +187,7 @@
     <description>ApplicationMaster CPU核心数</description>
 </property>
 
-                                                                         
+
 
 <property>
     <name>mapreduce.job.speculative.speculativecap</name>

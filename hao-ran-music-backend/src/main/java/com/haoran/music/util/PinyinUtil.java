@@ -1,32 +1,32 @@
-   
-                      
-                                      
-   
+
+
+
+
 
 package com.haoran.music.util;
 
 import java.util.*;
 
-   
-          
-                      
-   
+
+
+
+
 public class PinyinUtil {
 
-       
-                                  
-                         
-       
+
+
+
+
     private static final Map<String, String[]> PINYIN_DICT = new HashMap<>();
 
-       
-              
-       
+
+
+
     private static final Map<String, String> INITIAL_DICT = new HashMap<>();
 
     static {
-                                      
-                
+
+
         addPinyin("周", "zhou");
         addPinyin("杰", "jie");
         addPinyin("伦", "lun");
@@ -48,7 +48,7 @@ public class PinyinUtil {
         addPinyin("张", "zhang");
         addPinyin("杰", "jie");
 
-                 
+
         addPinyin("音", "yin");
         addPinyin("乐", "le", "yue");
         addPinyin("歌", "ge");
@@ -62,7 +62,7 @@ public class PinyinUtil {
         addPinyin("跳", "tiao");
         addPinyin("舞", "wu");
 
-               
+
         addPinyin("刘", "liu");
         addPinyin("赵", "zhao");
         addPinyin("钱", "qian");
@@ -407,31 +407,31 @@ public class PinyinUtil {
         addPinyin("都", "du");
         addPinyin("耿", "geng");
         addPinyin("满", "man");
-                       
 
-                   
+
+
         INITIAL_DICT.put("周", "z");
         INITIAL_DICT.put("杰", "j");
         INITIAL_DICT.put("伦", "l");
-                     
+
     }
 
-       
-             
-       
+
+
+
     private static void addPinyin(String hanzi, String... pinyins) {
         PINYIN_DICT.put(hanzi, pinyins);
-                  
+
         if (pinyins.length > 0 && pinyins[0] != null && pinyins[0].length() > 0) {
             INITIAL_DICT.put(hanzi, pinyins[0].substring(0, 1));
         }
     }
 
-       
-                  
-                      
-                               
-       
+
+
+
+
+
     public static String[] getPinyin(String hanzi) {
         if (hanzi == null || hanzi.isEmpty()) {
             return new String[0];
@@ -439,21 +439,21 @@ public class PinyinUtil {
         return PINYIN_DICT.getOrDefault(hanzi, new String[]{hanzi});
     }
 
-       
-                      
-                      
-                    
-       
+
+
+
+
+
     public static String getPinyinFirst(String hanzi) {
         String[] pinyins = getPinyin(hanzi);
         return pinyins.length > 0 ? pinyins[0] : hanzi;
     }
 
-       
-                  
-                          
-                           
-       
+
+
+
+
+
     public static String toPinyin(String text) {
         if (text == null || text.isEmpty()) {
             return "";
@@ -479,11 +479,11 @@ public class PinyinUtil {
         return result.toString();
     }
 
-       
-                         
-                          
-                       
-       
+
+
+
+
+
     public static String toPinyinInitial(String text) {
         if (text == null || text.isEmpty()) {
             return "";
@@ -503,16 +503,16 @@ public class PinyinUtil {
         return result.toString();
     }
 
-       
-                
-       
+
+
+
     private static boolean isChinese(char c) {
         return c >= 0x4E00 && c <= 0x9FA5;
     }
 
-       
-                  
-       
+
+
+
     public static boolean containsChinese(String text) {
         if (text == null || text.isEmpty()) {
             return false;
@@ -525,9 +525,9 @@ public class PinyinUtil {
         return false;
     }
 
-       
-                       
-       
+
+
+
     public static boolean isPinyin(String text) {
         if (text == null || text.isEmpty()) {
             return false;
@@ -535,23 +535,23 @@ public class PinyinUtil {
         return text.matches("[a-zA-Z]+");
     }
 
-       
-                           
-       
+
+
+
     public static boolean isPinyinInitial(String text) {
         if (text == null || text.isEmpty()) {
             return false;
         }
-                  
+
         return isPinyin(text) && text.length() <= 20;
     }
 
-       
-                    
-                                               
-                       
-                      
-       
+
+
+
+
+
+
     public static List<String> toSearchVariants(String text) {
         List<String> variants = new ArrayList<>();
 
@@ -559,35 +559,35 @@ public class PinyinUtil {
             return variants;
         }
 
-             
+
         variants.add(text);
 
-                        
+
         if (containsChinese(text)) {
-                 
+
             String pinyin = toPinyin(text).replace(" ", "");
             if (!pinyin.equals(text)) {
                 variants.add(pinyin);
             }
 
-                 
+
             String initial = toPinyinInitial(text);
             if (!initial.equals(text) && !initial.isEmpty()) {
                 variants.add(initial);
             }
         }
 
-                                 
+
         return variants.stream().distinct().collect(java.util.stream.Collectors.toList());
     }
 
-       
-             
-                             
-                        
-                               
-                   
-       
+
+
+
+
+
+
+
     public static boolean fuzzyMatch(String input, String target) {
         if (input == null || target == null) {
             return false;
@@ -596,14 +596,14 @@ public class PinyinUtil {
         input = input.toLowerCase().trim();
         target = target.toLowerCase().trim();
 
-                  
+
         if (target.contains(input)) {
             return true;
         }
 
-                             
+
         if (isPinyin(input)) {
-                          
+
             String targetPinyin = toPinyin(target).replace(" ", "");
             String targetInitial = toPinyinInitial(target);
 
@@ -612,7 +612,7 @@ public class PinyinUtil {
             }
         }
 
-                              
+
         if (containsChinese(input)) {
             String inputPinyin = toPinyin(input).replace(" ", "");
             String inputInitial = toPinyinInitial(input);

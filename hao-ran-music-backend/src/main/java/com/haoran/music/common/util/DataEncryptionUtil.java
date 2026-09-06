@@ -1,7 +1,7 @@
-   
-                      
-                                              
-   
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -15,11 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-   
-          
-                       
-                                
-   
+
+
+
+
+
 public class DataEncryptionUtil {
 
     private static final String AES_ALGORITHM = "AES/GCM/NoPadding";
@@ -27,16 +27,16 @@ public class DataEncryptionUtil {
     private static final int GCM_IV_LENGTH = 12;
     private static final int GCM_TAG_LENGTH = 128;
 
-                            
+
     private static final String DEFAULT_AES_KEY = "your-256-bit-aes-key-here-change-in-production";
 
-       
-            
-      
-                          
-                                   
-                                            
-       
+
+
+
+
+
+
+
     public static String encryptAES(String plainText, String base64Key) {
         try {
             byte[] keyBytes = Base64.getDecoder().decode(base64Key);
@@ -44,7 +44,7 @@ public class DataEncryptionUtil {
                 throw new IllegalArgumentException("AES密钥必须是32字节（256位）");
             }
 
-                     
+
             byte[] iv = new byte[GCM_IV_LENGTH];
             SecureRandom random = new SecureRandom();
             random.nextBytes(iv);
@@ -57,7 +57,7 @@ public class DataEncryptionUtil {
 
             byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
 
-                          
+
             byte[] combined = ByteBuffer.allocate(iv.length + cipherText.length)
                     .put(iv)
                     .put(cipherText)
@@ -69,20 +69,20 @@ public class DataEncryptionUtil {
         }
     }
 
-       
-                    
-       
+
+
+
     public static String encryptAES(String plainText) {
         return encryptAES(plainText, getDefaultAESKey());
     }
 
-       
-            
-      
-                                    
-                                    
-                 
-       
+
+
+
+
+
+
+
     public static String decryptAES(String cipherText, String base64Key) {
         try {
             byte[] keyBytes = Base64.getDecoder().decode(base64Key);
@@ -92,7 +92,7 @@ public class DataEncryptionUtil {
                 throw new IllegalArgumentException("密文格式错误");
             }
 
-                      
+
             ByteBuffer buffer = ByteBuffer.wrap(combined);
             byte[] iv = new byte[GCM_IV_LENGTH];
             buffer.get(iv);
@@ -112,20 +112,20 @@ public class DataEncryptionUtil {
         }
     }
 
-       
-                    
-       
+
+
+
     public static String decryptAES(String cipherText) {
         return decryptAES(cipherText, getDefaultAESKey());
     }
 
-       
-            
-              
-      
-                         
-                                  
-       
+
+
+
+
+
+
+
     public static String maskPhone(String phone) {
         if (phone == null || phone.length() < 11) {
             return phone;
@@ -133,13 +133,13 @@ public class DataEncryptionUtil {
         return phone.substring(0, 3) + "****" + phone.substring(7);
     }
 
-       
-             
-              
-      
-                           
-                                          
-       
+
+
+
+
+
+
+
     public static String maskIdCard(String idCard) {
         if (idCard == null || idCard.length() < 15) {
             return idCard;
@@ -148,13 +148,13 @@ public class DataEncryptionUtil {
         return idCard.substring(0, 6) + "********" + idCard.substring(length - 4);
     }
 
-       
-             
-           
-      
-                           
-                        
-       
+
+
+
+
+
+
+
     public static String maskRealName(String realName) {
         if (realName == null || realName.isEmpty()) {
             return realName;
@@ -165,13 +165,13 @@ public class DataEncryptionUtil {
         return realName.charAt(0) + "*";
     }
 
-       
-           
-                
-      
-                        
-                                   
-       
+
+
+
+
+
+
+
     public static String maskEmail(String email) {
         if (email == null || !email.contains("@")) {
             return email;
@@ -186,13 +186,13 @@ public class DataEncryptionUtil {
         return prefix.substring(0, 2) + "****" + suffix;
     }
 
-       
-             
-              
-      
-                             
-                                            
-       
+
+
+
+
+
+
+
     public static String maskBankCard(String bankCard) {
         if (bankCard == null || bankCard.length() < 8) {
             return bankCard;
@@ -200,11 +200,11 @@ public class DataEncryptionUtil {
         return bankCard.substring(0, 4) + "************" + bankCard.substring(bankCard.length() - 4);
     }
 
-       
-              
-      
-                          
-       
+
+
+
+
+
     public static String generateAESKey() {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
@@ -216,34 +216,34 @@ public class DataEncryptionUtil {
         }
     }
 
-       
-                          
-       
+
+
+
     private static String getDefaultAESKey() {
-                               
+
         String key = "ThisIsA32ByteLongKeyForAES256Enc!!";
         return Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.UTF_8));
     }
 
-                                                                              
-                                  
-                   
-                                              
-                                                  
-                                  
-                    
 
-      
-                                                                      
-                  
-     
 
-                                                                       
-                  
-     
 
-                                           
-                  
-     
-      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

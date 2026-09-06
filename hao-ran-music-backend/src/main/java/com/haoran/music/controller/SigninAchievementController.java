@@ -1,7 +1,7 @@
-   
-                      
-                              
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -15,10 +15,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-   
-                 
-              
-   
+
+
+
+
 @RestController
 @RequestMapping("/user/signin-achievement")
 public class SigninAchievementController {
@@ -29,9 +29,9 @@ public class SigninAchievementController {
     @Resource
     private UserCheckinService userCheckinService;
 
-       
-                 
-       
+
+
+
     @ApiLog("获取签到成就列表")
     @GetMapping("/list")
     public Result<List<Map<String, Object>>> getAchievementList(
@@ -39,7 +39,7 @@ public class SigninAchievementController {
         if (userId == null) {
             return Result.error(401, "请先登录");
         }
-                     
+
         int continuousDays = 0;
         try {
             Integer days = userCheckinService.getContinuousDays(userId);
@@ -47,16 +47,16 @@ public class SigninAchievementController {
                 continuousDays = days;
             }
         } catch (Exception e) {
-                         
+
             continuousDays = 0;
         }
         List<Map<String, Object>> achievements = signinAchievementService.getUserAchievementProgress(userId, continuousDays);
         return Result.success(achievements);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("领取签到成就奖励")
     @PostMapping("/claim/{achievementId}")
     public Result<Map<String, Object>> claimReward(

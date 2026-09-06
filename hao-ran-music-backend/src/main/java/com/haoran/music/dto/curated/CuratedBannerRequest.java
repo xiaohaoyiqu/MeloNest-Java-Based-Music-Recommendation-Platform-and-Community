@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.dto.curated;
 
 import lombok.Data;
@@ -8,9 +8,9 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
-   
-                  
-   
+
+
+
 @Data
 public class CuratedBannerRequest {
 

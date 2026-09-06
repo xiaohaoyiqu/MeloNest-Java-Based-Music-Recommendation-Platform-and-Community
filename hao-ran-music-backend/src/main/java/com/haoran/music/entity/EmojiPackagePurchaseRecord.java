@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.entity;
 
@@ -15,9 +15,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-   
-                            
-   
+
+
+
 @Data
 @TableName("emoji_package_purchase_record")
 public class EmojiPackagePurchaseRecord implements Serializable {

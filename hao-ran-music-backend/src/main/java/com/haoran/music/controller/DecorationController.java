@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-   
-          
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/decoration")
@@ -42,9 +42,9 @@ public class DecorationController {
         this.storeProductPolicyService = storeProductPolicyService;
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/user/list")
     public Result<Map<String, List<UserDecoration>>> getUserDecorations(
             HttpServletRequest request) {
@@ -61,9 +61,9 @@ public class DecorationController {
         return Result.success(decorations);
     }
 
-       
-                
-       
+
+
+
     @GetMapping("/user/equipped")
     @ApiLog("获取用户装备的装饰")
     public Result<Map<String, UserDecoration>> getEquippedDecorations(
@@ -81,9 +81,9 @@ public class DecorationController {
         return Result.success(equipped);
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/shop")
     public Result<List<DecorationService.DecorationDTO>> getDecorationShop(
             @RequestParam(required = false) String type) {
@@ -98,9 +98,9 @@ public class DecorationController {
         return Result.success(dtoList);
     }
 
-       
-                
-       
+
+
+
     @GetMapping("/shop/{type}")
     public Result<List<DecorationService.DecorationDTO>> getDecorationByType(
             @PathVariable("type") String type) {
@@ -115,9 +115,9 @@ public class DecorationController {
         return Result.success(dtoList);
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/detail/{decorationId}")
     public Result<DecorationService.DecorationDTO> getDecorationDetail(
             @PathVariable("decorationId") String decorationId) {
@@ -135,9 +135,9 @@ public class DecorationController {
         return Result.success(convertToDTO(config));
     }
 
-       
-           
-       
+
+
+
     @PostMapping("/equip")
     @ApiLog("装备装饰")
     public Result<Boolean> equipDecoration(
@@ -150,9 +150,9 @@ public class DecorationController {
         return Result.success(success);
     }
 
-       
-           
-       
+
+
+
     @PostMapping("/unequip")
     @ApiLog("卸载装饰")
     public Result<Boolean> unequipDecoration(
@@ -165,9 +165,9 @@ public class DecorationController {
         return Result.success(success);
     }
 
-       
-                
-       
+
+
+
     @PostMapping("/redeem")
     @ApiLog("兑换装饰")
     public Result<Boolean> redeemDecoration(
@@ -180,9 +180,9 @@ public class DecorationController {
         return Result.success(success);
     }
 
-       
-                
-       
+
+
+
     @GetMapping("/user/points")
     public Result<Integer> getUserPoints(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
@@ -190,9 +190,9 @@ public class DecorationController {
         return Result.success(points);
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/types")
     public Result<List<Map<String, Object>>> getDecorationTypes() {
         List<Map<String, Object>> types = new java.util.ArrayList<>();
@@ -236,9 +236,9 @@ public class DecorationController {
         return Result.success(types);
     }
 
-       
-             
-       
+
+
+
     private DecorationService.DecorationDTO convertToDTO(DecorationConfig config) {
         DecorationService.DecorationDTO dto = new DecorationService.DecorationDTO();
         dto.setConfigId(config.getId());
@@ -257,16 +257,16 @@ public class DecorationController {
         dto.setDurationDays(config.getDurationDays());
         dto.setCanRedeem("points".equals(config.getObtainType()));
 
-                 
+
         String obtainDesc = getObtainDescription(config);
         dto.setObtainDescription(obtainDesc);
 
         return dto;
     }
 
-       
-             
-       
+
+
+
     private String getObtainDescription(DecorationConfig config) {
         switch (config.getObtainType()) {
             case "sign":

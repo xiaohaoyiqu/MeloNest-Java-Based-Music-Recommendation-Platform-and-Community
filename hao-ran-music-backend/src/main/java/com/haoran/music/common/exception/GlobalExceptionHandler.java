@@ -19,21 +19,21 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
-   
-                      
-                                               
-   
+
+
+
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-       
-                       
-      
-                        
-                                               
-                    
-       
+
+
+
+
+
+
+
     @ExceptionHandler(ServletRequestBindingException.class)
     public Result<?> handleServletRequestBindingException(ServletRequestBindingException e, HttpServletRequest request) {
         log.warn("event=request_binding_rejected path={} errorType={}",
@@ -41,13 +41,13 @@ public class GlobalExceptionHandler {
         return Result.error(ResultCode.UNAUTHORIZED);
     }
 
-       
-                               
-      
-                    
-                                
-                     
-       
+
+
+
+
+
+
+
     @ExceptionHandler(BusinessException.class)
     public Result<?> handleBusinessException(BusinessException e, HttpServletRequest request) {
         log.warn("event=business_request_rejected path={} code={} errorType={}",
@@ -55,13 +55,13 @@ public class GlobalExceptionHandler {
         return Result.error(e.getCode(), e.getMessage());
     }
 
-       
-                                
-      
-                      
-                                
-                     
-       
+
+
+
+
+
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
         String errorMsg = e.getBindingResult().getFieldErrors().stream()
@@ -73,13 +73,13 @@ public class GlobalExceptionHandler {
         return Result.error(ResultCode.PARAM_ERROR.getCode(), errorMsg);
     }
 
-       
-                
-      
-                      
-                                
-                     
-       
+
+
+
+
+
+
+
     @ExceptionHandler(BindException.class)
     public Result<?> handleBindException(BindException e, HttpServletRequest request) {
         String errorMsg = e.getBindingResult().getFieldErrors().stream()
@@ -91,13 +91,13 @@ public class GlobalExceptionHandler {
         return Result.error(ResultCode.PARAM_ERROR.getCode(), errorMsg);
     }
 
-       
-                                    
-      
-                      
-                                
-                     
-       
+
+
+
+
+
+
+
     @ExceptionHandler(ConstraintViolationException.class)
     public Result<?> handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
         String errorMsg = e.getConstraintViolations().stream()
@@ -109,26 +109,26 @@ public class GlobalExceptionHandler {
         return Result.error(ResultCode.PARAM_ERROR.getCode(), errorMsg);
     }
 
-       
-                      
-      
-                        
-                                
-                      
-       
+
+
+
+
+
+
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Result<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         log.warn("event=request_method_rejected path={} method={}", request.getRequestURI(), e.getMethod());
         return Result.error(ResultCode.METHOD_NOT_ALLOWED);
     }
 
-       
-                 
-      
-                    
-                                
-                           
-       
+
+
+
+
+
+
+
     @ExceptionHandler(RateLimitException.class)
     public Result<Map<String, Object>> handleRateLimitException(RateLimitException e, HttpServletRequest request) {
         log.warn("event=request_rate_limited path={} needCaptcha={} captchaScene={} retryAfterSeconds={}",
@@ -144,19 +144,19 @@ public class GlobalExceptionHandler {
         return result;
     }
 
-       
-                          
-      
-                     
-                                
-                         
-       
+
+
+
+
+
+
+
     @ExceptionHandler(RuntimeException.class)
     public Result<?> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
         log.error("event=runtime_exception path={} errorType={}",
                 request.getRequestURI(), e.getClass().getSimpleName());
 
-                                     
+
         String message = e.getMessage();
         if (message != null) {
             if (message.contains("JWT") || message.contains("Token") ||
@@ -167,13 +167,13 @@ public class GlobalExceptionHandler {
         return Result.error(ResultCode.SYSTEM_BUSY);
     }
 
-       
-               
-      
-                     
-                                
-                     
-       
+
+
+
+
+
+
+
     @ExceptionHandler(Exception.class)
     public Result<?> handleException(Exception e, HttpServletRequest request) {
         log.error("event=unhandled_exception path={} errorType={}",

@@ -1,7 +1,7 @@
-   
-                      
-                                        
-   
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -14,23 +14,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-   
-          
-  
-      
-                    
-               
-                 
-            
-  
-                      
-   
+
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 public class VideoCompressUtil {
 
-       
-             
-       
+
+
+
     public static class CompressResult {
         private final boolean success;
         private final String outputPath;
@@ -59,9 +59,9 @@ public class VideoCompressUtil {
         public void setThumbnailPath(String path) { this.thumbnailPath = path; }
     }
 
-       
-           
-       
+
+
+
     public static class VideoInfo {
         private final int duration;
         private final int width;
@@ -84,9 +84,9 @@ public class VideoCompressUtil {
         public String getFormat() { return format; }
     }
 
-       
-           
-       
+
+
+
     public static class CompressConfig {
         private String videoCodec = "libx264";
         private String preset = "medium";
@@ -162,17 +162,17 @@ public class VideoCompressUtil {
         public int getThumbnailTime() { return thumbnailTime; }
     }
 
-       
-                    
-       
+
+
+
     private static final CompressConfig DEFAULT_CONFIG = new CompressConfig()
             .setPreset("medium")
             .setCrf(26)
             .setBitrate(0);
 
-       
-                   
-       
+
+
+
     public static boolean isFFmpegAvailable() {
         try {
             ProcessExecutionUtil.Result result = ProcessExecutionUtil.execute(
@@ -184,16 +184,16 @@ public class VideoCompressUtil {
         }
     }
 
-       
-             
-       
+
+
+
     public static VideoInfo getVideoInfo(String inputPath) {
         if (!isFFmpegAvailable()) {
             log.error("event=video_probe_rejected reason=ffmpeg_unavailable");
             return null;
         }
 
-                         
+
         if (!WorkProcessingUtil.isPathSafe(inputPath)) {
             log.warn("event=video_probe_rejected reason=unsafe_path");
             return null;
@@ -222,18 +222,18 @@ public class VideoCompressUtil {
         }
     }
 
-       
-           
-       
+
+
+
     public static CompressResult compress(String inputPath, String outputPath) {
         return compress(inputPath, outputPath, DEFAULT_CONFIG);
     }
 
-       
-                 
-       
+
+
+
     public static CompressResult compress(String inputPath, String outputPath, CompressConfig config) {
-                         
+
         if (!WorkProcessingUtil.isPathSafe(inputPath) || !WorkProcessingUtil.isPathSafe(outputPath)) {
             log.warn("event=video_compress_rejected reason=unsafe_path");
             return new CompressResult(false, outputPath, 0, 0, 0);
@@ -333,9 +333,9 @@ public class VideoCompressUtil {
         }
     }
 
-       
-             
-       
+
+
+
     public static String generateThumbnail(String videoPath, String outputPath, int timeSeconds) {
         try {
             List<String> commands = new ArrayList<>();
@@ -365,7 +365,7 @@ public class VideoCompressUtil {
         return null;
     }
 
-                                                     
+
 
     private static int parseDuration(String ffprobeOutput) {
         int duration = 0;
@@ -380,7 +380,7 @@ public class VideoCompressUtil {
                 }
             }
         } catch (Exception e) {
-                   
+
         }
         return duration;
     }
@@ -396,7 +396,7 @@ public class VideoCompressUtil {
                 }
             }
         } catch (Exception e) {
-                         
+
         }
         return 1280;
     }
@@ -412,7 +412,7 @@ public class VideoCompressUtil {
                 }
             }
         } catch (Exception e) {
-                         
+
         }
         return 720;
     }
@@ -428,7 +428,7 @@ public class VideoCompressUtil {
                 }
             }
         } catch (Exception e) {
-                          
+
         }
         return "mp4";
     }

@@ -4,11 +4,11 @@ import cn.hutool.core.util.StrUtil;
 import com.haoran.music.common.exception.BusinessException;
 import com.haoran.music.common.result.ResultCode;
 
-   
-                                                                            
-  
-                      
-   
+
+
+
+
+
 public final class CatalogSearchInput {
 
     private static final int MAX_KEYWORD_LENGTH = 100;
@@ -30,7 +30,7 @@ public final class CatalogSearchInput {
         return normalized;
     }
 
-                                                                                                
+
     public static String normalizeForLike(String value) {
         String normalized = normalize(value);
         return normalized == null ? null : normalized

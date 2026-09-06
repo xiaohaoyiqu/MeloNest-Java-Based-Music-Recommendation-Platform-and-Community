@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-   
-                
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class RefundWithdrawServiceImpl implements RefundWithdrawService {
@@ -48,7 +48,7 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
             return 0;
         }
 
-                     
+
         LambdaQueryWrapper<WithdrawApply> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(WithdrawApply::getCreatorId, creatorId)
                 .in(WithdrawApply::getStatus, "pending", "processing");
@@ -62,7 +62,7 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
 
         int frozenCount = 0;
         for (WithdrawApply withdraw : pendingWithdraws) {
-                     
+
             WithdrawFreeze freeze = new WithdrawFreeze();
             freeze.setWithdrawId(withdraw.getId());
             freeze.setCreatorId(creatorId);
@@ -75,7 +75,7 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
 
             withdrawFreezeMapper.insert(freeze);
 
-                          
+
             withdraw.setStatus("frozen");
             withdrawApplyMapper.updateById(withdraw);
 
@@ -98,14 +98,14 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
             return null;
         }
 
-                     
+
         WithdrawApply completedWithdraw = getLastCompletedWithdrawal(creatorId);
         if (completedWithdraw == null) {
             log.warn("创作者无已完成的提现记录: creatorId={}", creatorId);
             return null;
         }
 
-                 
+
         CreatorDebt debt = new CreatorDebt();
         debt.setCreatorId(creatorId);
         debt.setRefundId(refundId);
@@ -133,7 +133,7 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
             return 0;
         }
 
-                       
+
         LambdaQueryWrapper<WithdrawFreeze> freezeWrapper = new LambdaQueryWrapper<>();
         freezeWrapper.eq(WithdrawFreeze::getRefundId, refundId)
                 .eq(WithdrawFreeze::getStatus, "frozen")
@@ -148,12 +148,12 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
 
         int unfrozenCount = 0;
         for (WithdrawFreeze freeze : freezes) {
-                       
+
             freeze.setStatus("unfrozen");
             freeze.setUpdateTime(LocalDateTime.now());
             withdrawFreezeMapper.updateById(freeze);
 
-                       
+
             WithdrawApply withdraw = withdrawApplyMapper.selectById(freeze.getWithdrawId());
             if (withdraw != null && "frozen".equals(withdraw.getStatus())) {
                 withdraw.setStatus("pending");
@@ -177,7 +177,7 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
             return new ArrayList<>();
         }
 
-                      
+
         LambdaQueryWrapper<WithdrawFreeze> freezeWrapper = new LambdaQueryWrapper<>();
         freezeWrapper.eq(WithdrawFreeze::getCreatorId, creatorId)
                 .eq(WithdrawFreeze::getStatus, "frozen")
@@ -189,7 +189,7 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
             return new ArrayList<>();
         }
 
-                   
+
         List<Long> withdrawIds = freezes.stream()
                 .map(WithdrawFreeze::getWithdrawId)
                 .collect(Collectors.toList());
@@ -247,13 +247,13 @@ public class RefundWithdrawServiceImpl implements RefundWithdrawService {
             return false;
         }
 
-                       
+
         WithdrawApply completedWithdraw = getLastCompletedWithdrawal(creatorId);
         if (completedWithdraw == null) {
             return false;
         }
 
-                      
+
         BigDecimal withdrawAmount = completedWithdraw.getAmount();
         return withdrawAmount != null && withdrawAmount.compareTo(refundAmount) >= 0;
     }

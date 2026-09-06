@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    
-                                                                    
-                                                                      
-                                                                     
-                                                                                          
-                                                                  
-                                         
 
-                                              
 
-                                                                     
-                                                                   
-                                                                          
-                                                                     
-                                
-   
 
-                                                                                  
-                             
-                      
-                   
-                 
-                                                                                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <configuration>
 
-                                                                           
+
 
 <property>
   <name>fs.defaultFS</name>
@@ -40,7 +40,7 @@
   <description>Hadoop临时文件目录（软件安装目录下）</description>
 </property>
 
-                                                                         
+
 
 <property>
   <name>hadoop.security.authentication</name>
@@ -54,7 +54,7 @@
   <description>禁用授权（开发环境）</description>
 </property>
 
-                                                                           
+
 
 <property>
   <name>hadoop.proxyuser.hdfs.hosts</name>
@@ -88,7 +88,7 @@
   <value>*</value>
 </property>
 
-                                                                                
+
 
 <property>
   <name>ha.zookeeper.quorum</name>
@@ -96,7 +96,7 @@
   <description>ZooKeeper集群地址</description>
 </property>
 
-                                                                          
+
 
 <property>
   <name>hadoop.http.filter.enabled</name>
@@ -104,7 +104,7 @@
   <description>启用主机访问过滤</description>
 </property>
 
-                                                                         
+
 
 <property>
   <name>io.compression.codec.lzo.class</name>
@@ -148,7 +148,7 @@
   <description>SequenceFile本地写块大小</description>
 </property>
 
-                                                                           
+
 
 <property>
   <name>fs.trash.interval</name>
@@ -162,7 +162,7 @@
   <description>垃圾回收策略类</description>
 </property>
 
-                                                                         
+
 
 <property>
   <name>ipc.client.connection.maxidletime</name>
@@ -206,7 +206,7 @@
   <description>客户端启用TCP_NODELAY</description>
 </property>
 
-                                                                         
+
 
 <property>
   <name>ha.zookeeper.session-timeout.ms</name>
@@ -220,7 +220,7 @@
   <description>ZooKeeper父节点路径</description>
 </property>
 
-                                                                             
+
 
 <property>
   <name>fs.permissions.umask-mode</name>
@@ -246,7 +246,7 @@
   <description>HAR脚本前缀（软件安装目录下）</description>
 </property>
 
-                                                                             
+
 
 <property>
   <name>file.replication</name>
@@ -254,7 +254,7 @@
   <description>本地文件系统副本数</description>
 </property>
 
-                                                                              
+
 
 <property>
   <name>io.native.lib.available</name>

@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class SongRatingServiceImpl implements SongRatingService {
@@ -64,19 +64,19 @@ public class SongRatingServiceImpl implements SongRatingService {
         User currentUser = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(currentUser, "评分歌曲");
 
-                      
+
         validateRatingValue(dto.getRating());
 
-                                        
+
         checkOperationLimit(userId, currentUser, dto.getSongId(), dto.getRating());
 
-                      
+
         Song song = songMapper.selectById(dto.getSongId());
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌曲不存在");
         }
 
-                       
+
         LambdaQueryWrapper<SongRating> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongRating::getUserId, userId)
                 .eq(SongRating::getSongId, dto.getSongId());
@@ -84,21 +84,21 @@ public class SongRatingServiceImpl implements SongRatingService {
         SongRating existingRating = songRatingMapper.selectOne(wrapper);
 
         if (ObjectUtils.isNotEmpty(existingRating)) {
-                               
+
             checkModifyCooldown(userId, dto.getSongId());
 
-                   
+
             existingRating.setRating(dto.getRating());
             existingRating.setUpdateTime(LocalDateTime.now());
             songRatingMapper.updateById(existingRating);
 
-                     
+
             recordModifyTime(userId, dto.getSongId());
 
             log.info("用户修改评分: userId={}, songId={}, oldRating={}, newRating={}",
                 userId, dto.getSongId(), existingRating.getRating(), dto.getRating());
         } else {
-                    
+
             SongRating songRating = new SongRating();
             songRating.setUserId(userId);
             songRating.setSongId(dto.getSongId());
@@ -109,14 +109,14 @@ public class SongRatingServiceImpl implements SongRatingService {
             log.info("用户评分歌曲: userId={}, songId={}, rating={}", userId, dto.getSongId(), dto.getRating());
         }
 
-                          
+
         try {
             recommendService.recordUserAction(userId, "rate", dto.getSongId(), 1);
         } catch (Exception e) {
             log.warn("记录评分行为失败: {}", e.getClass().getSimpleName());
         }
 
-                       
+
         recordOperation(userId);
 
         return getSongRating(dto.getSongId(), userId);
@@ -128,18 +128,18 @@ public class SongRatingServiceImpl implements SongRatingService {
         User currentUser = userMapper.selectById(userId);
         UserAccountStatusUtil.requireCanInteract(currentUser, "批量评分歌曲");
 
-                      
+
         if (ratings.size() > CommonConstants.RATING_BATCH_MAX) {
             throw new BusinessException(ResultCode.BAD_REQUEST,
                 "批量评分最多" + CommonConstants.RATING_BATCH_MAX + "首歌曲");
         }
 
-                       
+
         for (Map.Entry<Long, Integer> entry : ratings.entrySet()) {
             validateRatingValue(entry.getValue());
         }
 
-                      
+
         int dailyCount = getDailyCount(userId);
         int maxDaily = getMaxDailyRatings(currentUser);
         int remaining = maxDaily - dailyCount;
@@ -149,19 +149,19 @@ public class SongRatingServiceImpl implements SongRatingService {
                 "今日剩余评分次数为" + remaining + "次，无法批量评分" + ratings.size() + "首歌曲");
         }
 
-                  
+
         for (Map.Entry<Long, Integer> entry : ratings.entrySet()) {
             Long songId = entry.getKey();
             Integer rating = entry.getValue();
 
-                     
+
             Song song = songMapper.selectById(songId);
             if (ObjectUtils.isEmpty(song)) {
                 log.warn("批量评分跳过不存在的歌曲: songId={}", songId);
                 continue;
             }
 
-                      
+
             LambdaQueryWrapper<SongRating> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(SongRating::getUserId, userId)
                     .eq(SongRating::getSongId, songId);
@@ -181,10 +181,10 @@ public class SongRatingServiceImpl implements SongRatingService {
                 songRatingMapper.insert(newRating);
             }
 
-                   
+
             recordOperation(userId);
 
-                     
+
             try {
                 recommendService.recordUserAction(userId, "rate", songId, 1);
             } catch (Exception e) {
@@ -202,22 +202,22 @@ public class SongRatingServiceImpl implements SongRatingService {
 
         boolean canExposeRatedSong = canExposeRatedSong(songId);
 
-                 
+
         Double avgRating = canExposeRatedSong ? songRatingMapper.getAvgRatingBySongId(songId) : 0.0;
         vo.setAvgRating(avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0);
 
-                 
+
         Integer ratingCount = canExposeRatedSong ? songRatingMapper.getRatingCountBySongId(songId) : 0;
         vo.setRatingCount(ratingCount != null ? ratingCount : 0);
 
-                   
+
         Integer userRating = null;
         if (userId != null) {
             userRating = songRatingMapper.getUserRating(userId, songId);
         }
         vo.setUserRating(userRating);
 
-                 
+
         Map<String, Object> distribution = canExposeRatedSong ? getRatingDistribution(songId) : new HashMap<>();
         SongRatingVO.RatingDistribution dist = new SongRatingVO.RatingDistribution();
         dist.setFiveStar((Integer) distribution.getOrDefault("5", 0));
@@ -233,7 +233,7 @@ public class SongRatingServiceImpl implements SongRatingService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRating(Long userId, Long songId) {
-                 
+
         checkOperationLimit(userId, userMapper.selectById(userId), songId, null);
 
         LambdaQueryWrapper<SongRating> wrapper = new LambdaQueryWrapper<>();
@@ -245,16 +245,16 @@ public class SongRatingServiceImpl implements SongRatingService {
             songRatingMapper.deleteById(rating.getId());
             log.info("用户删除评分: userId={}, songId={}", userId, songId);
 
-                       
+
             String cacheKey = "song:rating:" + songId;
             redisUtils.delete(cacheKey);
             log.info("清除歌曲评分缓存: songId={}", songId);
 
-                         
+
             String modifyKey = CommonConstants.RATING_SONG_MODIFY_KEY + userId + ":" + songId;
             redisUtils.delete(modifyKey);
 
-                   
+
             recordOperation(userId);
         }
     }
@@ -272,13 +272,13 @@ public class SongRatingServiceImpl implements SongRatingService {
     public Map<String, Object> getUserRatingStats(Long userId) {
         Map<String, Object> stats = new HashMap<>();
 
-                   
+
         LambdaQueryWrapper<SongRating> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongRating::getUserId, userId);
 
         List<SongRating> ratings = songRatingMapper.selectList(wrapper);
 
-                 
+
         Map<Integer, Integer> distribution = new HashMap<>();
         distribution.put(1, 0);
         distribution.put(2, 0);
@@ -296,7 +296,7 @@ public class SongRatingServiceImpl implements SongRatingService {
         stats.put("averageRating", ratings.isEmpty() ? 0 : Math.round((double) totalScore / ratings.size() * 10.0) / 10.0);
         stats.put("distribution", distribution);
 
-                     
+
         int dailyCount = getDailyCount(userId);
         int maxDaily = getMaxDailyRatings(userId);
         stats.put("dailyUsed", dailyCount);
@@ -306,12 +306,12 @@ public class SongRatingServiceImpl implements SongRatingService {
         return stats;
     }
 
-       
-               
-      
-                         
-                                             
-       
+
+
+
+
+
+
     private void validateRatingValue(Integer rating) {
         if (ObjectUtils.isEmpty(rating) ||
             rating < CommonConstants.RATING_MIN ||
@@ -321,18 +321,18 @@ public class SongRatingServiceImpl implements SongRatingService {
         }
     }
 
-       
-                                   
-      
-                         
-                                         
-                                        
-                                            
-       
+
+
+
+
+
+
+
+
     private void checkOperationLimit(Long userId, User currentUser, Long songId, Integer rating) {
         long currentTime = System.currentTimeMillis();
 
-                    
+
         String cooldownKey = CommonConstants.RATING_COOLDOWN_KEY + userId;
         Object lastOperationTime = redisUtils.get(cooldownKey);
 
@@ -347,7 +347,7 @@ public class SongRatingServiceImpl implements SongRatingService {
             }
         }
 
-                      
+
         int dailyCount = getDailyCount(userId);
         int maxDaily = getMaxDailyRatings(currentUser);
 
@@ -356,19 +356,19 @@ public class SongRatingServiceImpl implements SongRatingService {
                 CommonConstants.ERROR_RATING_DAILY_LIMIT);
         }
 
-                           
+
         if (rating != null && songId != null) {
             checkAnomalousRating(userId, rating);
         }
     }
 
-       
-                 
-      
-                         
-                         
-                                            
-       
+
+
+
+
+
+
+
     private void checkModifyCooldown(Long userId, Long songId) {
         String modifyKey = CommonConstants.RATING_SONG_MODIFY_KEY + userId + ":" + songId;
         Object lastModifyTime = redisUtils.get(modifyKey);
@@ -385,14 +385,14 @@ public class SongRatingServiceImpl implements SongRatingService {
         }
     }
 
-       
-               
-      
-                         
-                         
-       
+
+
+
+
+
+
     private void checkAnomalousRating(Long userId, Integer rating) {
-                     
+
         LambdaQueryWrapper<SongRating> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongRating::getUserId, userId)
                 .orderByDesc(SongRating::getCreateTime)
@@ -401,7 +401,7 @@ public class SongRatingServiceImpl implements SongRatingService {
         List<SongRating> recentRatings = songRatingMapper.selectList(wrapper);
 
         if (recentRatings.size() >= CommonConstants.RATING_ANOMALY_THRESHOLD) {
-                           
+
             boolean allSame = true;
             Integer firstRating = recentRatings.get(0).getRating();
 
@@ -414,51 +414,51 @@ public class SongRatingServiceImpl implements SongRatingService {
 
             if (allSame && rating.equals(firstRating)) {
                 log.warn("检测到异常评分行为: userId={}, 重复评分={}", userId, rating);
-                                      
+
             }
         }
     }
 
-       
-               
-      
-                         
-                         
-       
+
+
+
+
+
+
     private void recordModifyTime(Long userId, Long songId) {
         String modifyKey = CommonConstants.RATING_SONG_MODIFY_KEY + userId + ":" + songId;
         long currentTime = System.currentTimeMillis();
 
-                                 
+
         redisUtils.set(modifyKey, currentTime,
             CommonConstants.RATING_MODIFY_COOLDOWN_HOURS + 1, TimeUnit.HOURS);
     }
 
-       
-                            
-      
-                         
-       
+
+
+
+
+
     private void recordOperation(Long userId) {
         long currentTime = System.currentTimeMillis();
 
-                    
+
         String cooldownKey = CommonConstants.RATING_COOLDOWN_KEY + userId;
         redisUtils.set(cooldownKey, currentTime,
             CommonConstants.RATING_COOLDOWN_SECONDS + 1, TimeUnit.SECONDS);
 
-                      
+
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String dailyKey = CommonConstants.RATING_DAILY_KEY + userId + ":" + today;
 
-                       
+
         long endOfToday = LocalDate.now().plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.of("+8"));
         long currentSeconds = currentTime / 1000;
         long secondsUntilTomorrow = endOfToday - currentSeconds;
 
         Long newCount = redisUtils.increment(dailyKey);
 
-                          
+
         if (newCount != null && newCount == 1) {
             redisUtils.expire(dailyKey, secondsUntilTomorrow, TimeUnit.SECONDS);
         }
@@ -466,12 +466,12 @@ public class SongRatingServiceImpl implements SongRatingService {
         log.info("用户评分操作记录: userId={}, dailyCount={}", userId, newCount);
     }
 
-       
-                  
-      
-                         
-                      
-       
+
+
+
+
+
+
     private int getDailyCount(Long userId) {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String dailyKey = CommonConstants.RATING_DAILY_KEY + userId + ":" + today;
@@ -480,34 +480,34 @@ public class SongRatingServiceImpl implements SongRatingService {
         return dailyCount != null ? Integer.parseInt(dailyCount.toString()) : 0;
     }
 
-       
-                                
-      
-                         
-                       
-       
+
+
+
+
+
+
     private int getMaxDailyRatings(Long userId) {
         return getMaxDailyRatings(userMapper.selectById(userId));
     }
 
-       
-                                
-      
-                              
-                       
-       
+
+
+
+
+
+
     private int getMaxDailyRatings(User currentUser) {
-                    
+
         int maxDaily = CommonConstants.RATING_DAILY_MAX_NORMAL;
 
         try {
             if (ObjectUtils.isNotEmpty(currentUser)) {
-                            
+
                 if (Boolean.TRUE.equals(userVipService.isVip(currentUser.getId()))) {
                     maxDaily = CommonConstants.RATING_DAILY_MAX_VIP;
                 }
 
-                                   
+
                 if (currentUser.getCreditScore() != null &&
                     currentUser.getCreditScore() >= UserAccountPolicyConstants.CREDIT_SCORE_GOOD_MIN &&
                     maxDaily < CommonConstants.RATING_DAILY_MAX_EXCELLENT) {
@@ -522,12 +522,12 @@ public class SongRatingServiceImpl implements SongRatingService {
         return maxDaily;
     }
 
-       
-             
-      
-                         
-                      
-       
+
+
+
+
+
+
     private Map<String, Object> getRatingDistribution(Long songId) {
         Map<String, Object> distribution = new HashMap<>();
 

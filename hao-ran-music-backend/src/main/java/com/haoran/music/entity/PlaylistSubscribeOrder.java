@@ -10,10 +10,10 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-   
-                      
-                                    
-   
+
+
+
+
 @Data
 @TableName("playlist_subscribe_order")
 public class PlaylistSubscribeOrder {

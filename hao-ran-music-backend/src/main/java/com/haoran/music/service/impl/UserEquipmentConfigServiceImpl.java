@@ -1,7 +1,7 @@
-   
-                      
-                               
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -23,9 +23,9 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.time.LocalDateTime;
 
-   
-                  
-   
+
+
+
 @Slf4j
 @Service
 public class UserEquipmentConfigServiceImpl extends ServiceImpl<UserEquipmentConfigMapper, UserEquipmentConfig>
@@ -54,7 +54,7 @@ public class UserEquipmentConfigServiceImpl extends ServiceImpl<UserEquipmentCon
         result.put("profileCardStyle", config.getProfileCardStyle());
         result.put("chatBubble", config.getChatBubbleId());
 
-               
+
         List<String> badges = new ArrayList<>();
         if (config.getBadge1Id() != null) badges.add(config.getBadge1Id());
         if (config.getBadge2Id() != null) badges.add(config.getBadge2Id());
@@ -101,7 +101,7 @@ public class UserEquipmentConfigServiceImpl extends ServiceImpl<UserEquipmentCon
             equipmentConfig.setUserId(userId);
         }
 
-               
+
         if (config.containsKey("avatarFrame")) {
             equipmentConfig.setAvatarFrameId(validateOwnedDecoration(
                     ownedDecorations, config.get("avatarFrame"), "avatar_frame"));
@@ -118,7 +118,7 @@ public class UserEquipmentConfigServiceImpl extends ServiceImpl<UserEquipmentCon
                     ownedDecorations, config.get("chatBubble"), "dialog_box"));
         }
 
-                 
+
         Object badgesObj = config.get("badges");
         List<String> badges = null;
         if (badgesObj instanceof List) {
@@ -185,7 +185,7 @@ public class UserEquipmentConfigServiceImpl extends ServiceImpl<UserEquipmentCon
             config.setUserId(userId);
         }
 
-                   
+
         switch (decorationType) {
             case "avatar_frame":
                 requireDecorationType(decoration, "avatar_frame");
@@ -218,7 +218,7 @@ public class UserEquipmentConfigServiceImpl extends ServiceImpl<UserEquipmentCon
             return;
         }
 
-                   
+
         switch (decorationType) {
             case "avatar_frame":
                 config.setAvatarFrameId(null);

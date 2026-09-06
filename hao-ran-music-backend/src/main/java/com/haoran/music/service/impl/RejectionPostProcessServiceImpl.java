@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-   
-                      
-                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class RejectionPostProcessServiceImpl implements RejectionPostProcessService {
@@ -29,9 +29,9 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
     @Autowired
     private UserViolationService violationService;
 
-       
-               
-       
+
+
+
     @Getter
     private enum RejectionCategory {
         COPYRIGHT_VIOLATION("版权问题", false, true, 3),
@@ -54,9 +54,9 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
 
     }
 
-       
-                   
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void processRejection(Long moderationId, String rejectReason) {
@@ -68,23 +68,23 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
             throw new RuntimeException("审核记录不存在");
         }
 
-                       
+
         moderation.setReviewReason(rejectReason);
         moderation.setReviewTime(LocalDateTime.now());
 
-                       
+
         String reapplyTimeStr = calculateReapplyTime(rejectReason);
         LocalDateTime reapplyTime = parseReapplyTime(reapplyTimeStr);
         moderation.setReapplyAvailableTime(reapplyTime);
 
-                      
+
         String categoryCode = categorizeRejection(rejectReason);
         RejectionCategory category = getRejectionCategory(categoryCode);
 
-                     
+
         moderation.setCanModify(category.isModifiable() ? 1 : 0);
 
-                          
+
         if (category.isViolation()) {
             violationService.recordViolation(
                 moderation.getSubmitterId(),
@@ -96,21 +96,21 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
             );
         }
 
-                         
+
         String suggestions = generateSuggestions(rejectReason);
         log.info("审核拒绝改进建议: moderationId={}, suggestions={}", moderationId, suggestions);
 
 
-                 
+
         moderationMapper.updateById(moderation);
 
         log.info("审核拒绝处理完成: moderationId={}, canModify={}, reapplyTime={}",
                 moderationId, category.isModifiable(), reapplyTimeStr);
     }
 
-       
-                
-       
+
+
+
     @Override
     public String calculateReapplyTime(String rejectReason) {
         if (rejectReason == null) {
@@ -132,9 +132,9 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
         return "24小时后";
     }
 
-       
-                                
-       
+
+
+
     private LocalDateTime parseReapplyTime(String timeStr) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -153,9 +153,9 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
         return now.plusHours(24);
     }
 
-       
-               
-       
+
+
+
     @Override
     public String categorizeRejection(String rejectReason) {
         if (!StringUtils.hasText(rejectReason)) {
@@ -184,9 +184,9 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
         return "OTHER";
     }
 
-       
-                 
-       
+
+
+
     private RejectionCategory getRejectionCategory(String categoryCode) {
         try {
             return RejectionCategory.valueOf(categoryCode);
@@ -195,9 +195,9 @@ public class RejectionPostProcessServiceImpl implements RejectionPostProcessServ
         }
     }
 
-       
-             
-       
+
+
+
     @Override
     public String generateSuggestions(String rejectReason) {
         if (!StringUtils.hasText(rejectReason)) {

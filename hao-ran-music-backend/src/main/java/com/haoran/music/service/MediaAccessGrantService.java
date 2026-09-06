@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service;
 
 import com.haoran.music.common.exception.BusinessException;
@@ -16,10 +16,10 @@ import java.security.MessageDigest;
 import java.time.Clock;
 import java.util.Base64;
 
-   
-                                                                             
-                                                 
-   
+
+
+
+
 @Service
 public class MediaAccessGrantService {
 

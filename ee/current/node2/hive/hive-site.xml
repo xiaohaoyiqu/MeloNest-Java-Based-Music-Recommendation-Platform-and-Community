@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-    
-                                                                 
-                                                                  
-                                         
 
-                                              
 
-                                                                     
-                                                                   
-                                                                          
-                                                                     
-                                                               
-   
+
+
+
+
+
+
+
+
+
+
+
 
 <configuration>
 
-                                                                                  
-                               
-                      
-                   
-                 
-                                                                                   
 
-                                                                          
+
+
+
+
+
+
+
 
 <property>
   <name>javax.jdo.option.ConnectionURL</name>
@@ -47,7 +47,7 @@
   <value>${REDACTED_SECRET}</value>
 </property>
 
-                
+
 <property>
   <name>javax.jdo.option.ConnectionPoolSize</name>
   <value>10</value>
@@ -60,7 +60,7 @@
   <description>最大连接池大小</description>
 </property>
 
-               
+
 <property>
   <name>hive.metastore.warehouse.dir</name>
   <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse</value>
@@ -73,7 +73,7 @@
   <description>跳过元数据版本验证</description>
 </property>
 
-                                                                             
+
 
 <property>
   <name>fs.defaultFS</name>
@@ -86,7 +86,7 @@
   <description>ZooKeeper集群地址（使用主机名）</description>
 </property>
 
-                                                                                  
+
 
 <property>
   <name>hive.server2.thrift.bind.host</name>
@@ -115,7 +115,7 @@
   <value>true</value>
 </property>
 
-             
+
 <property>
   <name>hive.server2.thrift.max.worker.threads</name>
   <value>100</value>
@@ -128,7 +128,7 @@
   <description>最小工作线程数</description>
 </property>
 
-                                                                                
+
 
 <property>
   <name>hive.metastore.uris</name>
@@ -156,7 +156,7 @@
   <value>5s</value>
 </property>
 
-                                                                                     
+
 
 <property>
   <name>hive.execution.engine</name>
@@ -278,12 +278,12 @@
   <description>AM等待时间</description>
 </property>
 
-                                                                                     
-                                                           
-                                
-                        
-                     
-                                                                                
+
+
+
+
+
+
 
 <property>
   <name>hive.spark.job.monitor.timeout</name>
@@ -315,10 +315,10 @@
   <description>Spark on YARN应用最大重试次数</description>
 </property>
 
-                                                                                    
-                                       
-                                 
-                                                                                
+
+
+
+
 
 <property>
   <name>spark.yarn.resourcemanager.address</name>
@@ -356,7 +356,7 @@
   <description>使用Hive catalog</description>
 </property>
 
-                                                                             
+
 
 <property>
   <name>hive.exec.parallel</name>
@@ -382,7 +382,7 @@
   <description>启用中间结果压缩（Native 库已配置）</description>
 </property>
 
-                                    
+
 <property>
   <name>mapreduce.map.output.compress.codec</name>
   <value>org.apache.hadoop.io.compress.GzipCodec</value>
@@ -395,7 +395,7 @@
   <description>最终输出压缩编解码器</description>
 </property>
 
-                        
+
 <property>
   <name>spark.sql.parquet.compression.codec</name>
   <value>gzip</value>
@@ -438,7 +438,7 @@
   <description>优化动态分区排序</description>
 </property>
 
-                                                                           
+
 
 <property>
   <name>hive.exec.dynamic.partition</name>
@@ -464,7 +464,7 @@
   <description>每节点最大动态分区数</description>
 </property>
 
-                                                                           
+
 
 <property>
   <name>hive.compute.query.using.stats</name>
@@ -490,7 +490,7 @@
   <description>自动收集统计信息</description>
 </property>
 
-                                                                            
+
 
 <property>
   <name>hive.cli.print.header</name>
@@ -510,37 +510,37 @@
   <description>显示字节数</description>
 </property>
 
-                                                                               
 
-               
+
+
 <property>
   <name>hive.database.dw.name</name>
   <value>dw_haoranmusic</value>
   <description>数据仓库名称</description>
 </property>
 
-                   
+
 <property>
   <name>hive.table.ods.user_behavior.location</name>
   <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/ods_user_behavior</value>
   <description>ODS层用户行为表</description>
 </property>
 
-                   
+
 <property>
   <name>hive.table.dwd.user_behavior_fact.location</name>
   <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/dwd_user_behavior_fact</value>
   <description>DWD层用户行为事实表</description>
 </property>
 
-                   
+
 <property>
   <name>hive.table.dws.user_preference.location</name>
   <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/dws_user_preference</value>
   <description>DWS层用户偏好汇总表</description>
 </property>
 
-                   
+
 <property>
   <name>hive.table.ads_recommend_result.location</name>
   <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/ads_recommend_result</value>
@@ -553,7 +553,7 @@
   <description>ADS层热门歌曲榜单表</description>
 </property>
 
-               
+
 <property>
   <name>hive.schedule.hot_score.interval</name>
   <value>0 0 2/3 * * ?</value>

@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Map;
 
-   
-           
-                   
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/creator")
@@ -36,10 +36,10 @@ public class CreatorController {
         this.creatorService = creatorService;
     }
 
-       
-                       
-                                          
-       
+
+
+
+
     @ApiLog("申请成为创作者")
     @PostMapping("/apply")
     public Result applyCreator(HttpServletRequest request,
@@ -52,7 +52,7 @@ public class CreatorController {
                              @RequestParam(required = false) String worksSample) {
         Long userId = (Long) request.getAttribute("userId");
 
-               
+
         if (realName == null || realName.trim().isEmpty()) {
             return Result.error(400, "请输入真实姓名");
         }
@@ -70,9 +70,9 @@ public class CreatorController {
                 idCardUrl, phone, email, applyReason, worksSample));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取创作者信息")
     @GetMapping("/my")
     public Result getMyCreatorInfo(HttpServletRequest request) {
@@ -80,9 +80,9 @@ public class CreatorController {
         return Result.success(creatorService.getMyCreatorInfo(userId));
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("获取我的申请详情")
     @GetMapping("/my-application")
     public Result<CreatorApplyPublicVO> getMyApplication(HttpServletRequest request) {
@@ -99,9 +99,9 @@ public class CreatorController {
         }
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取创作者收益")
     @GetMapping("/earnings")
     public Result getCreatorEarnings(HttpServletRequest request) {
@@ -109,9 +109,9 @@ public class CreatorController {
         return Result.success(creatorService.getCreatorEarnings(userId));
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("审核创作者申请")
     @PostMapping("/review/{id}")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -128,9 +128,9 @@ public class CreatorController {
                 approved, reviewReason, creatorType, feeRate));
     }
 
-       
-                       
-       
+
+
+
     @ApiLog("查看申请详情")
     @GetMapping("/application/{id}")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -147,9 +147,9 @@ public class CreatorController {
         }
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("获取创作者列表")
     @GetMapping("/list")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -160,9 +160,9 @@ public class CreatorController {
         return Result.success(creatorService.getCreatorList(status, creatorType, page, size));
     }
 
-       
-                             
-       
+
+
+
     @ApiLog("获取待审核创作者申请")
     @GetMapping("/applications/pending")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -171,9 +171,9 @@ public class CreatorController {
         return Result.success(creatorService.getPendingApplications(page, size));
     }
 
-       
-                          
-       
+
+
+
     @ApiLog("获取待审核申请列表（脱敏）")
     @GetMapping("/applications/pending/public")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -182,9 +182,9 @@ public class CreatorController {
         return Result.success(creatorService.getPendingApplicationsPublic(page, size));
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("更新创作者状态")
     @PostMapping("/{creatorId}/status")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -194,9 +194,9 @@ public class CreatorController {
         return Result.success(creatorService.updateCreatorStatus(creatorId, status, reason));
     }
 
-       
-                   
-       
+
+
+
     @ApiLog("移除创作者身份")
     @PostMapping("/{creatorId}/remove")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -205,9 +205,9 @@ public class CreatorController {
         return Result.success(creatorService.removeCreator(creatorId, reason));
     }
 
-       
-                            
-       
+
+
+
     @ApiLog("获取创作者统计数据")
     @GetMapping("/stats")
     public Result getCreatorStats(HttpServletRequest request) {

@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -41,9 +41,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-   
-                       
-   
+
+
+
 @Slf4j
 @Service
 public class UserFriendServiceImpl implements UserFriendService {
@@ -85,7 +85,7 @@ public class UserFriendServiceImpl implements UserFriendService {
                     UserAccountStatusUtil.targetUnavailableMessage(targetUser) + "，无法添加好友");
         }
 
-                    
+
         if (isFriend(userId, targetUserId)) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "已经是好友关系");
         }
@@ -101,7 +101,7 @@ public class UserFriendServiceImpl implements UserFriendService {
         if (hasPendingFriendRequest(userId, targetUserId)) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "已有待处理的好友请求");
         }
-                                             
+
         LocalDateTime now = LocalDateTime.now();
         UserFriend request = new UserFriend();
         request.setUserId(userId);
@@ -122,7 +122,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             throw new BusinessException(ResultCode.NOT_FOUND, "好友请求不存在");
         }
 
-                           
+
         if (!request.getFriendId().equals(userId)) {
             throw new BusinessException(ResultCode.FORBIDDEN, "无权处理此请求");
         }
@@ -153,7 +153,7 @@ public class UserFriendServiceImpl implements UserFriendService {
                 throw new BusinessException(ResultCode.BUSINESS_ERROR, "需要保持互相关注后才能成为好友");
             }
 
-                                                              
+
             LocalDateTime now = LocalDateTime.now();
             request.setStatus("accepted");
             if (request.getFriendSince() == null) {
@@ -185,7 +185,7 @@ public class UserFriendServiceImpl implements UserFriendService {
 
             log.info("接受好友请求: user={}, friend={}", userId, request.getUserId());
         } else {
-                                               
+
             userFriendMapper.deleteById(requestId);
             userFriendMapper.delete(
                 new LambdaQueryWrapper<UserFriend>()
@@ -228,7 +228,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             return new ArrayList<>();
         }
 
-                         
+
         List<UserFriend> requests = userFriendMapper.selectList(
             new LambdaQueryWrapper<UserFriend>()
                 .eq(UserFriend::getFriendId, userId)
@@ -248,7 +248,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             return new ArrayList<>();
         }
 
-                    
+
         List<Long> fromUserIds = requests.stream()
                 .map(UserFriend::getUserId)
                 .distinct()
@@ -276,7 +276,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             return false;
         }
 
-                   
+
         userFriendMapper.delete(
             new LambdaQueryWrapper<UserFriend>()
                 .eq(UserFriend::getUserId, userId)
@@ -301,7 +301,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             return false;
         }
 
-                  
+
         if (!isFriend(userId, friendId)) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "只能对好友设置特别关注");
         }
@@ -332,7 +332,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             return false;
         }
 
-                     
+
         UserFriend friend = userFriendMapper.selectOne(
             new LambdaQueryWrapper<UserFriend>()
                 .eq(UserFriend::getUserId, userId)
@@ -357,7 +357,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             groupName = groupRecord.getFriendGroup();
         }
 
-                                           
+
         UserFriend updateEntity = new UserFriend();
         updateEntity.setFriendGroup(groupName);
         int updated = userFriendMapper.update(updateEntity,
@@ -391,7 +391,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "好友分组最多20个");
         }
 
-                    
+
         Long existingCount = userFriendMapper.selectCount(
             new LambdaQueryWrapper<UserFriend>()
                 .eq(UserFriend::getUserId, userId)
@@ -403,7 +403,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             throw new BusinessException(ResultCode.BUSINESS_ERROR, "分组已存在");
         }
 
-                   
+
         UserFriend friend = new UserFriend();
         friend.setUserId(userId);
         friend.setFriendId(0L);        
@@ -457,7 +457,7 @@ public class UserFriendServiceImpl implements UserFriendService {
         if (blocked) {
             return Boolean.TRUE.equals(userBlacklistService.addToBlacklist(userId, friendId, "好友页拉黑"));
         }
-                                       
+
         return Boolean.TRUE.equals(userBlacklistService.removeFromBlacklist(userId, friendId));
     }
 
@@ -516,7 +516,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             return new ArrayList<>();
         }
 
-                 
+
         List<UserFriend> friends = userFriendMapper.selectList(
             new LambdaQueryWrapper<UserFriend>()
                 .eq(UserFriend::getUserId, userId)
@@ -529,7 +529,7 @@ public class UserFriendServiceImpl implements UserFriendService {
 
     @Override
     public List<FriendGroupVO> getFriendGroups(Long userId) {
-                                     
+
         List<UserFriend> groupRecords = userFriendMapper.selectList(
             new LambdaQueryWrapper<UserFriend>()
                 .select(UserFriend::getId, UserFriend::getFriendGroup, UserFriend::getCreateTime)
@@ -546,7 +546,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             vo.setGroupName(record.getFriendGroup());
             vo.setCreateTime(record.getCreateTime() != null ? record.getCreateTime().toString() : null);
 
-                          
+
             Long count = userFriendMapper.selectCount(
                 new LambdaQueryWrapper<UserFriend>()
                     .eq(UserFriend::getUserId, userId)
@@ -567,7 +567,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             return false;
         }
 
-                 
+
         UserFriend groupRecord = userFriendMapper.selectOne(
             new LambdaQueryWrapper<UserFriend>()
                 .eq(UserFriend::getUserId, userId)
@@ -581,10 +581,10 @@ public class UserFriendServiceImpl implements UserFriendService {
 
         String groupName = groupRecord.getFriendGroup();
 
-                   
+
         userFriendMapper.deleteById(groupId);
 
-                        
+
         if (ObjectUtils.isNotEmpty(groupName)) {
             UserFriend updateEntity = new UserFriend();
             updateEntity.setFriendGroup(null);
@@ -601,9 +601,9 @@ public class UserFriendServiceImpl implements UserFriendService {
     }
 
 
-       
-                                  
-       
+
+
+
     private List<FriendVO> buildFriendVoList(Long userId,
                                              List<UserFriend> relations,
                                              boolean requireMutualFollow,
@@ -689,9 +689,9 @@ public class UserFriendServiceImpl implements UserFriendService {
                 .collect(Collectors.toSet());
     }
 
-       
-               
-       
+
+
+
     private FriendVO convertToFriendVO(UserFriend relation, User user, boolean isMutual, VipLevel vipLevel) {
         if (user == null) {
             return null;
@@ -702,7 +702,7 @@ public class UserFriendServiceImpl implements UserFriendService {
         vo.setUsername(user.getUsername());
         vo.setNickname(user.getNickname());
         vo.setAvatar(user.getAvatar());
-                                    
+
         vo.setSignature(user.getIntroduction());
         vo.setRole(user.getRole());
         vo.setStatus(user.getStatus());
@@ -716,10 +716,10 @@ public class UserFriendServiceImpl implements UserFriendService {
         vo.setIsVip(effectiveVipLevel.isPaidVip());
         vo.setVipLevel(effectiveVipLevel.getCode());
 
-                
+
         vo.setCreditScore(user.getCreditScore());
 
-                     
+
         if (relation != null) {
             vo.setFriendGroup(relation.getFriendGroup());
             vo.setRemark(relation.getRemark());
@@ -727,11 +727,11 @@ public class UserFriendServiceImpl implements UserFriendService {
             vo.setFriendSince(relation.getFriendSince());
         }
 
-                    
+
         vo.setRelationType("friend");
         vo.setIsMutual(relation != null && isMutual);
 
-                    
+
         if (user.getFansCount() != null) {
             vo.setFansCount(user.getFansCount().longValue());
         }
@@ -775,12 +775,12 @@ public class UserFriendServiceImpl implements UserFriendService {
         }
     }
 
-       
-                
-                       
-                              
-                     
-       
+
+
+
+
+
+
     private FriendRequestVO convertToFriendRequestVO(UserFriend request, User fromUser) {
         if (request == null) {
             return null;
@@ -797,7 +797,7 @@ public class UserFriendServiceImpl implements UserFriendService {
             vo.setFromUsername(fromUser.getUsername());
             vo.setFromNickname(fromUser.getNickname());
             vo.setFromAvatar(fromUser.getAvatar());
-                                        
+
             vo.setFromSignature(fromUser.getIntroduction());
             vo.setFromStatus(fromUser.getStatus());
             vo.setFromUserType(fromUser.getUserType());

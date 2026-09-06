@@ -41,11 +41,11 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Consumer;
 import javax.annotation.Resource;
 
-   
-            
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class VideoPostServiceImpl implements VideoPostService {
@@ -170,14 +170,14 @@ public class VideoPostServiceImpl implements VideoPostService {
         }
     }
 
-       
-                                                          
-      
-                                      
-                                       
-                                  
-                                                                              
-       
+
+
+
+
+
+
+
+
     public String transcodeVideoOnDemand(String baseName, String quality, int crf) {
         String normalizedQuality = normalizeQuality(quality);
         String variantFilename = baseName + "_" + normalizedQuality + ".mp4";
@@ -190,11 +190,11 @@ public class VideoPostServiceImpl implements VideoPostService {
         return buildPublicUrl("posts/videos/original/" + baseName + "_original.mp4");
     }
 
-       
-                                                                         
-      
-                                 
-       
+
+
+
+
+
     public int cleanupExpiredCache() {
         File cacheDir = new File(postMediaConfig.getVideoCachePath());
         if (!cacheDir.exists()) {

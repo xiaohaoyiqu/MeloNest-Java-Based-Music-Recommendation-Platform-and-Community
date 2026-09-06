@@ -1,7 +1,7 @@
-   
-                      
-                              
-   
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -16,50 +16,50 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Iterator;
 
-   
-          
-                            
-   
+
+
+
+
 @Slf4j
 public class ImageCompressUtil {
 
-       
-                      
-                                             
-       
+
+
+
+
     private static final float DEFAULT_QUALITY = 0.85f;
 
-       
-                 
-       
+
+
+
     private static final int MAX_WIDTH = 1920;
 
-       
-                 
-       
+
+
+
     private static final int MAX_HEIGHT = 1920;
 
-       
-             
-      
-                              
-                               
-                           
-                               
-       
+
+
+
+
+
+
+
+
     public static long compressImage(String sourcePath, String targetPath) throws IOException {
         return compressImage(sourcePath, targetPath, DEFAULT_QUALITY);
     }
 
-       
-                   
-      
-                              
-                               
-                                      
-                           
-                               
-       
+
+
+
+
+
+
+
+
+
     public static long compressImage(String sourcePath, String targetPath, float quality) throws IOException {
         File sourceFile = new File(sourcePath);
         if (!sourceFile.exists()) {
@@ -69,13 +69,13 @@ public class ImageCompressUtil {
         long originalSize = sourceFile.length();
         log.debug("event=image_compress_started originalBytes={} quality={}", originalSize, quality);
 
-               
+
         BufferedImage image = ImageIO.read(sourceFile);
         if (image == null) {
             throw new IOException("无法读取图片文件: " + sourcePath);
         }
 
-                   
+
         BufferedImage processedImage = image;
         if (image.getWidth() > MAX_WIDTH || image.getHeight() > MAX_HEIGHT) {
             processedImage = scaleImage(image, MAX_WIDTH, MAX_HEIGHT);
@@ -84,18 +84,18 @@ public class ImageCompressUtil {
                     processedImage.getWidth(), processedImage.getHeight());
         }
 
-                  
+
         String formatName = getImageFormatName(sourcePath);
 
-                
+
         File targetFile = new File(targetPath);
         targetFile.getParentFile().mkdirs();
 
         if ("png".equalsIgnoreCase(formatName)) {
-                        
+
             compressPNG(processedImage, targetFile);
         } else {
-                              
+
             compressWithQuality(processedImage, targetFile, formatName, quality);
         }
 
@@ -108,27 +108,27 @@ public class ImageCompressUtil {
         return compressedSize;
     }
 
-       
-                 
-      
-                              
-                                            
-                       
-                               
-       
+
+
+
+
+
+
+
+
     public static byte[] compressImage(byte[] imageData, String formatName) throws IOException {
         return compressImage(imageData, formatName, DEFAULT_QUALITY);
     }
 
-       
-                      
-      
-                              
-                             
-                             
-                       
-                               
-       
+
+
+
+
+
+
+
+
+
     public static byte[] compressImage(byte[] imageData, String formatName, float quality) throws IOException {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(imageData)) {
             BufferedImage image = ImageIO.read(bis);
@@ -136,13 +136,13 @@ public class ImageCompressUtil {
                 throw new IOException("无法读取图片数据");
             }
 
-                   
+
             BufferedImage processedImage = image;
             if (image.getWidth() > MAX_WIDTH || image.getHeight() > MAX_HEIGHT) {
                 processedImage = scaleImage(image, MAX_WIDTH, MAX_HEIGHT);
             }
 
-                      
+
             try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
                 if ("png".equalsIgnoreCase(formatName)) {
                     ImageIO.write(processedImage, "png", bos);
@@ -154,19 +154,19 @@ public class ImageCompressUtil {
         }
     }
 
-       
-                  
-      
-                                
-                                
-                                
-                     
-       
+
+
+
+
+
+
+
+
     private static BufferedImage scaleImage(BufferedImage originalImage, int maxWidth, int maxHeight) {
         int originalWidth = originalImage.getWidth();
         int originalHeight = originalImage.getHeight();
 
-                 
+
         double widthRatio = (double) maxWidth / originalWidth;
         double heightRatio = (double) maxHeight / originalHeight;
         double ratio = Math.min(widthRatio, heightRatio);
@@ -174,7 +174,7 @@ public class ImageCompressUtil {
         int newWidth = (int) (originalWidth * ratio);
         int newHeight = (int) (originalHeight * ratio);
 
-                   
+
         BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
         java.awt.Graphics2D g2d = scaledImage.createGraphics();
         try {
@@ -192,15 +192,15 @@ public class ImageCompressUtil {
         return scaledImage;
     }
 
-       
-              
-      
-                          
-                             
-                             
-                                   
-                               
-       
+
+
+
+
+
+
+
+
+
     private static void compressWithQuality(BufferedImage image, File outputFile,
                                            String formatName, float quality) throws IOException {
         try (FileOutputStream fos = new FileOutputStream(outputFile);
@@ -227,15 +227,15 @@ public class ImageCompressUtil {
         }
     }
 
-       
-                  
-      
-                          
-                              
-                             
-                          
-                               
-       
+
+
+
+
+
+
+
+
+
     private static void compressWithQuality(BufferedImage image, OutputStream outputStream,
                                            String formatName, float quality) throws IOException {
         try (ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream)) {
@@ -260,16 +260,16 @@ public class ImageCompressUtil {
         }
     }
 
-       
-              
-      
-                          
-                             
-                               
-       
+
+
+
+
+
+
+
     private static void compressPNG(BufferedImage image, File outputFile) throws IOException {
-                           
-                    
+
+
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("png");
         if (!writers.hasNext()) {
             throw new IOException("不支持PNG格式");
@@ -293,12 +293,12 @@ public class ImageCompressUtil {
         }
     }
 
-       
-               
-      
-                           
-                       
-       
+
+
+
+
+
+
     private static String getImageFormatName(String filePath) {
         String extension = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
         if (extension.equals("jpg")) {
@@ -307,12 +307,12 @@ public class ImageCompressUtil {
         return extension;
     }
 
-       
-              
-      
-                       
-                       
-       
+
+
+
+
+
+
     private static String formatSize(long bytes) {
         if (bytes < 1024) {
             return bytes + " B";
@@ -323,25 +323,25 @@ public class ImageCompressUtil {
         }
     }
 
-       
-                
-                       
-      
-                                 
-                      
-       
+
+
+
+
+
+
+
     public static float getRecommendedQuality(long fileSize) {
         if (fileSize < 100 * 1024) {
-                            
+
             return 0.95f;
         } else if (fileSize < 500 * 1024) {
-                                 
+
             return 0.85f;
         } else if (fileSize < 1024 * 1024) {
-                               
+
             return 0.75f;
         } else {
-                           
+
             return 0.65f;
         }
     }

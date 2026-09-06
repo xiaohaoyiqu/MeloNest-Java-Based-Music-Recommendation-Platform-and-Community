@@ -8,21 +8,21 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-   
-                
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class RankingSnapshotRefreshTask {
     private final RankingSnapshotBuildService rankingSnapshotBuildService;
 
-       
-                                         
-      
-  
+
+
+
+
     @Scheduled(cron = "${schedule.task.ranking-snapshot-build-cron:0 0/30 * * * ?}")
     public void refreshHotSongSnapshot() {
         LocalDateTime windowEnd = alignWindowEnd(LocalDateTime.now());
@@ -35,12 +35,12 @@ public class RankingSnapshotRefreshTask {
         }
     }
 
-       
-                        
-      
-                       
-                            
-  
+
+
+
+
+
+
     static LocalDateTime alignWindowEnd(LocalDateTime time) {
         int alignedMinute = time.getMinute() < 30 ? 0 : 30;
         return time.withMinute(alignedMinute).withSecond(0).withNano(0);

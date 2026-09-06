@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-   
-                      
-                     
-   
+
+
+
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("playlist")
@@ -28,31 +28,31 @@ public class Playlist extends BaseEntity implements Serializable {
     private Integer type;
     private Integer isPublic;
 
-       
-          
-       
+
+
+
     private Long songCount;
 
-       
-           
-       
+
+
+
     private Long playCount;
 
-       
-           
-       
+
+
+
     private Long favoriteCount;
 
-       
-           
-       
+
+
+
     private Long visitCount;
 
     private Integer status;
 
-       
-                      
-       
+
+
+
     private Integer isFeatured;
 
     private Integer deleted;
@@ -62,37 +62,37 @@ public class Playlist extends BaseEntity implements Serializable {
     private BigDecimal price;
     private Integer subscribePeriod;
 
-                                                       
 
-       
-                      
-       
+
+
+
+
     private Integer allowDownload;
 
-       
-                      
-       
+
+
+
     private Integer allowComment;
 
-       
-                      
-       
+
+
+
     private Integer allowShare;
 
-                                                     
 
-       
-                    
-       
+
+
+
+
     private String intro;
 
-       
-                               
-       
+
+
+
     private String category;
 
-       
-            
-       
+
+
+
     private Long creatorId;
 }

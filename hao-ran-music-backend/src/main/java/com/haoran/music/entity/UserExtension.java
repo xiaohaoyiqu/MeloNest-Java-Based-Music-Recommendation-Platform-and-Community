@@ -6,10 +6,10 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-                      
-                                
-   
+
+
+
+
 @Data
 @TableName("user_extension")
 public class UserExtension implements Serializable {
@@ -19,53 +19,53 @@ public class UserExtension implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-       
-           
-       
+
+
+
     private Long userId;
 
-       
-                     
-       
+
+
+
     private Integer isCreator;
 
-       
-                             
-       
+
+
+
     private Integer creatorType;
 
-       
-                        
-       
+
+
+
     private Integer verified;
 
-       
-          
-       
+
+
+
     private Integer followerCount;
 
-       
-          
-       
+
+
+
     private Integer followingCount;
 
-       
-           
-       
+
+
+
     private Integer worksCount;
 
-       
-           
-       
+
+
+
     private Long totalPlays;
 
-       
-           
-       
+
+
+
     private LocalDateTime createTime;
 
-       
-           
-       
+
+
+
     private LocalDateTime updateTime;
 }

@@ -44,11 +44,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-   
-                                                          
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -100,8 +100,8 @@ public class SubmissionAlbumPublishServiceImpl implements SubmissionAlbumPublish
         metadata.allowDownload = work.getAllowDownload();
         metadata.allowComment = work.getAllowComment();
         metadata.allowShare = work.getAllowShare();
-                                                                                       
-                                                                        
+
+
         metadata.isPaid = 0;
         metadata.price = null;
         metadata.artistName = resolveUserName(work.getUserId(), "creator_");

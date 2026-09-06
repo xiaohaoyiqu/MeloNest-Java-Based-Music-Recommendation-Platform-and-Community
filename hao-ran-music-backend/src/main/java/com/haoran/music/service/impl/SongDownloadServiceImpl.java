@@ -29,10 +29,10 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class SongDownloadServiceImpl implements SongDownloadService {
@@ -59,29 +59,29 @@ public class SongDownloadServiceImpl implements SongDownloadService {
             UserAccountStatusUtil.requireCanInteract(userId, userMapper::selectById, "下载歌曲");
         }
 
-                 
+
         Song song = songMapper.selectById(songId);
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌曲不存在");
         }
         contentAccessService.requireSongAccess(song, userId);
 
-                    
+
         checkVipPermissionForQuality(userId, quality);
 
-                     
+
         String downloadUrl = getDownloadUrl(song, quality);
         if (StrUtil.isBlank(downloadUrl)) {
             throw new BusinessException("该音质暂无下载资源");
         }
 
-                 
+
         Long fileSize = getFileSize(song, quality);
         if (fileSize == null || fileSize == 0) {
             fileSize = 0L;
         }
 
-                
+
         response.setContentType("audio/mpeg");
         response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s - %s.mp3\"",
                 song.getArtistNames(), song.getName()));
@@ -89,7 +89,7 @@ public class SongDownloadServiceImpl implements SongDownloadService {
             response.setContentLengthLong(fileSize);
         }
 
-                       
+
         if (userId != null) {
             try {
                 recommendService.recordUserAction(userId, "download", songId, 1);
@@ -99,10 +99,10 @@ public class SongDownloadServiceImpl implements SongDownloadService {
             }
         }
 
-                               
+
         streamDownload(downloadUrl, response);
 
-                      
+
         if (canContributeDownloadStats(userId, song)) {
             try {
                 songMapper.updateDownloadCount(songId);
@@ -129,7 +129,7 @@ public class SongDownloadServiceImpl implements SongDownloadService {
         info.put("songName", song.getName());
         info.put("artistNames", song.getArtistNames());
 
-                   
+
         Map<String, Long> sizes = new HashMap<>();
         if (song.getSizeStandard() != null && song.getSizeStandard() > 0) {
             sizes.put("standard", song.getSizeStandard());
@@ -142,7 +142,7 @@ public class SongDownloadServiceImpl implements SongDownloadService {
         }
         info.put("sizes", sizes);
 
-                                          
+
         String controlledUrl = "/api/song/download/" + songId + "?quality=" + quality;
         Long size = getFileSize(song, quality);
         info.put("url", controlledUrl);
@@ -152,21 +152,21 @@ public class SongDownloadServiceImpl implements SongDownloadService {
         return info;
     }
 
-       
-                     
-                         
-                          
-       
+
+
+
+
+
     private void checkVipPermissionForQuality(Long userId, String quality) {
-                 
+
         SoundQuality soundQuality = SoundQuality.fromCode(quality);
 
-                     
+
         if (soundQuality.isRequireVip()) {
             if (userId == null) {
                 throw new BusinessException(ResultCode.UNAUTHORIZED, "请先登录");
             }
-                             
+
             Boolean isVip = userVipService.isVip(userId);
             if (isVip == null || !isVip) {
                 throw new BusinessException("该音质需要VIP会员才能下载，请开通VIP后重试");
@@ -203,13 +203,13 @@ public class SongDownloadServiceImpl implements SongDownloadService {
         }
     }
 
-       
-                 
-      
-                         
-                        
-                   
-       
+
+
+
+
+
+
+
     private Long getFileSize(Song song, String quality) {
         switch (quality) {
             case "high":
@@ -221,12 +221,12 @@ public class SongDownloadServiceImpl implements SongDownloadService {
         }
     }
 
-       
-                                   
-      
-                           
-                             
-       
+
+
+
+
+
+
     private void streamDownload(String fileUrl, HttpServletResponse response) {
         HttpURLConnection connection = null;
         java.io.InputStream in = null;
@@ -245,7 +245,7 @@ public class SongDownloadServiceImpl implements SongDownloadService {
                 throw new BusinessException("获取音频资源失败: HTTP " + responseCode);
             }
 
-                                          
+
             int contentLength = connection.getContentLength();
             if (contentLength > 0) {
                 response.setContentLengthLong(contentLength);

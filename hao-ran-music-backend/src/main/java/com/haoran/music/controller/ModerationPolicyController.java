@@ -18,10 +18,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/admin/moderation-policy")
@@ -31,9 +31,9 @@ public class ModerationPolicyController {
     @Autowired
     private ModerationPolicyService policyService;
 
-       
-                
-       
+
+
+
     @PostMapping("/update")
     public Result<Void> updatePolicy(@Valid @RequestBody PolicyUpdateDTO dto) {
         log.info("event=moderation_policy_update_requested policyCode={}", dto.getPolicyCode());
@@ -47,18 +47,18 @@ public class ModerationPolicyController {
         return Result.success();
     }
 
-       
-             
-       
+
+
+
     @GetMapping("/list")
     public Result<?> listPolicies() {
         return Result.success(policyService.list());
     }
 
 
-       
-                   
-       
+
+
+
     @GetMapping("/{policyCode}")
     public Result<ModerationPolicy> getPolicyByCode(@PathVariable String policyCode) {
         ModerationPolicy policy = policyService.getOne(
@@ -72,9 +72,9 @@ public class ModerationPolicyController {
         }
         return Result.success(policy);
     }
-       
-              
-       
+
+
+
     static class PolicyUpdateDTO {
         @NotBlank(message = "规则编码不能为空")
         @Size(max = 64, message = "规则编码不能超过64个字符")

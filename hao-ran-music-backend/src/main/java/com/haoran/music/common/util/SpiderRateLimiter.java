@@ -9,10 +9,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                                  
-   
+
+
+
+
 @Slf4j
 @Component
 public class SpiderRateLimiter {
@@ -25,11 +25,11 @@ public class SpiderRateLimiter {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-       
-                     
-      
-                                         
-       
+
+
+
+
+
     public boolean checkRateLimit() {
         String today = LocalDate.now().format(DATE_FORMATTER);
         String key = "spider:count:" + today;
@@ -46,9 +46,9 @@ public class SpiderRateLimiter {
                 return false;
             }
 
-                   
+
             Long newCount = redisUtils.increment(key);
-                          
+
             if (newCount == 1) {
                 redisUtils.expire(key, 24, TimeUnit.HOURS);
             }
@@ -58,16 +58,16 @@ public class SpiderRateLimiter {
 
         } catch (Exception e) {
             log.error("[SpiderRateLimiter] 检查限流失败");
-                               
+
             return true;
         }
     }
 
-       
-                 
-      
-                   
-       
+
+
+
+
+
     public int getRemainingCount() {
         String today = LocalDate.now().format(DATE_FORMATTER);
         String key = "spider:count:" + today;
@@ -85,11 +85,11 @@ public class SpiderRateLimiter {
         }
     }
 
-       
-                
-      
-                    
-       
+
+
+
+
+
     public int getCurrentCount() {
         String today = LocalDate.now().format(DATE_FORMATTER);
         String key = "spider:count:" + today;
@@ -106,11 +106,11 @@ public class SpiderRateLimiter {
         }
     }
 
-       
-                       
-      
-                   
-       
+
+
+
+
+
     public boolean resetTodayCount() {
         String today = LocalDate.now().format(DATE_FORMATTER);
         String key = "spider:_count:" + today;

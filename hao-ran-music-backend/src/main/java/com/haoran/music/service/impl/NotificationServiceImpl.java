@@ -33,10 +33,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Notification> implements NotificationService {
@@ -53,19 +53,19 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     @Autowired
     private RedisUtils redisUtils;
 
-       
-               
-       
+
+
+
     private static final String UNREAD_COUNT_PREFIX = "notification:unread:";
 
-       
-                     
-       
+
+
+
     private static final int CACHE_TTL = 300;
 
-       
-                                
-       
+
+
+
     private static final int AGGREGATE_WINDOW_HOURS = 1;
 
     @Override
@@ -86,10 +86,10 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
         requireNotificationInserted(notification);
 
-                   
+
         clearUnreadCountCache(userId);
 
-                        
+
         sendWebSocketNotification(userId, notification);
 
         log.debug("event=notification_created type={} userId={} notificationId={} relatedId={}",
@@ -114,10 +114,10 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
         requireNotificationInserted(notification);
 
-                   
+
         clearUnreadCountCache(userId);
 
-                        
+
         sendWebSocketNotification(userId, notification);
 
         log.debug("event=notification_created type={} userId={} notificationId={} relatedId={}",
@@ -141,10 +141,10 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
         requireNotificationInserted(notification);
 
-                   
+
         clearUnreadCountCache(userId);
 
-                        
+
         sendWebSocketNotification(userId, notification);
 
         log.debug("event=notification_created type={} userId={} notificationId={}",
@@ -168,10 +168,10 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
         requireNotificationInserted(notification);
 
-                   
+
         clearUnreadCountCache(userId);
 
-                        
+
         sendWebSocketNotification(userId, notification);
 
         log.debug("event=notification_created type={} userId={} notificationId={}",
@@ -189,7 +189,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         notification.setUserId(userId);
         notification.setType("system");
         notification.setTitle(title);
-                                         
+
         if (ObjectUtils.isNotEmpty(content)) {
             SecurityCheckUtil.CheckResult contentCheck = SecurityCheckUtil.checkDescription(content);
             if (!contentCheck.isSafe()) {
@@ -205,25 +205,25 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
         requireNotificationInserted(notification);
 
-                   
+
         clearUnreadCountCache(userId);
 
-                        
+
         sendWebSocketNotification(userId, notification);
 
         log.debug("event=notification_created type={} userId={} notificationId={}",
                 notification.getType(), userId, notification.getId());
     }
 
-       
-                                           
-      
-                           
-                      
-                        
-                       
-                               
-       
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendSystemNotificationOnce(Long userId, String title, String content,
@@ -295,7 +295,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return false;
         }
 
-                    
+
         Notification notification = notificationMapper.selectById(notificationId);
         if (notification == null || !notification.getUserId().equals(userId)) {
             return false;
@@ -305,7 +305,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return true;
         }
 
-                                       
+
         boolean success = notificationMapper.update(null,
                 new LambdaUpdateWrapper<Notification>()
                         .eq(Notification::getId, notificationId)
@@ -315,13 +315,13 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         ) > 0;
 
         if (success) {
-                       
+
             clearUnreadCountCache(userId);
             sendWebSocketReadEvent(userId, notificationId);
             return true;
         }
 
-                                                   
+
         Notification current = notificationMapper.selectById(notificationId);
         return current != null
                 && userId.equals(current.getUserId())
@@ -342,7 +342,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
                         .set(Notification::getIsRead, 1)
         );
 
-                   
+
         clearUnreadCountCache(userId);
         if (count > 0) {
             sendWebSocketAllReadEvent(userId, count);
@@ -358,17 +358,17 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return false;
         }
 
-                    
+
         Notification notification = notificationMapper.selectById(notificationId);
         if (notification == null || !notification.getUserId().equals(userId)) {
             return false;
         }
 
-               
+
         boolean success = notificationMapper.deleteById(notificationId) > 0;
 
         if (success && Integer.valueOf(0).equals(notification.getIsRead())) {
-                              
+
             clearUnreadCountCache(userId);
         }
 
@@ -386,7 +386,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
                 .eq(Notification::getIsRead, 1));
     }
 
-                                                           
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -396,14 +396,14 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return;
         }
 
-                  
+
         String groupId = generateGroupId("reward", creatorId, resourceId);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime timeWindowStart = now.minusHours(AGGREGATE_WINDOW_HOURS);
 
         Notification existing = lockRecentGroupNotification(creatorId, groupId, timeWindowStart);
 
-                
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("senderName", senderName);
         metadata.put("amount", amount);
@@ -412,7 +412,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         metadata.put("senderId", senderId);
 
         if (existing != null) {
-                       
+
             existing.setGroupCount(existing.getGroupCount() + 1);
             existing.setGroupAmount(existing.getGroupAmount().add(amount));
             existing.setCreateTime(now);              
@@ -421,16 +421,16 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
                     existing.getGroupAmount(), resourceName));
             requireNotificationUpdated(existing);
 
-                       
+
             clearUnreadCountCache(creatorId);
 
-                          
+
             sendWebSocketNotification(creatorId, existing, false);
 
             log.debug("event=notification_aggregate_updated type={} userId={} groupId={} count={}",
                     "reward", creatorId, groupId, existing.getGroupCount());
         } else {
-                    
+
             Notification notification = new Notification();
             notification.setUserId(creatorId);
             notification.setSenderId(senderId);
@@ -450,10 +450,10 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
             requireNotificationInserted(notification);
 
-                       
+
             clearUnreadCountCache(creatorId);
 
-                          
+
             sendWebSocketNotification(creatorId, notification);
 
             log.debug("event=notification_created type={} userId={} notificationId={} relatedId={}",
@@ -469,14 +469,14 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return;
         }
 
-                         
+
         String groupId = generateGroupId("subscribe", creatorId, playlistId);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime timeWindowStart = now.minusHours(AGGREGATE_WINDOW_HOURS);
 
         Notification existing = lockRecentGroupNotification(creatorId, groupId, timeWindowStart);
 
-                
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("subscriberName", subscriberName);
         metadata.put("playlistName", playlistName);
@@ -485,7 +485,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         metadata.put("subscriberId", subscriberId);
 
         if (existing != null) {
-                       
+
             existing.setGroupCount(existing.getGroupCount() + 1);
             existing.setGroupAmount(existing.getGroupAmount().add(amount));
             existing.setCreateTime(now);
@@ -500,7 +500,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             log.debug("event=notification_aggregate_updated type={} userId={} groupId={} count={}",
                     "subscribe", creatorId, groupId, existing.getGroupCount());
         } else {
-                    
+
             Notification notification = new Notification();
             notification.setUserId(creatorId);
             notification.setSenderId(subscriberId);
@@ -535,14 +535,14 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return;
         }
 
-                  
+
         String groupId = generateGroupId("like", resourceOwnerId, resourceId);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime timeWindowStart = now.minusHours(AGGREGATE_WINDOW_HOURS);
 
         Notification existing = lockRecentGroupNotification(resourceOwnerId, groupId, timeWindowStart);
 
-                
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("likerName", likerName);
         metadata.put("resourceType", resourceType);
@@ -551,7 +551,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         metadata.put("likerId", likerId);
 
         if (existing != null) {
-                       
+
             existing.setGroupCount(existing.getGroupCount() + 1);
             existing.setCreateTime(now);
             existing.setSenderName(getAggregatedSenderName(existing, likerName));
@@ -565,7 +565,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             log.debug("event=notification_aggregate_updated type={} userId={} groupId={} count={}",
                     "like", resourceOwnerId, groupId, existing.getGroupCount());
         } else {
-                    
+
             Notification notification = new Notification();
             notification.setUserId(resourceOwnerId);
             notification.setSenderId(likerId);
@@ -598,20 +598,20 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return;
         }
 
-                           
+
         String groupId = generateGroupId("follow", followeeId, null);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime timeWindowStart = now.minusHours(AGGREGATE_WINDOW_HOURS);
 
         Notification existing = lockRecentGroupNotification(followeeId, groupId, timeWindowStart);
 
-                
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("followerName", followerName);
         metadata.put("followerId", followerId);
 
         if (existing != null) {
-                       
+
             existing.setGroupCount(existing.getGroupCount() + 1);
             existing.setCreateTime(now);
             existing.setSenderName(getAggregatedSenderName(existing, followerName));
@@ -625,7 +625,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             log.debug("event=notification_aggregate_updated type={} userId={} groupId={} count={}",
                     "follow", followeeId, groupId, existing.getGroupCount());
         } else {
-                    
+
             Notification notification = new Notification();
             notification.setUserId(followeeId);
             notification.setSenderId(followerId);
@@ -658,7 +658,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return;
         }
 
-                           
+
         Notification notification = new Notification();
         notification.setUserId(creatorId);
         notification.setType("revenue");
@@ -764,7 +764,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             vo.setMetadata(notification.getMetadata());
             vo.setResourceId(notification.getRelatedId());
 
-                            
+
             if (notification.getMetadata() != null) {
                 try {
                     @SuppressWarnings("unchecked")
@@ -790,16 +790,16 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         return result;
     }
 
-                                                       
 
-       
-                         
-      
-                                                 
-                                       
-                                             
-                                                                
-       
+
+
+
+
+
+
+
+
+
     private boolean insertNotificationOnce(Notification notification, String businessKey) {
         notification.setBusinessKey(businessKey);
         notification.setDeleted(0);
@@ -822,17 +822,17 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         return normalized.length() <= 200 ? normalized : normalized.substring(0, 200);
     }
 
-       
-                                            
-                                             
-                                            
-      
-                          
-                           
-                                          
-                                        
-                                                         
-       
+
+
+
+
+
+
+
+
+
+
+
     private Notification lockRecentGroupNotification(Long userId, String groupId,
                                                        LocalDateTime timeWindowStart) {
         Notification candidate = notificationMapper.selectOne(
@@ -853,9 +853,9 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
                 recentGroupQuery(userId, groupId, timeWindowStart, null, true));
     }
 
-       
-                                   
-       
+
+
+
     private LambdaQueryWrapper<Notification> recentGroupQuery(Long userId, String groupId,
                                                                LocalDateTime timeWindowStart,
                                                                Long notificationId, boolean forUpdate) {
@@ -872,44 +872,44 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         return wrapper;
     }
 
-       
-              
-                                             
-       
+
+
+
+
     private String generateGroupId(String type, Long userId, Long relatedId) {
         String dateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String relatedIdStr = relatedId != null ? relatedId.toString() : "null";
         return type + ":" + userId + ":" + relatedIdStr + ":" + dateStr;
     }
 
-       
-                    
-                         
-       
+
+
+
+
     private String getAggregatedSenderName(Notification existing, String newName) {
         String existingNames = existing.getSenderName();
         if (existingNames == null) {
             return newName;
         }
 
-                     
+
         if (existingNames.contains(newName)) {
             return existingNames;
         }
 
-                                  
+
         String[] names = existingNames.split("、");
         if (names.length >= 2) {
             return existingNames;
         }
 
-                
+
         return existingNames + "、" + newName;
     }
 
-       
-               
-       
+
+
+
     private String buildAggregatedContent(String type, int count, BigDecimal amount, String resourceName) {
         switch (type) {
             case "reward":
@@ -925,33 +925,33 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         }
     }
 
-       
-                                     
-      
-                                 
-                                                               
-       
+
+
+
+
+
+
     private void requireNotificationInserted(Notification notification) {
         if (notificationMapper.insert(notification) != 1) {
             throw new BusinessException("通知写入失败");
         }
     }
 
-       
-                                   
-      
-                                      
-                                                               
-       
+
+
+
+
+
+
     private void requireNotificationUpdated(Notification notification) {
         if (notificationMapper.updateById(notification) != 1) {
             throw new BusinessException("通知更新失败");
         }
     }
 
-       
-               
-       
+
+
+
     private void clearUnreadCountCache(Long userId) {
         if (userId != null) {
             String cacheKey = UNREAD_COUNT_PREFIX + userId;
@@ -959,9 +959,9 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         }
     }
 
-       
-                      
-       
+
+
+
     private void sendWebSocketNotification(Long userId, Notification notification) {
         sendWebSocketNotification(userId, notification, true);
     }
@@ -1134,14 +1134,14 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         }
     }
 
-       
-                                         
-                                                  
-      
-                          
-                                 
-                                                     
-       
+
+
+
+
+
+
+
+
     private void sendWebSocketNotification(Long userId, Notification notification, boolean unreadDelta) {
         if (ObjectUtils.isNotEmpty(notificationDeliveryOutboxService)) {
             String eventId = notificationDeliveryOutboxService.record(notification, unreadDelta);
@@ -1177,9 +1177,9 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         });
     }
 
-       
-                                
-       
+
+
+
     private void sendWebSocketReadEvent(Long userId, Long notificationId) {
         runAfterCommit(() -> {
             if (webSocketService == null) {
@@ -1201,9 +1201,9 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         });
     }
 
-       
-                
-       
+
+
+
     private void sendWebSocketAllReadEvent(Long userId, int count) {
         runAfterCommit(() -> {
             if (webSocketService == null) {
@@ -1252,7 +1252,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         notification.setIsRead(0);
         notification.setCreateTime(LocalDateTime.now());
 
-                
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("reportId", reportId);
         metadata.put("result", result);
@@ -1297,7 +1297,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         notification.setIsRead(0);
         notification.setCreateTime(LocalDateTime.now());
 
-                
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("feedbackId", feedbackId);
         metadata.put("result", result);
@@ -1329,7 +1329,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
                 notification.getType(), feedbackerId, notification.getId(), feedbackId);
     }
 
-                                                           
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -1347,11 +1347,11 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return false;
         }
 
-               
+
         boolean success = notificationMapper.deleteById(notificationId) > 0;
 
         if (success) {
-                                
+
             if (notification.getIsRead() == 0) {
                 clearUnreadCountCache(notification.getUserId());
             }
@@ -1375,22 +1375,22 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         LambdaQueryWrapper<Notification> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Notification::getUserId, userId);
 
-                             
+
         if (type != null && !type.isEmpty()) {
             wrapper.eq(Notification::getType, type);
         }
 
-                  
+
         wrapper.eq(Notification::getIsRead, 0);
 
         List<Notification> notifications = notificationMapper.selectList(wrapper);
         int count = notifications.size();
 
         if (count > 0) {
-                   
+
             notifications.forEach(notification -> notificationMapper.deleteById(notification.getId()));
 
-                       
+
             clearUnreadCountCache(userId);
 
             log.debug("event=notification_revoked operation={} userId={} type={} count={}",
@@ -1417,13 +1417,13 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         int count = notifications.size();
 
         if (count > 0) {
-                           
+
             notifications.stream()
                     .map(Notification::getUserId)
                     .distinct()
                     .forEach(this::clearUnreadCountCache);
 
-                   
+
             notifications.forEach(notification -> notificationMapper.deleteById(notification.getId()));
 
             log.debug("event=notification_revoked operation={} type={} count={}",
@@ -1442,7 +1442,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return false;
         }
 
-                 
+
         LambdaQueryWrapper<Notification> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Notification::getUserId, resourceOwnerId)
                 .eq(Notification::getSenderId, likerId)
@@ -1456,9 +1456,9 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         boolean success = false;
 
         for (Notification notification : notifications) {
-                   
+
             if (notificationMapper.deleteById(notification.getId()) > 0) {
-                               
+
                 if (notification.getIsRead() == 0) {
                     clearUnreadCountCache(resourceOwnerId);
                 }
@@ -1483,9 +1483,9 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return 0;
         }
 
-                        
-                      
-                      
+
+
+
         LambdaQueryWrapper<Notification> wrapper = new LambdaQueryWrapper<>();
         wrapper.and(w -> w.eq(Notification::getType, "like")
                         .eq(Notification::getRelatedId, commentId))
@@ -1496,7 +1496,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         List<Notification> notifications = notificationMapper.selectList(wrapper);
         int count = 0;
 
-                        
+
         java.util.Set<Long> affectedUserIds = new java.util.HashSet<>();
 
         for (Notification notification : notifications) {
@@ -1508,7 +1508,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             }
         }
 
-                     
+
         for (Long userId : affectedUserIds) {
             clearUnreadCountCache(userId);
         }
@@ -1530,31 +1530,31 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return false;
         }
 
-                 
+
         LambdaQueryWrapper<Notification> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Notification::getUserId, followeeId)
                 .eq(Notification::getSenderId, followerId)
                 .eq(Notification::getType, "follow");
 
-                                    
+
         wrapper.eq(Notification::getRelatedId, followerId);
 
-                             
+
         wrapper.eq(Notification::getIsRead, 0);
 
         List<Notification> notifications = notificationMapper.selectList(wrapper);
         boolean success = false;
 
         for (Notification notification : notifications) {
-                                     
+
             if (notification.getGroupCount() != null && notification.getGroupCount() > 1) {
-                         
+
                 notification.setGroupCount(notification.getGroupCount() - 1);
                 requireNotificationUpdated(notification);
 
-                                  
+
                 if (notification.getGroupCount() == 1) {
-                                        
+
                     notification.setContent(String.format("%s关注了你",
                             notification.getSenderName() != null ? notification.getSenderName() : "某用户"));
                     requireNotificationUpdated(notification);
@@ -1563,7 +1563,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
                 clearUnreadCountCache(followeeId);
                 success = true;
             } else {
-                            
+
                 if (notificationMapper.deleteById(notification.getId()) > 0) {
                     clearUnreadCountCache(followeeId);
                     success = true;
@@ -1588,7 +1588,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             return 0;
         }
 
-                       
+
         LambdaQueryWrapper<Notification> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Notification::getUserId, userId)
                 .eq(Notification::getSenderId, senderId);

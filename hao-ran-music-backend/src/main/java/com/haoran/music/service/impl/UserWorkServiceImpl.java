@@ -34,10 +34,10 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -124,7 +124,7 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateWork(UserWork userWork) {
-                     
+
         UserWork existing = getById(userWork.getId());
         if (existing == null) {
             throw new BusinessException(ResultCode.NOT_FOUND, "投稿不存在");
@@ -195,9 +195,9 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
         return editable;
     }
 
-       
-                                                  
-       
+
+
+
     private Boolean normalizeRealNameDisplay(Long userId, Boolean requested) {
         if (!Boolean.TRUE.equals(requested) || userId == null || userPrivateService == null) {
             return false;
@@ -266,7 +266,7 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
             throw new BusinessException(409, "投稿已被其他审核人处理");
         }
         if (status == 1) {
-                                       
+
             work.setPublishTime(java.time.LocalDateTime.now());
             if (isSingleLikeWork(work.getWorkType())) {
                 submissionFileSecurityService.validateSingleAudioFile(work.getUserId(), work.getFileUrl(), true);
@@ -282,7 +282,7 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
                     work.setSongId(result.getFirstSongId());
                 }
             }
-                                         
+
             Integer points = rewardConfig.calculateRewardPoints(
                 work.getLikeCount(),
                 work.getCollectCount(),
@@ -304,12 +304,12 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
                 status == 1, reviewReason, "moderation:user_work:" + workId);
         return true;
     }
-       
-                                                                
-      
-                                     
-                                                              
-       
+
+
+
+
+
+
     private Long createSongFromSingleWork(UserWork work) {
         if (!isSingleLikeWork(work.getWorkType())) {
             log.info("[UserWork] skip auto song for non-single work: workId={}, workType={}",
@@ -383,12 +383,12 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
         }
     }
 
-       
-                                                              
-      
-                            
-                                     
-       
+
+
+
+
+
+
     private void saveLyricIfPresent(Long songId, UserWork work) {
         if (StrUtil.isBlank(work.getLyric())) {
             return;
@@ -440,12 +440,12 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
                 null, null, null);
     }
 
-       
-                                                            
-      
-                                                
-                            
-       
+
+
+
+
+
+
     private String mapLanguage(Integer language) {
         if (language == null) {
             return null;
@@ -505,7 +505,7 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
 
     @Override
     public int checkAndUpdateRewards() {
-                              
+
         List<UserWork> publishedWorks = baseMapper.getPublishedWorks();
         int updatedCount = 0;
 
@@ -533,7 +533,7 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
     }
     @Override
     public boolean updateLyricFile(Long workId, String lyricFileName, String lyricContent) {
-                  
+
         if (workId == null) {
             return false;
         }
@@ -544,11 +544,11 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
         }
 
         try {
-                      
+
             if (lyricFileName != null && !lyricFileName.trim().isEmpty()) {
-                                         
+
             }
-                     
+
             if (lyricContent != null) {
                 work.setLyric(lyricContent);
             }
@@ -561,9 +561,9 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
         }
     }
 
-       
-              
-       
+
+
+
     @Override
     public UserWork submitZipFile(UserWork userWork, org.springframework.web.multipart.MultipartFile zipFile) {
         UserWork work = submitWork(userWork);
@@ -572,9 +572,9 @@ public class UserWorkServiceImpl extends ServiceImpl<UserWorkMapper, UserWork> i
         return work;
     }
 
-       
-              
-       
+
+
+
     @Override
     public UserWork submitMultipleFiles(UserWork userWork, org.springframework.web.multipart.MultipartFile[] files) {
         UserWork work = submitWork(userWork);

@@ -1,10 +1,10 @@
-   
-                      
-                              
-                   
-   
 
-                    
+
+
+
+
+
+
 body > .el-select__popper,
 body > .el-select-dropdown,
 body > div[class*="el-select"],
@@ -25,14 +25,14 @@ body > .el-select-dropdown .el-select-dropdown__item {
   padding: 10px !important;
 }
 
-                  
+
 body > [data-popper-placement] {
   background-color: #ff0000 !important;
   border: 5px solid #00ff00 !important;
   z-index: 999999 !important;
 }
 
-                     
+
 .el-pagination__sizes {
   display: block !important;
   visibility: visible !important;
@@ -45,13 +45,13 @@ body > [data-popper-placement] {
   visibility: visible !important;
 }
 
-                 
+
 .el-pagination__sizes .el-select .el-input__wrapper {
   background-color: #ffff00 !important;                
   border: 3px solid #ff0000 !important;
 }
 
-             
+
 .pagination-wrapper {
   display: flex;
   align-items: center;

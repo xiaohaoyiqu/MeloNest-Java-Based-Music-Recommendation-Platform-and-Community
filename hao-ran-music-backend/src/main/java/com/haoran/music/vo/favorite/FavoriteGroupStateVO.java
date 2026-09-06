@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.List;
 
-                        
+
 @Data
 public class FavoriteGroupStateVO {
     private List<FavoriteGroupVO> groups;

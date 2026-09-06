@@ -9,54 +9,54 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
-   
-                      
-                     
-   
+
+
+
+
 @Configuration
 @EnableAsync
 public class ThreadPoolConfig {
 
-       
-              
-      
-                       
-       
+
+
+
+
+
     @Bean("asyncExecutor")
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
-                
+
         int processors = Runtime.getRuntime().availableProcessors();
         executor.setCorePoolSize(Math.min(8, Math.max(2, processors * 2)));
 
-                
+
         executor.setMaxPoolSize(Math.min(16, Math.max(4, processors * 4)));
 
-               
+
         executor.setQueueCapacity(500);
 
-                 
+
         executor.setThreadNamePrefix("async-");
 
-                                                                              
+
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
 
-                          
+
         executor.setWaitForTasksToCompleteOnShutdown(true);
 
-                  
+
         executor.setAwaitTerminationSeconds(60);
 
         executor.initialize();
         return executor;
     }
 
-       
-              
-      
-                       
-       
+
+
+
+
+
     @Bean("recommendExecutor")
     public Executor recommendExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -73,11 +73,11 @@ public class ThreadPoolConfig {
         return executor;
     }
 
-       
-                  
-      
-                       
-       
+
+
+
+
+
     @Bean("lyricTranslatorExecutor")
     public Executor lyricTranslatorExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -94,11 +94,11 @@ public class ThreadPoolConfig {
         return executor;
     }
 
-       
-                                 
-      
-                       
-       
+
+
+
+
+
     @Bean("taskExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -114,11 +114,11 @@ public class ThreadPoolConfig {
         executor.initialize();
         return executor;
     }
-       
-                                  
-      
-                       
-  
+
+
+
+
+
     @Bean("mediaProcessingExecutor")
     public Executor mediaProcessingExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -135,9 +135,9 @@ public class ThreadPoolConfig {
         return executor;
     }
 
-       
-                                                                              
-       
+
+
+
     @Bean
     public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();

@@ -18,10 +18,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                                                                                       
-   
+
+
+
+
 @Component
 public class SshUtil {
 
@@ -46,11 +46,11 @@ public class SshUtil {
     @Value("${music.node3.lyric-url:http://192.168.153.133:8081/lyrics/}")
     private String lyricHttpBaseUrl;
 
-       
-                                                  
-                           
-                                                 
-  
+
+
+
+
+
     private Session createSession() throws JSchException {
         JSch jsch = new JSch();
         jsch.addIdentity(keyPath);
@@ -60,11 +60,11 @@ public class SshUtil {
         return session;
     }
 
-       
-                               
-                                                         
-                           
-       
+
+
+
+
+
     public String readRemoteFile(String filePath) {
         if (!LyricFileResolver.isSafeRelativePath(filePath)) {
             logger.warn("event=remote_lyric_path_rejected");
@@ -167,11 +167,11 @@ public class SshUtil {
         }
     }
 
-       
-                                                                     
-                                                                             
-                                                                                
-       
+
+
+
+
+
     public Map<String, String> readRemoteLyricFiles(Collection<String> filePaths) {
         Map<String, String> result = new LinkedHashMap<>();
         if (filePaths == null || filePaths.isEmpty()) {
@@ -231,11 +231,11 @@ public class SshUtil {
         return result;
     }
 
-       
-                                  
-                                                         
-                             
-       
+
+
+
+
+
     public boolean checkRemoteFileExists(String filePath) {
         if (!LyricFileResolver.isSafeRelativePath(filePath)) {
             logger.warn("[SSH] Refuse unsafe lyric relative path: {}", filePath);
@@ -280,30 +280,30 @@ public class SshUtil {
         }
     }
 
-       
-                                     
-                            
-                                            
-  
+
+
+
+
+
     public String getLyricFilePath(Long songId) {
         return songId + ".lrc";
     }
 
-       
-                                                           
-                                                   
-                                
-                                    
-                                                                              
-  
+
+
+
+
+
+
+
     public String getLyricFilePath(String songName, String artistName) {
         return "oranial/" + songName + "-" + artistName + ".lrc";
     }
 
-       
-                                                                         
-                                             
-       
+
+
+
+
     public String readRemoteLyricFile(String songName, String artistName, Integer lyricType) {
         List<String> candidates = LyricFileResolver.candidatePaths(songName, artistName, lyricType);
         for (String candidate : candidates) {

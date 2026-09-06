@@ -10,19 +10,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 
 public class PlaylistVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-       
-                                                       
-       
+
+
+
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
@@ -56,20 +56,20 @@ public class PlaylistVO implements Serializable {
 
     private List<SongSimpleVO> songs;
 
-       
-                                 
-       
+
+
+
     private String orderVersion;
 
     private List<String> tags;
 
-                                                                                     
+
     private String primaryLanguage;
 
-                                                                             
+
     private List<String> contentLanguages;
 
-                                                    
+
     private Map<String, Integer> languageCounts;
 
     private LocalDateTime createTime;
@@ -84,46 +84,46 @@ public class PlaylistVO implements Serializable {
 
     private Integer filteredSongCount;
 
-                                                                          
+
     private Boolean contentAccessible;
 
-                                                       
 
-       
-                      
-       
+
+
+
+
     private Integer allowDownload;
 
-       
-                      
-       
+
+
+
     private Integer allowComment;
 
-       
-                      
-       
+
+
+
     private Integer allowShare;
 
-                                                     
 
-       
-             
-       
+
+
+
+
     private String intro;
 
-       
-           
-       
+
+
+
     private String category;
 
-       
-            
-       
+
+
+
     private Long creatorId;
 
-       
-             
-       
+
+
+
     @Data
     public static class SongSimpleVO implements Serializable {
 

@@ -11,22 +11,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-   
-                   
-  
-                      
-   
+
+
+
+
+
 @Mapper
 public interface MediaDerivativeTaskMapper extends BaseMapper<MediaDerivativeTask> {
 
-       
-                      
-      
-                            
-                          
-                              
-                   
-       
+
+
+
+
+
+
+
+
     @Select("SELECT * FROM media_derivative_task "
             + "WHERE media_type = #{mediaType} AND media_id = #{mediaId} AND source_url = #{sourceUrl} "
             + "ORDER BY id DESC LIMIT 1")
@@ -34,13 +34,13 @@ public interface MediaDerivativeTaskMapper extends BaseMapper<MediaDerivativeTas
                                      @Param("mediaId") Long mediaId,
                                      @Param("sourceUrl") String sourceUrl);
 
-       
-                    
-      
-                        
-                                                      
-                    
-       
+
+
+
+
+
+
+
     @Select("SELECT * FROM media_derivative_task "
             + "WHERE ((status IN ('PENDING', 'FAILED') "
             + "AND retry_count < max_retry_count "
@@ -53,13 +53,13 @@ public interface MediaDerivativeTaskMapper extends BaseMapper<MediaDerivativeTas
     List<MediaDerivativeTask> selectDueTasks(@Param("limit") Integer limit,
                                              @Param("staleProcessingBefore") LocalDateTime staleProcessingBefore);
 
-       
-                             
-      
-                         
-                                                        
-                   
-       
+
+
+
+
+
+
+
     @Update("UPDATE media_derivative_task SET status = 'PROCESSING', started_at = NOW(), finished_at = NULL, updated_at = NOW() WHERE id = #{taskId} AND ((status IN ('PENDING', 'FAILED') AND retry_count < max_retry_count AND (next_retry_time IS NULL OR next_retry_time <= NOW())) OR (status = 'PROCESSING' AND retry_count < max_retry_count AND started_at IS NOT NULL AND started_at <= #{staleProcessingBefore}))")
     int claimForProcessing(@Param("taskId") Long taskId,
                            @Param("staleProcessingBefore") LocalDateTime staleProcessingBefore);
@@ -77,11 +77,11 @@ public interface MediaDerivativeTaskMapper extends BaseMapper<MediaDerivativeTas
             + "ORDER BY updated_at DESC LIMIT #{limit}")
     List<Map<String, Object>> selectRecentRiskTasks(@Param("limit") Integer limit);
 
-       
-                                   
-      
-                     
-       
+
+
+
+
+
     @Select("SELECT COUNT(*) AS outstandingCount, MIN(created_at) AS oldestCreatedAt, "
             + "MIN(updated_at) AS oldestUpdatedAt, COALESCE(SUM(retry_count), 0) AS totalRetryCount, "
             + "COALESCE(MAX(retry_count), 0) AS maxRetryCountObserved, "

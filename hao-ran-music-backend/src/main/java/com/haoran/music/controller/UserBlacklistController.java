@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-           
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/blacklist")
@@ -34,9 +34,9 @@ public class UserBlacklistController {
     @Resource
     private UserService userService;
 
-       
-               
-       
+
+
+
     @PostMapping("/add")
     @ApiLog("添加黑名单")
     public Result<Void> addToBlacklist(
@@ -55,9 +55,9 @@ public class UserBlacklistController {
         return Result.error("添加失败");
     }
 
-       
-             
-       
+
+
+
     @DeleteMapping("/remove")
     @ApiLog("移除黑名单")
     public Result<Void> removeFromBlacklist(
@@ -75,9 +75,9 @@ public class UserBlacklistController {
         return Result.error("移除失败");
     }
 
-       
-                   
-       
+
+
+
     @GetMapping("/list")
     @ApiLog("获取黑名单列表")
     public Result<List<Long>> getBlacklistList(HttpServletRequest request) {
@@ -91,9 +91,9 @@ public class UserBlacklistController {
         return Result.success(blacklistedIds);
     }
 
-       
-                    
-       
+
+
+
     @GetMapping("/list/detail")
     @ApiLog("获取黑名单详情列表")
     public Result<List<BlacklistUserVO>> getBlacklistDetailList(HttpServletRequest request) {
@@ -107,9 +107,9 @@ public class UserBlacklistController {
         return Result.success(blacklistUsers);
     }
 
-       
-                  
-       
+
+
+
     @GetMapping("/check")
     @ApiLog("检查黑名单状态")
     public Result<Map<String, Boolean>> checkBlacklist(

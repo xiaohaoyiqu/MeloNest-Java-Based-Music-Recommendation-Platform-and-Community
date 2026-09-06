@@ -6,10 +6,10 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-                      
-                         
-   
+
+
+
+
 @Data
 @TableName("user_violation")
 public class UserViolation implements Serializable {
@@ -19,59 +19,59 @@ public class UserViolation implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-       
-           
-       
+
+
+
     private Long userId;
 
-       
-           
-       
+
+
+
     private String violationType;
 
-       
-                          
-       
+
+
+
     private Integer violationLevel;
 
-       
-           
-       
+
+
+
     private String contentType;
 
-       
-           
-       
+
+
+
     private Long contentId;
 
-       
-           
-       
+
+
+
     private String description;
 
-       
-            
-       
+
+
+
     private Long handlerId;
 
-       
-           
-       
+
+
+
     private String penaltyType;
 
-       
-           
-       
+
+
+
     private String penaltyValue;
 
-       
-            
-       
+
+
+
     private Integer isResolved;
 
-       
-           
-       
+
+
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 }

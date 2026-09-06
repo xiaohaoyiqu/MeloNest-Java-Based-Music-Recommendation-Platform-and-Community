@@ -20,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class SyncFavoriteServiceImpl implements SyncFavoriteService {
@@ -46,7 +46,7 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Result<Long> syncFavoriteData(Long userId) {
-                                    
+
         List<Long> userIds = new ArrayList<>();
         if (ObjectUtils.isNotEmpty(userId)) {
             userIds.add(userId);
@@ -103,16 +103,16 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
         return Result.success(updated);
     }
 
-       
-                  
-      
-                         
-                      
-       
+
+
+
+
+
+
     private long syncUserFavoriteData(Long userId) {
         long syncedCount = 0;
 
-                             
+
         LambdaQueryWrapper<Playlist> playlistWrapper = new LambdaQueryWrapper<>();
         playlistWrapper.eq(Playlist::getUserId, userId)
                 .eq(Playlist::getType, MusicConstants.PlaylistType.FAVORITE)
@@ -120,7 +120,7 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
 
         Playlist favoritePlaylist = playlistMapper.selectOne(playlistWrapper);
 
-                     
+
         if (ObjectUtils.isEmpty(favoritePlaylist)) {
             favoritePlaylist = new Playlist();
             favoritePlaylist.setUserId(userId);
@@ -141,7 +141,7 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
             log.info("创建收藏歌单: userId={}, playlistId={}", userId, favoritePlaylist.getId());
         }
 
-                                        
+
         LambdaQueryWrapper<SongLike> likeWrapper = new LambdaQueryWrapper<>();
         likeWrapper.eq(SongLike::getUserId, userId)
                 .eq(SongLike::getIsFavorite, 1)
@@ -154,7 +154,7 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
 
         log.info("用户收藏歌曲数(从song_like): userId={}, count={}", userId, favoriteSongIds.size());
 
-                                      
+
         LambdaQueryWrapper<PlaylistSong> existingWrapper = new LambdaQueryWrapper<>();
         existingWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                 .eq(PlaylistSong::getDeleted, CommonConstants.NOT_DELETED);
@@ -166,17 +166,17 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
 
         log.info("歌单中现有歌曲数(从playlist_song): userId={}, count={}", userId, existingSongIds.size());
 
-                                                         
+
         Set<Long> toAdd = new HashSet<>(favoriteSongIds);
         toAdd.removeAll(existingSongIds);
 
-                                                         
+
         Set<Long> toRemove = new HashSet<>(existingSongIds);
         toRemove.removeAll(favoriteSongIds);
 
         log.info("需要同步: userId={}, toAdd={}, toRemove={}", userId, toAdd.size(), toRemove.size());
 
-                     
+
         int maxSortOrder = existingSongs.isEmpty() ? 0
             : existingSongs.stream()
                 .mapToInt(PlaylistSong::getSortOrder)
@@ -184,11 +184,11 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
                 .orElse(0);
 
         for (Long songId : toAdd) {
-                          
+
             String deleteOldSql = "DELETE FROM playlist_song WHERE playlist_id = ? AND song_id = ? AND deleted = 1";
             jdbcTemplate.update(deleteOldSql, favoritePlaylist.getId(), songId);
 
-                      
+
             LambdaQueryWrapper<PlaylistSong> checkWrapper = new LambdaQueryWrapper<>();
             checkWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                     .eq(PlaylistSong::getSongId, songId)
@@ -206,7 +206,7 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
             }
         }
 
-                     
+
         for (Long songId : toRemove) {
             LambdaQueryWrapper<PlaylistSong> removeWrapper = new LambdaQueryWrapper<>();
             removeWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
@@ -215,7 +215,7 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
 
             PlaylistSong toDelete = playlistSongMapper.selectOne(removeWrapper);
             if (ObjectUtils.isNotEmpty(toDelete)) {
-                                
+
                 LambdaQueryWrapper<PlaylistSong> deletedWrapper = new LambdaQueryWrapper<>();
                 deletedWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())
                         .eq(PlaylistSong::getSongId, songId)
@@ -223,25 +223,25 @@ public class SyncFavoriteServiceImpl implements SyncFavoriteService {
 
                 PlaylistSong deleted = playlistSongMapper.selectOne(deletedWrapper);
                 if (ObjectUtils.isNotEmpty(deleted)) {
-                              
+
                     String physicalDeleteSql = "DELETE FROM playlist_song WHERE id = ?";
                     requireSingleWrite(jdbcTemplate.update(physicalDeleteSql, deleted.getId()),
                             "清理收藏歌曲历史记录失败");
                 }
 
-                           
+
                 requireSingleWrite(playlistSongMapper.deleteById(toDelete.getId()), "移除收藏歌曲失败");
                 syncedCount++;
                 log.info("从收藏歌单移除歌曲: userId={}, songId={}", userId, songId);
             }
         }
 
-                      
+
         long newCount = playlistSongMapper.countVisibleSongs(
                 favoritePlaylist.getId(), false, Collections.emptySet());
         favoritePlaylist.setSongCount(newCount);
 
-                 
+
         if (newCount > 0) {
             LambdaQueryWrapper<PlaylistSong> firstSongWrapper = new LambdaQueryWrapper<>();
             firstSongWrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylist.getId())

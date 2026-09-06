@@ -6,50 +6,50 @@ import com.haoran.music.vo.emoji.EmojiPackageVO;
 
 import java.util.List;
 
-   
-                      
-                             
-   
+
+
+
+
 public interface EmojiShopService {
 
-       
-                 
-       
+
+
+
     EmojiShopHomeVO getHomeData();
 
-       
-              
-       
+
+
+
     PageResult<EmojiPackageVO> getPackages(String type, String category, Integer page, Integer size);
 
-       
-              
-       
+
+
+
     EmojiPackageDetailVO getPackageDetail(Long id);
 
-       
-               
-       
+
+
+
     void purchasePackage(Long id);
 
-       
-             
-       
+
+
+
     List<EmojiPackageVO> getMyEmojis();
 
-       
-            
-       
+
+
+
     void favoritePackage(Long id);
 
-       
-           
-       
+
+
+
     void unfavoritePackage(Long id);
 
-       
-               
-       
+
+
+
     @lombok.Data
     class EmojiShopHomeVO {
         private List<EmojiPackageVO> recommended;

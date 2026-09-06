@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -24,9 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-   
-         
-   
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/emoji")
@@ -38,11 +38,11 @@ public class EmojiController {
         this.emojiService = emojiService;
     }
 
-       
-                
-      
-                    
-       
+
+
+
+
+
     @GetMapping("/packages")
     @ApiLog("获取表情包列表")
     public Result<List<EmojiPackage>> getAllPackages(
@@ -51,11 +51,11 @@ public class EmojiController {
         return Result.success(packages);
     }
 
-       
-                 
-      
-                       
-       
+
+
+
+
+
     @GetMapping("/packages/enabled")
     public Result<List<EmojiPackage>> getEnabledPackages(
             @RequestAttribute(value = "userId", required = false) Long userId) {
@@ -63,12 +63,12 @@ public class EmojiController {
         return Result.success(packages);
     }
 
-       
-                  
-      
-                             
-                    
-       
+
+
+
+
+
+
     @GetMapping("/package/{packageId}")
     @ApiLog("获取表情包详情")
     public Result<EmojiPackage> getPackageDetail(
@@ -79,14 +79,14 @@ public class EmojiController {
             return Result.error(404, "表情包不存在");
         }
 
-                      
+
         List<Emoji> emojis = emojiService.getEmojisByPackage(packageId, userId);
         emojiPackage.setEmojis(emojis);
 
         return Result.success(emojiPackage);
     }
 
-                             
+
     @GetMapping("/package/{packageId}/review-detail")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     public Result<EmojiPackage> getPackageReviewDetail(@PathVariable Long packageId) {
@@ -96,11 +96,11 @@ public class EmojiController {
                 : Result.success(emojiPackage);
     }
 
-       
-               
-      
-                     
-       
+
+
+
+
+
     @GetMapping("/system")
     public Result<List<Emoji>> getSystemEmojis(
             @RequestAttribute(value = "userId", required = false) Long userId) {
@@ -108,12 +108,12 @@ public class EmojiController {
         return Result.success(emojis);
     }
 
-       
-              
-      
-                                                                       
-                   
-       
+
+
+
+
+
+
     @GetMapping("/category/{category}")
     @ApiLog("获取分类表情")
     public Result<List<Emoji>> getEmojisByCategory(
@@ -123,12 +123,12 @@ public class EmojiController {
         return Result.success(emojis);
     }
 
-       
-           
-      
-                         
-                   
-       
+
+
+
+
+
+
     @GetMapping("/search")
     @ApiLog("搜索表情")
     public Result<List<Emoji>> searchEmojis(
@@ -138,21 +138,21 @@ public class EmojiController {
         return Result.success(emojis);
     }
 
-       
-                                
-                                   
-       
+
+
+
+
     @GetMapping("/render")
     public Result<List<EmojiDisplayVO>> resolveDisplayEmojis(@RequestParam List<String> codes) {
         return Result.success(emojiService.resolveDisplayEmojis(codes));
     }
 
-       
-             
-      
-                        
-                     
-       
+
+
+
+
+
+
     @GetMapping("/hot")
     public Result<List<Emoji>> getHotEmojis(
             @RequestParam(defaultValue = "50") Integer limit,
@@ -161,13 +161,13 @@ public class EmojiController {
         return Result.success(emojis);
     }
 
-       
-              
-      
-                     
-                       
-                      
-       
+
+
+
+
+
+
+
     @GetMapping("/packages/page")
     @ApiLog("分页查询表情包")
     public Result<IPage<EmojiPackage>> pagePackages(
@@ -179,12 +179,12 @@ public class EmojiController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                            
-                      
-       
+
+
+
+
+
+
     @GetMapping("/packages/my")
     @ApiLog("获取我的表情包")
     public Result<List<EmojiPackage>> getMyPackages(HttpServletRequest request) {
@@ -197,13 +197,13 @@ public class EmojiController {
         return Result.success(packages);
     }
 
-       
-               
-      
-                              
-                               
-                    
-       
+
+
+
+
+
+
+
     @PostMapping("/package/create")
     @ApiLog("创建表情包")
     @RateLimit(maxRequests = 10, timeWindowSeconds = 3600, scope = RateLimitScope.USER,
@@ -231,7 +231,7 @@ public class EmojiController {
         return Result.success();
     }
 
-                             
+
     @PostMapping("/package/{packageId}/submit")
     @ApiLog("提交表情包审核")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 3600, scope = RateLimitScope.USER,
@@ -245,7 +245,7 @@ public class EmojiController {
         return Result.success();
     }
 
-                             
+
     @PutMapping("/package/{packageId}/cover")
     @ApiLog("设置表情包封面")
     public Result<Void> setPackageCover(@PathVariable Long packageId,
@@ -262,11 +262,11 @@ public class EmojiController {
         return Result.success();
     }
 
-       
-             
-      
-                          
-       
+
+
+
+
+
     @PostMapping("/{emojiId}/usage")
     @ApiLog("记录表情使用")
     public Result<Void> recordUsage(
@@ -276,13 +276,13 @@ public class EmojiController {
         return Result.success();
     }
 
-       
-              
-      
-                           
-                            
-                 
-       
+
+
+
+
+
+
+
     @DeleteMapping("/{emojiId}")
     @ApiLog("删除自定义表情")
     public Result<Boolean> deleteEmoji(@PathVariable Long emojiId,
@@ -307,11 +307,11 @@ public class EmojiController {
         return Result.success(emojiService.deleteCustomPackage(packageId, userId));
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @GetMapping("/statistics")
     @ApiLog("获取表情统计")
     public Result<Map<String, Object>> getStatistics() {

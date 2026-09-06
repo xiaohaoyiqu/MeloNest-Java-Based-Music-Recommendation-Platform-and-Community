@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.task;
 
 import com.haoran.music.common.config.HotScoreConfig;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-   
-                              
-   
+
+
+
 @Slf4j
 @Component
 public class HotScoreCalculationTask {
@@ -34,9 +34,9 @@ public class HotScoreCalculationTask {
     @Resource
     private MusicIntelligenceCacheService musicIntelligenceCacheService;
 
-       
-                                            
-       
+
+
+
     @Scheduled(cron = "${schedule.task.hot-score.calculation-cron}")
     public void calculateHotScore() {
         log.info("========== Hot score calculation started ==========");

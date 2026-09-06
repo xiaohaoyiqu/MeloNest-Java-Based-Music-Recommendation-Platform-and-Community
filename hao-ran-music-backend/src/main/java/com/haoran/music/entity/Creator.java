@@ -11,64 +11,64 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 @TableName("creator")
 public class Creator implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-       
-         
-       
+
+
+
     @TableId(type = IdType.AUTO)
     private Long id;
 
-       
-           
-       
+
+
+
     private Long userId;
 
-       
-            
-       
+
+
+
     private String creatorType;
 
-       
-         
-       
+
+
+
     private String status;
 
-       
-          
-       
+
+
+
     private Long fansCount;
 
-       
-           
-       
+
+
+
     private String creatorNote;
 
-       
-           
-       
+
+
+
     private LocalDateTime creatorApplyTime;
 
-       
-           
-                              
-       
+
+
+
+
     @TableField(value = "created_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-       
-                        
-                                     
-                             
-       
+
+
+
+
+
     @TableLogic
     @TableField("deleted")
     private Integer deleted;

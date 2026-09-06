@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.result.Result;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
-   
-            
-   
+
+
+
 @RestController
 @RequestMapping("/curated-content/carousel")
 public class CuratedCarouselController {

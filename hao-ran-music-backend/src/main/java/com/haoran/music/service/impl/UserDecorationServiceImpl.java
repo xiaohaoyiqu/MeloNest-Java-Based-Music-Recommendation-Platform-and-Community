@@ -1,7 +1,7 @@
-   
-                      
-                             
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -22,9 +22,9 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
-   
-                
-   
+
+
+
 @Slf4j
 @Service
 public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper, UserDecoration>
@@ -66,18 +66,18 @@ public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper,
     public boolean addDecoration(Long userId, String decorationId, String source) {
         UserAccountStatusUtil.requireCanInteract(userMapper.selectById(userId), "获得装饰");
 
-                  
+
         if (hasDecoration(userId, decorationId)) {
             return false;
         }
 
-                 
+
         DecorationConfig config = decorationConfigService.getByDecorationId(decorationId);
         if (config == null) {
             throw new RuntimeException("装饰不存在: " + decorationId);
         }
 
-                   
+
         UserDecoration userDecoration = new UserDecoration();
         userDecoration.setUserId(userId);
         userDecoration.setDecorationType(config.getDecorationType());
@@ -89,7 +89,7 @@ public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper,
         userDecoration.setSourceDescription(getSourceDescription(source));
         userDecoration.setRarity(config.getRarity());
 
-                 
+
         if (config.getIsPermanent() == 0 && config.getDurationDays() != null) {
             userDecoration.setExpireTime(LocalDateTime.now().plusDays(config.getDurationDays()));
         }
@@ -112,12 +112,12 @@ public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper,
             throw new RuntimeException("未拥有该装饰");
         }
 
-                 
+
         if (decoration.getExpireTime() != null && decoration.getExpireTime().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("装饰已过期");
         }
 
-                     
+
         LambdaQueryWrapper<UserDecoration> unequipWrapper = new LambdaQueryWrapper<>();
         unequipWrapper.eq(UserDecoration::getUserId, userId)
                 .eq(UserDecoration::getDecorationType, decoration.getDecorationType())
@@ -128,7 +128,7 @@ public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper,
             updateById(unequipDecoration);
         }
 
-                 
+
         decoration.setIsEquipped(1);
         updateById(decoration);
 
@@ -151,9 +151,9 @@ public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper,
         }
     }
 
-       
-             
-       
+
+
+
     private String getSourceDescription(String source) {
         switch (source) {
             case "sign": return "签到获取";
@@ -165,25 +165,25 @@ public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper,
             default: return "其他";
         }
     }
-       
-                  
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean addUserBadge(Long userId, String badgeType, String badgeName, String badgeIcon,
                                 String badgeColor, String displayPosition, int days) {
         UserAccountStatusUtil.requireCanInteract(userMapper.selectById(userId), "获得徽章");
 
-                 
+
         String decorationId = "badge_" + badgeType;
-        
-                  
+
+
         if (hasDecoration(userId, decorationId)) {
             log.info("用户已拥有该徽章: userId={}, badgeType={}", userId, badgeType);
             return false;
         }
 
-                   
+
         UserDecoration userDecoration = new UserDecoration();
         userDecoration.setUserId(userId);
         userDecoration.setDecorationType("badge");
@@ -195,7 +195,7 @@ public class UserDecorationServiceImpl extends ServiceImpl<UserDecorationMapper,
         userDecoration.setSourceDescription("成就奖励获取");
         userDecoration.setRarity("rare");
 
-                 
+
         if (days > 0) {
             userDecoration.setExpireTime(LocalDateTime.now().plusDays(days));
         }

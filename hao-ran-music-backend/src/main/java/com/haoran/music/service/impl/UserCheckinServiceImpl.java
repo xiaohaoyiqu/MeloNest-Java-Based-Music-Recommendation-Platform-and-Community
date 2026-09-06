@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -31,16 +31,16 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-   
-           
-  
-          
-              
-                        
-                  
-  
-                                                 
-   
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Service
 public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserCheckin> implements UserCheckinService {
@@ -65,7 +65,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> checkin(Long userId) {
-                   
+
         User user = userMapper.selectByIdForUpdate(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
@@ -75,15 +75,15 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
         LocalDateTime checkinTime = LocalDateTime.now(BUSINESS_ZONE);
         LocalDate today = checkinTime.toLocalDate();
 
-                    
+
         if (hasCheckedInToday(userId)) {
             throw new BusinessException("今日已签到，请明天再来~");
         }
 
-                    
+
         UserCheckin yesterdayRecord = getCheckinRecord(userId, today.minusDays(1));
 
-                 
+
         int continuousDays;
         if (yesterdayRecord != null) {
             continuousDays = yesterdayRecord.getContinuousDays() + 1;
@@ -91,13 +91,13 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
             continuousDays = 1;
         }
 
-               
+
         UserGrowthConfig.Checkin checkinConfig = userGrowthConfig.getCheckin();
         int rewardPoints = checkinConfig.getDailyPoints();
         int rewardVipDays = 0;
         int bonusPoints = 0;
 
-                         
+
         if (continuousDays % 7 == 0) {
             bonusPoints += checkinConfig.getWeeklyBonus();
             rewardVipDays += checkinConfig.getWeeklyVipDays();             
@@ -106,7 +106,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
             bonusPoints += checkinConfig.getMonthlyBonus();
         }
 
-                 
+
         UserCheckin checkin = new UserCheckin();
         checkin.setUserId(userId);
         checkin.setUsername(user.getUsername());
@@ -122,16 +122,16 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
 
         signinAchievementService.checkAndUnlockAchievement(userId, continuousDays);
 
-                  
+
         activityPointsService.addPoints(userId, rewardPoints + bonusPoints, "sign",
                 String.format("签到奖励，连续签到%d天", continuousDays));
 
-                         
+
         if (rewardVipDays > 0) {
             userVipService.grantVip(userId, 1, rewardVipDays, "sign");
         }
 
-                 
+
         Map<String, Object> result = new HashMap<>();
         result.put("checkinDate", today);
         result.put("continuousDays", continuousDays);
@@ -158,7 +158,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
 
     @Override
     public Integer getContinuousDays(Long userId) {
-                             
+
         LocalDate today = LocalDate.now(BUSINESS_ZONE);
         LambdaQueryWrapper<UserCheckin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserCheckin::getUserId, userId)
@@ -171,7 +171,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
             return 0;
         }
 
-                                 
+
         LocalDate lastDate = lastCheckin.getCheckinDate();
         long daysBetween = ChronoUnit.DAYS.between(lastDate, today);
         if (daysBetween > 1) {
@@ -209,14 +209,14 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> makeupCheckin(Long userId, LocalDate date) {
-                   
+
         User user = userMapper.selectByIdForUpdate(userId);
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("用户不存在");
         }
         UserAccountStatusUtil.requireCanInteract(user, "补签");
 
-                             
+
         LocalDate today = LocalDate.now(BUSINESS_ZONE);
         UserGrowthConfig.Checkin checkinConfig = userGrowthConfig.getCheckin();
         if (date == null || !date.isBefore(today)
@@ -224,7 +224,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
             throw new BusinessException("只能补签最近7天的签到");
         }
 
-                  
+
         LambdaQueryWrapper<UserCheckin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserCheckin::getUserId, userId)
                 .eq(UserCheckin::getCheckinDate, date)
@@ -233,7 +233,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
             throw new BusinessException("该日期已签到");
         }
 
-                    
+
         Integer currentPoints = activityPointsService.getUserTotalPoints(userId);
         if (currentPoints < checkinConfig.getMakeupCostPoints()) {
             throw new BusinessException("活跃值不足，无法补签");
@@ -241,7 +241,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
 
         activityPointsService.consumePoints(userId, checkinConfig.getMakeupCostPoints(), "makeup", "补签");
 
-                              
+
         UserCheckin checkin = new UserCheckin();
         checkin.setUserId(userId);
         checkin.setUsername(user.getUsername());
@@ -255,7 +255,7 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
             throw new IllegalStateException("补签记录创建失败");
         }
 
-                
+
         activityPointsService.addPoints(userId, checkinConfig.getDailyPoints(), "sign", "补签奖励");
 
         Map<String, Object> result = new HashMap<>();
@@ -276,22 +276,22 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
         LocalDate today = LocalDate.now(BUSINESS_ZONE);
         LocalDate monthStart = today.withDayOfMonth(1);
 
-                 
+
         int monthCount = getMonthCheckinCount(userId);
 
-                 
+
         int continuousDays = getContinuousDays(userId);
 
-                  
+
         boolean checkedToday = hasCheckedInToday(userId);
 
-                
+
         LambdaQueryWrapper<UserCheckin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserCheckin::getUserId, userId)
                 .eq(UserCheckin::getDeleted, CommonConstants.NOT_DELETED);
         long totalCount = count(wrapper);
 
-                
+
         int totalPoints = activityPointsService.getUserTotalPoints(userId);
 
         Map<String, Object> stats = new HashMap<>();
@@ -306,8 +306,8 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
         stats.put("makeupCostPoints", userGrowthConfig.getCheckin().getMakeupCostPoints());
         stats.put("makeupRewardPoints", userGrowthConfig.getCheckin().getDailyPoints());
         stats.put("makeupAffectsContinuousDays", false);
-                                                                                       
-                                                                            
+
+
         stats.put("dailyRewardPoints", userGrowthConfig.getCheckin().getDailyPoints());
         stats.put("weeklyBonusPoints", userGrowthConfig.getCheckin().getWeeklyBonus());
         stats.put("weeklyVipDays", userGrowthConfig.getCheckin().getWeeklyVipDays());
@@ -316,9 +316,9 @@ public class UserCheckinServiceImpl extends ServiceImpl<UserCheckinMapper, UserC
         return stats;
     }
 
-       
-                  
-  
+
+
+
     private UserCheckin getCheckinRecord(Long userId, LocalDate date) {
         LambdaQueryWrapper<UserCheckin> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserCheckin::getUserId, userId)

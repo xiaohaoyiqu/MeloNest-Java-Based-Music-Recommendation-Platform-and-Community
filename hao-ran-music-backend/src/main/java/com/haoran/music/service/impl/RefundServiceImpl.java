@@ -30,10 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class RefundServiceImpl implements RefundService {
@@ -68,18 +68,18 @@ public class RefundServiceImpl implements RefundService {
                                             String reason, String description) {
         String safeReason = sanitizeRefundText(reason);
         String safeDescription = sanitizeRefundText(description);
-                   
+
         PaymentOrder order = paymentOrderMapper.selectById(orderId);
         if (order == null) {
             throw new BusinessException("订单不存在");
         }
 
-                      
+
         if (!order.getUserId().equals(userId)) {
             throw new BusinessException("无权操作此订单");
         }
 
-                 
+
         if (!PaymentOrderStatusUtil.isPaidStatus(order.getStatus())) {
             throw new BusinessException("当前订单状态不可申请退款");
         }
@@ -88,13 +88,13 @@ public class RefundServiceImpl implements RefundService {
             throw new BusinessException("用户不存在");
         }
 
-                   
+
         Integer monthCount = getMonthRefundCount(userId);
         if (monthCount >= 3) {
             throw new BusinessException("本月退款次数已达上限");
         }
 
-                 
+
         RefundRecord refundRecord = new RefundRecord();
         refundRecord.setUserId(userId);
         refundRecord.setOrderId(orderId);
@@ -106,7 +106,7 @@ public class RefundServiceImpl implements RefundService {
         refundRecord.setStatus("pending");
         refundRecord.setCreateTime(LocalDateTime.now());
 
-                                     
+
         if (paymentOrderMapper.transitionStatus(orderId, order.getStatus(), "refunding") != 1) {
             throw new BusinessException("订单状态已变化，请刷新后重试");
         }
@@ -198,14 +198,14 @@ public class RefundServiceImpl implements RefundService {
         Map<String, Object> result = new HashMap<>();
 
         if (approved) {
-                   
+
             int unreasonable = isUnreasonable != null && isUnreasonable ? 1 : 0;
             if (refundRecordMapper.reviewPending(refundId, "approved", reviewerId,
                     LocalDateTime.now(), safeReviewReason, unreasonable, safeUnreasonableReason) != 1) {
                 throw new BusinessException("退款已被其他操作处理");
             }
 
-                              
+
             if (isUnreasonable != null && isUnreasonable) {
                 deductRefundCredit(refundRecord.getUserId(), refundId, 10, "不合理退款");
             }
@@ -217,7 +217,7 @@ public class RefundServiceImpl implements RefundService {
                     refundId, reviewerId);
 
         } else {
-                   
+
             if (refundRecordMapper.reviewPending(refundId, "rejected", reviewerId,
                     LocalDateTime.now(), safeReviewReason, 0, null) != 1) {
                 throw new BusinessException("退款已被其他操作处理");
@@ -267,12 +267,12 @@ public class RefundServiceImpl implements RefundService {
                     refundRecord.getUserId(), order.getId(), refundRecord.getAmount());
         }
 
-                   
+
         if (refundRecordMapper.completeApproved(refundId, LocalDateTime.now()) != 1) {
             return false;
         }
 
-                 
+
         if (paymentOrderMapper.transitionStatus(refundRecord.getOrderId(), "refunding", "refunded") != 1) {
             throw new BusinessException("订单退款状态已变化");
         }
@@ -492,17 +492,17 @@ public class RefundServiceImpl implements RefundService {
     @Transactional(rollbackFor = Exception.class)
     public Integer resetRefundCredit() {
         log.info("event=refund_credit_reset_started");
-        
+
         int resetCount = 0;
-        
+
         try {
-                              
+
             LambdaQueryWrapper<RefundCredit> wrapper = new LambdaQueryWrapper<>();
             wrapper.gt(RefundCredit::getUnreasonableRefundCount, 0);
-            
+
             List<RefundCredit> refundCredits = refundCreditMapper.selectList(wrapper);
-            
-                                
+
+
             for (RefundCredit refundCredit : refundCredits) {
                 Integer oldCount = refundCredit.getUnreasonableRefundCount();
                 if (oldCount != null && oldCount > 0) {
@@ -512,14 +512,14 @@ public class RefundServiceImpl implements RefundService {
                         continue;
                     }
                     resetCount++;
-                    
+
                     log.info("event=refund_credit_reset userId={}", refundCredit.getUserId());
                 }
             }
-            
+
             log.info("event=refund_credit_reset_completed resetCount={}", resetCount);
             return resetCount;
-            
+
         } catch (Exception e) {
             log.error("event=refund_credit_reset_failed errorType={}",
                     e.getClass().getSimpleName());
@@ -538,7 +538,7 @@ public class RefundServiceImpl implements RefundService {
             return false;
         }
 
-                              
+
         Integer creditScore = refundCredit.getCreditScore();
         Integer unreasonableCount = refundCredit.getUnreasonableRefundCount() != null ?
                 refundCredit.getUnreasonableRefundCount() : 0;
@@ -548,27 +548,27 @@ public class RefundServiceImpl implements RefundService {
 
     @Override
     public Map<String, Object> getRefundStatistics(Long userId) {
-                   
+
         Map<String, Object> result = new HashMap<>();
 
-                
+
         LambdaQueryWrapper<RefundRecord> totalWrapper = new LambdaQueryWrapper<>();
         totalWrapper.eq(RefundRecord::getUserId, userId);
         Integer totalCount = Math.toIntExact(refundRecordMapper.selectCount(totalWrapper));
 
-               
+
         LambdaQueryWrapper<RefundRecord> successWrapper = new LambdaQueryWrapper<>();
         successWrapper.eq(RefundRecord::getUserId, userId)
                 .eq(RefundRecord::getStatus, "completed");
         Integer successCount = Math.toIntExact(refundRecordMapper.selectCount(successWrapper));
 
-               
+
         LambdaQueryWrapper<RefundRecord> rejectWrapper = new LambdaQueryWrapper<>();
         rejectWrapper.eq(RefundRecord::getUserId, userId)
                 .eq(RefundRecord::getStatus, "rejected");
         Integer rejectCount = Math.toIntExact(refundRecordMapper.selectCount(rejectWrapper));
 
-                
+
         Integer unreasonableCount = 0;
         LambdaQueryWrapper<RefundCredit> creditWrapper = new LambdaQueryWrapper<>();
         creditWrapper.eq(RefundCredit::getUserId, userId)
@@ -578,7 +578,7 @@ public class RefundServiceImpl implements RefundService {
             unreasonableCount = refundCredit.getUnreasonableRefundCount();
         }
 
-              
+
         Integer creditScore = getRefundCredit(userId);
 
         result.put("totalCount", totalCount);
@@ -590,15 +590,15 @@ public class RefundServiceImpl implements RefundService {
         return result;
     }
 
-                     
-       
-                   
-                                    
-       
-       
-                     
-                                       
-       
+
+
+
+
+
+
+
+
+
     @SuppressWarnings("unused")
     public Map<String, Object> approveRefund(Long refundId, Long adminId, String notes) {
         return reviewRefund(refundId, adminId, true, notes, false, null);
@@ -608,10 +608,10 @@ public class RefundServiceImpl implements RefundService {
         return reviewRefund(refundId, adminId, false, reason, false, null);
     }
 
-       
-                       
-                                          
-       
+
+
+
+
     public Map<String, Object> getRefundInfo(Long refundId) {
         return getRefundDetail(refundId);
     }

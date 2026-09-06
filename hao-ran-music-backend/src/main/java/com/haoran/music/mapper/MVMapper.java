@@ -13,16 +13,16 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                           
-   
+
+
+
+
 @Mapper
 public interface MVMapper extends BaseMapper<MV> {
 
-       
-                                                               
-       
+
+
+
     @Select("SELECT id FROM mv WHERE status = 1 AND deleted = 0 "
             + "AND (song_id = #{songId} OR (#{preferredMvId} IS NOT NULL AND id = #{preferredMvId} "
             + "AND (song_id IS NULL OR song_id = #{songId}))) "
@@ -30,16 +30,16 @@ public interface MVMapper extends BaseMapper<MV> {
     Long selectPublicRelatedMvId(@Param("songId") Long songId,
                                  @Param("preferredMvId") Long preferredMvId);
 
-       
-                       
-      
-                       
-                                      
-                                                     
-                           
-                                         
-                     
-       
+
+
+
+
+
+
+
+
+
+
     IPage<MV> selectPageWithFilters(
             Page<MV> page,
             @Param("area") String area,

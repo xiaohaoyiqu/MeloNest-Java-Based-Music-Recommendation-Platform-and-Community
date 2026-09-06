@@ -1,10 +1,10 @@
- 
-                     
-                                       
-                  
- 
-                                   
- 
+
+
+
+
+
+
+
 
 server:
   port: 9090
@@ -14,27 +14,27 @@ server:
       min-spare: 200
     accept-count: 2000
     max-connections: 10000
-        
+
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
 
 spring:
-                         
+
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.jdbc.Driver
       url: ${DB_URL:jdbc:mysql://192.168.153.131:3306/haoranmusic_bus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true}
       username: ${DB_USERNAME:hdfs}
-                             
+
       password: ${DB_PASSWORD:}
-               
+
       initial-size: 50
       min-idle: 50
       max-active: 500
       max-wait: 5000
-               
+
       time-between-eviction-runs-millis: 30000
       min-evictable-idle-time-millis: 120000
       max-evictable-idle-time-millis: 300000
@@ -42,17 +42,17 @@ spring:
       test-while-idle: true
       test-on-borrow: false
       test-on-return: false
-            
+
       pool-prepared-statements: true
       max-pool-prepared-statement-per-connection-size: 20
-              
+
       remove-abandoned: true
       remove-abandoned-timeout: 180
-           
+
       filters: stat,wall,slf4j
-              
+
       connection-properties: cachePrepStmts=true;cacheResultSetMetadata=true;cacheServerConfiguration=true;useSSL=false;useUnicode=true;characterEncoding=UTF-8
-              
+
       stat-view-servlet:
         enabled: true
         url-pattern: /druid/*
@@ -70,12 +70,12 @@ spring:
           config:
             multi-statement-allow: true
 
-           
+
   data:
     redis:
       host: ${REDIS_HOST:192.168.153.131}
       port: 6379
-                             
+
       password: ${REDIS_PASSWORD:}
       lettuce:
         pool:
@@ -83,23 +83,23 @@ spring:
           max-idle: 200
           min-idle: 50
           max-wait: 3000ms
-            
+
       timeout: 3000ms
-            
+
       connect-timeout: 3000ms
-            
+
       command-timeout: 2000ms
 
-           
+
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:192.168.153.131:9092,192.168.153.132:9092,192.168.153.133:9092}
 
-      
+
 music:
   playback:
     source-url-prefix: ${MUSIC_PLAYBACK_SOURCE_URL_PREFIX:http://192.168.153.133:8081/}
     nginx-accel-enabled: ${MUSIC_PLAYBACK_NGINX_ACCEL_ENABLED:false}
-        
+
   cluster:
     enabled: true
     node-name: ${NODE_NAME:node1}
@@ -117,34 +117,34 @@ music:
         name: node3
         ip: 192.168.153.133
         port: 9090
-                               
+
   upload:
     song-path: /sdb1/haoranmusicData/Datas/songs/
     mv-path: /sdb1/haoranmusicData/Datas/mvs/
     avatar-path: /sdb1/haoranmusicData/Datas/images/avatars/
     album-cover-path: /sdb1/haoranmusicData/Datas/images/covers/
     playlist-cover-path: /sdb1/haoranmusicData/Datas/playlist-covers/
-                   
+
   node3:
     host: 192.168.153.133
     user: hdfs
     images-path: /sdb1/haoranmusicData/Datas/images/
-                            
+
   nginx-url-prefix: ${MUSIC_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
 
-          
+
 hadoop:
   name-node: hdfs://node1:9000
   hdfs-path: /haoran/music
   user: hdfs
 
-        
+
 hive:
   jdbc-url: jdbc:hive2://node1:10000/haoranmuisc
   username: ${HIVE_USERNAME:hdfs}
   password:
 
-             
+
 logging:
   level:
     root: INFO
@@ -154,17 +154,17 @@ logging:
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
 
-                   
+
 jwt:
-                           
+
   secret: ${JWT_SECRET:}
   expiration: 604800000
 
-            
+
 deepseek:
   base-url: ${DEEPSEEK_BASE_URL:http://192.168.153.1:11434}
   model: ${DEEPSEEK_MODEL:deepseek-r1:8b}
-                               
+
   api-key: ${DEEPSEEK_API_KEY:}
   timeout: ${DEEPSEEK_TIMEOUT:120}
   max-retries: ${DEEPSEEK_MAX_RETRIES:3}

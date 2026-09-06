@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import cn.hutool.core.util.StrUtil;
@@ -92,8 +92,8 @@ public class AppealServiceImpl extends ServiceImpl<AppealMapper, Appeal> impleme
                     "新申诉不再接受证据URL，请先上传私有附件并提交evidenceAssetIds");
         }
 
-                                                                                             
-                                                                                            
+
+
         User user = userMapper.selectByIdForUpdate(userId);
         if (user == null || Integer.valueOf(1).equals(user.getDeleted())) {
             throw new BusinessException(ResultCode.USER_NOT_EXIST);
@@ -285,9 +285,9 @@ public class AppealServiceImpl extends ServiceImpl<AppealMapper, Appeal> impleme
         return count != null && count > 0;
     }
 
-       
-                                      
-       
+
+
+
     private Long resolveAppealTarget(User user, String appealType, Long requestedRelatedId) {
         if ("BAN".equals(appealType)) {
             if (UserAccountStatusUtil.canInteract(user)) {

@@ -31,10 +31,10 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                                                                                                                       
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/song")
@@ -55,11 +55,11 @@ public class SongController {
     @Autowired
     private SongResourceRequestService songResourceRequestService;
 
-                                                       
 
-       
-             
-       
+
+
+
+
     @ApiLog("获取歌曲详情")
     @GetMapping("/info/{id}")
     public Result<SongVO> getSongById(@PathVariable("id") Long id,
@@ -68,9 +68,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("查询歌曲列表")
     @DetectCrawler(operation = "查询歌曲列表", checkReferer = true, checkBehavior = false)
     @GetMapping("/page")
@@ -80,9 +80,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取新歌列表")
     @DetectCrawler(operation = "获取新歌列表", checkReferer = true)
     @GetMapping("/new")
@@ -92,9 +92,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取热门歌曲")
     @DetectCrawler(operation = "获取热门歌曲", checkReferer = true)
     @GetMapping("/hot")
@@ -105,9 +105,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-           
-       
+
+
+
     @ApiLog("记录歌曲播放")
     @PostMapping("/play/{songId}")
     public Result<Void> recordPlay(@PathVariable("songId") Long songId,
@@ -116,10 +116,10 @@ public class SongController {
         return Result.error(410, "旧播放计数入口已停用，请使用带事件ID和有效进度的听歌事件");
     }
 
-       
-                
-                     
-       
+
+
+
+
     @ApiLog(value = "获取歌曲播放URL", logReturn = false)
     @DetectCrawler(operation = "获取播放链接", checkReferer = true, riskThreshold = 50)
     @GetMapping("/url/{songId}")
@@ -132,9 +132,9 @@ public class SongController {
         return Result.successData(url);
     }
 
-       
-                                              
-       
+
+
+
     @ApiLog(value = "获取歌曲试听URL", logReturn = false)
     @DetectCrawler(operation = "获取歌曲试听链接", checkReferer = true, riskThreshold = 50)
     @GetMapping("/preview/{songId}")
@@ -145,10 +145,10 @@ public class SongController {
         return Result.successData(songService.getPreviewUrl(songId, userId));
     }
 
-       
-             
-                  
-       
+
+
+
+
     @ApiLog(value = "流式播放歌曲", logArgs = false, logReturn = false)
     @DetectCrawler(operation = "流式播放", checkReferer = false, checkBehavior = false)
     @GetMapping("/stream/{songId}")
@@ -162,11 +162,11 @@ public class SongController {
         songService.streamSong(songId, quality, grant, range, userId, response);
     }
 
-                                                        
 
-       
-           
-       
+
+
+
+
     @ApiLog("点赞歌曲")
     @RateLimit(maxRequests = 30, timeWindowSeconds = 3600, operation = "likeSong",
                message = "点赞操作过于频繁，请稍后再试")
@@ -180,9 +180,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("取消点赞歌曲")
     @DeleteMapping({"/like/{songId}", "/like/like/{songId}"})
     public Result<Boolean> unlikeSong(@PathVariable("songId") Long songId,
@@ -194,9 +194,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("切换点赞状态")
     @RateLimit(maxRequests = 30, timeWindowSeconds = 3600, operation = "toggleLikeSong",
                message = "点赞操作过于频繁，请稍后再试")
@@ -210,9 +210,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-           
-       
+
+
+
     @ApiLog("收藏歌曲")
     @RateLimit(maxRequests = 120, timeWindowSeconds = 60, operation = "favoriteSong",
                message = "收藏操作过于频繁，请稍后再试")
@@ -226,9 +226,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("取消收藏歌曲")
     @DeleteMapping({"/favorite/{songId}", "/like/favorite/{songId}"})
     public Result<Boolean> unfavoriteSong(@PathVariable("songId") Long songId,
@@ -240,9 +240,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-             
-       
+
+
+
     @ApiLog("切换收藏状态")
     @RateLimit(maxRequests = 120, timeWindowSeconds = 60, operation = "toggleFavoriteSong",
                message = "收藏操作过于频繁，请稍后再试")
@@ -256,9 +256,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("检查歌曲状态")
     @GetMapping({"/status/{songId}", "/like/status/{songId}"})
     public Result<Map<String, Boolean>> checkSongStatus(@PathVariable("songId") Long songId,
@@ -269,9 +269,9 @@ public class SongController {
         return Result.success(status);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("批量获取歌曲状态")
     @PostMapping({"/status/batch", "/like/status/batch"})
     public Result<Map<Long, Map<String, Boolean>>> getBatchSongStatus(
@@ -284,9 +284,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("获取收藏歌曲列表")
     @GetMapping({"/favorite/list", "/like/favorite/list"})
     public Result<IPage<SongLike>> getFavoriteSongs(PageQuery pageQuery,
@@ -298,9 +298,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-                                                 
-       
+
+
+
     @ApiLog("获取收藏歌曲详情列表")
     @GetMapping({"/favorite/details", "/like/favorite/details"})
     public Result<IPage<SongVO>> getFavoriteSongDetails(PageQuery pageQuery,
@@ -312,9 +312,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取收藏数量")
     @GetMapping({"/favorite/count", "/like/favorite/count"})
     public Result<Integer> getFavoriteCount(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -325,11 +325,11 @@ public class SongController {
         return Result.success(count);
     }
 
-                                                     
 
-       
-                
-       
+
+
+
+
     @ApiLog("歌曲评分")
     @PostMapping("/rating")
     public Result<SongRatingVO> rateSong(
@@ -342,9 +342,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取歌曲评分")
     @GetMapping("/rating/{songId}")
     public Result<SongRatingVO> getSongRating(
@@ -354,9 +354,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("删除歌曲评分")
     @DeleteMapping("/rating/{songId}")
     public Result<Void> deleteRating(
@@ -369,9 +369,9 @@ public class SongController {
         return Result.success();
     }
 
-       
-                
-       
+
+
+
     @ApiLog("获取用户评分列表")
     @GetMapping("/rating/user/list")
     public Result<Object> getUserRatings(@RequestAttribute(value = "userId", required = false) Long userId) {
@@ -382,9 +382,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("批量评分歌曲")
     @PostMapping("/rating/batch")
     public Result<Void> batchRateSong(
@@ -397,9 +397,9 @@ public class SongController {
         return Result.success();
     }
 
-       
-                 
-       
+
+
+
     @ApiLog("获取用户评分统计")
     @GetMapping("/rating/stats")
     public Result<Map<String, Object>> getUserRatingStats(
@@ -411,11 +411,11 @@ public class SongController {
         return Result.success(stats);
     }
 
-                                                     
 
-       
-           
-       
+
+
+
+
     @ApiLog("下载歌曲")
     @GetMapping("/download/{songId}")
     public void downloadSong(
@@ -426,9 +426,9 @@ public class SongController {
         songDownloadService.downloadSong(songId, quality, userId, response);
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取歌曲下载链接")
     @GetMapping("/download/{songId}/info")
     public Result<Object> getDownloadInfo(
@@ -439,11 +439,11 @@ public class SongController {
         return Result.success(result);
     }
 
-                                                       
 
-       
-               
-       
+
+
+
+
     @ApiLog("创建歌曲资源申请")
     @PostMapping("/resource-request")
     public Result<Long> createRequest(
@@ -456,9 +456,9 @@ public class SongController {
         return Result.success(requestId);
     }
 
-       
-                
-       
+
+
+
     @ApiLog("上传文件并创建歌曲资源申请")
     @PostMapping("/resource-request/upload")
     public Result<Long> createRequestWithFile(
@@ -479,9 +479,9 @@ public class SongController {
         return Result.success(requestId);
     }
 
-       
-                 
-       
+
+
+
     @GetMapping("/resource-request/check")
     public Result<Boolean> checkRequested(
             @RequestParam("songName") String songName,
@@ -494,9 +494,9 @@ public class SongController {
         return Result.success(hasRequested);
     }
 
-       
-               
-       
+
+
+
     @GetMapping("/resource-request/today-count")
     public Result<Integer> getTodayCount(
             @RequestAttribute(value = "userId", required = false) Long userId) {
@@ -507,9 +507,9 @@ public class SongController {
         return Result.success(count);
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("查询用户歌曲资源申请记录")
     @GetMapping("/resource-request/my")
     public Result<IPage<SongResourceRequestVO>> getMyRequests(
@@ -528,9 +528,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-                    
-       
+
+
+
     @ApiLog("查询所有歌曲资源申请")
     @GetMapping("/resource-request/all")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -542,9 +542,9 @@ public class SongController {
         return Result.success(result);
     }
 
-       
-                    
-       
+
+
+
     @ApiLog("处理歌曲资源申请")
     @PostMapping("/resource-request/handle")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -559,9 +559,9 @@ public class SongController {
         return Result.success("处理成功");
     }
 
-       
-              
-       
+
+
+
     @GetMapping("/resource-request/pending-count")
     @RequireRole({UserRole.MODERATOR, UserRole.ADMIN, UserRole.SUPER_ADMIN})
     public Result<Long> getPendingCount() {

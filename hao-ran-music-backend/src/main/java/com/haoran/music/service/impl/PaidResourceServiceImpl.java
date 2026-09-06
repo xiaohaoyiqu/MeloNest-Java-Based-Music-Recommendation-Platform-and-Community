@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -35,9 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class PaidResourceServiceImpl implements PaidResourceService {
@@ -97,7 +97,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                                               String changeType, String changeReason) {
         creatorEligibilityService.requireEligible(ownerId, "设置付费资源");
 
-                 
+
         if (!isValidResourceType(resourceType)) {
             throw new BusinessException("不支持的资源类型");
         }
@@ -114,7 +114,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
             throw new BusinessException("订阅周期仅支持一次性、30、90、180或365天");
         }
 
-                  
+
         LambdaQueryWrapper<PaidResource> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PaidResource::getResourceType, resourceType)
                 .eq(PaidResource::getResourceId, resourceId);
@@ -138,7 +138,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                 return buildResourceResult(existing, "change_pending");
             }
 
-                                         
+
             int updated = paidResourceMapper.update(null, new LambdaUpdateWrapper<PaidResource>()
                     .eq(PaidResource::getId, existing.getId())
                     .eq(PaidResource::getOwnerId, ownerId)
@@ -169,7 +169,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
             return buildResourceResult(existing, "updated");
         }
 
-                
+
         PaidResource resource = new PaidResource();
         resource.setResourceType(resourceType);
         resource.setResourceId(resourceId);
@@ -290,7 +290,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
             return false;
         }
 
-                 
+
         if (purchased.getExpireTime() != null &&
                 LocalDateTime.now().isAfter(purchased.getExpireTime())) {
             return false;
@@ -305,18 +305,18 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                                                 String idempotencyKey) {
         UserAccountStatusUtil.requireCanInteract(userId, userMapper::selectById, "购买付费资源");
 
-                  
+
         if (checkPurchased(userId, resourceType, resourceId)) {
             throw new BusinessException("您已购买过此资源");
         }
 
-                   
+
         PaidResource resource = getActivePublicPaidResource(resourceType, resourceId);
         BigDecimal price = resource.getPrice();
         Long ownerId = resource.getOwnerId();
         Long paidResourceId = resource.getId();
 
-                 
+
         Map<String, Object> orderResult = paymentOrderService.createOrder(
                 userId,
                 "purchase",
@@ -326,7 +326,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                 purchaseOrderRemark(resourceType, paidResourceId),
                 idempotencyKey
         );
-                          
+
         Long orderId = (Long) orderResult.get("orderId");
 
         log.info("event=paid_resource_order_created userId={} resourceType={} resourceId={} paidResourceId={} orderId={}",
@@ -555,9 +555,9 @@ public class PaidResourceServiceImpl implements PaidResourceService {
         }
     }
 
-       
-                                      
-       
+
+
+
     private void syncStoppedSaleProjection(PaidResource resource) {
         int updated;
         switch (resource.getResourceType()) {
@@ -635,7 +635,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
 
         Page<UserPurchased> resultPage = userPurchasedMapper.selectPage(pageParam, wrapper);
 
-                           
+
         if ("playlist".equals(resourceType)) {
             Map<Long, Playlist> playlistById = new HashMap<>();
             java.util.LinkedHashSet<Long> playlistIds = new java.util.LinkedHashSet<>();
@@ -680,7 +680,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                     record.put("purchaseTime", purchased.getPurchaseTime());
                     record.put("expireTime", purchased.getExpireTime());
 
-                              
+
                     User creator = creatorById.get(playlist.getUserId());
                     if (creator != null) {
                         record.put("creatorName", creator.getNickname());
@@ -700,7 +700,7 @@ public class PaidResourceServiceImpl implements PaidResourceService {
             return result;
         }
 
-                     
+
         Map<String, Object> result = new HashMap<>();
         result.put("list", resultPage.getRecords());
         result.put("total", resultPage.getTotal());
@@ -724,11 +724,11 @@ public class PaidResourceServiceImpl implements PaidResourceService {
         return result;
     }
 
-                                                     
 
-       
-             
-       
+
+
+
+
     private Boolean isValidResourceType(String resourceType) {
         return "song".equals(resourceType)
                 || "mv".equals(resourceType)
@@ -736,9 +736,9 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                 || "playlist".equals(resourceType);
     }
 
-       
-             
-       
+
+
+
     private Map<String, Object> buildResourceResult(PaidResource resource, String type) {
         Map<String, Object> result = new HashMap<>();
         result.put("id", resource.getId());
@@ -758,9 +758,9 @@ public class PaidResourceServiceImpl implements PaidResourceService {
         return result;
     }
 
-       
-                                   
-       
+
+
+
     private void stageCandidateChange(PaidResource resource, BigDecimal price, Integer subscribePeriod,
                                       String changeType, String changeReason) {
         if ("pending".equals(resource.getChangeReviewStatus())) {
@@ -799,12 +799,12 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                 resource.getOwnerId(), resource.getResourceType(), resource.getResourceId(), price);
     }
 
-       
-                                     
-       
+
+
+
     private Map<String, Object> reviewCandidateChange(PaidResource resource, Long reviewerId,
                                                       boolean approved, String reviewReason) {
-                                           
+
         if (approved) {
             validateCandidateChange(resource);
         }
@@ -853,9 +853,9 @@ public class PaidResourceServiceImpl implements PaidResourceService {
         return result;
     }
 
-       
-                                    
-       
+
+
+
     private void validateCandidateChange(PaidResource resource) {
         BigDecimal price = resource.getCandidatePrice();
         Integer subscribePeriod = resource.getCandidateSubscribePeriod();
@@ -883,9 +883,9 @@ public class PaidResourceServiceImpl implements PaidResourceService {
                 && java.util.Objects.equals(resource.getSubscribePeriod(), subscribePeriod);
     }
 
-       
-                                          
-       
+
+
+
     private void notifyReviewResult(PaidResource resource, boolean approved, boolean changeReview) {
         String subject = changeReview ? "付费配置变更审核结果" : "付费资源审核结果";
         String content = approved

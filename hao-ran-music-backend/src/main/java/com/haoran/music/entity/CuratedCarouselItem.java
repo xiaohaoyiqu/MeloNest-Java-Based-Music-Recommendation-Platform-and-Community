@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -13,9 +13,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-                      
-   
+
+
+
 @Data
 @TableName("curated_carousel_item")
 public class CuratedCarouselItem {
@@ -23,14 +23,14 @@ public class CuratedCarouselItem {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-       
-                                        
-       
+
+
+
     private String scene;
 
-       
-                                                                                    
-       
+
+
+
     private String contentType;
 
     private String title;
@@ -65,8 +65,8 @@ public class CuratedCarouselItem {
     @TableLogic
     private Integer deleted;
 
-       
-                            
-       
+
+
+
     private String legacySourceKey;
 }

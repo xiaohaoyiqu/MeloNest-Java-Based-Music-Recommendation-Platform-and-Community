@@ -32,10 +32,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -143,7 +143,7 @@ public class SearchServiceImpl implements SearchService {
     public List<String> getHotKeywords(Integer limit) {
         final int resultSize = SearchLimitUtil.normalize(limit);
 
-                              
+
         String cacheKey = RedisConstants.SEARCH_PREFIX + musicIntelligenceCacheService.searchVersionSegment()
                 + "hot:keywords:" + resultSize;
         return CacheHelper.getOrLoad(
@@ -153,15 +153,15 @@ public class SearchServiceImpl implements SearchService {
         );
     }
 
-       
-                          
-      
-                        
-                      
-       
+
+
+
+
+
+
     private List<String> loadHotKeywords(int limit) {
         try {
-                                                
+
             LambdaQueryWrapper<SearchHistory> wrapper = new LambdaQueryWrapper<>();
             wrapper.select(SearchHistory::getKeyword)
                     .isNotNull(SearchHistory::getKeyword)
@@ -175,13 +175,13 @@ public class SearchServiceImpl implements SearchService {
                     .map(map -> (String) map.get("keyword"))
                     .collect(Collectors.toList());
 
-                                    
+
             if (!hotKeywords.isEmpty()) {
                 log.info("从数据库加载热门搜索关键词: {}", hotKeywords);
                 return hotKeywords;
             }
 
-                                    
+
             log.info("数据库暂无搜索历史，使用默认关键词");
             return DEFAULT_KEYWORDS.stream()
                     .limit(limit)
@@ -194,13 +194,13 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-       
-             
-      
-                         
-                        
-                     
-       
+
+
+
+
+
+
+
     @Override
     public List<String> getSearchHistory(Long userId, Integer limit) {
         if (ObjectUtils.isEmpty(userId)) {
@@ -213,7 +213,7 @@ public class SearchServiceImpl implements SearchService {
             Object cached = redisUtils.get(key);
 
             if (ObjectUtils.isNotEmpty(cached)) {
-                                                 
+
                 List<String> history;
                 if (cached instanceof List) {
                     history = new ArrayList<>();
@@ -230,18 +230,18 @@ public class SearchServiceImpl implements SearchService {
                         .limit(resultSize)
                         .collect(Collectors.toList());
             } else {
-                                 
+
                 log.info("Redis缓存为空，从数据库加载搜索历史: userId={}", userId);
                 List<SearchHistory> dbHistory = searchHistoryService.getRecentSearch(userId, resultSize);
 
-                               
+
                 List<String> keywords = dbHistory.stream()
                         .map(SearchHistory::getKeyword)
                         .distinct()
                         .limit(resultSize)
                         .collect(Collectors.toList());
 
-                            
+
                 if (!keywords.isEmpty()) {
                     redisUtils.set(key, keywords, 7, TimeUnit.DAYS);
                     log.info("从数据库加载了{}条搜索历史，已回写Redis", keywords.size());
@@ -262,11 +262,11 @@ public class SearchServiceImpl implements SearchService {
             return;
         }
 
-                    
+
         String key = RedisConstants.SEARCH_PREFIX + "history:" + userId;
         redisUtils.delete(key);
 
-                    
+
         try {
             searchHistoryService.clearSearchHistory(userId);
             log.info("清除用户搜索历史（Redis+数据库）: userId={}", userId);
@@ -277,12 +277,12 @@ public class SearchServiceImpl implements SearchService {
         clearEnhancedSearchActivity(userId);
     }
 
-       
-               
-      
-                          
-                         
-       
+
+
+
+
+
+
     @Override
     public void deleteSearchHistoryItem(Long userId, String keyword) {
         if (ObjectUtils.isEmpty(userId) || StrUtil.isBlank(keyword)) {
@@ -301,18 +301,18 @@ public class SearchServiceImpl implements SearchService {
                     }
                 }
 
-                          
+
                 history.remove(keyword);
 
-                          
+
                 redisUtils.set(key, history, 7, TimeUnit.DAYS);
 
                 log.info("删除单条搜索历史（Redis）: userId={}, keyword={}", userId, keyword);
             }
 
-                        
+
             try {
-                                   
+
                 LambdaQueryWrapper<SearchHistory> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(SearchHistory::getUserId, userId)
                         .eq(SearchHistory::getKeyword, keyword.trim());
@@ -329,12 +329,12 @@ public class SearchServiceImpl implements SearchService {
         deleteEnhancedSearchActivityItem(userId, keyword);
     }
 
-       
-             
-      
-                         
-                         
-       
+
+
+
+
+
+
     @Override
     public void saveSearchHistory(Long userId, String keyword) {
         if (ObjectUtils.isEmpty(userId) || StrUtil.isBlank(keyword)) {
@@ -349,7 +349,7 @@ public class SearchServiceImpl implements SearchService {
 
             List<String> history;
             if (ObjectUtils.isNotEmpty(cached) && cached instanceof List) {
-                         
+
                 history = new ArrayList<>();
                 for (Object item : (List<?>) cached) {
                     if (item instanceof String) {
@@ -360,24 +360,24 @@ public class SearchServiceImpl implements SearchService {
                 history = new ArrayList<>();
             }
 
-                                    
+
             history.remove(keyword);
             history.add(0, keyword);
 
-                          
+
             if (history.size() > 50) {
                 history = history.subList(0, 50);
             }
 
-                   
+
             redisUtils.set(key, history, 7, TimeUnit.DAYS);
 
-                                    
+
             try {
-                                                        
+
                 searchHistoryService.addSearchHistory(userId, keyword.trim(), 0, 0);
             } catch (Exception dbEx) {
-                                 
+
                 log.warn("保存搜索历史到数据库失败: userId={}, keyword={}", userId, keyword);
             }
             userStatisticsService.recordSearch(userId);
@@ -412,25 +412,25 @@ public class SearchServiceImpl implements SearchService {
             log.warn("删除增强搜索记录失败: userId={}, keyword={}", userId, keyword);
         }
     }
-       
-                   
-      
-                         
-                        
-                         
-       
+
+
+
+
+
+
+
     @Override
     public List<String> getPersonalizedHotKeywords(Long userId, Integer limit) {
         final int resultSize = SearchLimitUtil.normalize(limit);
 
-                       
+
         if (ObjectUtils.isEmpty(userId)) {
             return DEFAULT_KEYWORDS.stream()
                     .limit(resultSize)
                     .collect(Collectors.toList());
         }
 
-                              
+
         String cacheKey = RedisConstants.SEARCH_PREFIX + musicIntelligenceCacheService.searchVersionSegment()
                 + "hot:keywords:" + userId + ":" + resultSize;
         return CacheHelper.getOrLoad(
@@ -440,20 +440,20 @@ public class SearchServiceImpl implements SearchService {
         );
     }
 
-       
-                   
-      
-                         
-                        
-                         
-       
+
+
+
+
+
+
+
     private List<String> loadPersonalizedHotKeywords(Long userId, int limit) {
         try {
-                       
+
             UserPortraitService userPortraitService = getBean(UserPortraitService.class);
             Map<String, Object> userPortrait = userPortraitService.getUserPortrait(userId);
 
-                              
+
             return SearchPersonalizationUtil.getPersonalizedHotKeywords(
                     userPortrait, DEFAULT_KEYWORDS, limit);
         } catch (Exception e) {
@@ -464,14 +464,14 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-       
-                
-      
-                           
-                         
-                        
-                      
-       
+
+
+
+
+
+
+
+
     @Override
     public List<String> getPersonalizedSuggestions(String keyword, Long userId, Integer limit) {
         if (StrUtil.isBlank(keyword)) {
@@ -481,7 +481,7 @@ public class SearchServiceImpl implements SearchService {
         final int resultSize = SearchLimitUtil.normalize(limit);
         List<String> defaultSuggestions = generateDefaultSuggestions(keyword);
 
-                      
+
         if (ObjectUtils.isEmpty(userId)) {
             return defaultSuggestions.stream()
                     .limit(resultSize)
@@ -489,11 +489,11 @@ public class SearchServiceImpl implements SearchService {
         }
 
         try {
-                       
+
             UserPortraitService userPortraitService = getBean(UserPortraitService.class);
             Map<String, Object> userPortrait = userPortraitService.getUserPortrait(userId);
 
-                           
+
             return SearchPersonalizationUtil.getPersonalizedSuggestions(
                     keyword, userPortrait, defaultSuggestions);
         } catch (Exception e) {
@@ -504,34 +504,34 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-       
-               
-      
-                           
-                     
-       
+
+
+
+
+
+
     private List<String> generateDefaultSuggestions(String keyword) {
         List<String> suggestions = new ArrayList<>();
 
-                      
+
         suggestions.add(keyword + " 的歌");
         suggestions.add(keyword + " 专辑");
         suggestions.add(keyword + " 现场");
 
-                  
+
         suggestions.add("类似 " + keyword);
         suggestions.add(keyword + " 翻唱");
 
         return suggestions;
     }
 
-       
-                    
-      
-                              
-                        
-                     
-       
+
+
+
+
+
+
+
     private <T> T getBean(Class<T> beanClass) {
         return ApplicationContextProvider
                 .getApplicationContext()

@@ -6,10 +6,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-   
-                      
-                         
-   
+
+
+
+
 @Data
 public class LyricRequestDTO {
 
@@ -31,9 +31,9 @@ public class LyricRequestDTO {
 
     private Integer changeType;
 
-       
-                                                                                    
-       
+
+
+
     @Size(max = 500, message = "修改说明不能超过500个字符")
     private String description;
 

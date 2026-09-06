@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -44,9 +44,9 @@ import java.util.stream.Collectors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-   
-          
-   
+
+
+
 @Slf4j
 @Service
 public class EmojiServiceImpl extends ServiceImpl<EmojiPackageMapper, EmojiPackage> implements EmojiService {
@@ -167,7 +167,7 @@ public class EmojiServiceImpl extends ServiceImpl<EmojiPackageMapper, EmojiPacka
 
     @Override
     public List<Emoji> getSystemEmojis(Long userId) {
-                      
+
         return getEmojisByPackage(0L, userId);
     }
 
@@ -712,16 +712,16 @@ public class EmojiServiceImpl extends ServiceImpl<EmojiPackageMapper, EmojiPacka
         List<EmojiPackage> publicPackages = filterPublicPackages(emojiPackageMapper.selectList(null));
         List<Emoji> allEmojis = filterPublicEmojis(emojiMapper.selectList(null));
 
-                  
+
         stats.put("packageCount", (long) publicPackages.size());
 
-                   
+
         stats.put("systemEmojiCount", allEmojis.stream().filter(this::isSystemEmoji).count());
 
-                    
+
         stats.put("customEmojiCount", allEmojis.stream().filter(emoji -> !isSystemEmoji(emoji)).count());
 
-                
+
         Map<String, Long> categoryStats = allEmojis.stream()
                 .collect(Collectors.groupingBy(emoji -> {
                     String cat = emoji.getCategory();
@@ -729,7 +729,7 @@ public class EmojiServiceImpl extends ServiceImpl<EmojiPackageMapper, EmojiPacka
                 }, Collectors.counting()));
         stats.put("categoryStats", categoryStats);
 
-                
+
         long totalUsage = allEmojis.stream()
                 .mapToLong(emoji -> emoji.getUsageCount() != null ? emoji.getUsageCount() : 0L)
                 .sum();

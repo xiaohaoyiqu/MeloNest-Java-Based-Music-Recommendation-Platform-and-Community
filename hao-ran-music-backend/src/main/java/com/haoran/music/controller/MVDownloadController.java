@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-   
-                      
-                       
-   
+
+
+
+
 @RestController
 @RequestMapping("/mv/download")
 public class MVDownloadController {
@@ -20,14 +20,14 @@ public class MVDownloadController {
     @Resource
     private MVDownloadService mvDownloadService;
 
-       
-           
-                   
-      
-                           
-                                                         
-                             
-       
+
+
+
+
+
+
+
+
     @ApiLog("下载MV")
     @DetectCrawler(operation = "MV下载", checkReferer = true, riskThreshold = 40)
     @GetMapping("/{mvId}")
@@ -39,14 +39,14 @@ public class MVDownloadController {
         mvDownloadService.downloadMV(mvId, quality, userId, response);
     }
 
-       
-                         
-                     
-      
-                           
-                         
-                     
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取MV下载链接")
     @DetectCrawler(operation = "MV下载链接", checkReferer = true, riskThreshold = 40)
     @GetMapping("/{mvId}/info")

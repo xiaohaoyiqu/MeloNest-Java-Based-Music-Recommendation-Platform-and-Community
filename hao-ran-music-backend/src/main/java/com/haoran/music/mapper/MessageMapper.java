@@ -1,7 +1,7 @@
-   
-                      
-                          
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -14,16 +14,16 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
-   
-             
-   
+
+
+
 @Mapper
 public interface MessageMapper extends BaseMapper<Message> {
 
-       
-                     
-                                    
-       
+
+
+
+
     @Select("SELECT * FROM message " +
             "WHERE ((sender_id = #{currentUserId} AND receiver_id = #{otherUserId} AND is_deleted_by_sender = 0) " +
             "OR (sender_id = #{otherUserId} AND receiver_id = #{currentUserId} AND is_deleted_by_receiver = 0)) " +
@@ -35,9 +35,9 @@ public interface MessageMapper extends BaseMapper<Message> {
                                           @Param("offset") long offset,
                                           @Param("limit") int limit);
 
-       
-                           
-       
+
+
+
     @Select("SELECT COUNT(*) FROM message " +
             "WHERE ((sender_id = #{currentUserId} AND receiver_id = #{otherUserId} AND is_deleted_by_sender = 0) " +
             "OR (sender_id = #{otherUserId} AND receiver_id = #{currentUserId} AND is_deleted_by_receiver = 0)) " +
@@ -72,24 +72,24 @@ public interface MessageMapper extends BaseMapper<Message> {
     int recallReadMessage(@Param("messageId") Long messageId,
                           @Param("senderId") Long senderId);
 
-       
-                  
-      
-                              
-                     
-       
+
+
+
+
+
+
     @Select("SELECT COUNT(*) FROM message " +
             "WHERE receiver_id = #{receiverId} AND is_read = 0 " +
             "AND is_recalled = 0 AND is_deleted_by_receiver = 0 AND is_deleted = 0")
     int getUnreadCount(@Param("receiverId") Long receiverId);
 
-       
-                     
-      
-                              
-                              
-                     
-       
+
+
+
+
+
+
+
     @Select("SELECT COUNT(*) FROM message " +
             "WHERE receiver_id = #{receiverId} AND sender_id = #{senderId} " +
             "AND is_read = 0 AND is_recalled = 0 " +

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,11 +25,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-   
-              
-  
-                                       
-   
+
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/external")
@@ -41,12 +41,12 @@ public class ExternalProxyController {
     @Autowired
     private ObjectMapper objectMapper;
 
-       
-                             
-      
-                         
-                              
-       
+
+
+
+
+
+
     private String encode(String value) {
         try {
             return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8.name());
@@ -55,9 +55,9 @@ public class ExternalProxyController {
         }
     }
 
-       
-                               
-       
+
+
+
     private int normalizeLimit(Integer limit, int defaultLimit, int maxLimit) {
         if (limit == null || limit <= 0) {
             return defaultLimit;
@@ -65,9 +65,9 @@ public class ExternalProxyController {
         return Math.min(limit, maxLimit);
     }
 
-       
-                                 
-       
+
+
+
     private String requireQuery(String value) {
         String normalized = value == null ? "" : value.trim();
         if (normalized.isEmpty() || normalized.length() > MAX_QUERY_LENGTH) {
@@ -76,9 +76,9 @@ public class ExternalProxyController {
         return normalized;
     }
 
-       
-                            
-       
+
+
+
     private String optionalToken(String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
@@ -90,9 +90,9 @@ public class ExternalProxyController {
         return normalized;
     }
 
-       
-                                   
-       
+
+
+
     @GetMapping("/itunes/search")
     @RateLimit(maxRequests = 15, timeWindowSeconds = 60, operation = "externalItunes",
             scope = RateLimitScope.GLOBAL, message = "外部搜索过于频繁，请稍后再试")
@@ -121,9 +121,9 @@ public class ExternalProxyController {
         }
     }
 
-       
-                  
-       
+
+
+
     @GetMapping("/anime/seasonal/now")
     @RateLimit(maxRequests = 20, timeWindowSeconds = 60, operation = "externalKitsu",
             scope = RateLimitScope.GLOBAL, message = "外部查询过于频繁，请稍后再试")
@@ -153,9 +153,9 @@ public class ExternalProxyController {
         return "FALL";
     }
 
-       
-                     
-       
+
+
+
     @GetMapping("/anime/{id}")
     @RateLimit(maxRequests = 20, timeWindowSeconds = 60, operation = "externalKitsu",
             scope = RateLimitScope.GLOBAL, message = "外部查询过于频繁，请稍后再试")
@@ -180,9 +180,9 @@ public class ExternalProxyController {
         }
     }
 
-       
-                  
-       
+
+
+
     @GetMapping("/anime")
     @RateLimit(maxRequests = 20, timeWindowSeconds = 60, operation = "externalKitsu",
             scope = RateLimitScope.GLOBAL, message = "外部搜索过于频繁，请稍后再试")
@@ -208,9 +208,9 @@ public class ExternalProxyController {
         }
     }
 
-       
-                                         
-       
+
+
+
     String toKitsuAnimeCatalogResponse(String response) throws Exception {
         JsonNode root = objectMapper.readTree(response);
         JsonNode resourceData = root.path("data");
@@ -321,9 +321,9 @@ public class ExternalProxyController {
         return text.isEmpty() ? null : text;
     }
 
-       
-                            
-       
+
+
+
     @GetMapping("/games")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 1, operation = "externalFreeToGame",
             scope = RateLimitScope.GLOBAL, message = "外部查询过于频繁，请稍后再试")
@@ -355,9 +355,9 @@ public class ExternalProxyController {
         }
     }
 
-       
-                       
-       
+
+
+
     @GetMapping("/games/{id}")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 1, operation = "externalFreeToGame",
             scope = RateLimitScope.GLOBAL, message = "外部查询过于频繁，请稍后再试")

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    
-                      
-                               
-                   
-  
-          
-                                          
-                       
-                   
-                      
-               
-   
+
+
+
+
+
+
+
+
+
+
+
+
 
 <configuration>
-                              
+
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-                   
+
     <property name="LOG_HOME" value="${LOG_HOME:-logs}"/>
     <property name="APP_NAME" value="${LOG_APP_NAME:-haoran-music}"/>
     <property name="MAX_FILE_SIZE" value="${LOG_MAX_FILE_SIZE:-100MB}"/>
@@ -33,29 +33,29 @@
     <property name="API_TOTAL_SIZE_CAP" value="${LOG_API_TOTAL_SIZE_CAP:-256MB}"/>
     <property name="CONSOLE_THRESHOLD_LEVEL" value="${LOG_CONSOLE_LEVEL:-INFO}"/>
 
-                 
+
     <property name="CONSOLE_LOG_PATTERN"
               value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n"/>
     <property name="FILE_LOG_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%t] %-40.40logger{39} : %m%n"/>
 
-                                                       
-                    
-                                                       
+
+
+
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
-                                             
+
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>${CONSOLE_THRESHOLD_LEVEL}</level>
         </filter>
     </appender>
 
-                                                       
-                   
-                                                       
+
+
+
     <appender name="FILE_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/${APP_NAME}.log</file>
         <encoder>
@@ -70,9 +70,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                         
-                                                       
+
+
+
     <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/${APP_NAME}-error.log</file>
         <encoder>
@@ -92,9 +92,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                   
-                                                       
+
+
+
     <appender name="FILE_PAYMENT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/module/payment.log</file>
         <encoder>
@@ -109,9 +109,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                    
-                                                       
+
+
+
     <appender name="FILE_CREATOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/module/creator.log</file>
         <encoder>
@@ -126,9 +126,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                   
-                                                       
+
+
+
     <appender name="FILE_MODERATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/module/moderation.log</file>
         <encoder>
@@ -143,9 +143,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                   
-                                                       
+
+
+
     <appender name="FILE_RECOMMEND" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/module/recommend.log</file>
         <encoder>
@@ -160,9 +160,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                   
-                                                       
+
+
+
     <appender name="FILE_USER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/module/user.log</file>
         <encoder>
@@ -177,9 +177,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                    
-                                                       
+
+
+
     <appender name="FILE_SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/module/sql.log</file>
         <encoder>
@@ -194,9 +194,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                    
-                                                       
+
+
+
     <appender name="FILE_API" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/module/api.log</file>
         <encoder>
@@ -211,9 +211,9 @@
         </rollingPolicy>
     </appender>
 
-                                                       
-                          
-                                                       
+
+
+
     <appender name="ASYNC_FILE_ALL" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="FILE_ALL"/>
         <queueSize>512</queueSize>
@@ -224,21 +224,21 @@
         <appender-ref ref="FILE_ERROR"/>
         <queueSize>256</queueSize>
         <discardingThreshold>0</discardingThreshold>
-                          
+
         <neverBlock>true</neverBlock>
     </appender>
 
-                                                       
-                   
-                                                       
 
-                                        
+
+
+
+
     <logger name="com.haoran.music.common.aspect.ApiLogAspect" level="${LOG_API_LOG_ASPECT_LEVEL:-WARN}"/>
     <logger name="com.haoran.music.common.interceptor.AuthInterceptor" level="${LOG_AUTH_INTERCEPTOR_LEVEL:-WARN}"/>
     <logger name="com.haoran.music.service.impl.NotificationServiceImpl" level="${LOG_NOTIFICATION_LEVEL:-WARN}"/>
     <logger name="com.haoran.music.service.impl.MessageServiceImpl" level="${LOG_MESSAGE_LEVEL:-WARN}"/>
 
-                   
+
     <logger name="com.haoran.music.service.impl.PaymentServiceImpl" level="INFO" additivity="false">
         <appender-ref ref="FILE_PAYMENT"/>
         <appender-ref ref="ASYNC_FILE_ALL"/>
@@ -256,7 +256,7 @@
         <appender-ref ref="FILE_API"/>
     </logger>
 
-                    
+
     <logger name="com.haoran.music.service.impl.CreatorServiceImpl" level="INFO" additivity="false">
         <appender-ref ref="FILE_CREATOR"/>
         <appender-ref ref="ASYNC_FILE_ALL"/>
@@ -270,7 +270,7 @@
         <appender-ref ref="ASYNC_FILE_ALL"/>
     </logger>
 
-                   
+
     <logger name="com.haoran.music.service.impl.ModerationServiceImpl" level="INFO" additivity="false">
         <appender-ref ref="FILE_MODERATION"/>
         <appender-ref ref="ASYNC_FILE_ALL"/>
@@ -284,7 +284,7 @@
         <appender-ref ref="ASYNC_FILE_ALL"/>
     </logger>
 
-                   
+
     <logger name="com.haoran.music.service.impl.RecommendServiceImpl" level="INFO" additivity="false">
         <appender-ref ref="FILE_RECOMMEND"/>
         <appender-ref ref="ASYNC_FILE_ALL"/>
@@ -298,7 +298,7 @@
         <appender-ref ref="FILE_API"/>
     </logger>
 
-                   
+
     <logger name="com.haoran.music.service.impl.UserServiceImpl" level="INFO" additivity="false">
         <appender-ref ref="FILE_USER"/>
         <appender-ref ref="ASYNC_FILE_ALL"/>
@@ -312,7 +312,7 @@
         <appender-ref ref="FILE_API"/>
     </logger>
 
-                  
+
     <logger name="com.haoran.music.mapper" level="${LOG_SQL_LEVEL:-WARN}" additivity="false">
         <appender-ref ref="FILE_SQL"/>
         <appender-ref ref="CONSOLE"/>
@@ -321,22 +321,22 @@
         <appender-ref ref="FILE_SQL"/>
     </logger>
 
-                      
+
     <logger name="com.haoran.music.controller" level="${LOG_CONTROLLER_LEVEL:-WARN}" additivity="false">
         <appender-ref ref="FILE_API"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-                        
+
     <logger name="org.apache.kafka" level="WARN"/>
     <logger name="org.apache.hadoop" level="WARN"/>
     <logger name="org.apache.spark" level="WARN"/>
     <logger name="org.springframework" level="INFO"/>
     <logger name="com.alibaba.druid" level="INFO"/>
 
-                                                       
-                  
-                                                       
+
+
+
     <springProfile name="dev">
         <root level="${LOG_DEV_ROOT_LEVEL:-DEBUG}">
             <appender-ref ref="CONSOLE"/>

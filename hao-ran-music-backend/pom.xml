@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    
-                     
-                                     
-                  
-   
+
+
+
+
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -25,25 +25,25 @@
     <packaging>jar</packaging>
 
     <repositories>
-                          
+
         <repository>
             <id>huaweicloud</id>
             <name>Huawei Cloud</name>
             <url>https://mirrors.huaweicloud.com/repository/maven/</url>
         </repository>
-                        
+
         <repository>
             <id>aliyun-public</id>
             <name>Aliyun Public</name>
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
-                      
+
         <repository>
             <id>tencent</id>
             <name>Tencent Cloud</name>
             <url>https://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
         </repository>
-                                     
+
         <repository>
             <id>maven-central</id>
             <name>Maven Central</name>
@@ -52,25 +52,25 @@
     </repositories>
 
     <pluginRepositories>
-                            
+
         <pluginRepository>
             <id>huaweicloud-plugin</id>
             <name>Huawei Cloud Plugin</name>
             <url>https://mirrors.huaweicloud.com/repository/maven/</url>
         </pluginRepository>
-                        
+
         <pluginRepository>
             <id>aliyun-plugin</id>
             <name>Aliyun Plugin</name>
             <url>https://maven.aliyun.com/repository/public</url>
         </pluginRepository>
-                        
+
         <pluginRepository>
             <id>tencent-plugin</id>
             <name>Tencent Cloud Plugin</name>
             <url>https://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
         </pluginRepository>
-                                     
+
         <pluginRepository>
             <id>maven-central-plugin</id>
             <name>Maven Central Plugin</name>
@@ -98,32 +98,32 @@
     </properties>
 
     <dependencies>
-                                    
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-                                       
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-                                                 
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-                                                    
+
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>dysmsapi20170525</artifactId>
             <version>4.6.0</version>
         </dependency>
 
-                                                                                                   
+
         <dependency>
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
@@ -135,27 +135,27 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-                                
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-                                  
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-                                                                 
 
-                                  
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
-                             
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -163,42 +163,42 @@
             <scope>runtime</scope>
         </dependency>
 
-                          
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
 
-                             
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
 
-                                       
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
 
-                          
+
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
             <version>${fastjson2.version}</version>
         </dependency>
 
-                           
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
 
-                    
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -217,27 +217,27 @@
             <scope>runtime</scope>
         </dependency>
 
-                                     
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-                                            
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>4.4</version>
         </dependency>
 
-                                  
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
 
-                       
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -245,14 +245,14 @@
             <optional>false</optional>
         </dependency>
 
-                                 
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-                              
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
@@ -277,7 +277,7 @@
             </exclusions>
         </dependency>
 
-                            
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-hdfs</artifactId>
@@ -302,7 +302,7 @@
             </exclusions>
         </dependency>
 
-                              
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
@@ -327,7 +327,7 @@
             </exclusions>
         </dependency>
 
-                           
+
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.11</artifactId>
@@ -340,7 +340,7 @@
             </exclusions>
         </dependency>
 
-                          
+
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.11</artifactId>
@@ -353,7 +353,7 @@
             </exclusions>
         </dependency>
 
-                                           
+
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_2.11</artifactId>
@@ -366,7 +366,7 @@
             </exclusions>
         </dependency>
 
-                          
+
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-exec</artifactId>
@@ -387,14 +387,14 @@
             </exclusions>
         </dependency>
 
-                                 
+
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
             <version>4.2.0</version>
         </dependency>
 
-                             
+
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
@@ -404,7 +404,7 @@
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
-                                                                              
+
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
@@ -412,58 +412,58 @@
             <scope>test</scope>
         </dependency>
 
-                                   
+
         <dependency>
             <groupId>fi.solita.clamav</groupId>
             <artifactId>clamav-client</artifactId>
             <version>1.0.1</version>
         </dependency>
 
-                                    
+
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>0.4.20</version>
         </dependency>
 
-                                             
+
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-webp</artifactId>
             <version>3.10.1</version>
         </dependency>
 
-                                             
+
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-jpeg</artifactId>
             <version>3.10.1</version>
         </dependency>
 
-                                                                
 
-                       
+
+
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-sdk-java</artifactId>
             <version>4.39.27.ALL</version>
         </dependency>
 
-                        
+
         <dependency>
             <groupId>com.github.wechatpay-apiv3</groupId>
             <artifactId>wechatpay-java</artifactId>
             <version>0.2.12</version>
         </dependency>
 
-                                     
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.14</version>
         </dependency>
 
-                                     
+
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -473,7 +473,7 @@
 
     <build>
         <plugins>
-                                             
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -487,7 +487,7 @@
                 </configuration>
             </plugin>
 
-                                          
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -514,7 +514,7 @@
                 </dependencies>
             </plugin>
 
-                                           
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -524,7 +524,7 @@
                 </configuration>
             </plugin>
 
-                                     
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

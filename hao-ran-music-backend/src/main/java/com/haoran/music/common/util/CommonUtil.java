@@ -1,7 +1,7 @@
-   
-                      
-                                   
-   
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -12,17 +12,17 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-   
-        
-                                                
-   
+
+
+
+
 public class CommonUtil {
 
     private static volatile Map<String, String> urlMappings = Collections.emptyMap();
 
-       
-                                                                              
-       
+
+
+
     public static void setUrlMappings(Map<String, String> mappings) {
         if (ObjectUtils.isEmpty(mappings)) {
             urlMappings = Collections.emptyMap();
@@ -36,11 +36,11 @@ public class CommonUtil {
         urlMappings = Collections.unmodifiableMap(orderedMappings);
     }
 
-       
-              
-                       
-                       
-       
+
+
+
+
+
     public static String formatSize(long bytes) {
         if (bytes < 1024) {
             return bytes + " B";
@@ -53,17 +53,17 @@ public class CommonUtil {
         }
     }
 
-       
-                   
-                           
-                          
-       
+
+
+
+
+
     public static String getFileExtension(String filePath) {
         if (StrUtil.isBlank(filePath)) {
             return "";
         }
 
-                  
+
         int queryIndex = filePath.indexOf('?');
         if (queryIndex > 0) {
             filePath = filePath.substring(0, queryIndex);
@@ -77,22 +77,22 @@ public class CommonUtil {
         return "";
     }
 
-       
-                  
-                           
-                            
-       
+
+
+
+
+
     public static String getFileExtensionWithDot(String filePath) {
         String ext = getFileExtension(filePath);
         return ext.isEmpty() ? "" : "." + ext;
     }
 
-       
-                         
-                     
-                                   
-                             
-       
+
+
+
+
+
+
     public static Integer extractInt(String text, String regex) {
         if (StrUtil.isBlank(text) || StrUtil.isBlank(regex)) {
             return null;
@@ -104,17 +104,17 @@ public class CommonUtil {
                 return Integer.parseInt(matcher.group(1));
             }
         } catch (Exception e) {
-                   
+
         }
         return null;
     }
 
-       
-                          
-                     
-                                   
-                              
-       
+
+
+
+
+
+
     public static Double extractDouble(String text, String regex) {
         if (StrUtil.isBlank(text) || StrUtil.isBlank(regex)) {
             return null;
@@ -126,17 +126,17 @@ public class CommonUtil {
                 return Double.parseDouble(matcher.group(1));
             }
         } catch (Exception e) {
-                   
+
         }
         return null;
     }
 
-       
-                          
-                     
-                                   
-                              
-       
+
+
+
+
+
+
     public static String extractString(String text, String regex) {
         if (StrUtil.isBlank(text) || StrUtil.isBlank(regex)) {
             return null;
@@ -148,16 +148,16 @@ public class CommonUtil {
                 return matcher.group(1);
             }
         } catch (Exception e) {
-                   
+
         }
         return null;
     }
 
-       
-                          
-                       
-                                
-       
+
+
+
+
+
     public static String extractLocalPath(String url) {
         if (StrUtil.isBlank(url)) {
             return null;
@@ -178,11 +178,11 @@ public class CommonUtil {
         return null;
     }
 
-       
-                          
-                           
-                                     
-       
+
+
+
+
+
     public static String getImageFormatName(String filePath) {
         String extension = getFileExtension(filePath);
         if ("jpg".equalsIgnoreCase(extension)) {
@@ -191,30 +191,30 @@ public class CommonUtil {
         return extension;
     }
 
-       
-                    
-                            
-                      
-       
+
+
+
+
+
     public static String sanitizeFileName(String fileName) {
         if (StrUtil.isBlank(fileName)) {
             return "file";
         }
 
-                 
+
         String cleanName = new java.io.File(fileName).getName();
 
-                 
+
         cleanName = cleanName.replaceAll("[/\\\\:*?\"<>|]", "_");
 
-                  
+
         if (cleanName.length() > 100) {
             String extension = getFileExtensionWithDot(cleanName);
             String nameWithoutExt = cleanName.substring(0, cleanName.lastIndexOf('.'));
             cleanName = nameWithoutExt.substring(0, 90) + extension;
         }
 
-                 
+
         if (cleanName.isEmpty() || cleanName.startsWith(".")) {
             cleanName = "file_" + System.currentTimeMillis() + getFileExtensionWithDot(cleanName);
         }

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-   
-          
-  
-                         
-  
-                      
-   
+
+
+
+
+
+
+
 @RestController
 @RequestMapping("/recommend/topics")
 public class TopicRecommendController {
@@ -24,13 +24,13 @@ public class TopicRecommendController {
     @Resource
     private TopicRecommendService topicRecommendService;
 
-       
-                   
-      
-                         
-                             
-                            
-       
+
+
+
+
+
+
+
     @ApiLog("获取推荐话题")
     @GetMapping
     public Result<List<Map<String, Object>>> getRecommendedTopics(
@@ -40,14 +40,14 @@ public class TopicRecommendController {
         return Result.success(result);
     }
 
-       
-                 
-      
-                         
-                                                                                
-                             
-                            
-       
+
+
+
+
+
+
+
+
     @ApiLog("按流派获取推荐话题")
     @GetMapping("/genre")
     public Result<List<Map<String, Object>>> getTopicsByGenre(

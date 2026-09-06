@@ -34,10 +34,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> implements UserVipService {
@@ -56,7 +56,7 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
         vo.setUserId(String.valueOf(userId));
         boolean accountCanUseVip = UserAccountStatusUtil.canInteract(userId, userMapper::selectById);
 
-                     
+
         UserVip vip = userVipMapper.selectActiveVip(userId, LocalDateTime.now());
 
         if (ObjectUtils.isNotEmpty(vip)) {
@@ -70,7 +70,7 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
             vo.setVipStartTime(vip.getVipStartTime());
             vo.setVipExpireTime(vip.getVipExpireTime());
 
-                     
+
             if (ObjectUtils.isNotEmpty(vip.getVipExpireTime())) {
                 long days = ChronoUnit.DAYS.between(LocalDateTime.now(), vip.getVipExpireTime());
                 vo.setRemainingDays(String.valueOf((int) Math.max(0, days)));
@@ -245,7 +245,7 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
         List<UserVip> expiringVips = userVipMapper.selectExpiringVips(LocalDateTime.now(), threeDaysLater);
 
         for (UserVip vip : expiringVips) {
-                             
+
             log.info("event=vip_expiration_reminder_queued userId={}", vip.getUserId());
         }
 
@@ -268,13 +268,13 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
         }
 
         try {
-                                    
+
             String key = "vip:privilege:usage:" + userId;
             String field = privilege;
 
-                                    
+
             redisUtils.hIncrBy(key, field, 1);
-                         
+
             redisUtils.expire(key, 30, java.util.concurrent.TimeUnit.DAYS);
 
             log.debug("event=vip_privilege_usage_recorded userId={}", userId);
@@ -307,13 +307,13 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
         return privileges;
     }
 
-       
-              
-                    
-                            
-                     
-                       
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void grantVip(Long userId, int vipLevel, int days, String source) {
@@ -328,7 +328,7 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireTime;
 
-                                     
+
         UserVip existingVip = userVipMapper.selectLatestVipForUpdate(userId);
 
         if (existingVip != null) {
@@ -347,7 +347,7 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
             }
             existingVip.setVipExpireTime(expireTime);
             existingVip.setTotalVipDays((existingVip.getTotalVipDays() == null ? 0 : existingVip.getTotalVipDays()) + days);
-                                        
+
             if ("payment".equals(existingVip.getSource()) || "payment".equals(normalizedSource)) {
                 existingVip.setSource("payment");
             } else {
@@ -358,7 +358,7 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
             }
         } else {
             expireTime = now.plusDays(days);
-                       
+
             UserVip vip = new UserVip();
             vip.setUserId(userId);
             vip.setVipLevel(vipLevel);
@@ -373,7 +373,7 @@ public class UserVipServiceImpl extends ServiceImpl<UserVipMapper, UserVip> impl
             }
         }
 
-                                         
+
         if (expireTime != null) {
             try {
                 String key = "vip:source:" + userId;

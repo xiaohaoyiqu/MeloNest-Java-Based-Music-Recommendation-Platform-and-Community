@@ -22,10 +22,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, SearchHistory> implements SearchHistoryService {
@@ -43,7 +43,7 @@ public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, S
             return true;
         }
 
-                         
+
         LambdaQueryWrapper<SearchHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SearchHistory::getUserId, userId)
                 .eq(SearchHistory::getKeyword, keyword)
@@ -53,12 +53,12 @@ public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, S
         SearchHistory existing = getOne(wrapper);
 
         if (ObjectUtils.isNotEmpty(existing)) {
-                        
+
             existing.setCreateTime(LocalDateTime.now());
             existing.setResultCount(resultCount);
             updateById(existing);
         } else {
-                   
+
             SearchHistory history = new SearchHistory();
             history.setUserId(userId);
             history.setKeyword(keyword.trim());
@@ -91,7 +91,7 @@ public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, S
             throw new BusinessException(ResultCode.PARAM_ERROR, "用户ID和记录ID不能为空");
         }
 
-                      
+
         SearchHistory history = getById(id);
         if (ObjectUtils.isEmpty(history)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "搜索记录不存在");
@@ -124,7 +124,7 @@ public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, S
     public List<String> getHotKeywords(Integer limit) {
         int safeLimit = ObjectUtils.isEmpty(limit) || limit <= 0 ? 10 : limit;
 
-                       
+
         LocalDateTime since = LocalDateTime.now().minusDays(7);
 
         LambdaQueryWrapper<SearchHistory> wrapper = new LambdaQueryWrapper<>();
@@ -151,7 +151,7 @@ public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, S
             keywordCount.put(keyword, keywordCount.getOrDefault(keyword, 0L) + 1);
         }
 
-                  
+
         return keywordCount.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(safeLimit)
@@ -174,7 +174,7 @@ public class SearchHistoryServiceImpl extends ServiceImpl<SearchHistoryMapper, S
         }
 
         if (ObjectUtils.isEmpty(keyword)) {
-                             
+
             return getRecentSearch(userId, limit).stream()
                     .map(SearchHistory::getKeyword)
                     .collect(Collectors.toList());

@@ -9,19 +9,19 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                          
-   
+
+
+
+
 @Mapper
 public interface NotificationMapper extends BaseMapper<Notification> {
 
-       
-                                     
-      
-                          
-                                        
-       
+
+
+
+
+
+
     @Select("SELECT id FROM `user` WHERE id = #{userId} AND deleted = 0 FOR UPDATE")
     Long lockRecipientForNotificationAggregation(@Param("userId") Long userId);
 

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service;
 
 import com.haoran.music.mapper.PlayEventReceiptMapper;
@@ -10,18 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-   
-              
-   
+
+
+
 @Service
 public class PlayEventReceiptService {
 
     @Resource
     private PlayEventReceiptMapper receiptMapper;
 
-       
-                                                  
-       
+
+
+
     @Transactional(rollbackFor = Exception.class)
     public boolean tryClaim(String eventId, Long userId, String songId, Integer isLocal) {
         if (eventId == null || eventId.trim().isEmpty()) {

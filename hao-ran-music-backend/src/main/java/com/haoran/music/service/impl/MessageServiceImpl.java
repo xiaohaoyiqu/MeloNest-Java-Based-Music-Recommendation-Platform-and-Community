@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -50,9 +50,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-         
-   
+
+
+
 @Slf4j
 @Service
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> implements MessageService {
@@ -107,7 +107,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     private Long sendMessageInternal(Long senderId, Long receiverId, String messageType,
                                      String content, Long resourceId, boolean contentAlreadyNormalized) {
-               
+
         if (ObjectUtils.isEmpty(senderId) || ObjectUtils.isEmpty(receiverId)) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "发送者和接收者ID不能为空");
         }
@@ -128,26 +128,26 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             throw new BusinessException(ResultCode.FORBIDDEN,
                     UserAccountStatusUtil.targetUnavailableMessage(receiver) + "，无法发送消息");
         }
-                           
+
         Boolean senderBlacklisted = userBlacklistService.isBlacklisted(senderId, receiverId);
         if (Boolean.TRUE.equals(senderBlacklisted)) {
             throw new BusinessException(ResultCode.FORBIDDEN, "您已将该用户加入黑名单，无法发送消息");
         }
 
-                           
+
         Boolean receiverBlacklisted = userBlacklistService.isBlacklisted(receiverId, senderId);
         if (Boolean.TRUE.equals(receiverBlacklisted)) {
             throw new BusinessException(ResultCode.FORBIDDEN, "对方已将您加入黑名单，无法发送消息");
         }
 
-                          
+
         if (isUserBlocked(senderId, receiverId)) {
             throw new BusinessException(ResultCode.FORBIDDEN, "您已被对方屏蔽，无法发送消息");
         }
 
         requireSharedResourceAccess(messageType, resourceId, senderId, receiverId);
 
-               
+
         Message message = new Message();
         message.setSenderId(senderId);
         message.setReceiverId(receiverId);
@@ -155,7 +155,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         String storedContent = contentAlreadyNormalized ? content : normalizeMessageContent(messageType, content);
         message.setContent(storedContent);
         message.setResourceId(resourceId);
-                                                
+
         message.setResourceData(null);
         message.setIsRead(0);
         message.setIsRecalled(0);
@@ -165,10 +165,10 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
         messageMapper.insert(message);
 
-                  
+
         updateOrCreateConversation(message);
 
-                   
+
         incrementUnreadCount(receiverId, senderId);
 
         log.debug("发送消息成功: senderId={}, receiverId={}, type={}, messageId={}",
@@ -205,14 +205,14 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         return sendMessage(senderId, receiverId, "image", imageUrl, null, null);
     }
 
-       
-                                    
-      
-                            
-                              
-                                        
-                   
-       
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long sendImageMessage(Long senderId, Long receiverId, Long attachmentAssetId) {
@@ -282,7 +282,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         List<Message> messages = messageMapper.getMessagesBetweenUsers(
                 currentUserId, otherUserId, offset, size);
 
-                                          
+
         Collections.reverse(messages);
 
         page.setRecords(messages);
@@ -319,13 +319,13 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         return conversations.stream().map(conv -> {
             Map<String, Object> result = new HashMap<>();
 
-                          
+
             boolean isUserA = conv.getUserAId().equals(userId);
             Long otherUserId = isUserA ? conv.getUserBId() : conv.getUserAId();
             int unreadCount = isUserA ? conv.getUserAUnreadCount() : conv.getUserBUnreadCount();
             boolean pinned = isUserA ? conv.getUserAPinned() == 1 : conv.getUserBPinned() == 1;
 
-                       
+
             User otherUser = otherUsersById.get(otherUserId);
 
             result.put("conversationId", conv.getId());
@@ -366,7 +366,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         int updated = messageMapper.markActiveMessageAsRead(messageId, userId, LocalDateTime.now());
 
         if (updated > 0) {
-                      
+
             decrementUnreadCount(userId, message.getSenderId());
             return true;
         }
@@ -395,7 +395,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
                 .set(Message::getIsRead, 1)
                 .set(Message::getReadTime, now));
 
-                  
+
         Conversation conversation = conversationMapper.getConversationBetweenUsers(currentUserId, otherUserId);
         if (conversation != null) {
             boolean isUserA = conversation.getUserAId().equals(currentUserId);
@@ -406,7 +406,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             }
             conversationMapper.updateById(conversation);
 
-                   
+
             clearUnreadCountCache(currentUserId, otherUserId);
         }
 
@@ -428,17 +428,17 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             return false;
         }
 
-                      
+
         if (!message.getSenderId().equals(userId)) {
             throw new BusinessException(ResultCode.FORBIDDEN, "无权撤回此消息");
         }
 
-                                            
+
         if (Integer.valueOf(1).equals(message.getIsRecalled())) {
             return true;
         }
 
-                       
+
         LocalDateTime createTime = message.getCreateTime();
         if (createTime == null) {
             return false;
@@ -449,7 +449,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             return false;
         }
 
-                                               
+
         int unreadUpdated = messageMapper.recallUnreadMessage(messageId, userId);
         int updated = unreadUpdated > 0
                 ? unreadUpdated
@@ -471,7 +471,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             return true;
         }
 
-                                              
+
         Message current = messageMapper.selectById(messageId);
         return current != null
                 && userId.equals(current.getSenderId())
@@ -490,7 +490,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             return false;
         }
 
-                      
+
         boolean isSender = message.getSenderId().equals(userId);
         boolean isReceiver = message.getReceiverId().equals(userId);
 
@@ -498,7 +498,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             return false;
         }
 
-               
+
         if (isSender) {
             message.setIsDeletedBySender(1);
         }
@@ -508,7 +508,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
         int updated = messageMapper.updateById(message);
 
-                         
+
         if (message.getIsDeletedBySender() == 1 && message.getIsDeletedByReceiver() == 1) {
             messageMapper.deleteById(messageId);
         }
@@ -517,7 +517,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             return true;
         }
 
-                                              
+
         Message current = messageMapper.selectById(messageId);
         return current != null
                 && userId.equals(current.getSenderId())
@@ -680,7 +680,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         int updated = conversationMapper.updateById(conversation);
 
         if (updated > 0) {
-                   
+
             String cacheKey = privateMessageConfig.getConversationPrefix() + currentUserId + ":" + otherUserId;
             CacheHelper.delete(redisUtils, cacheKey);
         }
@@ -710,7 +710,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         int updated = conversationMapper.updateById(conversation);
 
         if (updated > 0) {
-                   
+
             String cacheKey = privateMessageConfig.getConversationPrefix() + currentUserId + ":" + otherUserId;
             CacheHelper.delete(redisUtils, cacheKey);
         }
@@ -779,7 +779,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         return toMessageViewPage(searchMessages(userId, keyword, pageQuery), userId);
     }
 
-                                                     
+
 
     private IPage<Map<String, Object>> toMessageViewPage(IPage<Message> source, Long viewerId) {
         Page<Map<String, Object>> page = new Page<>(source.getCurrent(), source.getSize());
@@ -922,10 +922,10 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         return !lower.contains(":") && !lower.startsWith("//");
     }
 
-       
-                               
-                                           
-       
+
+
+
+
     private void refreshConversationSummaryAfterRecall(Message recalledMessage) {
         Conversation conversation = conversationMapper.getConversationBetweenUsersForUpdate(
                 recalledMessage.getSenderId(), recalledMessage.getReceiverId());
@@ -947,13 +947,13 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         conversationMapper.updateById(conversation);
     }
 
-       
-              
-       
+
+
+
     private void updateOrCreateConversation(Message message) {
         Long userAId = message.getSenderId();
         Long userBId = message.getReceiverId();
-                                       
+
         if (userAId > userBId) {
             Long temp = userAId;
             userAId = userBId;
@@ -964,7 +964,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         String summary = conversationSummary(message);
 
         if (conversation == null) {
-                    
+
             conversation = new Conversation();
             conversation.setUserAId(userAId);
             conversation.setUserBId(userBId);
@@ -980,7 +980,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             conversation.setStatus("active");
             conversationMapper.insert(conversation);
         } else {
-                     
+
             conversation.setLastMessage(summary);
             conversation.setLastMessageType(message.getMessageType());
             conversation.setLastMessageTime(message.getCreateTime());
@@ -988,18 +988,18 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         }
     }
 
-       
-                                     
-       
+
+
+
     private String conversationSummary(Message message) {
         return "image".equals(message.getMessageType()) ? "[图片]" : message.getContent();
     }
 
-       
-            
-       
+
+
+
     private void incrementUnreadCount(Long receiverId, Long senderId) {
-                               
+
         Long userAId = receiverId < senderId ? receiverId : senderId;
         Long userBId = receiverId < senderId ? senderId : receiverId;
 
@@ -1014,23 +1014,23 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             conversationMapper.updateById(conversation);
         }
 
-               
+
         clearUnreadCountCache(receiverId);
     }
 
-       
-            
-       
+
+
+
     private void decrementUnreadCount(Long receiverId, Long senderId) {
         conversationMapper.decrementUnreadCount(receiverId, senderId);
 
-               
+
         clearUnreadCountCache(receiverId, senderId);
     }
 
-       
-              
-       
+
+
+
     private void clearUnreadCountCache(Long userId, Long... otherUserIds) {
         CacheHelper.delete(redisUtils, privateMessageConfig.getUnreadCountPrefix() + userId + ":total");
 
@@ -1041,11 +1041,11 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         }
     }
 
-       
-                
-       
+
+
+
     private boolean isUserBlocked(Long senderId, Long receiverId) {
-                               
+
         Long userAId = senderId < receiverId ? senderId : receiverId;
         Long userBId = senderId < receiverId ? receiverId : senderId;
 
@@ -1054,7 +1054,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
             return false;
         }
 
-                        
+
         boolean isSenderUserA = conversation.getUserAId().equals(senderId);
         if (isSenderUserA) {
             return conversation.getUserBBlocked() == 1;

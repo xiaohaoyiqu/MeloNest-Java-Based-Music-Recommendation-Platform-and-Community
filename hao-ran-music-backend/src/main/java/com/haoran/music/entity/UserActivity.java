@@ -6,10 +6,10 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-                      
-                         
-   
+
+
+
+
 @Data
 @TableName("user_activity")
 public class UserActivity implements Serializable {
@@ -21,15 +21,15 @@ public class UserActivity implements Serializable {
 
     private Long userId;
 
-       
-                                           
-       
+
+
+
     @TableField(exist = false)
     private Integer activityScore;
 
-       
-                                           
-       
+
+
+
     @TableField(exist = false)
     private String activityLevel;
 

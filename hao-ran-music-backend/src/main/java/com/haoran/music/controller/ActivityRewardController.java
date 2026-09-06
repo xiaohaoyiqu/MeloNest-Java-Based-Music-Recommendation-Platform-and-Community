@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Map;
 
-   
-                      
-                        
-  
-               
-   
+
+
+
+
+
+
 @RestController
 @RequestMapping("/user/activity-reward")
 public class ActivityRewardController {
@@ -24,11 +24,11 @@ public class ActivityRewardController {
     @Resource
     private ActivityRewardService activityRewardService;
 
-       
-                    
-      
-                   
-       
+
+
+
+
+
     @ApiLog("获取活跃度奖励")
     @GetMapping("/current")
     public Result<Map<String, Object>> getCurrentReward() {
@@ -37,12 +37,12 @@ public class ActivityRewardController {
         return Result.success(reward);
     }
 
-       
-              
-                                       
-      
-                     
-       
+
+
+
+
+
+
     @ApiLog("领取活跃度奖励")
     @PostMapping("/claim")
     public Result<Boolean> claimReward() {
@@ -51,11 +51,11 @@ public class ActivityRewardController {
         return Result.success(success);
     }
 
-       
-                  
-      
-                    
-       
+
+
+
+
+
     @ApiLog("检查奖励领取状态")
     @GetMapping("/check-claimed")
     public Result<Boolean> isClaimedThisMonth() {
@@ -64,13 +64,13 @@ public class ActivityRewardController {
         return Result.success(claimed);
     }
 
-       
-               
-      
-                     
-                       
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取奖励领取历史")
     @GetMapping("/history")
     public Result<Map<String, Object>> getClaimHistory(
@@ -81,11 +81,11 @@ public class ActivityRewardController {
         return Result.success(history);
     }
 
-       
-             
-      
-                       
-       
+
+
+
+
+
     @ApiLog("获取奖励配置")
     @GetMapping("/config")
     public Result<Map<String, Integer>> getRewardConfig() {
@@ -93,12 +93,12 @@ public class ActivityRewardController {
         return Result.success(config);
     }
 
-       
-                   
-      
-                                 
-                   
-       
+
+
+
+
+
+
     @ApiLog("计算奖励积分")
     @GetMapping("/calculate")
     public Result<Integer> calculateRewardPoints(@RequestParam Integer activityScore) {
@@ -106,14 +106,14 @@ public class ActivityRewardController {
         return Result.success(points);
     }
 
-                                                      
 
-       
-                         
-      
-                         
-                   
-       
+
+
+
+
+
+
+
     @ApiLog("获取指定用户奖励信息")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/admin/current/{userId}")
@@ -122,14 +122,14 @@ public class ActivityRewardController {
         return Result.success(reward);
     }
 
-       
-                         
-      
-                         
-                     
-                       
-                   
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取指定用户奖励历史")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/admin/history/{userId}")

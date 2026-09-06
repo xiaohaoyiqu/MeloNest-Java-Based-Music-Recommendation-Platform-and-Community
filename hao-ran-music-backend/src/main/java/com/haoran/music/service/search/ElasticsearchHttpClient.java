@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-   
-                                                                
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class ElasticsearchHttpClient {

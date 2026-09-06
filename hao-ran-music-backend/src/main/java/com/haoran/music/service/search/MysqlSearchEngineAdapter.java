@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.search;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -182,9 +182,9 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
         }
     }
 
-       
-                 
-       
+
+
+
     private List<SearchResultVO.SongSimpleVO> searchSongsInternal(String keyword, Long userId) {
         return searchSongsPage(keyword, userId, 1, SEARCH_LIMIT).records;
     }
@@ -206,7 +206,7 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                 .limit(size)
                 .collect(Collectors.toList());
 
-                              
+
         Set<Long> favoriteSongIds = Collections.emptySet();
         if (ObjectUtils.isNotEmpty(userId)) {
             favoriteSongIds = getFavoriteSongIds(userId, songList);
@@ -225,12 +225,12 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
             vo.setUrlStandard(UrlHelper.buildRelativeAudioUrl(song.getUrlStandard()));
             vo.setUrlHigh(UrlHelper.buildRelativeAudioUrl(song.getUrlHigh()));
             vo.setUrlLossless(UrlHelper.buildRelativeAudioUrl(song.getUrlLossless()));
-                     
+
             vo.setVersionType(song.getVersionType());
             vo.setVersionName(song.getVersionName());
-                     
+
             vo.setLanguage("中文");
-                               
+
             vo.setIsFavorite(favoriteSongIds.contains(song.getId()));
             voList.add(vo);
         }
@@ -262,31 +262,31 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                 .like(Song::getAlbumName, keyword));
     }
 
-       
-                      
-      
-                         
-                        
-                        
-       
+
+
+
+
+
+
+
     private Set<Long> getFavoriteSongIds(Long userId, List<Song> songs) {
-                    
+
         Long favoritePlaylistId = getFavoritePlaylistId(userId);
         if (favoritePlaylistId == null) {
             return Collections.emptySet();
         }
 
-                       
+
         if (songs.isEmpty()) {
             return Collections.emptySet();
         }
 
-                   
+
         List<Long> songIds = songs.stream()
                 .map(Song::getId)
                 .collect(Collectors.toList());
 
-                         
+
         LambdaQueryWrapper<PlaylistSong> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PlaylistSong::getPlaylistId, favoritePlaylistId)
                 .in(PlaylistSong::getSongId, songIds)
@@ -295,15 +295,15 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
 
         List<PlaylistSong> playlistSongs = playlistSongMapper.selectList(wrapper);
 
-                      
+
         return playlistSongs.stream()
                 .map(PlaylistSong::getSongId)
                 .collect(Collectors.toSet());
     }
 
-       
-                 
-       
+
+
+
     private Long getFavoritePlaylistId(Long userId) {
         LambdaQueryWrapper<Playlist> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Playlist::getUserId, userId)
@@ -315,9 +315,9 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
         return favoritePlaylist != null ? favoritePlaylist.getId() : null;
     }
 
-       
-                 
-       
+
+
+
     private List<SearchResultVO.AlbumSimpleVO> searchAlbumsInternal(String keyword, Long userId) {
         return searchAlbumsPage(keyword, 1, SEARCH_LIMIT).records;
     }
@@ -359,9 +359,9 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                         .like(Album::getArtistNames, keyword));
     }
 
-       
-                 
-       
+
+
+
     private List<SearchResultVO.ArtistSimpleVO> searchArtistsInternal(String keyword, Long userId) {
         return searchArtistsPage(keyword, 1, SEARCH_LIMIT).records;
     }
@@ -397,9 +397,9 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                 .like(Artist::getName, keyword);
     }
 
-       
-                 
-       
+
+
+
     private List<SearchResultVO.PlaylistSimpleVO> searchPlaylistsInternal(String keyword, Long userId) {
         return searchPlaylistsPage(keyword, 1, SEARCH_LIMIT).records;
     }
@@ -417,7 +417,7 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                 .limit(size)
                 .collect(Collectors.toList());
 
-                   
+
         Map<Long, String> userNameMap = Collections.emptyMap();
         if (!playlistList.isEmpty()) {
             Set<Long> userIds = playlistList.stream()
@@ -449,19 +449,19 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                 .like(Playlist::getName, keyword);
     }
 
-       
-                 
-      
-                            
-                             
-       
+
+
+
+
+
+
     private Map<Long, String> getUserNames(Set<Long> userIds) {
         if (userIds == null || userIds.isEmpty()) {
             return Collections.emptyMap();
         }
 
         try {
-                     
+
             LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
             wrapper.in(User::getId, userIds)
                     .eq(User::getStatus, CommonConstants.STATUS_NORMAL)
@@ -470,7 +470,7 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
 
             List<User> users = userMapper.selectList(wrapper);
 
-                             
+
             return users.stream()
                     .filter(UserAccountStatusUtil::canExposePublicContent)
                     .collect(Collectors.toMap(User::getId, User::getNickname, (a, b) -> a));
@@ -480,9 +480,9 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
         }
     }
 
-       
-                 
-       
+
+
+
     private List<SearchResultVO.MvSimpleVO> searchMvsInternal(String keyword, Long userId) {
         return searchMvsPage(keyword, 1, SEARCH_LIMIT).records;
     }
@@ -500,7 +500,7 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                 .limit(size)
                 .collect(Collectors.toList());
 
-                      
+
         Map<Long, String> songLanguageMap = getSongLanguageMap(mvList);
 
         List<SearchResultVO.MvSimpleVO> voList = new ArrayList<>();
@@ -512,7 +512,7 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
             vo.setDuration(mv.getDuration());
             vo.setPlayCount(mv.getPlayCount());
             vo.setCover(mv.getCover());
-                        
+
             if (mv.getSongId() != null && songLanguageMap.containsKey(mv.getSongId())) {
                 vo.setSongLanguage(songLanguageMap.get(mv.getSongId()));
             }
@@ -531,14 +531,14 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                         .like(MV::getArtistNames, keyword));
     }
 
-       
-                    
-      
-                         
-                            
-       
+
+
+
+
+
+
     private Map<Long, String> getSongLanguageMap(List<MV> mvList) {
-                         
+
         Set<Long> songIds = mvList.stream()
                 .map(MV::getSongId)
                 .filter(ObjectUtils::isNotEmpty)
@@ -548,7 +548,7 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
             return Collections.emptyMap();
         }
 
-                   
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Song::getId, Song::getLanguage)
                 .in(Song::getId, songIds)
@@ -557,7 +557,7 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
 
         List<Song> songs = songMapper.selectList(wrapper);
 
-               
+
         return songs.stream()
                 .collect(Collectors.toMap(Song::getId, Song::getLanguage, (a, b) -> a));
     }
@@ -646,9 +646,9 @@ public class MysqlSearchEngineAdapter implements SearchEngineAdapter {
                 .collect(Collectors.toList());
     }
 
-       
-                 
-       
+
+
+
     private List<SearchResultVO.UserSimpleVO> searchUsersInternal(String keyword, Long userId) {
         return searchUsersPage(keyword, 1, SEARCH_LIMIT).records;
     }

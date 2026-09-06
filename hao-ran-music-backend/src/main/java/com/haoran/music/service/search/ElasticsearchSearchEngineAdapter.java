@@ -20,12 +20,12 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                                                                                 
-                                                                   
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class ElasticsearchSearchEngineAdapter implements SearchEngineAdapter {
@@ -109,7 +109,7 @@ public class ElasticsearchSearchEngineAdapter implements SearchEngineAdapter {
         int currentPage = normalizePage(page);
         int pageSize = normalizeSize(size);
         if (!"all".equals(field)) {
-                                                       
+
             return mysqlFallback.searchSongs(keyword, userId, currentPage, pageSize, field);
         }
         return searchSongs(keyword, userId, currentPage, pageSize);

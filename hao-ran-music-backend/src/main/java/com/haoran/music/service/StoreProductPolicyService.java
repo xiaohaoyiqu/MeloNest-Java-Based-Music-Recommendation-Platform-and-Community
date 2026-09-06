@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.service;
 
@@ -32,6 +32,6 @@ public interface StoreProductPolicyService {
 
     StoreProductVO getProduct(String productType, Long productId);
 
-                                    
+
     List<StoreProductVO> getPublicSellerProducts(Long sellerId, Integer limit);
 }

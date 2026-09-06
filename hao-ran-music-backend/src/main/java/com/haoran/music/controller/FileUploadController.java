@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                   
-  
-                                           
-   
+
+
+
+
+
 @RestController
 @RequestMapping("/file")
 public class FileUploadController {
@@ -28,13 +28,13 @@ public class FileUploadController {
     @Resource
     private FileUploadUtil fileUploadUtil;
 
-       
-                      
-      
-                        
-                            
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/upload")
     @ApiLog("上传文件")
     public Result<String> uploadFile(
@@ -49,11 +49,11 @@ public class FileUploadController {
         return Result.error(410, "通用上传入口已停用，请使用对应业务的受管上传接口");
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @GetMapping("/config")
     @ApiLog("获取上传配置")
     public Result<Map<String, Object>> getUploadConfig() {
@@ -66,9 +66,9 @@ public class FileUploadController {
         config.put("compressThreshold", fileUploadUtil.getCompressThreshold());
         return Result.success(config);
     }
-       
-                            
-       
+
+
+
     private String formatSize(long bytes) {
         if (bytes < 1024L * 1024L) {
             return String.format("%.2fKB", bytes / 1024.0);

@@ -1,7 +1,7 @@
-   
-                      
-                     
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-   
-        
-                    
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/refund")
@@ -34,15 +34,15 @@ public class RefundController {
         this.feedbackService = feedbackService;
     }
 
-       
-           
-                            
-                          
-                            
-                         
-                              
-                     
-       
+
+
+
+
+
+
+
+
+
     @ApiLog(value = "申请退款", logArgs = false, logReturn = false)
     @PostMapping("/apply")
     public Result applyRefund(HttpServletRequest request,
@@ -54,14 +54,14 @@ public class RefundController {
         return Result.success(refundService.applyRefund(userId, orderId, orderType, reason, description));
     }
 
-       
-               
-                            
-                         
-                     
-                       
-                     
-       
+
+
+
+
+
+
+
+
     @ApiLog("获取退款记录")
     @GetMapping("/my")
     public Result getMyRefundRecords(HttpServletRequest request,
@@ -72,11 +72,11 @@ public class RefundController {
         return Result.success(refundService.getMyRefundRecords(userId, status, page, size));
     }
 
-       
-             
-                            
-                     
-       
+
+
+
+
+
     @ApiLog("获取退款统计")
     @GetMapping("/statistics")
     public Result getRefundStatistics(HttpServletRequest request) {
@@ -84,12 +84,12 @@ public class RefundController {
         return Result.success(refundService.getRefundStatistics(userId));
     }
 
-       
-             
-                            
-                          
-                       
-       
+
+
+
+
+
+
     @ApiLog("检查退款资格")
     @GetMapping("/check-eligible")
     public Result checkRefundEligible(HttpServletRequest request,
@@ -98,11 +98,11 @@ public class RefundController {
         return Result.success(refundService.checkRefundEligible(userId, orderId));
     }
 
-       
-             
-                           
-                   
-       
+
+
+
+
+
     @ApiLog("获取退款详情")
     @GetMapping("/{id}")
     public Result getRefundDetail(HttpServletRequest request,
@@ -111,12 +111,12 @@ public class RefundController {
         return Result.success(refundService.getRefundDetail(id, userId));
     }
 
-       
-                     
-                     
-                       
-                      
-       
+
+
+
+
+
+
     @ApiLog("获取待审核退款")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending")
@@ -125,16 +125,16 @@ public class RefundController {
         return Result.success(refundService.getPendingRefunds(page, size));
     }
 
-       
-                  
-                           
-                              
-                           
-                               
-                                                           
-                                        
-                   
-       
+
+
+
+
+
+
+
+
+
+
     @ApiLog(value = "审核退款", logArgs = false, logReturn = false)
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/review/{id}")
@@ -150,12 +150,12 @@ public class RefundController {
         return Result.success(refundService.reviewRefund(id, reviewerId, approved, reviewReason, isUnreasonable, unreasonableReason));
     }
 
-       
-                  
-                           
-                              
-                   
-       
+
+
+
+
+
+
     @ApiLog("完成退款")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{id}/complete")
@@ -167,11 +167,11 @@ public class RefundController {
         return Result.success(refundService.completeRefund(id, operatorId));
     }
 
-       
-              
-                            
-                    
-       
+
+
+
+
+
     @ApiLog("获取退款信用分")
     @GetMapping("/credit")
     public Result getRefundCredit(HttpServletRequest request) {
@@ -179,12 +179,12 @@ public class RefundController {
         return Result.success(refundService.getRefundCredit(userId));
     }
 
-       
-             
-                            
-                           
-                   
-       
+
+
+
+
+
+
     @ApiLog("取消退款")
     @PostMapping("/{id}/cancel")
     public Result cancelRefund(HttpServletRequest request,
@@ -193,12 +193,12 @@ public class RefundController {
         return Result.success(refundService.cancelRefund(id, userId));
     }
 
-       
-                     
-                             
-                              
-                     
-       
+
+
+
+
+
+
     @ApiLog("从反馈创建退款")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/create-from-feedback")

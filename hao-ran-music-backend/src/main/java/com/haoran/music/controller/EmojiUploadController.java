@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.controller;
 
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-                                                                              
+
 @RestController
 @RequestMapping("/emoji/upload")
 public class EmojiUploadController {

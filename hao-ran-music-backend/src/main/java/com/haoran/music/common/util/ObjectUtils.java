@@ -5,18 +5,18 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 import java.util.Map;
 
-   
-                      
-                         
-   
+
+
+
+
 public class ObjectUtils {
 
-       
-               
-      
-                    
-                                
-       
+
+
+
+
+
+
     public static boolean isEmpty(Object obj) {
         if (obj == null) {
             return true;
@@ -36,22 +36,22 @@ public class ObjectUtils {
         return false;
     }
 
-       
-                
-      
-                    
-                                
-       
+
+
+
+
+
+
     public static boolean isNotEmpty(Object obj) {
         return !isEmpty(obj);
     }
 
-       
-                  
-      
-                          
-                                      
-       
+
+
+
+
+
+
     public static boolean isAllEmpty(Object... objects) {
         if (objects == null) {
             return true;
@@ -64,12 +64,12 @@ public class ObjectUtils {
         return true;
     }
 
-       
-                    
-      
-                          
-                                      
-       
+
+
+
+
+
+
     public static boolean isAnyEmpty(Object... objects) {
         if (objects == null) {
             return true;
@@ -82,25 +82,25 @@ public class ObjectUtils {
         return false;
     }
 
-       
-                          
-      
-                           
-                            
-                             
-                     
-       
+
+
+
+
+
+
+
+
     public static <T> T defaultIfNull(T obj, T defaultObj) {
         return isEmpty(obj) ? defaultObj : obj;
     }
 
-       
-                 
-      
-                      
-                      
-                                
-       
+
+
+
+
+
+
+
     public static boolean equals(Object obj1, Object obj2) {
         if (obj1 == obj2) {
             return true;
@@ -111,14 +111,14 @@ public class ObjectUtils {
         return obj1.equals(obj2);
     }
 
-       
-                    
-      
-                      
-                        
-                        
-                       
-  
+
+
+
+
+
+
+
+
     @SuppressWarnings("unchecked")
     public static <T> java.util.List<T> castList(Object obj, Class<T> clazz) {
         if (obj == null) {
@@ -130,12 +130,12 @@ public class ObjectUtils {
         return null;
     }
 
-       
-                   
-      
-                    
-                      
-  
+
+
+
+
+
+
     @SuppressWarnings("unchecked")
     public static <K, V> java.util.Map<K, V> castMap(Object obj) {
         if (obj == null) {
@@ -147,12 +147,12 @@ public class ObjectUtils {
         return null;
     }
 
-       
-                      
-      
-                    
-                         
-  
+
+
+
+
+
+
     public static String castString(Object obj) {
         if (obj == null) {
             return null;

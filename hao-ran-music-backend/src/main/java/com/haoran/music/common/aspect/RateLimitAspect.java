@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                        
-   
+
+
+
+
 @Slf4j
 @Aspect
 @Component
@@ -47,9 +47,9 @@ public class RateLimitAspect {
     private static final String RATE_LIMIT_KEY_PREFIX = "rate:limit:";
     private static final String OPERATION_RECORD_KEY_PREFIX = "op:record:";
 
-       
-                                
-       
+
+
+
     @Around("@annotation(com.haoran.music.common.aspect.RateLimit)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -60,10 +60,10 @@ public class RateLimitAspect {
             return joinPoint.proceed();
         }
 
-                 
+
         Long userId = getUserIdFromRequest();
 
-                 
+
         String limitKey = getLimitKey(joinPoint, rateLimit, userId);
         int maxRequests = rateLimit.maxRequests();
         int timeWindowSeconds = rateLimit.timeWindowSeconds();
@@ -72,7 +72,7 @@ public class RateLimitAspect {
             operation = joinPoint.getSignature().getName();
         }
 
-                 
+
         if (!checkRateLimit(limitKey, maxRequests, timeWindowSeconds, rateLimit.failClosed())) {
             String clientIp = getClientIp();
             String captchaScene = "rate:" + operation;
@@ -101,7 +101,7 @@ public class RateLimitAspect {
             }
         }
 
-                       
+
         if (userId != null && !operation.isEmpty()) {
             recordOperation(userId, operation, timeWindowSeconds);
         }
@@ -109,21 +109,21 @@ public class RateLimitAspect {
         return joinPoint.proceed();
     }
 
-       
-             
-      
-                     
-                               
-                                       
-                               
-       
+
+
+
+
+
+
+
+
     private boolean checkRateLimit(String key, int maxRequests, int timeWindowSeconds,
                                    boolean failClosed) {
         try {
             String redisKey = RATE_LIMIT_KEY_PREFIX + key;
             Long count = redisUtils.increment(redisKey);
 
-                          
+
             if (count == 1) {
                 redisUtils.expire(redisKey, timeWindowSeconds, TimeUnit.SECONDS);
             }
@@ -138,7 +138,7 @@ public class RateLimitAspect {
                 throw new RateLimitException("上传保护服务暂时不可用，请稍后再试",
                         false, null, null, timeWindowSeconds);
             }
-                                                                                          
+
             return true;
         }
     }
@@ -152,16 +152,16 @@ public class RateLimitAspect {
         }
     }
 
-       
-                   
-      
-                         
-                            
-                                    
-       
+
+
+
+
+
+
+
     private void recordOperation(Long userId, String operation, int timeWindowSeconds) {
         try {
-                                     
+
             long recordExpireSeconds = 86400;        
             String recordKey = OPERATION_RECORD_KEY_PREFIX + userId + ":" + operation;
             Long count = redisUtils.increment(recordKey);
@@ -170,7 +170,7 @@ public class RateLimitAspect {
                 redisUtils.expire(recordKey, recordExpireSeconds, TimeUnit.SECONDS);
             }
 
-                                  
+
             String timestampKey = OPERATION_RECORD_KEY_PREFIX + userId + ":" + operation + ":timestamps";
             long timestamp = System.currentTimeMillis();
             redisUtils.increment(timestampKey + ":" + timestamp);
@@ -184,11 +184,11 @@ public class RateLimitAspect {
         }
     }
 
-       
-                 
-      
-                               
-       
+
+
+
+
+
     private Long getUserIdFromRequest() {
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -200,7 +200,7 @@ public class RateLimitAspect {
                 return null;
             }
 
-                                     
+
             Object userIdObj = request.getAttribute("userId");
             if (userIdObj != null) {
                 if (userIdObj instanceof Long) {
@@ -221,33 +221,33 @@ public class RateLimitAspect {
         }
     }
 
-       
-            
-                      
-      
-                          
-                            
-                         
-                  
-       
+
+
+
+
+
+
+
+
+
     private String getLimitKey(ProceedingJoinPoint joinPoint, RateLimit rateLimit, Long userId) {
         StringBuilder keyBuilder = new StringBuilder();
 
-                 
+
         String operation = rateLimit.operation();
         if (operation.isEmpty()) {
             operation = joinPoint.getSignature().getName();
         }
         keyBuilder.append(operation);
 
-                
+
         switch (rateLimit.scope()) {
             case USER:
-                          
+
                 keyBuilder.append(":user:").append(userId != null ? userId : "anonymous");
                 break;
             case IP:
-                        
+
                 String ip = getClientIp();
                 keyBuilder.append(":ip:").append(ip != null ? ip : "unknown");
                 break;
@@ -257,7 +257,7 @@ public class RateLimitAspect {
                 break;
         }
 
-                  
+
         String prefix = rateLimit.keyPrefix();
         if (!prefix.isEmpty()) {
             keyBuilder.insert(0, prefix + ":");
@@ -266,11 +266,11 @@ public class RateLimitAspect {
         return keyBuilder.toString();
     }
 
-       
-                
-      
-                   
-       
+
+
+
+
+
     private String getClientIp() {
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

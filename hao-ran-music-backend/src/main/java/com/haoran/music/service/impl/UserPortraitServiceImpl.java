@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-             
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class UserPortraitServiceImpl implements UserPortraitService {
@@ -51,20 +51,20 @@ public class UserPortraitServiceImpl implements UserPortraitService {
     public Map<String, Object> getUserPortrait(Long userId) {
         Map<String, Object> portrait = new HashMap<>();
 
-               
+
         portrait.put("userId", userId);
         portrait.put("lastUpdateTime", LocalDateTime.now());
 
-               
+
         portrait.put("musicPreference", getUserMusicPreference(userId));
 
-               
+
         portrait.put("interestTags", getUserInterestTags(userId));
 
-               
+
         portrait.put("activePeriods", getUserActivePeriods(userId));
 
-               
+
         portrait.put("behaviorSummary", getUserBehaviorSummary(userId));
 
         return portrait;
@@ -74,7 +74,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
     public Map<String, Object> getUserMusicPreference(Long userId) {
         Map<String, Object> preference = new HashMap<>();
 
-                                         
+
         List<Song> likedSongs = getPublicLikedSongs(userId);
 
         if (likedSongs.isEmpty()) {
@@ -83,9 +83,9 @@ public class UserPortraitServiceImpl implements UserPortraitService {
             return preference;
         }
 
-                 
+
         Map<String, Integer> genreCount = new HashMap<>();
-                 
+
         Map<String, Integer> languageCount = new HashMap<>();
 
         for (Song song : likedSongs) {
@@ -97,14 +97,14 @@ public class UserPortraitServiceImpl implements UserPortraitService {
             }
         }
 
-                  
+
         List<String> favoriteGenres = genreCount.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(5)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-                  
+
         List<String> favoriteLanguages = languageCount.entrySet().stream()
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(3)
@@ -123,7 +123,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
     public List<String> getUserInterestTags(Long userId) {
         List<String> tags = new ArrayList<>();
 
-                    
+
         Map<String, Object> preference = getUserMusicPreference(userId);
         @SuppressWarnings("unchecked")
         List<String> genres = getStringList(preference, "favoriteGenres");
@@ -141,7 +141,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
             }
         }
 
-                   
+
         Map<String, Long> summary = getUserBehaviorSummary(userId);
         Long playCount = summary.getOrDefault("playCount", 0L);
         Long likeCount = summary.getOrDefault("likeCount", 0L);
@@ -172,7 +172,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         periods.put("evening", 0);             
         periods.put("night", 0);             
 
-                 
+
         LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ListenHistory::getUserId, userId)
                 .eq(ListenHistory::getDeleted, CommonConstants.NOT_DELETED)
@@ -230,8 +230,8 @@ public class UserPortraitServiceImpl implements UserPortraitService {
     @Override
     public Boolean refreshUserPortrait(Long userId) {
         try {
-                        
-                     
+
+
             getUserPortrait(userId);
             return true;
         } catch (Exception e) {
@@ -261,7 +261,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
     public Map<String, Long> getUserBehaviorSummary(Long userId) {
         Map<String, Long> summary = new HashMap<>();
 
-               
+
         Long playCount = listenHistoryMapper.selectCount(
                 new LambdaQueryWrapper<ListenHistory>()
                         .eq(ListenHistory::getUserId, userId)
@@ -269,7 +269,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         );
         summary.put("playCount", playCount);
 
-               
+
         Long likeCount = songLikeMapper.selectCount(
                 new LambdaQueryWrapper<SongLike>()
                         .eq(SongLike::getUserId, userId)
@@ -278,7 +278,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         );
         summary.put("likeCount", likeCount);
 
-               
+
         Long commentCount = commentMapper.selectCount(
                 new LambdaQueryWrapper<Comment>()
                         .eq(Comment::getUserId, userId)
@@ -286,7 +286,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         );
         summary.put("commentCount", commentCount);
 
-              
+
         Long followingCount = userFollowMapper.selectCount(
                 new LambdaQueryWrapper<UserFollow>()
                         .eq(UserFollow::getFollowerId, userId)
@@ -294,7 +294,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         );
         summary.put("followingCount", followingCount);
 
-              
+
         Long followerCount = userFollowMapper.selectCount(
                 new LambdaQueryWrapper<UserFollow>()
                         .eq(UserFollow::getFolloweeId, userId)
@@ -307,12 +307,12 @@ public class UserPortraitServiceImpl implements UserPortraitService {
 
     @Override
     public List<Long> predictUserPreferences(Long userId, Integer limit) {
-                          
+
         Map<String, Object> preference = getUserMusicPreference(userId);
         @SuppressWarnings("unchecked")
         List<String> favoriteGenres = getStringList(preference, "favoriteGenres");
 
-                     
+
         String genre = favoriteGenres.isEmpty() ? "Pop" : favoriteGenres.get(0);
 
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
@@ -351,7 +351,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
             return 100;
         }
 
-                         
+
         Set<Long> user1Liked = getPublicLikedSongs(userId1).stream()
                 .map(Song::getId)
                 .collect(Collectors.toSet());
@@ -363,7 +363,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
             return 50;         
         }
 
-                     
+
         Set<Long> intersection = new HashSet<>(user1Liked);
         intersection.retainAll(user2Liked);
 
@@ -378,14 +378,14 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         return (int) (jaccard * 100);
     }
 
-                                                       
 
-       
-                            
-      
-                         
-                           
-       
+
+
+
+
+
+
+
     private List<Song> getPublicLikedSongs(Long userId) {
         LambdaQueryWrapper<SongLike> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SongLike::getUserId, userId)
@@ -426,10 +426,10 @@ public class UserPortraitServiceImpl implements UserPortraitService {
                 .collect(Collectors.toList());
     }
 
-       
-                   
-                 
-       
+
+
+
+
     private String getLanguageTag(String language) {
         if (language == null) {
             return null;
@@ -450,9 +450,9 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         }
     }
 
-       
-                      
-       
+
+
+
     @SuppressWarnings("unchecked")
     private List<String> getStringList(Map<String, Object> map, String key) {
         Object value = map.get(key);

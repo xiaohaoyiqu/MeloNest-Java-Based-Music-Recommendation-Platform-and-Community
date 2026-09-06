@@ -24,12 +24,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-   
-            
-                    
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendService {
@@ -64,7 +64,7 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
     }
 
     private Map<String, Object> loadThatDayHistory(Long userId, LocalDate date) {
-                      
+
         LocalDate lastYearDate = date.minusYears(1);
 
         String sql = "SELECT s.id, s.name, s.artist_names, s.cover, s.valence, s.energy, " +
@@ -80,7 +80,7 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         List<Map<String, Object>> records = jdbcTemplate.queryForList(sql, userId,
                 startOfDay(lastYearDate), endExclusive(lastYearDate));
 
-                              
+
         Map<String, Object> result = new HashMap<>();
         result.put("date", date);
         result.put("lastYearDate", lastYearDate);
@@ -110,11 +110,11 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         List<Map<String, Object>> history = (List<Map<String, Object>>) historyData.get("records");
 
         if (ObjectUtils.isEmpty(history)) {
-                                 
+
             return getHistoricalHotSongsWithDetail(targetDate.minusYears(1), safeLimit);
         }
 
-                      
+
         double avgValence = 0, avgEnergy = 0;
         Set<String> genres = new HashSet<>();
 
@@ -131,7 +131,7 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
             avgEnergy /= count;
         }
 
-                                     
+
         String recommendSql = "SELECT s.id, s.name, s.artist_names, s.cover, s.valence, s.energy, " +
                 "s.play_count, s.favorite_count, s.main_type, s.duration, s.uploader_id " +
                 "FROM song s " +
@@ -157,13 +157,13 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
                 .collect(Collectors.toList());
     }
 
-       
-                   
-                    
-                                        
-                                      
-                   
-       
+
+
+
+
+
+
+
     @Override
     public Map<String, Object> comparePeriods(Long userId, Integer period1, Integer period2) {
         LocalDate now = LocalDate.now();
@@ -172,11 +172,11 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         LocalDate start2 = now.minusMonths(period2);
         LocalDate end2 = now.minusMonths(period2 > 0 ? period2 - 1 : 0);
 
-                      
+
         Map<String, Object> stats1 = getPeriodStats(userId, start1, end1);
         Map<String, Object> stats2 = getPeriodStats(userId, start2, end2);
 
-                      
+
         List<String> preferredTypes1 = getPeriodPreferredTypes(userId, start1, end1);
         List<String> preferredTypes2 = getPeriodPreferredTypes(userId, start2, end2);
 
@@ -193,12 +193,12 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         period2Data.put("preferredTypes", preferredTypes2);
         result.put("period2", period2Data);
 
-               
+
         Integer listenCount1 = ((Number) stats1.getOrDefault("listenCount", 0)).intValue();
         Integer listenCount2 = ((Number) stats2.getOrDefault("listenCount", 0)).intValue();
         result.put("listenCountChange", listenCount2 - listenCount1);
 
-               
+
         Set<String> newTypes = new HashSet<>(preferredTypes2);
         newTypes.removeAll(preferredTypes1);
         Set<String> lostTypes = new HashSet<>(preferredTypes1);
@@ -209,9 +209,9 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         return result;
     }
 
-       
-                  
-       
+
+
+
     private Map<String, Object> getPeriodStats(Long userId, LocalDate start, LocalDate end) {
         String sql = "SELECT COUNT(*) as listen_count, " +
                 "COUNT(DISTINCT song_id) as unique_songs, " +
@@ -224,9 +224,9 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         return jdbcTemplate.queryForMap(sql, userId, startOfDay(start), endExclusive(end));
     }
 
-       
-                  
-       
+
+
+
     private List<String> getPeriodPreferredTypes(Long userId, LocalDate start, LocalDate end) {
         String sql = "SELECT s.main_type, COUNT(*) as count " +
                 "FROM listen_history lh " +
@@ -359,7 +359,7 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
             monthlyTrend = buildMonthlyTrendFromSummaries(summaries);
             moodCurve = buildMoodCurveFromSummaries(summaries);
         } else {
-                   
+
             String statsSql = "SELECT " +
                     "COUNT(*) as total_listens, " +
                     "COUNT(DISTINCT song_id) as unique_songs, " +
@@ -371,7 +371,7 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
 
             stats = jdbcTemplate.queryForMap(statsSql, userId, yearStart, nextYearStart);
 
-                   
+
             String monthlyTrendSql = "SELECT " +
                     "MONTH(create_time) as month, " +
                     "COUNT(*) as count, " +
@@ -383,7 +383,7 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
 
             monthlyTrend = jdbcTemplate.queryForList(monthlyTrendSql, userId, yearStart, nextYearStart);
 
-                     
+
             String moodCurveSql = "SELECT " +
                     "MONTH(create_time) as month, " +
                     "AVG(s.valence) as avg_valence, " +
@@ -443,7 +443,7 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
                 ? "monthly_summary_with_top_item_summary" : "listen_history");
         memory.put("calculationVersion", UserMusicSummaryService.CALCULATION_VERSION);
 
-                 
+
         List<String> tags = generateYearlyTags(stats, topSongs);
         memory.put("tags", tags);
 
@@ -496,9 +496,9 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         }
     }
 
-       
-                      
-  
+
+
+
     private List<Map<String, Object>> getHistoricalHotSongsWithDetail(LocalDate date, Integer limit) {
         int safeLimit = safeLimit(limit);
         if (safeLimit <= 0) {
@@ -728,9 +728,9 @@ public class TimeMachineRecommendServiceImpl implements TimeMachineRecommendServ
         return value == null ? defaultValue : value.doubleValue();
     }
 
-       
-             
-       
+
+
+
     private List<String> generateYearlyTags(Map<String, Object> stats, List<Map<String, Object>> topSongs) {
         List<String> tags = new ArrayList<>();
 

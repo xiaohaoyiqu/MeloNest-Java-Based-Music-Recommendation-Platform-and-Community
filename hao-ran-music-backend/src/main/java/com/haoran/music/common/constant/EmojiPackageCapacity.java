@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.common.constant;
 
@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-   
-                               
-   
+
+
+
 public final class EmojiPackageCapacity {
 
     public static final int DEFAULT = 16;

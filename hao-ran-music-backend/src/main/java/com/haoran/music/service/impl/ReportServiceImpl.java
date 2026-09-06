@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -35,9 +35,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-   
-         
-   
+
+
+
 @Slf4j
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -84,18 +84,18 @@ public class ReportServiceImpl implements ReportService {
                 description, attachmentUrls, null);
     }
 
-       
-                     
-      
-                              
-                                
-                              
-                             
-                         
-                              
-                                         
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> submitReportWithAssets(Long reporterId, String targetType, Long targetId,
@@ -105,36 +105,36 @@ public class ReportServiceImpl implements ReportService {
                 description, null, attachmentAssetIds);
     }
 
-       
-                             
-      
-                              
-                                
-                              
-                             
-                         
-                              
-                                  
-                                       
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
     private Map<String, Object> submitReportInternal(Long reporterId, String targetType, Long targetId,
                                                      String reportType, String reason, String description,
                                                      String attachmentUrls, List<Long> attachmentAssetIds) {
-                
+
         User reporter = userMapper.selectById(reporterId);
         if (ObjectUtils.isEmpty(reporter)) {
             throw new BusinessException("用户不存在");
         }
 
-                 
+
         if (checkReportFrequency(reporterId)) {
             throw new BusinessException("举报过于频繁，请稍后再试");
         }
 
         targetType = targetType == null ? null : targetType.trim().toLowerCase();
         reportType = reportType == null ? null : reportType.trim().toLowerCase();
-                 
+
         if (!isValidTargetType(targetType)) {
             throw new BusinessException("不支持的目标类型");
         }
@@ -154,13 +154,13 @@ public class ReportServiceImpl implements ReportService {
             throw new BusinessException("举报附件引用过长");
         }
 
-                 
+
         Report report = new Report();
         report.setReporterId(reporterId);
         report.setTargetType(targetType);
         report.setTargetId(targetId);
         report.setReportType(reportType);
-                              
+
         if (ObjectUtils.isNotEmpty(reason)) {
             SecurityCheckUtil.CheckResult reasonCheck = SecurityCheckUtil.checkDescription(reason);
             if (!reasonCheck.isSafe()) {
@@ -170,7 +170,7 @@ public class ReportServiceImpl implements ReportService {
         } else {
             report.setReason(reason);
         }
-                                   
+
         if (ObjectUtils.isNotEmpty(description)) {
             SecurityCheckUtil.CheckResult descriptionCheck = SecurityCheckUtil.checkDescription(description);
             if (!descriptionCheck.isSafe()) {
@@ -251,13 +251,13 @@ public class ReportServiceImpl implements ReportService {
         return result;
     }
 
-       
-                                   
-      
-                           
-                              
-                        
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean withdrawReport(Long reportId, Long reporterId) {
@@ -347,8 +347,8 @@ public class ReportServiceImpl implements ReportService {
         report.setAction(storedAction);
 
         if (approved) {
-                   
-                     
+
+
             Map<String, Object> actionResult = reportActionService.executeAction(
                     report.getId(), storedAction, reviewerId);
             if (!Boolean.TRUE.equals(actionResult.get("success"))) {
@@ -356,7 +356,7 @@ public class ReportServiceImpl implements ReportService {
             }
             result.put("actionResult", actionResult);
 
-                                             
+
             boolean rewardGranted = grantReportReward(report.getId());
             Integer credit = rewardGranted
                     ? creditService.updateReportCredit(
@@ -374,7 +374,7 @@ public class ReportServiceImpl implements ReportService {
                     ? "举报成立，已发放奖励"
                     : "举报成立，账号当前不可领取正向奖励");
 
-                       
+
             if (notificationService != null) {
                 notificationService.sendReportResultNotification(
                     report.getReporterId(),
@@ -388,10 +388,10 @@ public class ReportServiceImpl implements ReportService {
             log.info("举报成立: reportId={}, action={}", reportId, action);
 
         } else {
-                    
-                               
+
+
             if ("malicious".equals(storedAction)) {
-                          
+
                 Integer credit = creditService.updateReportCredit(
                         report.getReporterId(),
                         report.getId(),
@@ -407,7 +407,7 @@ public class ReportServiceImpl implements ReportService {
 
             log.info("举报不成立: reportId={}, reason={}", reportId, reviewReason);
 
-                       
+
             if (notificationService != null) {
                 notificationService.sendReportResultNotification(
                     report.getReporterId(),
@@ -563,7 +563,7 @@ public class ReportServiceImpl implements ReportService {
             return current != null && Integer.valueOf(1).equals(current.getIsRewarded());
         }
 
-                 
+
         userPointsService.addPoints(
                 report.getReporterId(),
                 "reward",
@@ -573,7 +573,7 @@ public class ReportServiceImpl implements ReportService {
                 "report"
         );
 
-               
+
         ReportReward reward = new ReportReward();
         reward.setUserId(report.getReporterId());
         reward.setReportId(reportId);
@@ -591,9 +591,9 @@ public class ReportServiceImpl implements ReportService {
         return true;
     }
 
-       
-              
-       
+
+
+
     @Override
     public Integer getReportCredit(Long userId) {
         return creditService.getUserCredit(userId);
@@ -646,7 +646,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Boolean checkReportFrequency(Long userId) {
-                         
+
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
 
         LambdaQueryWrapper<Report> wrapper = new LambdaQueryWrapper<>();
@@ -655,7 +655,7 @@ public class ReportServiceImpl implements ReportService {
 
         Long count = reportMapper.selectCount(wrapper);
 
-                     
+
         return count >= 5;
     }
 
@@ -664,11 +664,11 @@ public class ReportServiceImpl implements ReportService {
         return creditConfig.getReportRewardPoints();
     }
 
-                                                     
 
-       
-             
-       
+
+
+
+
     private Boolean isValidTargetType(String targetType) {
         return "song".equals(targetType)
                 || "mv".equals(targetType)

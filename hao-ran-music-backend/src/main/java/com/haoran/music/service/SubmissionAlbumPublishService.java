@@ -7,46 +7,46 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-   
-                                                                                
-  
-                      
-   
+
+
+
+
+
 public interface SubmissionAlbumPublishService {
 
-       
-                                                  
-      
-                                        
-                             
-       
+
+
+
+
+
+
     AlbumPublishResult publishCreatorAlbum(CreatorWork work);
 
-       
-                                                      
-      
-                                     
-                             
-       
+
+
+
+
+
+
     AlbumPublishResult publishUserAlbum(UserWork work);
 
-       
-                                                                                                
-      
-                                    
-       
+
+
+
+
+
     void enrichUserWorks(List<UserWork> works);
 
-       
-                                                                                                   
-      
-                                       
-       
+
+
+
+
+
     void enrichCreatorWorks(List<CreatorWork> works);
 
-       
-                                                           
-       
+
+
+
     final class AlbumPublishResult {
         private final Long albumId;
         private final List<Long> songIds;

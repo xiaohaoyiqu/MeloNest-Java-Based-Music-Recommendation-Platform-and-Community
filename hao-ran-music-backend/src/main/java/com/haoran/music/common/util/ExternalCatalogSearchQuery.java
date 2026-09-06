@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import java.text.Normalizer;
@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-   
-                        
-  
-                                   
-                                          
-   
+
+
+
+
+
+
 public final class ExternalCatalogSearchQuery {
     private static final Map<String, String> ALIASES;
 

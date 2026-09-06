@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -24,64 +24,64 @@ public class PaymentConfigEntity implements Serializable {
 
     private String paymentType;
 
-       
-               
-       
+
+
+
     private String qrCodeUrl;
 
-       
-                    
-       
+
+
+
     private String qrCodeWithVerify;
 
-       
-          
-       
+
+
+
     private String verifyCode;
 
-       
-              
-       
+
+
+
     private String md5Hash;
 
-       
-                     
-       
+
+
+
     private Integer isEnabled;
 
-       
-             
-       
+
+
+
     private BigDecimal dailyLimit;
 
-       
-              
-       
+
+
+
     private BigDecimal todayReceived;
 
-       
-             
-       
+
+
+
     private LocalDate lastResetDate;
 
-       
-             
-       
+
+
+
     private LocalDateTime lastScanTime;
 
-       
-           
-       
+
+
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-       
-           
-       
+
+
+
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-                          
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

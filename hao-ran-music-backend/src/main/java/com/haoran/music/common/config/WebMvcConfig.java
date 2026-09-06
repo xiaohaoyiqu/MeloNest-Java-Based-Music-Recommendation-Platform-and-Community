@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -22,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final UserActivityInterceptor userActivityInterceptor;
     private final ApiAccessInterceptor apiAccessInterceptor;
 
-                           
+
     @Value("${music.upload.avatar-path}")
     private String avatarPath;
 
@@ -35,22 +35,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
         this.apiAccessInterceptor = apiAccessInterceptor;
     }
 
-       
-               
-                                          
-                                                    
-       
+
+
+
+
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                    
+
         String avatarLocation = avatarPath.endsWith("/") ? avatarPath : avatarPath + "/";
         String playlistCoverLocation = playlistCoverPath.endsWith("/") ? playlistCoverPath : playlistCoverPath + "/";
 
-                     
+
         registry.addResourceHandler("/api/files/avatar/**")
                 .addResourceLocations("file:" + avatarLocation);
 
-                       
+
         registry.addResourceHandler("/api/files/playlist-cover/**")
                 .addResourceLocations("file:" + playlistCoverLocation);
 
@@ -60,7 +60,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-                             
+
         registry.addInterceptor(apiAccessInterceptor)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns(
@@ -74,15 +74,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/error"
                 );
 
-                                                      
-                              
+
+
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                                       
+
                         "/api/auth/**",
 
-                                       
+
                         "/api/system/health",
                         "/api/actuator/**",
                         "/api/doc.html",
@@ -93,10 +93,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/favicon.ico",
                         "/api/error",
 
-                                       
+
                         "/api/files/**",
 
-                                           
+
                         "/api/song/public/**",
                         "/api/song/page",
                         "/api/song/new",
@@ -105,7 +105,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/song/url/**",
                         "/api/song/info/**",
 
-                                           
+
                         "/api/artist/public/**",
                         "/api/artist/page",
                         "/api/artist/list",
@@ -116,7 +116,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/artist/letters",
                         "/api/artist/info/**",
 
-                                           
+
                         "/api/album/public/**",
                         "/api/album/page",
                         "/api/album/list",
@@ -124,20 +124,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/album/info/**",
                         "/api/album/new",
 
-                                           
-                                                                                   
+
+
                         "/api/playlist/new",
 
-                                           
+
                         "/api/mv/hot",
                         "/api/mv/newest",
                         "/api/mv/page",
                         "/api/mv/info/**",
 
-                                          
+
                         "/api/ranking/**",
 
-                                           
+
                         "/api/recommend/new",
                         "/api/recommend/hot",
                         "/api/recommend/daily",
@@ -145,27 +145,27 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/recommend/personal",
                         "/api/recommend/public/**",
 
-                                               
+
                         "/api/external-content/list/*",
                         "/api/external-content/recommend",
 
-                                           
+
                         "/api/comment/page",
                         "/api/comment/hot",
                         "/api/comment/*/replies",
                         "/api/comment/info/*",
 
-                                                           
+
                         "/api/emoji/render",
 
-                                             
+
                         "/api/user/info/*",
 
-                                         
+
                         "/api/local-music/download-proxy"
                 );
 
-                                            
+
         registry.addInterceptor(userActivityInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(

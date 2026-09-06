@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -12,9 +12,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-                                       
-   
+
+
+
 @Data
 @TableName("schema_migration_ledger")
 public class SchemaMigrationLedger implements Serializable {

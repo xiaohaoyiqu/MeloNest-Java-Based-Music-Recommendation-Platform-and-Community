@@ -6,10 +6,10 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 
 public class RecommendVO implements Serializable {
@@ -29,44 +29,44 @@ public class RecommendVO implements Serializable {
     private String sourceName;
 
 
-                                  
+
     private String modelVersion;
 
 
-                              
+
     private Boolean modelBacked;
 
 
-                             
+
     private String fallbackReason;
 
 
     private List<SongSimpleVO> songs;
 
-                                                           
-       
-                    
-       
+
+
+
+
     private String scenario;
 
-       
-                   
-       
+
+
+
     private Double mood;
 
-       
-                      
-       
+
+
+
     private String bpmRange;
 
-       
-                      
-       
+
+
+
     private Long baseSongId;
 
-       
-             
-       
+
+
+
     @Data
 
     public static class SongSimpleVO implements Serializable {
@@ -128,39 +128,39 @@ public class RecommendVO implements Serializable {
         private Integer isHot;
 
 
-           
-                
-           
+
+
+
         private Boolean isFavorite;
 
-           
-                       
-           
+
+
+
         private Long sizeStandard;
 
-           
-                        
-           
+
+
+
         private Long sizeHigh;
 
-           
-                       
-           
+
+
+
         private Long sizeLossless;
 
-           
-                         
-           
+
+
+
         private String language;
 
-           
-                         
-           
+
+
+
         private String versionType;
 
-           
-                         
-           
+
+
+
         private String versionName;
 
         public String getUrlStandard() {

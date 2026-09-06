@@ -1,7 +1,7 @@
-   
-                      
-                                           
-   
+
+
+
+
 package com.haoran.music.common.util;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,26 +16,26 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-   
-           
-                               
-   
+
+
+
+
 @Slf4j
 @Component
 public class ZipUtil {
 
-       
-              
-      
-                                 
-                          
-                       
-                               
-       
+
+
+
+
+
+
+
+
     public List<String> unzip(String zipFilePath, String destDir) throws IOException {
         List<String> extractedFiles = new ArrayList<>();
 
-                   
+
         Path destPath = Paths.get(destDir);
         if (!Files.exists(destPath)) {
             Files.createDirectories(destPath);
@@ -48,22 +48,22 @@ public class ZipUtil {
                 ZipEntry entry = entries.nextElement();
                 Path entryPath = destPath.resolve(entry.getName());
 
-                                    
+
                 if (!entryPath.normalize().startsWith(destPath.normalize())) {
                     log.warn("event=zip_entry_rejected reason=PATH_TRAVERSAL");
                     continue;
                 }
 
                 if (entry.isDirectory()) {
-                           
+
                     Files.createDirectories(entryPath);
                 } else {
-                              
+
                     if (entryPath.getParent() != null) {
                         Files.createDirectories(entryPath.getParent());
                     }
 
-                           
+
                     try (InputStream is = zipFile.getInputStream(entry)) {
                         Files.copy(is, entryPath, StandardCopyOption.REPLACE_EXISTING);
                         extractedFiles.add(entryPath.toString());
@@ -77,18 +77,18 @@ public class ZipUtil {
         return extractedFiles;
     }
 
-       
-                    
-      
-                                 
-                          
-                         
-                               
-       
+
+
+
+
+
+
+
+
     public List<String> extractAudioFiles(String zipFilePath, String destDir) throws IOException {
         List<String> extractedFiles = unzip(zipFilePath, destDir);
 
-                 
+
         List<String> audioFiles = new ArrayList<>();
         String[] audioExtensions = {".mp3", ".flac", ".wav", ".m4a", ".aac", ".ogg", ".wma"};
 
@@ -106,18 +106,18 @@ public class ZipUtil {
         return audioFiles;
     }
 
-       
-                    
-      
-                                 
-                          
-                              
-                               
-       
+
+
+
+
+
+
+
+
     public String extractLyricFile(String zipFilePath, String destDir) throws IOException {
         List<String> extractedFiles = unzip(zipFilePath, destDir);
 
-                 
+
         String[] lyricExtensions = {".lrc", ".txt"};
 
         for (String file : extractedFiles) {
@@ -133,13 +133,13 @@ public class ZipUtil {
         return null;
     }
 
-       
-               
-      
-                                  
-                   
-                               
-       
+
+
+
+
+
+
+
     public String readLyricFile(String lyricFilePath) throws IOException {
         StringBuilder content = new StringBuilder();
 
@@ -153,27 +153,27 @@ public class ZipUtil {
         return content.toString();
     }
 
-       
-                     
-      
-                          
-                       
-       
+
+
+
+
+
+
     public boolean isSupportedArchive(String fileName) {
         if (fileName == null) return false;
         String lower = fileName.toLowerCase();
         return lower.endsWith(".zip");
-                            
-                                    
-                                   
+
+
+
     }
 
-       
-                
-      
-                          
-                      
-       
+
+
+
+
+
+
     public boolean isAudioFile(String fileName) {
         if (fileName == null) return false;
         String lower = fileName.toLowerCase();
@@ -186,12 +186,12 @@ public class ZipUtil {
         return false;
     }
 
-       
-                
-      
-                          
-                      
-       
+
+
+
+
+
+
     public boolean isLyricFile(String fileName) {
         if (fileName == null) return false;
         String lower = fileName.toLowerCase();

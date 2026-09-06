@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-   
-          
-   
+
+
+
 @RestController
 @RequestMapping("/cache")
 @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
@@ -28,11 +28,11 @@ public class CacheWarmupController {
         this.cacheWarmupService = cacheWarmupService;
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @PostMapping("/warmup")
     @ApiLog("触发缓存预热")
     public Result<Map<String, Object>> warmUpAll() {
@@ -40,11 +40,11 @@ public class CacheWarmupController {
         return Result.success(result);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @PostMapping("/warmup/hot-songs")
     @ApiLog("预热热门歌曲缓存")
     public Result<Integer> warmUpHotSongs() {
@@ -52,11 +52,11 @@ public class CacheWarmupController {
         return Result.success(count);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @PostMapping("/warmup/hot-albums")
     @ApiLog("预热热门专辑缓存")
     public Result<Integer> warmUpHotAlbums() {
@@ -64,11 +64,11 @@ public class CacheWarmupController {
         return Result.success(count);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @PostMapping("/warmup/hot-artists")
     @ApiLog("预热热门歌手缓存")
     public Result<Integer> warmUpHotArtists() {
@@ -76,11 +76,11 @@ public class CacheWarmupController {
         return Result.success(count);
     }
 
-       
-               
-      
-                   
-       
+
+
+
+
+
     @PostMapping("/warmup/recommendations")
     @ApiLog("预热推荐数据缓存")
     public Result<Integer> warmUpRecommendations() {
@@ -88,11 +88,11 @@ public class CacheWarmupController {
         return Result.success(count);
     }
 
-       
-              
-      
-                   
-       
+
+
+
+
+
     @PostMapping("/warmup/rankings")
     @ApiLog("预热排行榜缓存")
     public Result<Integer> warmUpRankings() {
@@ -100,11 +100,11 @@ public class CacheWarmupController {
         return Result.success(count);
     }
 
-       
-             
-      
-                   
-       
+
+
+
+
+
     @DeleteMapping("/clear")
     @ApiLog("清除所有缓存")
     public Result<Map<String, Object>> clearAllCache() {
@@ -112,11 +112,11 @@ public class CacheWarmupController {
         return Result.success(result);
     }
 
-       
-             
-      
-                   
-       
+
+
+
+
+
     @GetMapping("/status")
     @ApiLog("获取缓存状态")
     public Result<Map<String, Object>> getCacheStatus() {

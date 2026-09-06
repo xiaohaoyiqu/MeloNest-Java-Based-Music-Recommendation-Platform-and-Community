@@ -33,12 +33,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class ActivityRewardServiceImpl implements ActivityRewardService {
@@ -51,16 +51,16 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final Clock clock;
 
-                 
+
     private static final int INACTIVE_REWARD = 0;
     private static final int NORMAL_REWARD = 10;                 
     private static final int ACTIVE_REWARD = 25;                  
     private static final int SUPER_ACTIVE_REWARD = 50;             
 
-             
+
     private static final String POINTS_CHANGE_TYPE = "activity_reward";
 
-               
+
     private static final String CLAIM_KEY_PREFIX = "activity:reward:claimed:";
     private static final int DEFAULT_HISTORY_PAGE_SIZE = 20;
     private static final int MAX_HISTORY_PAGE_SIZE = 100;
@@ -101,15 +101,15 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
         User user = ObjectUtils.isEmpty(userId) ? null : userMapper.selectById(userId);
         boolean canInteract = UserAccountStatusUtil.canInteract(user);
 
-                  
+
         Integer activityScore = userActivityEnhancedService.getEnhancedActivityScore(userId);
         String activityLevel = getActivityLevel(activityScore);
         int pointsReward = calculateRewardPoints(activityScore);
 
-                  
+
         boolean claimedThisMonth = isClaimedThisMonth(userId);
 
-                 
+
         reward.put("userId", userId);
         reward.put("activityScore", activityScore);
         reward.put("activityLevel", activityLevel);
@@ -122,7 +122,7 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
             reward.put("accountUnavailableMessage", UserAccountStatusUtil.currentUnavailableMessage(user));
         }
 
-               
+
         if (pointsReward > 0) {
             reward.put("rewardDescription", String.format(
                     "您的活跃度等级为【%s】，本月可获得%d积分奖励！",
@@ -132,7 +132,7 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
             reward.put("rewardDescription", "活跃度达到30分以上可领取奖励，继续加油！");
         }
 
-                 
+
         reward.put("nextLevelInfo", getNextLevelInfo(activityScore));
 
         return reward;
@@ -144,13 +144,13 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
         User lockedUser = ObjectUtils.isEmpty(userId) ? null : userMapper.selectByIdForUpdate(userId);
         UserAccountStatusUtil.requireCanInteract(lockedUser, "领取活跃度奖励");
         try {
-                     
+
             Map<String, Object> reward = getCurrentReward(userId);
             boolean claimedThisMonth = (boolean) reward.get("claimedThisMonth");
             int pointsReward = (int) reward.get("pointsReward");
             String activityLevel = (String) reward.get("activityLevel");
 
-                       
+
             if (pointsReward <= 0) {
                 log.warn("event=activity_reward_claim_rejected reason=no_reward userId={} score={}",
                         userId, reward.get("activityScore"));
@@ -177,7 +177,7 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
                 return false;
             }
 
-                             
+
             String reason = "活跃度奖励-" + activityLevel + "级";
             Map<String, Object> pointsBeforeGrant = userPointsService.getUserPoints(userId);
             Object currentPointsValue = pointsBeforeGrant == null ? null : pointsBeforeGrant.get("currentPoints");
@@ -290,11 +290,11 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
         return config;
     }
 
-                                                       
 
-       
-              
-       
+
+
+
+
     private String getActivityLevel(int score) {
         if (score >= ActivityAntiSpamConstants.SUPER_ACTIVE_MIN_SCORE) {
             return "super_active";
@@ -307,9 +307,9 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
         }
     }
 
-       
-                
-       
+
+
+
     private String getActivityLevelName(String level) {
         switch (level) {
             case "super_active":
@@ -324,9 +324,9 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
         }
     }
 
-       
-               
-       
+
+
+
     private Map<String, Object> getNextLevelInfo(int currentScore) {
         Map<String, Object> info = new HashMap<>();
 
@@ -369,19 +369,19 @@ public class ActivityRewardServiceImpl implements ActivityRewardService {
         return info;
     }
 
-       
-                
-       
+
+
+
     private String getClaimKey(Long userId) {
         return CLAIM_KEY_PREFIX + userId + ":" + currentClaimPeriod();
     }
 
-       
-              
-       
+
+
+
     private void setClaimedFlag(Long userId) {
         try {
-                                            
+
             redisTemplate.opsForValue().set(getClaimKey(userId), true, 35, TimeUnit.DAYS);
         } catch (RuntimeException e) {
             log.warn("event=activity_reward_cache_write_failed userId={} errorType={}",

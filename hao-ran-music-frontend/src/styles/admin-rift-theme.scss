@@ -1,7 +1,7 @@
-   
-                       
-                                    
-   
+
+
+
+
 :root {
   --hr-font-body: 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
   --hr-font-display: Georgia, 'STZhongsong', 'Noto Serif SC', 'Songti SC', SimSun, serif;
@@ -170,7 +170,7 @@ body.admin-rift-body :is(button, input, textarea, select, .el-popper, .el-dialog
   position: relative;
 }
 
-                             
+
 .admin-realm .layout-main > * {
   width: 100%;
   max-width: none !important;
@@ -372,8 +372,8 @@ body.admin-rift-body :is(button, input, textarea, select, .el-popper, .el-dialog
   background: var(--hr-surface) !important;
 }
 
-                                                                              
-                                                                                  
+
+
 .admin-realm :is(.content-card, .interaction-card, .overview-card, .audit-stat-card, .realtime-card, .ranking-card, .type-chart-card, .metrics-card, .behavior-card, .hot-card, .creator-card) {
   background: var(--hr-surface) !important;
   border: 1px solid var(--hr-border-soft) !important;

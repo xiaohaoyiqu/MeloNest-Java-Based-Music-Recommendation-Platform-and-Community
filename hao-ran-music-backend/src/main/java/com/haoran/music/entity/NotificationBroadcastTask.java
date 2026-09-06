@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -13,9 +13,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-   
-               
-   
+
+
+
 @Data
 @TableName("notification_broadcast_task")
 public class NotificationBroadcastTask {

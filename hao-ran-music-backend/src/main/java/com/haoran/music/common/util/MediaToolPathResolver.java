@@ -1,13 +1,13 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
-   
-                                                                              
-                                                                           
-                                                
-   
+
+
+
+
+
 public final class MediaToolPathResolver {
 
     public static final String DEFAULT_FFMPEG_PATH =

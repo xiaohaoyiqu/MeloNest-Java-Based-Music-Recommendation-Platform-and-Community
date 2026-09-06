@@ -16,41 +16,41 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 
-   
-          
-                           
-  
-                      
-   
+
+
+
+
+
+
 public class CacheHelper {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheHelper.class);
     private static final long DEFAULT_SCAN_COUNT = 1000L;
     private static final Map<String, Object> LOAD_LOCKS = new ConcurrentHashMap<>();
 
     private CacheHelper() {
-                    
+
     }
 
-       
-               
-                                    
-      
-                                     
-                                
-                                              
-                                   
-                                 
-                                 
-                                 
-                          
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static <T> T getOrLoad(RedisUtils redisUtils,
                                   String cacheKey,
                                   Supplier<T> supplier,
                                   long expire,
                                   TimeUnit timeUnit,
                                   Class<T> clazz) {
-                     
+
         T cached = castCached(redisUtils.get(cacheKey), cacheKey, clazz);
         if (com.haoran.music.common.util.ObjectUtils.isNotEmpty(cached)) {
             return cached;
@@ -74,20 +74,20 @@ public class CacheHelper {
         }
     }
 
-       
-                    
-                     
-      
-                                     
-                                
-                                   
-                                   
-                                           
-                                 
-                                 
-                                 
-                          
-       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static <T> T getOrLoadWithNullProtection(RedisUtils redisUtils,
                                                      String cacheKey,
                                                      Supplier<T> supplier,
@@ -95,10 +95,10 @@ public class CacheHelper {
                                                      long nullExpire,
                                                      TimeUnit timeUnit,
                                                      Class<T> clazz) {
-                     
+
         Object cached = redisUtils.get(cacheKey);
         if (com.haoran.music.common.util.ObjectUtils.isNotEmpty(cached)) {
-                        
+
             if (cached instanceof NullMarker) {
                 return null;
             }
@@ -165,20 +165,20 @@ public class CacheHelper {
         return null;
     }
 
-       
-              
-      
-                                 
-                                             
-                     
-       
+
+
+
+
+
+
+
     public static Set<String> keys(RedisUtils redisUtils, String pattern) {
         return redisUtils.keys(pattern);
     }
 
-       
-                                                                   
-       
+
+
+
     public static Set<String> keys(RedisTemplate<String, Object> redisTemplate, String pattern) {
         if (redisTemplate == null || pattern == null || pattern.trim().isEmpty()) {
             return Collections.emptySet();
@@ -197,7 +197,7 @@ public class CacheHelper {
                 try {
                     cursor.close();
                 } catch (Exception ignored) {
-                                                                            
+
                 }
             }
             return keys;
@@ -205,9 +205,9 @@ public class CacheHelper {
         return result == null ? Collections.emptySet() : result;
     }
 
-       
-                                                                             
-       
+
+
+
     public static Map<String, Long> countKeyPrefixes(RedisTemplate<String, Object> redisTemplate,
                                                      String pattern) {
         if (redisTemplate == null || pattern == null || pattern.trim().isEmpty()) {
@@ -230,7 +230,7 @@ public class CacheHelper {
                 try {
                     cursor.close();
                 } catch (Exception ignored) {
-                                                                            
+
                 }
             }
             return counts;
@@ -238,13 +238,13 @@ public class CacheHelper {
         return result == null ? Collections.emptyMap() : result;
     }
 
-       
-                
-      
-                                 
-                            
-                    
-       
+
+
+
+
+
+
+
     public static long deleteByPattern(RedisUtils redisUtils, String pattern) {
         return redisUtils == null ? 0L : redisUtils.deleteByPattern(pattern);
     }
@@ -273,7 +273,7 @@ public class CacheHelper {
                 try {
                     cursor.close();
                 } catch (Exception ignored) {
-                                                                              
+
                 }
             }
             return total;
@@ -290,45 +290,45 @@ public class CacheHelper {
         return deleted == null ? 0L : deleted;
     }
 
-       
-                    
-                               
-      
-                                 
-                            
-                            
-                               
-                             
-       
+
+
+
+
+
+
+
+
+
+
     public static void setWithRandomTTL(RedisUtils redisUtils,
                                          String key,
                                          Object value,
                                          long baseExpire,
                                          TimeUnit timeUnit) {
-                     
+
         long randomTTL = baseExpire + (long) (Math.random() * baseExpire * 0.2 - baseExpire * 0.1);
         redisUtils.set(key, value, Math.max(1, randomTTL), timeUnit);
     }
 
-       
-            
-                       
-       
+
+
+
+
     private static class NullMarker {
-                      
+
     }
 
-       
-           
-                     
-      
-                                  
-                             
-                                
-                              
-                              
-                              
-       
+
+
+
+
+
+
+
+
+
+
+
     public static <T> void warmUp(RedisUtils redisUtils,
                                    String cacheKey,
                                    Supplier<T> supplier,
@@ -345,59 +345,59 @@ public class CacheHelper {
         }
     }
 
-       
-                 
-      
-                                 
-                            
-                                    
-       
+
+
+
+
+
+
+
     public static long getExpire(RedisUtils redisUtils, String key) {
         return redisUtils.getExpire(key);
     }
 
-       
-               
-      
-                                 
-                            
-                                
-       
+
+
+
+
+
+
+
     public static boolean exists(RedisUtils redisUtils, String key) {
         return redisUtils.hasKey(key);
     }
 
-       
-               
-      
-                                 
-                            
-                             
-                             
-                               
-       
+
+
+
+
+
+
+
+
+
     public static boolean expire(RedisUtils redisUtils, String key, long expire, TimeUnit timeUnit) {
         return redisUtils.expire(key, expire, timeUnit);
     }
 
-       
-             
-      
-                                 
-                              
-       
+
+
+
+
+
+
     public static void delete(RedisUtils redisUtils, Set<String> keys) {
         if (com.haoran.music.common.util.ObjectUtils.isNotEmpty(keys)) {
             redisUtils.delete(keys);
         }
     }
 
-       
-                 
-      
-                                 
-                              
-       
+
+
+
+
+
+
     public static void delete(RedisUtils redisUtils, String... keys) {
         if (keys != null && keys.length > 0) {
             for (String key : keys) {
@@ -406,37 +406,37 @@ public class CacheHelper {
         }
     }
 
-       
-                         
-      
-                                 
-                             
-                           
-                    
-       
+
+
+
+
+
+
+
+
     public static long increment(RedisUtils redisUtils, String key, long delta) {
         return redisUtils.increment(key, delta);
     }
 
-       
-            
-      
-                                 
-                             
-                           
-                    
-       
+
+
+
+
+
+
+
+
     public static long decrement(RedisUtils redisUtils, String key, long delta) {
         return redisUtils.decrement(key, delta);
     }
 
-       
-             
-      
-                                 
-                             
-                  
-       
+
+
+
+
+
+
+
     public static long getCounter(RedisUtils redisUtils, String key) {
         Object value = redisUtils.get(key);
         if (com.haoran.music.common.util.ObjectUtils.isNotEmpty(value)) {

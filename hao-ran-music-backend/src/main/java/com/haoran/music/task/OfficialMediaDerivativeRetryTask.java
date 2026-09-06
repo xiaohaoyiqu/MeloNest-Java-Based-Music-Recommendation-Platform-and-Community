@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-   
-                
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Component
 public class OfficialMediaDerivativeRetryTask {
@@ -20,9 +20,9 @@ public class OfficialMediaDerivativeRetryTask {
         this.officialMediaDerivativeService = officialMediaDerivativeService;
     }
 
-       
-                         
-       
+
+
+
     @Scheduled(cron = "${schedule.task.media-derivative-retry-cron:0 */5 * * * ?}")
     public void retryDueTasks() {
         int submitted = officialMediaDerivativeService.retryDueDerivativeJobs();

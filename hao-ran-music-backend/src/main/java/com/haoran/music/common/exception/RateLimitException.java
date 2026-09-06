@@ -1,9 +1,9 @@
 package com.haoran.music.common.exception;
 
-   
-                      
-                      
-   
+
+
+
+
 public class RateLimitException extends RuntimeException {
 
     private final boolean needCaptcha;

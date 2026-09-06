@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                      
-                                                                                  
-   
+
+
+
+
 @Slf4j
 @Component
 public class WorkProcessingUtil {
@@ -46,9 +46,9 @@ public class WorkProcessingUtil {
     @Autowired
     private SongCreditProjectionService songCreditProjectionService;
 
-       
-                  
-       
+
+
+
     private static final Map<Integer, String> QUALITY_FIELD_MAP;
     static {
         Map<Integer, String> map = new HashMap<>();
@@ -60,9 +60,9 @@ public class WorkProcessingUtil {
         QUALITY_FIELD_MAP = Collections.unmodifiableMap(map);
     }
 
-       
-                  
-       
+
+
+
     private static final Map<Integer, String> SIZE_FIELD_MAP;
     static {
         Map<Integer, String> map = new HashMap<>();
@@ -74,9 +74,9 @@ public class WorkProcessingUtil {
         SIZE_FIELD_MAP = Collections.unmodifiableMap(map);
     }
 
-       
-                    
-       
+
+
+
     private static final Map<String, String> VIDEO_QUALITY_FIELD_MAP;
     static {
         Map<String, String> map = new HashMap<>();
@@ -91,9 +91,9 @@ public class WorkProcessingUtil {
         VIDEO_QUALITY_FIELD_MAP = Collections.unmodifiableMap(map);
     }
 
-       
-             
-       
+
+
+
     public static class AudioDetectionResult {
         private Integer qualityLevel;
         private String qualityName;
@@ -119,9 +119,9 @@ public class WorkProcessingUtil {
         public void setFormat(String format) { this.format = format; }
     }
 
-       
-             
-       
+
+
+
     public static class VideoDetectionResult {
         private Long fileSize;
         private Integer duration;
@@ -144,9 +144,9 @@ public class WorkProcessingUtil {
         public void setHeight(Integer height) { this.height = height; }
     }
 
-       
-                     
-       
+
+
+
     public static VideoDetectionResult detectVideoInfo(String localFilePath) {
         VideoDetectionResult info = new VideoDetectionResult();
 
@@ -193,9 +193,9 @@ public class WorkProcessingUtil {
         return info;
     }
 
-       
-             
-       
+
+
+
     private static void parseVideoInfo(String jsonOutput, VideoDetectionResult info) {
         Double duration = CommonUtil.extractDouble(jsonOutput, "\"duration\"\\s*:\\s*(\\d+\\.?\\d*)");
         if (duration != null) {
@@ -217,9 +217,9 @@ public class WorkProcessingUtil {
         }
     }
 
-       
-                   
-       
+
+
+
     private static String determineVideoQuality(Integer width, Integer height) {
         int minDim = Math.min(width, height);
         if (minDim >= 2160) return "4k";
@@ -229,30 +229,30 @@ public class WorkProcessingUtil {
         return "360p";
     }
 
-       
-                 
-       
+
+
+
     public static String getQualityUrlField(Integer qualityLevel) {
         return QUALITY_FIELD_MAP.getOrDefault(qualityLevel, "urlHigh");
     }
 
-       
-                
-       
+
+
+
     public static String getQualitySizeField(Integer qualityLevel) {
         return SIZE_FIELD_MAP.getOrDefault(qualityLevel, "sizeHigh");
     }
 
-       
-                 
-       
+
+
+
     public static String getVideoQualityField(String quality) {
         return VIDEO_QUALITY_FIELD_MAP.getOrDefault(quality.toLowerCase(), "url720p");
     }
 
-       
-                   
-       
+
+
+
     public static void setSongQualityField(Song song, Integer qualityLevel, String url, Long size) {
         String urlField = getQualityUrlField(qualityLevel);
         String sizeField = getQualitySizeField(qualityLevel);
@@ -261,9 +261,9 @@ public class WorkProcessingUtil {
         setSongField(song, sizeField, size != null ? String.valueOf(size) : "0");
     }
 
-       
-                 
-       
+
+
+
     private static void setSongField(Song song, String fieldName, String value) {
         try {
             Field field = song.getClass().getDeclaredField(fieldName);
@@ -275,9 +275,9 @@ public class WorkProcessingUtil {
         }
     }
 
-       
-                    
-       
+
+
+
     public Artist getOrCreateArtist(String artistName) {
         if (StrUtil.isBlank(artistName)) {
             artistName = "未知歌手";
@@ -301,9 +301,9 @@ public class WorkProcessingUtil {
         return artist;
     }
 
-       
-                
-       
+
+
+
     public void createSongArtistRelation(Long songId, Long artistId, String artistName) {
         com.haoran.music.entity.SongArtist songArtist = new com.haoran.music.entity.SongArtist();
         songArtist.setSongId(songId);
@@ -319,16 +319,16 @@ public class WorkProcessingUtil {
                 "work_processing", "published work artist relation sync");
     }
 
-       
-                                 
-       
+
+
+
     public static String extractLocalPath(String url) {
         return CommonUtil.extractLocalPath(url);
     }
 
-       
-                      
-       
+
+
+
     public static boolean isPathSafe(String path) {
         if (StrUtil.isBlank(path)) {
             return false;
@@ -344,9 +344,9 @@ public class WorkProcessingUtil {
         return true;
     }
 
-       
-                
-       
+
+
+
     public static String validateAndCleanPath(String path) {
         if (!isPathSafe(path)) {
             throw new SecurityException("路径包含非法字符或不安全: " + path);

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.aliyun.dysmsapi20170525.Client;
@@ -13,10 +13,10 @@ import com.haoran.music.service.AliyunSmsGateway;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-   
-                                                                                                      
-                                                        
-   
+
+
+
+
 @Component
 @ConditionalOnProperty(prefix = "sms", name = "enabled", havingValue = "true")
 public class DefaultAliyunSmsGateway implements AliyunSmsGateway {

@@ -1,13 +1,13 @@
-   
-                      
-                        
-  
-      
-                    
-                 
-                  
-                    
-   
+
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.service;
 
@@ -24,22 +24,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-           
-   
+
+
+
 @Slf4j
 @Service
 public class FileVersionService {
 
-       
-              
-       
+
+
+
     @Value("${music.upload.base-path}")
     private String basePath;
 
-       
-                             
-       
+
+
+
     @Value("${music.node4.host}")
     private String node4Host;
 
@@ -49,9 +49,9 @@ public class FileVersionService {
     @Value("${music.node4.path}")
     private String node4Path;
 
-       
-             
-       
+
+
+
     private static final List<EnhancedImageCompressUtil.ImageSize> IMAGE_VERSIONS =
             Arrays.asList(
             EnhancedImageCompressUtil.ImageSize.THUMBNAIL,
@@ -61,9 +61,9 @@ public class FileVersionService {
             EnhancedImageCompressUtil.ImageSize.ORIGINAL
     );
 
-       
-                  
-       
+
+
+
     public enum AudioQuality {
         STANDARD("标准音质", 128000, "standard"),
         HIGH("高音质", 320000, "high"),
@@ -84,9 +84,9 @@ public class FileVersionService {
         public String getCode() { return code; }
     }
 
-       
-              
-       
+
+
+
     public enum VideoQuality {
         SD("标清", 480, "sd"),
         HD("高清", 720, "hd"),
@@ -108,14 +108,14 @@ public class FileVersionService {
         public String getCode() { return code; }
     }
 
-       
-                
-      
-                                 
-                                                  
-                              
-                    
-       
+
+
+
+
+
+
+
+
     public Map<String, String> generateImageVersions(String originalPath, String category, String fileName) {
         if (ObjectUtils.isEmpty(originalPath) || ObjectUtils.isEmpty(fileName)) {
             return new HashMap<>();
@@ -144,14 +144,14 @@ public class FileVersionService {
         }
     }
 
-       
-                  
-      
-                           
-                            
-                                                                  
-                   
-       
+
+
+
+
+
+
+
+
     public String getImageVersionPath(String category, String fileName, String version) {
         if (ObjectUtils.isEmpty(fileName) || ObjectUtils.isEmpty(version)) {
             return null;
@@ -165,39 +165,39 @@ public class FileVersionService {
             return "/" + category + "/versions/" + baseName + "/" + baseName + "_" + version + "." + getFileExtension(fileName);
         }
 
-                       
+
         return "/" + category + "/" + fileName;
     }
 
-       
-                    
-      
-                              
-                            
-                   
-       
+
+
+
+
+
+
+
     public String getAudioVersionPath(Long audioId, AudioQuality quality) {
-                             
-                              
+
+
         return "/songs/" + quality.getCode() + "/" + audioId + ".mp3";
     }
 
-       
-                     
-      
-                             
-                            
-                   
-       
+
+
+
+
+
+
+
     public String getVideoVersionPath(Long videoId, VideoQuality quality) {
         return "/videos/" + quality.getCode() + "/" + videoId + ".mp4";
     }
 
-       
-                  
-      
-                   
-       
+
+
+
+
+
     public List<Map<String, Object>> getAvailableAudioQualities() {
         List<Map<String, Object>> qualities = new ArrayList<>();
 
@@ -222,11 +222,11 @@ public class FileVersionService {
         return qualities;
     }
 
-       
-                     
-      
-                    
-       
+
+
+
+
+
     public List<Map<String, Object>> getAvailableVideoQualities() {
         List<Map<String, Object>> qualities = new ArrayList<>();
 
@@ -251,13 +251,13 @@ public class FileVersionService {
         return qualities;
     }
 
-       
-                  
-      
-                         
-                          
-                      
-       
+
+
+
+
+
+
+
     public int cleanupFileVersions(String category, String fileName) {
         if (ObjectUtils.isEmpty(fileName)) {
             return 0;
@@ -281,7 +281,7 @@ public class FileVersionService {
             }
         }
 
-                 
+
         dir.delete();
 
         log.info("event=file_versions_cleaned category={} count={}", category, count);
@@ -289,9 +289,9 @@ public class FileVersionService {
         return count;
     }
 
-       
-              
-       
+
+
+
     private String getFileExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return "jpg";
@@ -303,9 +303,9 @@ public class FileVersionService {
         return fileName.substring(lastDotIndex + 1);
     }
 
-       
-                    
-       
+
+
+
     public Map<String, String> getNode4Info() {
         Map<String, String> info = new HashMap<>();
         info.put("host", node4Host);

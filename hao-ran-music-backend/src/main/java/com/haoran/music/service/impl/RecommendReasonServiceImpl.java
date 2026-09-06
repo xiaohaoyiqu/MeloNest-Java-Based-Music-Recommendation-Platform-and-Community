@@ -18,10 +18,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class RecommendReasonServiceImpl implements RecommendReasonService {
@@ -47,9 +47,9 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-       
-                   
-       
+
+
+
     private static final Integer REASON_CACHE_HOURS = 3;
 
     @Override
@@ -58,7 +58,7 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
             return null;
         }
 
-                  
+
         String cacheKey = "reason:" + itemType + ":" + userId + ":" + itemId;
         RecommendReasonVO cached = (RecommendReasonVO) redisTemplate.opsForValue().get(cacheKey);
         if (ObjectUtils.isNotEmpty(cached)) {
@@ -69,29 +69,29 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         reason.setItemId(itemId);
         reason.setItemType(itemType);
 
-                      
+
         String reasonType = determineReasonType(userId, itemId, itemType);
         reason.setReasonType(reasonType);
         reason.setReasonTypeDescription(getReasonTypeDescription(reasonType));
 
-                   
+
         String reasonText = generateReasonText(userId, itemId, itemType, reasonType);
         reason.setReasonText(reasonText);
         reason.setReasonTemplate(getReasonTemplate(reasonType));
 
-                   
+
         reason.setConfidence(calculateConfidence(userId, itemId, itemType, reasonType));
         reason.setWeight(calculateWeight(userId, itemType));
 
-                 
+
         reason.setExplainable(true);
         reason.setRecommendSource(getRecommendSource(reasonType));
 
-                 
+
         List<RecommendReasonVO.RelatedEntity> relatedEntities = generateRelatedEntities(userId, itemId, itemType, reasonType);
         reason.setRelatedEntities(relatedEntities);
 
-               
+
         redisTemplate.opsForValue().set(cacheKey, reason, REASON_CACHE_HOURS, TimeUnit.HOURS);
 
         log.debug("生成推荐理由: userId={}, itemId={}, type={}", userId, itemId, reasonType);
@@ -118,7 +118,7 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
             return null;
         }
 
-                     
+
         reason.setRecommendSource(recommendSource);
 
         return reason;
@@ -128,19 +128,19 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
     public Map<String, Integer> getReasonTypeStatistics() {
         Map<String, Integer> stats = new LinkedHashMap<>();
 
-                   
+
         for (RecommendReasonVO.ReasonType type : RecommendReasonVO.ReasonType.values()) {
             stats.put(type.getCode(), 0);
         }
 
-                                 
+
         String statsKey = "reason:stats:types";
         Map<String, Integer> cached = (Map<String, Integer>) redisTemplate.opsForValue().get(statsKey);
         if (ObjectUtils.isNotEmpty(cached)) {
             return cached;
         }
 
-                      
+
         redisTemplate.opsForValue().set(statsKey, stats, 1, TimeUnit.HOURS);
 
         return stats;
@@ -152,7 +152,7 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
             return false;
         }
 
-                     
+
         String configKey = "reason:config:" + reasonType;
         Map<String, Object> config = new LinkedHashMap<>();
         config.put("enabled", ObjectUtils.isNotEmpty(enabled) ? enabled : true);
@@ -192,7 +192,7 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
             return false;
         }
 
-                     
+
         String feedbackKey = "reason:feedback:" + itemType + ":" + userId + ":" + itemId;
         Map<String, Object> feedback = new LinkedHashMap<>();
         feedback.put("userId", userId);
@@ -203,7 +203,7 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
 
         redisTemplate.opsForValue().set(feedbackKey, feedback, 7, TimeUnit.DAYS);
 
-               
+
         String statsKey = "reason:feedback:stats:" + itemType;
         redisTemplate.opsForHash().increment(statsKey, "total", 1);
         if (ObjectUtils.isNotEmpty(helpful) && helpful) {
@@ -222,7 +222,7 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
 
         int analysisDays = ObjectUtils.isNotEmpty(days) ? days : 7;
 
-                       
+
         Map<String, Object> feedbackStats = new LinkedHashMap<>();
         for (RecommendReasonVO.ReasonType type : RecommendReasonVO.ReasonType.values()) {
             String statsKey = "reason:feedback:stats:" + type.getCode();
@@ -252,10 +252,10 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
     public Map<String, Object> optimizeReasonDisplay(Long userId) {
         Map<String, Object> config = new LinkedHashMap<>();
 
-                 
+
         Map<String, Integer> userPreference = analyzeUserReasonPreference(userId);
 
-                 
+
         config.put("userId", userId);
         config.put("preferredReasonTypes", userPreference);
         config.put("displayStrategy", determineDisplayStrategy(userPreference));
@@ -266,41 +266,41 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return config;
     }
 
-       
-               
-       
-    private String determineReasonType(Long userId, Long itemId, String itemType) {
-                                           
 
-                        
+
+
+    private String determineReasonType(Long userId, Long itemId, String itemType) {
+
+
+
         if (isFromSocialSource(userId, itemId)) {
             return RecommendReasonVO.ReasonType.SOCIAL_BASED.getCode();
         }
 
-                        
+
         if (isFromHistory(userId, itemId)) {
             return RecommendReasonVO.ReasonType.HISTORY_BASED.getCode();
         }
 
-                      
+
         if (isFromFavorite(userId, itemId)) {
             return RecommendReasonVO.ReasonType.FAVORITE_BASED.getCode();
         }
 
-                        
+
         if (isFromTagPreference(userId, itemId)) {
             return RecommendReasonVO.ReasonType.TAG_BASED.getCode();
         }
 
-                      
+
         return RecommendReasonVO.ReasonType.PORTRAIT_BASED.getCode();
     }
 
-       
-                 
-       
+
+
+
     private boolean isFromSocialSource(Long userId, Long itemId) {
-                        
+
         LambdaQueryWrapper<UserFollow> followWrapper = new LambdaQueryWrapper<>();
         followWrapper.eq(UserFollow::getFollowerId, userId)
                 .eq(UserFollow::getDeleted, CommonConstants.NOT_DELETED);
@@ -328,9 +328,9 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return false;
     }
 
-       
-                 
-       
+
+
+
     private boolean isFromHistory(Long userId, Long itemId) {
         LambdaQueryWrapper<ListenHistory> historyWrapper = new LambdaQueryWrapper<>();
         historyWrapper.eq(ListenHistory::getUserId, userId)
@@ -342,9 +342,9 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return ObjectUtils.isNotEmpty(history);
     }
 
-       
-               
-       
+
+
+
     private boolean isFromFavorite(Long userId, Long itemId) {
         LambdaQueryWrapper<SongLike> likeWrapper = new LambdaQueryWrapper<>();
         likeWrapper.eq(SongLike::getUserId, userId)
@@ -354,17 +354,17 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return ObjectUtils.isNotEmpty(count) && count > 0;
     }
 
-       
-                 
-       
+
+
+
     private boolean isFromTagPreference(Long userId, Long itemId) {
-                  
+
         Song song = songMapper.selectById(itemId);
         if (ObjectUtils.isEmpty(song) || ObjectUtils.isEmpty(song.getMainGenre())) {
             return false;
         }
 
-                      
+
         LambdaQueryWrapper<UserTagPreference> prefWrapper = new LambdaQueryWrapper<>();
         prefWrapper.eq(UserTagPreference::getUserId, userId)
                 .eq(UserTagPreference::getTagName, song.getMainGenre());
@@ -373,13 +373,13 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return ObjectUtils.isNotEmpty(count) && count > 0;
     }
 
-       
-               
-       
+
+
+
     private String generateReasonText(Long userId, Long itemId, String itemType, String reasonType) {
         switch (reasonType) {
             case "social_based":
-                         
+
                 String friendName = getFriendNameWhoLiked(userId, itemId);
                 if (ObjectUtils.isNotEmpty(friendName)) {
                     return "您的好友" + friendName + "也喜欢这首歌";
@@ -402,9 +402,9 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         }
     }
 
-       
-                   
-       
+
+
+
     private String getFriendNameWhoLiked(Long userId, Long itemId) {
         LambdaQueryWrapper<UserFollow> followWrapper = new LambdaQueryWrapper<>();
         followWrapper.eq(UserFollow::getFollowerId, userId);
@@ -430,9 +430,9 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return null;
     }
 
-       
-               
-       
+
+
+
     private String getReasonTypeDescription(String reasonType) {
         for (RecommendReasonVO.ReasonType type : RecommendReasonVO.ReasonType.values()) {
             if (type.getCode().equals(reasonType)) {
@@ -442,9 +442,9 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return "未知类型";
     }
 
-       
-             
-       
+
+
+
     private String getReasonTemplate(String reasonType) {
         for (RecommendReasonVO.ReasonType type : RecommendReasonVO.ReasonType.values()) {
             if (type.getCode().equals(reasonType)) {
@@ -454,18 +454,18 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return "为您推荐";
     }
 
-       
-             
-       
+
+
+
     private String getRecommendSource(String reasonType) {
         return "推荐引擎_" + reasonType;
     }
 
-       
-            
-       
+
+
+
     private Integer calculateConfidence(Long userId, Long itemId, String itemType, String reasonType) {
-                      
+
         Integer confidence;
         switch (reasonType) {
             case "social_based":
@@ -490,22 +490,22 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return confidence;
     }
 
-       
-             
-       
+
+
+
     private Double calculateWeight(Long userId, String itemType) {
-                         
+
         return 1.0;
     }
 
-       
-             
-       
+
+
+
     private List<RecommendReasonVO.RelatedEntity> generateRelatedEntities(Long userId, Long itemId, String itemType, String reasonType) {
         List<RecommendReasonVO.RelatedEntity> entities = new ArrayList<>();
 
         if ("social_based".equals(reasonType)) {
-                         
+
             String friendName = getFriendNameWhoLiked(userId, itemId);
             if (ObjectUtils.isNotEmpty(friendName)) {
                 RecommendReasonVO.RelatedEntity entity = new RecommendReasonVO.RelatedEntity();
@@ -515,7 +515,7 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
                 entities.add(entity);
             }
         } else if ("history_based".equals(reasonType) || "favorite_based".equals(reasonType)) {
-                     
+
             Song song = songMapper.selectById(itemId);
             if (ObjectUtils.isNotEmpty(song)) {
                 RecommendReasonVO.RelatedEntity entity = new RecommendReasonVO.RelatedEntity();
@@ -530,28 +530,28 @@ public class RecommendReasonServiceImpl implements RecommendReasonService {
         return entities;
     }
 
-       
-                   
-       
+
+
+
     private Map<String, Integer> analyzeUserReasonPreference(Long userId) {
         Map<String, Integer> preference = new LinkedHashMap<>();
 
-                     
+
         for (RecommendReasonVO.ReasonType type : RecommendReasonVO.ReasonType.values()) {
             preference.put(type.getCode(), 50);
         }
 
-                     
-                         
+
+
 
         return preference;
     }
 
-       
-             
-       
+
+
+
     private String determineDisplayStrategy(Map<String, Integer> preference) {
-                      
+
         String topType = preference.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)

@@ -1,7 +1,7 @@
-   
-                      
-                              
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -13,9 +13,9 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.Map;
 
-   
-                 
-   
+
+
+
 @Mapper
 public interface UserVisitMapper extends BaseMapper<UserVisit> {
 

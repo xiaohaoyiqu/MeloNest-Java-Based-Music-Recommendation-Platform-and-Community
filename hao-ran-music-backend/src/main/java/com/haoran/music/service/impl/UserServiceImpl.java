@@ -50,10 +50,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-   
-                      
-                                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -202,7 +202,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String email = normalizeEmail(dto.getEmail());
 
         ensureUsernameAvailable(username);
-                                                                                                                           
+
         ensurePhoneAvailable(phone, null);
         ensureEmailAvailable(email, null);
 
@@ -419,7 +419,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getDeleted, CommonConstants.NOT_DELETED);
 
-                         
+
         if (ObjectUtils.isNotEmpty(dto.getKeyword())) {
             wrapper.and(w -> w.like(User::getUsername, dto.getKeyword())
                     .or()
@@ -427,7 +427,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                     .or()
                     .like(User::getEmail, dto.getKeyword()));
         } else {
-                     
+
             if (ObjectUtils.isNotEmpty(dto.getUsername())) {
                 wrapper.like(User::getUsername, dto.getUsername());
             }
@@ -447,21 +447,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } else if ("banned".equals(accountState)) {
             wrapper.eq(User::getIsBanned, 1);
         } else if (ObjectUtils.isNotEmpty(dto.getStatus())) {
-                                              
+
             wrapper.eq(User::getStatus, dto.getStatus());
         }
 
         if (ObjectUtils.isNotEmpty(dto.getRole()) && UserRole.isValidCode(dto.getRole())) {
             wrapper.apply("UPPER(role) = {0}", UserRole.fromCode(dto.getRole()).getCode());
         }
-                                                                      
 
-                 
+
+
         if (ObjectUtils.isNotEmpty(dto.getUserType())) {
             wrapper.eq(User::getUserType, dto.getUserType());
         }
 
-                                    
+
         if (dto.getIsVip() != null) {
             if (dto.getIsVip()) {
                 wrapper.inSql(User::getId,
@@ -474,7 +474,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
 
-                   
+
         if (ObjectUtils.isNotEmpty(dto.getRegisterTimeStart())) {
             wrapper.ge(User::getCreateTime, dto.getRegisterTimeStart());
         }
@@ -482,7 +482,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             wrapper.le(User::getCreateTime, dto.getRegisterTimeEnd());
         }
 
-                  
+
         if (ObjectUtils.isNotEmpty(dto.getFansCountMin())) {
             wrapper.ge(User::getFansCount, dto.getFansCountMin());
         }
@@ -490,7 +490,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             wrapper.le(User::getFansCount, dto.getFansCountMax());
         }
 
-                  
+
         if (ObjectUtils.isNotEmpty(dto.getCreditScoreMin())) {
             wrapper.ge(User::getCreditScore, dto.getCreditScoreMin());
         }
@@ -499,7 +499,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
 
-                  
+
         if (dto.getIsCreator() != null) {
             if (dto.getIsCreator()) {
                 wrapper.eq(User::getIsCreator, 1);
@@ -508,7 +508,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
 
-                  
+
         if (dto.getIsModerator() != null) {
             if (dto.getIsModerator()) {
                 wrapper.eq(User::getIsModerator, 1);
@@ -517,7 +517,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
 
-                 
+
         if (dto.getIsOfficial() != null) {
             if (dto.getIsOfficial()) {
                 wrapper.eq(User::getIsOfficial, 1);
@@ -637,7 +637,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         IPage<UserFollow> followResult = userFollowMapper.selectPage(followPage, wrapper);
 
-                      
+
         List<Long> followeeIds = followResult.getRecords().stream()
                 .map(UserFollow::getFolloweeId)
                 .collect(Collectors.toList());
@@ -646,13 +646,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return ConvertHelper.emptyPage(page, size, UserVO.class);
         }
 
-                   
+
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.in(User::getId, followeeIds)
                 .eq(User::getDeleted, CommonConstants.NOT_DELETED);
         List<User> users = list(userWrapper);
 
-                
+
         Set<Long> vipUserIds = userVipService.getActiveVipExpirations(
                 users.stream().map(User::getId).collect(Collectors.toSet())).keySet();
         List<UserVO> voList = ConvertHelper.toVOList(users,
@@ -677,7 +677,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         IPage<UserFollow> followResult = userFollowMapper.selectPage(followPage, wrapper);
 
-                    
+
         List<Long> followerIds = followResult.getRecords().stream()
                 .map(UserFollow::getFollowerId)
                 .collect(Collectors.toList());
@@ -686,13 +686,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return ConvertHelper.emptyPage(page, size, UserVO.class);
         }
 
-                   
+
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.in(User::getId, followerIds)
                 .eq(User::getDeleted, CommonConstants.NOT_DELETED);
         List<User> users = list(userWrapper);
 
-                
+
         Set<Long> vipUserIds = userVipService.getActiveVipExpirations(
                 users.stream().map(User::getId).collect(Collectors.toSet())).keySet();
         List<UserVO> voList = ConvertHelper.toVOList(users,
@@ -718,7 +718,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void sendVerifyCode(String phone, String type) {
-                                                                                                             
+
         phoneVerificationService.sendCode(phone, type, null, null);
     }
 
@@ -946,11 +946,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("User account deleted: userId={}", userId);
     }
 
-       
-                                 
-      
-                       
-       
+
+
+
+
+
     private void cleanupUserRelatedData(Long userId) {
         userPasswordService.deleteByUserId(userId);
         userPrivateService.deleteUserPrivate(userId);
@@ -1023,11 +1023,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("User related data cleanup completed: userId={}", userId);
     }
 
-       
-                                                                                            
-      
-                         
-       
+
+
+
+
+
     private void anonymizeUserData(User user) {
         user.setUsername("deleted_user_" + user.getId());
         user.setPassword(null);
@@ -1044,11 +1044,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("User data anonymized: userId={}", user.getId());
     }
 
-       
-                                         
-      
-                       
-       
+
+
+
+
+
     private void clearUserCache(Long userId) {
         CacheHelper.delete(
                 redisUtils,
@@ -1058,12 +1058,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         permissionService.clearRoleCache(userId);
     }
 
-       
-                    
-      
-                              
-                     
-       
+
+
+
+
+
+
     private UserVO convertToVO(User user) {
         return convertToVO(user, Boolean.TRUE.equals(userVipService.isVip(user.getId())));
     }
@@ -1143,13 +1143,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
-       
-                 
-                         
-                        
-                       
-                   
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean addVipDays(Long userId, Integer days, String reason) {
@@ -1167,14 +1167,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return true;
     }
 
-                                                                   
 
-       
-                    
-      
-                         
-                                  
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUserStatus(Long userId, Integer status) {
@@ -1209,13 +1209,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("管理员更新用户状态: userId={}, status={}", userId, status);
     }
 
-       
-               
-      
-                            
-                                   
-                      
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int batchUpdateUserStatus(List<Long> userIds, Integer status) {
@@ -1234,12 +1234,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return count;
     }
 
-       
-                    
-      
-                         
-                                   
-       
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUserRole(Long userId, String role) {
@@ -1266,13 +1266,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("管理员更新用户角色: userId={}, role={}", userId, normalizedRole);
     }
 
-       
-               
-      
-                            
-                                    
-                      
-       
+
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int batchUpdateUserRole(List<Long> userIds, String role) {
@@ -1291,11 +1291,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return count;
     }
 
-       
-                  
-      
-                         
-       
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void adminDeleteUser(Long userId) {
@@ -1318,12 +1318,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.warn("管理员删除用户: userId={}", userId);
     }
 
-       
-             
-      
-                            
-                      
-       
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int batchDeleteUsers(List<Long> userIds) {
@@ -1342,12 +1342,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return count;
     }
 
-       
-                    
-      
-                              
-                             
-       
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void adminResetPassword(Long userId, String newPassword) {
@@ -1369,12 +1369,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.warn("管理员重置用户密码: userId={}", userId);
     }
 
-       
-                    
-      
-                         
-                            
-       
+
+
+
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void adminEditUserInfo(Long userId, java.util.Map<String, Object> params) {
@@ -1414,12 +1414,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("管理员编辑用户信息: userId={}", userId);
     }
 
-       
-                    
-      
-                         
-                   
-       
+
+
+
+
+
+
     @Override
     public User getUserEntityById(Long userId) {
         if (ObjectUtils.isEmpty(userId)) {

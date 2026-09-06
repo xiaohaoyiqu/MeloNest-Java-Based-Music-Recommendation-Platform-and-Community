@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.Map;
 
-   
-           
-                  
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 @Component
 public class CacheWarmupScheduler {
@@ -21,10 +21,10 @@ public class CacheWarmupScheduler {
     @Resource
     private CacheWarmupService cacheWarmupService;
 
-       
-                  
-                  
-       
+
+
+
+
     @Scheduled(cron = "${schedule.cache-warmup.hourly-cron}")
     public void warmUpCacheHourly() {
         try {
@@ -36,10 +36,10 @@ public class CacheWarmupScheduler {
         }
     }
 
-       
-                     
-                        
-       
+
+
+
+
     @Scheduled(cron = "${schedule.cache-warmup.rankings-cron}")
     public void warmUpRankings() {
         try {
@@ -51,16 +51,16 @@ public class CacheWarmupScheduler {
         }
     }
 
-       
-                     
-       
+
+
+
     @Scheduled(cron = "${schedule.cache-warmup.daily-cron}")
     public void warmUpCacheDaily() {
         try {
             log.info("开始执行每日全面缓存预热");
             Map<String, Object> result = cacheWarmupService.warmUpAll();
 
-                     
+
             log.info("每日全面缓存预热完成 - 热门歌曲: {}, 热门专辑: {}, 热门歌手: {}, 热门歌单: {}, 总计: {}",
                     result.get("hotSongs"),
                     result.get("hotAlbums"),
@@ -72,9 +72,9 @@ public class CacheWarmupScheduler {
         }
     }
 
-       
-                    
-       
+
+
+
     @Scheduled(cron = "${schedule.cache-warmup.clean-expired-cron}")
     public void cleanExpiredCache() {
         try {

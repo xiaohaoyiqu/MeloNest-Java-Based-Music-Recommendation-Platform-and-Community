@@ -1,13 +1,13 @@
-   
-                      
-                                 
-  
-        
-                           
-                                  
-                               
-                            
-   
+
+
+
+
+
+
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -52,9 +52,9 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-   
-               
-   
+
+
+
 @Slf4j
 @Service
 public class MultiFileUploadServiceImpl implements MultiFileUploadService {
@@ -81,27 +81,27 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
     private String nginxUrl;
 
 
-              
+
     private static final Set<String> AUDIO_FORMATS = new HashSet<>(Arrays.asList(
         "mp3", "flac", "wav", "m4a", "aac", "ogg", "wma", "ape"
     ));
 
-              
+
     private static final Set<String> VIDEO_FORMATS = new HashSet<>(Arrays.asList(
         "mp4", "mov", "avi", "mkv", "flv", "wmv"
     ));
 
-              
+
     private static final Set<String> LYRIC_FORMATS = new HashSet<>(Arrays.asList(
         "lrc", "txt", "json"
     ));
 
-              
+
     private static final Set<String> IMAGE_FORMATS = new HashSet<>(Arrays.asList(
         "jpg", "jpeg", "png", "gif", "webp"
     ));
 
-                                                                                              
+
     private static final Set<String> ARCHIVE_FORMATS = Collections.singleton("zip");
 
     @Autowired
@@ -131,7 +131,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         List<Map<String, Object>> uploadedFiles = new ArrayList<>();
         List<String> errors = new ArrayList<>();
 
-                    
+
         if (files == null || files.isEmpty()) {
             throw new BusinessException(ResultCode.ERROR, "文件列表不能为空");
         }
@@ -139,7 +139,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
             throw new BusinessException(ResultCode.ERROR, "最多支持" + musicUploadConfig.getMaxFiles() + "个文件");
         }
 
-                   
+
         long totalSize = files.stream().mapToLong(MultipartFile::getSize).sum();
         if (totalSize > musicUploadConfig.getMaxTotalSize()) {
             throw new BusinessException(ResultCode.ERROR, "总文件大小不能超过" + (musicUploadConfig.getMaxTotalSize() / 1024 / 1024) + "MB");
@@ -152,7 +152,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         }
 
 
-                      
+
         LocalDate now = LocalDate.now();
         String datePath = now.format(DateTimeFormatter.ofPattern("yyyy/MM"));
         String userPath = String.valueOf(userId);
@@ -166,7 +166,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
             throw new BusinessException(ResultCode.ERROR, "创建上传目录失败");
         }
 
-                    
+
         int successCount = 0;
         for (MultipartFile file : files) {
             try {
@@ -180,7 +180,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
             }
         }
 
-                  
+
         if (successCount == 0) {
             throw new BusinessException(ResultCode.ERROR, "所有文件上传失败: " + String.join("; ", errors));
         }
@@ -191,7 +191,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         result.put("errors", errors);
         result.put("uploadTime", LocalDateTime.now());
 
-                    
+
         Map<String, Object> summary = generateFileSummary(uploadedFiles);
         result.put("summary", summary);
 
@@ -336,9 +336,9 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
             }
         }
     }
-       
-                                  
-       
+
+
+
     private List<Map<String, String>> extractZip(String zipPath, String destDir) throws IOException {
         List<Map<String, String>> files = new ArrayList<>();
         long totalExtractedSize = 0L;
@@ -682,9 +682,9 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         return results;
     }
 
-       
-               
-       
+
+
+
     @Override
     public List<Map<String, Object>> batchDetectVideoInfo(List<String> videoUrls, Long userId) {
         requireInteractiveUser(userId, "检测视频");
@@ -696,10 +696,10 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
             result.put("url", url);
 
             try {
-                              
+
                 Path ownedFile = requireOwnedManagedFile(url, userId);
 
-                                  
+
                 Map<String, Object> videoInfo = detectVideoWithFFprobe(ownedFile.toString());
                 result.put("status", "success");
                 result.putAll(videoInfo);
@@ -718,9 +718,9 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         return results;
     }
 
-       
-                   
-       
+
+
+
     private String extractLocalPath(String url) {
         return CommonUtil.extractLocalPath(url);
     }
@@ -875,9 +875,9 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         return prefix + "/" + datePath + "/" + userPath + "/" + fileName;
     }
 
-       
-                      
-       
+
+
+
     private Map<String, Object> detectVideoWithFFprobe(String localPath) {
         Map<String, Object> info = new HashMap<>();
 
@@ -906,17 +906,17 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         return info;
     }
 
-       
-             
-       
+
+
+
     private void parseVideoInfo(String jsonOutput, Map<String, Object> info) {
-               
+
         Double duration = extractDouble(jsonOutput, "\"duration\"\\s*:\\s*(\\d+\\.?\\d*)");
         if (duration != null) {
             info.put("duration", duration.intValue());
         }
 
-                  
+
         Integer width = extractInt(jsonOutput, "\"width\"\\s*:\\s*(\\d+)");
         Integer height = extractInt(jsonOutput, "\"height\"\\s*:\\s*(\\d+)");
 
@@ -926,22 +926,22 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
             info.put("quality", determineVideoQuality(width, height));
         }
 
-                 
+
         String codec = extractString(jsonOutput, "\"codec_name\"\\s*:\\s*\"([^\"]+)\"");
         if (codec != null) {
             info.put("format", codec);
         }
 
-                
+
         Long bitrate = extractLong(jsonOutput, "\"bit_rate\"\\s*:\\s*(\\d+)");
         if (bitrate != null) {
             info.put("bitrate", bitrate.intValue());
         }
     }
 
-       
-                   
-       
+
+
+
     private String determineVideoQuality(Integer width, Integer height) {
         int minDim = Math.min(width, height);
         if (minDim >= 2160) return "4k";
@@ -951,9 +951,9 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         return "360p";
     }
 
-       
-           
-       
+
+
+
     private Integer extractInt(String text, String regex) {
         try {
             Pattern pattern = Pattern.compile(regex);
@@ -962,14 +962,14 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
                 return Integer.parseInt(matcher.group(1));
             }
         } catch (Exception e) {
-                 
+
         }
         return null;
     }
 
-       
-            
-       
+
+
+
     private Double extractDouble(String text, String regex) {
         try {
             Pattern pattern = Pattern.compile(regex);
@@ -978,14 +978,14 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
                 return Double.parseDouble(matcher.group(1));
             }
         } catch (Exception e) {
-                 
+
         }
         return null;
     }
 
-       
-            
-       
+
+
+
     private String extractString(String text, String regex) {
         try {
             Pattern pattern = Pattern.compile(regex);
@@ -994,14 +994,14 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
                 return matcher.group(1);
             }
         } catch (Exception e) {
-                 
+
         }
         return null;
     }
 
-       
-            
-       
+
+
+
     private Long extractLong(String text, String regex) {
         try {
             Pattern pattern = Pattern.compile(regex);
@@ -1010,7 +1010,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
                 return Long.parseLong(matcher.group(1));
             }
         } catch (Exception e) {
-                 
+
         }
         return null;
     }
@@ -1057,7 +1057,7 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
             try {
                 totalSize += Long.parseLong(file.get("size"));
             } catch (Exception e) {
-                         
+
             }
         }
 
@@ -1068,9 +1068,9 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         return summary;
     }
 
-       
-             
-       
+
+
+
     private Map<String, Object> processSingleFile(MultipartFile file, String uploadDir,
                                                    String datePath, String userPath, Long userId) {
         String originalFilename = file.getOriginalFilename();
@@ -1148,9 +1148,9 @@ public class MultiFileUploadServiceImpl implements MultiFileUploadService {
         log.debug("event=submission_upload_file_completed userId={} mediaType={}", userId, fileType);
         return fileResult;
     }
-       
-             
-       
+
+
+
     private Map<String, Object> generateFileSummary(List<Map<String, Object>> files) {
         Map<String, Object> summary = new HashMap<>();
         Map<String, Integer> typeCount = new HashMap<>();

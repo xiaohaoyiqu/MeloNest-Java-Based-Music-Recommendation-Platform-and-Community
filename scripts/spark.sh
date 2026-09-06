@@ -1,7 +1,7 @@
 #!/bin/bash
-                      
-                     
-                  
+
+
+
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -30,7 +30,7 @@ log_warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 log_step()  { echo -e "${BLUE}[STEP]${NC} $1"; }
 
-                   
+
 exec_hdfs() {
     if [ "$(whoami)" = "${CLUSTER_USER}" ]; then
         eval "$@"
@@ -39,7 +39,7 @@ exec_hdfs() {
     fi
 }
 
-         
+
 ssh_exec() {
     local node=$1 cmd=$2 env_sh=$(get_node_env_sh $node)
     if [ "$(whoami)" = "${CLUSTER_USER}" ]; then
@@ -49,8 +49,8 @@ ssh_exec() {
     fi
 }
 
-                                                   
-                                      
+
+
 get_worker_webui_port() {
     local node=$1
     if [ "$node" = "${NODE3_IP}" ]; then
@@ -60,7 +60,7 @@ get_worker_webui_port() {
     fi
 }
 
-        
+
 get_deploy_mode() {
     if [ -f "${SPARK_HOME}/conf/spark-defaults.conf" ]; then
         local master_config=$(grep "^spark.master" ${SPARK_HOME}/conf/spark-defaults.conf 2>/dev/null | awk '{print $2}')
@@ -70,7 +70,7 @@ get_deploy_mode() {
     fi
 }
 
-         
+
 init_log_dirs() {
     log_step "初始化Spark日志目录..."
     echo ""
@@ -89,7 +89,7 @@ init_log_dirs() {
     echo ""
 }
 
-                  
+
 start_history_server() {
     if [ "${HAORAN_SPARK_HISTORY_ENABLED:-false}" != "true" ]; then
         echo "History Server:"
@@ -116,12 +116,12 @@ start_history_server() {
     echo ""
 }
 
-                
+
 start_standalone() {
     log_step "启动Standalone模式..."
     echo ""
 
-              
+
     echo "Master:"
     if [ "$(get_current_ip)" = "${NODE1_IP}" ]; then
         if exec_hdfs "jps | grep -qE '^[0-9]+[[:space:]]+Master$'"; then
@@ -141,7 +141,7 @@ start_standalone() {
     fi
     echo ""
 
-               
+
     echo "Workers:"
     local master_url="spark://${NODE1_IP}:${SPARK_MASTER_PORT:-7077}"
     for node in "${WORKER_NODES[@]}"; do
@@ -170,7 +170,7 @@ start_standalone() {
     start_history_server
 }
 
-          
+
 start_yarn_mode() {
     log_step "启动YARN模式..."
     echo ""

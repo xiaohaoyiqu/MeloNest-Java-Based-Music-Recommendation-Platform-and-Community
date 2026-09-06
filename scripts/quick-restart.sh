@@ -1,9 +1,9 @@
 #!/bin/bash
-                                                                               
-                               
-                     
-                  
-                                                                               
+
+
+
+
+
 
 SSH_CONFIG="D:/ideaproject/HaoRanMusic/scripts/ssh/config"
 SERVER="node1"
@@ -13,7 +13,7 @@ LOG_FILE="$PROJECT_DIR/logs/backend.log"
 
 echo "=== 重启后端服务 ==="
 
-                   
+
 ssh -F "$SSH_CONFIG" -o ConnectTimeout=10 "$SERVER" << 'ENDSSH'
 cd /sdb1/myprojoct/haoranmusic
 source ./scripts/env.sh
@@ -22,19 +22,19 @@ export DB_PASSWORD="${DB_PASS}"
 export REDIS_PASSWORD
 export JWT_SECRET
 
-       
+
 echo "停止旧服务..."
 pkill -f "^java.*hao-ran-music-backend-1.0.0.jar" || true
 sleep 3
 
-               
+
 echo "启动新服务..."
 nohup java ${BACKEND_JAVA_OPTS:-} -jar hao-ran-music-backend-1.0.0.jar --server.port=9090 > logs/backend.log 2>&1 &
 
-      
+
 sleep 5
 
-      
+
 echo "=== 服务状态 ==="
 ps aux | grep hao-ran-music-backend | grep -v grep
 echo ""

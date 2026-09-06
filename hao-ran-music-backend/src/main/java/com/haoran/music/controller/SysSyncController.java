@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                      
-                                  
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/sys/sync")
@@ -31,9 +31,9 @@ public class SysSyncController {
     private final CommentMapper commentMapper;
     private final MVMapper mvMapper;
 
-       
-                  
-       
+
+
+
     @ApiLog("同步MV评论数")
     @PostMapping("/mv-comment/{mvId}")
     public Result<Map<String, Object>> syncMVCommentCount(@PathVariable Long mvId) {
@@ -42,7 +42,7 @@ public class SysSyncController {
             return Result.error("MV不存在");
         }
 
-                                            
+
         int actualCount = Math.toIntExact(commentMapper.selectCount(
             new LambdaQueryWrapper<Comment>()
                 .eq(Comment::getTargetType, 4)
@@ -58,7 +58,7 @@ public class SysSyncController {
         result.put("oldCommentCount", mv.getCommentCount());
         result.put("newCommentCount", Long.valueOf(actualCount));
 
-               
+
         if (mv.getCommentCount() == null || mv.getCommentCount() != actualCount) {
             mv.setCommentCount(Long.valueOf(actualCount));
             mvMapper.updateById(mv);

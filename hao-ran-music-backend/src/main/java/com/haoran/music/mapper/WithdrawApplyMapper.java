@@ -1,7 +1,7 @@
-   
-                      
-                            
-   
+
+
+
+
 
 package com.haoran.music.mapper;
 
@@ -10,9 +10,9 @@ import com.haoran.music.entity.WithdrawApply;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 
-   
-               
-   
+
+
+
 @Mapper
 public interface WithdrawApplyMapper extends BaseMapper<WithdrawApply> {
 

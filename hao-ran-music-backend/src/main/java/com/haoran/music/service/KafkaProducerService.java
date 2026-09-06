@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 import java.util.UUID;
 
-   
-                      
-                          
-   
+
+
+
+
 @Service
 @Slf4j
 public class KafkaProducerService {
@@ -33,10 +33,10 @@ public class KafkaProducerService {
         return UUID.randomUUID().toString();
     }
 
-       
-                            
-                                           
-       
+
+
+
+
     public void sendPlayEvent(Long userId, String songId, Integer isLocal, Integer progress, String quality) {
         PlayEvent event = new PlayEvent();
         event.setEventId(newPlayEventId());
@@ -47,27 +47,27 @@ public class KafkaProducerService {
         event.setQuality(quality);
 
         String message = JSON.toJSONString(event);
-                             
+
         kafkaTemplate.send(playTopic, userId.toString(), message);
     }
 
-       
-                            
-      
-                         
-                         
-                          
-                           
-                        
-                                    
-       
+
+
+
+
+
+
+
+
+
+
     public boolean sendPlayEventSync(Long userId, String songId, Integer isLocal, Integer progress, String quality) {
         return sendPlayEventSync(userId, songId, isLocal, progress, quality, newPlayEventId());
     }
 
-       
-                                               
-       
+
+
+
     public boolean sendPlayEventSync(Long userId, String songId, Integer isLocal, Integer progress,
                                      String quality, String eventId) {
         try {
@@ -80,7 +80,7 @@ public class KafkaProducerService {
             event.setQuality(quality);
 
             String message = JSON.toJSONString(event);
-                                 
+
             kafkaTemplate.send(playTopic, userId.toString(), message)
                     .get(KAFKA_SEND_TIMEOUT_SECONDS, TimeUnit.SECONDS);
             return true;
@@ -90,15 +90,15 @@ public class KafkaProducerService {
         }
     }
 
-       
-                     
-      
-                         
-                         
-                          
-                           
-                        
-       
+
+
+
+
+
+
+
+
+
     @Async(CommonConstants.TASK_EXECUTOR)
     public void sendPlayEventAsync(Long userId, String songId, Integer isLocal, Integer progress, String quality) {
         try {
@@ -111,7 +111,7 @@ public class KafkaProducerService {
             event.setQuality(quality);
 
             String message = JSON.toJSONString(event);
-                                 
+
             kafkaTemplate.send(playTopic, userId.toString(), message);
             log.debug("Kafka播放事件发送成功: userId={}, songId={}", userId, songId);
         } catch (Exception e) {

@@ -20,11 +20,11 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-   
-              
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class CreatorEarningsDeductServiceImpl implements CreatorEarningsDeductService {
@@ -58,7 +58,7 @@ public class CreatorEarningsDeductServiceImpl implements CreatorEarningsDeductSe
         BigDecimal actualDeduct = availableEarnings.min(normalizedRefund);
         BigDecimal debtAmount = normalizedRefund.subtract(actualDeduct);
 
-                                                  
+
         recordEarningsDeduction(creatorId, refundId, normalizedRefund.negate(), workId, workType);
         applyRefundToCreatorSummary(creatorId, normalizedRefund, actualDeduct);
 

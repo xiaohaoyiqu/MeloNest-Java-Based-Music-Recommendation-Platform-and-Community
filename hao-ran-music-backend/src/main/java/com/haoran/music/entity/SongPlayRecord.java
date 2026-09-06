@@ -10,46 +10,46 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-   
-                      
-                         
-   
+
+
+
+
 @Data
 @TableName("song_play_record")
 public class SongPlayRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-       
-         
-       
+
+
+
     @TableId(type = IdType.AUTO)
     private Long id;
 
-       
-           
-       
+
+
+
     private Long songId;
 
-       
-           
-       
+
+
+
     private Long userId;
 
-       
-              
-       
+
+
+
     private Integer playDuration;
 
-       
-           
-       
+
+
+
     private LocalDateTime playTime;
 
-       
-           
-                              
-       
+
+
+
+
     @TableField(value = "created_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 }

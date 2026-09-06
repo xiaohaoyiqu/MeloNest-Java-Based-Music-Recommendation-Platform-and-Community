@@ -42,10 +42,10 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-   
-                      
-                       
-   
+
+
+
+
 @Slf4j
 @Service
 public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements LyricService {
@@ -95,7 +95,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
             throw new BusinessException(ResultCode.PARAM_ERROR, "歌曲ID不能为空");
         }
 
-                   
+
         Song song = songMapper.selectById(songId);
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌曲不存在");
@@ -121,7 +121,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         String safeLanguage = normalizeLanguage(language);
         Integer safeLyricType = normalizeLyricType(lyricType, CommonConstants.LYRIC_TYPE_ORIGINAL);
 
-               
+
         LambdaQueryWrapper<Lyric> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Lyric::getSongId, songId)
                 .eq(Lyric::getLanguage, safeLanguage)
@@ -133,7 +133,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
 
         Lyric lyric = getOne(wrapper);
 
-                                     
+
         if (ObjectUtils.isEmpty(lyric)) {
             lyric = new Lyric();
             lyric.setSongId(songId);
@@ -174,7 +174,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         Integer safeLyricType = normalizeLyricType(lyricType, CommonConstants.LYRIC_TYPE_ORIGINAL);
         String safeSource = normalizeSource(source);
 
-                   
+
         Song song = songMapper.selectById(songId);
         if (ObjectUtils.isEmpty(song)) {
             throw new BusinessException(ResultCode.NOT_FOUND, "歌曲不存在");
@@ -215,7 +215,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
 
         removeById(lyricId);
 
-                     
+
         LambdaQueryWrapper<Lyric> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Lyric::getSongId, lyric.getSongId());
         long count = count(wrapper);
@@ -263,7 +263,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         requireSupportedLanguage(safeTargetLanguage);
         Integer safeLyricType = normalizeTranslationType(lyricType);
 
-                   
+
         LambdaQueryWrapper<Lyric> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Lyric::getSongId, songId)
                 .eq(Lyric::getLyricType, safeLyricType)
@@ -305,7 +305,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
             reserveTranslationQuota(userId);
             quotaReserved = true;
 
-                                                
+
             reusableTask = findReusableTranslationTask(songId, safeTargetLanguage, safeLyricType, userId);
             if (reusableTask != null) {
                 releaseTranslationQuota(userId);
@@ -313,14 +313,14 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
                 return reusableTask.getId();
             }
 
-                                                   
-                                                       
+
+
             Lyric originalLyric = resolveTranslationSource(song);
 
-                     
+
             LyricTranslation task = new LyricTranslation();
             task.setSongId(songId);
-                                                     
+
             task.setSourceLyricId(originalLyric.getId());
             task.setTargetLanguage(safeTargetLanguage);
             task.setLyricType(safeLyricType);
@@ -417,7 +417,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
             if (ObjectUtils.isEmpty(song)) {
                 throw new BusinessException(ResultCode.NOT_FOUND, "歌曲不存在");
             }
-                                               
+
             LocalDateTime completedAt = LocalDateTime.now();
             int completed = updateClaimedTranslation(taskId, processingToken,
                     new LambdaUpdateWrapper<LyricTranslation>()
@@ -488,7 +488,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         try {
             redisTemplate.delete(lockKey);
         } catch (RuntimeException e) {
-                                                       
+
             log.warn("event=lyric_translation_lock_release_failed errorType={}",
                     e.getClass().getSimpleName());
         }
@@ -813,10 +813,10 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
                 + songId + ":" + lyricType + ":" + language.toLowerCase(Locale.ROOT);
     }
 
-       
-                                        
-                                              
-       
+
+
+
+
     @Scheduled(fixedDelayString = "${lyric.translation.recovery-delay-ms:60000}")
     public void recoverTranslationTasks() {
         LocalDateTime now = LocalDateTime.now();
@@ -929,9 +929,9 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         return value.substring(0, maxLength);
     }
 
-       
-                        
-       
+
+
+
     protected String callDeepSeekAPI(String prompt) {
         JSONObject requestBody = new JSONObject();
         requestBody.set("model", requireDeepSeekModelName());
@@ -1056,9 +1056,9 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         }
     }
 
-       
-              
-       
+
+
+
     private String buildTranslationPrompt(String lrcContent, String targetLanguage, Integer lyricType) {
         StringBuilder prompt = new StringBuilder();
 
@@ -1074,16 +1074,16 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         return prompt.toString();
     }
 
-       
-                   
-       
+
+
+
     private String extractLRCTranslation(String originalLRC, String translatedText) {
         return DeepSeekResponseParser.extractLrcTranslation(originalLRC, translatedText);
     }
 
-       
-             
-       
+
+
+
     private String getLanguageName(String code) {
         Map<String, String> languageNames = new HashMap<>();
         languageNames.put("zh-CN", "简体中文");
@@ -1109,7 +1109,7 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
     public Map<String, Object> testDeepSeekConnection() {
         Map<String, Object> result = new HashMap<>();
 
-               
+
         result.put("baseUrl", deepSeekConfig.getBaseUrl());
         result.put("model", deepSeekConfig.getModel());
         result.put("timeout", deepSeekConfig.getTimeout() + "s");
@@ -1163,12 +1163,12 @@ public class LyricServiceImpl extends ServiceImpl<LyricMapper, Lyric> implements
         return result;
     }
 
-       
-       
+
+
     @Override
     public String getLocalLyricFromFile(Long songId) {
         try {
-                                               
+
             Song song = songMapper.selectById(songId);
             if (song == null) {
                 log.warn("Song not found: {}", songId);

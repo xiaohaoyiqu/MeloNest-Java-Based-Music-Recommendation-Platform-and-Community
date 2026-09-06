@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-   
-                                                               
-  
-                                                                             
-                                                                      
-   
+
+
+
+
+
+
 public final class LyricFileResolver {
 
     public static final String ORIGINAL_DIRECTORY = "oranial";

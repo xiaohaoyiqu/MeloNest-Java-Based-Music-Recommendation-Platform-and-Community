@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.annotation.RequireRole;
@@ -20,9 +20,9 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
-   
-                          
-   
+
+
+
 @RestController
 @RequestMapping("/admin/curated-content")
 @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.task;
 
 import com.haoran.music.service.ArtistService;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-   
-                                                                       
-   
+
+
+
 @Slf4j
 @Component
 public class ArtistCountSyncTask {

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 
 package com.haoran.music.entity;
 
@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-                            
+
 @Data
 @TableName("decoration_purchase_record")
 public class DecorationPurchaseRecord implements Serializable {

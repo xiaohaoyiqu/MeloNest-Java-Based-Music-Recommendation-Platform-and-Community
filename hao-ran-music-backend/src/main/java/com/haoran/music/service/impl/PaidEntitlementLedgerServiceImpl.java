@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -26,9 +26,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
-   
-                   
-   
+
+
+
 @Slf4j
 @Service
 public class PaidEntitlementLedgerServiceImpl implements PaidEntitlementLedgerService {
@@ -175,9 +175,9 @@ public class PaidEntitlementLedgerServiceImpl implements PaidEntitlementLedgerSe
         }
     }
 
-       
-                                               
-       
+
+
+
     private void rebuildPlaylistSubscriptionProjection(PaidEntitlementGrant revoked,
                                                        PaidEntitlementGrant effective,
                                                        LocalDateTime transactionTime) {
@@ -255,9 +255,9 @@ public class PaidEntitlementLedgerServiceImpl implements PaidEntitlementLedgerSe
         return order;
     }
 
-       
-                                               
-       
+
+
+
     private void rebaseTimedGrants(PaidEntitlementGrant revoked, LocalDateTime transactionTime) {
         List<PaidEntitlementGrant> grants = grantMapper.selectActiveGrants(
                 revoked.getUserId(), revoked.getResourceType(), revoked.getResourceId());

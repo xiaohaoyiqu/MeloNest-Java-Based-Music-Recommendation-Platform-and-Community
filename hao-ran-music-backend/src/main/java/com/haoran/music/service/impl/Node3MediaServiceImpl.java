@@ -20,11 +20,11 @@ import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
 
-   
-                                                            
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Service
 public class Node3MediaServiceImpl implements Node3MediaService {
@@ -502,14 +502,14 @@ public class Node3MediaServiceImpl implements Node3MediaService {
         return executeCommand(command, timeoutSeconds);
     }
 
-       
-                                  
-      
-                                 
-                                    
-                                 
-                   
-       
+
+
+
+
+
+
+
+
     protected CommandResult runRemoteShellCommand(int timeoutSeconds, int maxOutputChars, String shellCommand) {
         List<String> command = buildSshBaseCommand();
         command.add(shellCommand);
@@ -610,17 +610,17 @@ public class Node3MediaServiceImpl implements Node3MediaService {
         return normalizedDir + "/" + filename;
     }
 
-       
-                                              
-                              
-       
+
+
+
+
     private String temporaryPath(String targetPath, String operation) {
         return targetPath + "." + operation + "-" + UUID.randomUUID();
     }
 
-       
-                                      
-       
+
+
+
     private CommandResult promoteTemporaryFile(String temporaryPath, String targetPath) {
         return runRemoteCommand(postMediaConfig.getVideoSshTimeoutSeconds(),
                 "mv", "-f", "--", temporaryPath, targetPath);
@@ -635,9 +635,9 @@ public class Node3MediaServiceImpl implements Node3MediaService {
         return localFile == null ? null : sanitizeRemoteFileName(localFile.getName());
     }
 
-       
-                                   
-       
+
+
+
     private String commandErrorCategory(CommandResult result) {
         if (result == null || ObjectUtils.isEmpty(result.output)) {
             return "COMMAND_FAILED";

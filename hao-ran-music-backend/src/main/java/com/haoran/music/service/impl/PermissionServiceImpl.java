@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class PermissionServiceImpl implements PermissionService {
@@ -39,14 +39,14 @@ public class PermissionServiceImpl implements PermissionService {
     @Autowired
     private JwtUtils jwtUtils;
 
-       
-               
-       
+
+
+
     private static final String USER_ROLE_CACHE_PREFIX = "user:role:";
 
-       
-                       
-       
+
+
+
     private static final int ROLE_CACHE_TTL = 3600;
 
     @Override
@@ -146,31 +146,31 @@ public class PermissionServiceImpl implements PermissionService {
             return false;
         }
 
-                      
+
         if (hasRole(userId, UserRole.SUPER_ADMIN)) {
             return true;
         }
 
-                     
+
         if (hasRole(userId, UserRole.ADMIN)) {
-                                
+
             if ("system".equals(resource) && "config".equals(action)) {
                 return false;
             }
             return true;
         }
 
-                  
+
         if ("moderation".equals(resource) && isModerator(userId)) {
             return true;
         }
 
-                    
+
         if ("content".equals(resource) && "create".equals(action) && isCreator(userId)) {
             return true;
         }
 
-                   
+
         return "user".equals(resource) && ("profile".equals(action) || "settings".equals(action));
     }
 
@@ -201,7 +201,7 @@ public class PermissionServiceImpl implements PermissionService {
             user.setRole(normalizedRole.getCode());
             userMapper.updateById(user);
 
-                   
+
             clearRoleCache(userId);
 
             log.info("更新用户角色: userId={}, role={}", userId, role);

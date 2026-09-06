@@ -1,8 +1,8 @@
-   
-                            
-  
-                      
-   
+
+
+
+
+
 package com.haoran.music.service.impl;
 
 import com.haoran.music.common.constant.CommonConstants;
@@ -167,9 +167,9 @@ public class NotificationBroadcastTaskServiceImpl implements NotificationBroadca
         }
     }
 
-       
-                                                 
-       
+
+
+
     private void executeTask(String taskId) {
         if (taskMapper.claimTask(taskId) <= 0) {
             return;
@@ -220,10 +220,10 @@ public class NotificationBroadcastTaskServiceImpl implements NotificationBroadca
         }
     }
 
-       
-                                             
-                                           
-       
+
+
+
+
     private void completeTask(NotificationBroadcastTask task) {
         PushNotificationVO push = new PushNotificationVO();
         push.setPushId(publicAnnouncementPushId(task.getTaskId()));
@@ -251,9 +251,9 @@ public class NotificationBroadcastTaskServiceImpl implements NotificationBroadca
         return "broadcast:" + suffix;
     }
 
-       
-                                           
-       
+
+
+
     private String announcementLink(String link) {
         return link == null || link.trim().isEmpty() ? DEFAULT_ANNOUNCEMENT_LINK : link;
     }

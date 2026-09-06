@@ -31,11 +31,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 
-   
-                   
-  
-                      
-   
+
+
+
+
+
 @RestController
 @RequestMapping("/private-attachments")
 @RequiredArgsConstructor
@@ -43,13 +43,13 @@ public class PrivateAttachmentController {
 
     private final PrivateAttachmentService privateAttachmentService;
 
-       
-              
-      
-                              
-                            
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/sessions")
     @ApiLog("创建私有附件上传会话")
     public Result<PrivateAttachmentSessionVO> createSession(
@@ -59,14 +59,14 @@ public class PrivateAttachmentController {
                 requireUserId(request), requestBody.getPurpose()));
     }
 
-       
-                  
-      
-                               
-                       
-                            
-                     
-       
+
+
+
+
+
+
+
+
     @PostMapping("/sessions/{sessionToken}/assets")
     @ApiLog("上传私有附件")
     public Result<PrivateAttachmentAssetVO> upload(
@@ -77,13 +77,13 @@ public class PrivateAttachmentController {
                 requireUserId(request), sessionToken, file));
     }
 
-       
-               
-      
-                               
-                            
-                  
-       
+
+
+
+
+
+
+
     @DeleteMapping("/sessions/{sessionToken}")
     @ApiLog("取消私有附件上传会话")
     public Result<Void> cancelSession(@PathVariable String sessionToken,
@@ -92,13 +92,13 @@ public class PrivateAttachmentController {
         return Result.success();
     }
 
-       
-                        
-      
-                          
-                            
-                   
-       
+
+
+
+
+
+
+
     @PostMapping("/assets/{assetId}/grant")
     @ApiLog("签发私有附件读取授权")
     public Result<PrivateAttachmentGrantVO> issueGrant(@PathVariable Long assetId,
@@ -106,14 +106,14 @@ public class PrivateAttachmentController {
         return Result.success(privateAttachmentService.issueGrant(assetId, requireUserId(request)));
     }
 
-       
-                         
-      
-                          
-                        
-                            
-                   
-       
+
+
+
+
+
+
+
+
     @GetMapping("/assets/{assetId}/content")
     @ApiLog("读取私有附件")
     public ResponseEntity<org.springframework.core.io.Resource> download(
@@ -134,12 +134,12 @@ public class PrivateAttachmentController {
                 .body(download.getResource());
     }
 
-       
-                  
-      
-                            
-                   
-       
+
+
+
+
+
+
     private Long requireUserId(HttpServletRequest request) {
         Long userId = parseUserId(request.getAttribute("userId"));
         if (ObjectUtils.isEmpty(userId)) {
@@ -148,12 +148,12 @@ public class PrivateAttachmentController {
         return userId;
     }
 
-       
-                     
-      
-                        
-                     
-       
+
+
+
+
+
+
     private Long parseUserId(Object value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;

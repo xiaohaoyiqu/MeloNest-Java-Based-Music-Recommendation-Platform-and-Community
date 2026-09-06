@@ -1,7 +1,7 @@
-   
-                      
-                           
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -31,9 +31,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-   
-              
-   
+
+
+
 @Slf4j
 @Service
 public class UserInteractionServiceImpl extends ServiceImpl<UserInteractionMapper, UserInteraction>
@@ -49,7 +49,7 @@ public class UserInteractionServiceImpl extends ServiceImpl<UserInteractionMappe
     @Transactional(rollbackFor = Exception.class)
     public void recordInteraction(Long userId, Long targetUserId, String interactionType,
                                   String targetType, Long targetId) {
-                      
+
         if (ObjectUtils.isEmpty(userId) || ObjectUtils.isEmpty(targetUserId) || userId.equals(targetUserId)) {
             return;
         }

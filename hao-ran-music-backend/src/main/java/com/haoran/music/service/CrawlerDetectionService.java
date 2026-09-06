@@ -1,70 +1,70 @@
-   
-                      
-                                           
-   
+
+
+
+
 
 package com.haoran.music.service;
 
 import javax.servlet.http.HttpServletRequest;
 
-   
-         
-  
-        
-                           
-                                    
-                          
-                    
-   
+
+
+
+
+
+
+
+
+
 public interface CrawlerDetectionService {
 
-       
-                
-      
-                            
-                                  
-                                  
-       
+
+
+
+
+
+
+
     boolean isCrawler(HttpServletRequest request, Long userId);
 
-       
-               
-                  
-      
-                            
-                         
-                                                     
-       
+
+
+
+
+
+
+
+
     void recordNormalBehavior(HttpServletRequest request, Long userId, String action);
 
-       
-                
-      
-                     
-                                
-       
+
+
+
+
+
+
     boolean isIpBanned(String ip);
 
-       
-           
-      
-                     
-                                    
-                         
-       
+
+
+
+
+
+
+
     void banIp(String ip, int durationHours, String reason);
 
-       
-                     
-      
-                            
-                   
-       
+
+
+
+
+
+
     CrawlerDetectionResult detectAndGetDetails(HttpServletRequest request, Long userId);
 
-       
-             
-       
+
+
+
     class CrawlerDetectionResult {
         private boolean isCrawler;
         private String reason;

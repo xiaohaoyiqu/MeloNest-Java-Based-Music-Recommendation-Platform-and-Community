@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.Map;
 
-   
-                                                           
-  
-                      
-   
+
+
+
+
+
 @Slf4j
 @Component
 public class SearchIndexRebuildTask {
@@ -38,10 +38,10 @@ public class SearchIndexRebuildTask {
     @Value("${search.elasticsearch.bootstrap-min-documents:2}")
     private long bootstrapMinDocuments;
 
-       
-                                         
-                          
-       
+
+
+
+
     @EventListener(ApplicationReadyEvent.class)
     public void bootstrapIndexIfNeeded() {
         if (!isElasticsearchSelected() || !bootstrapRebuildEnabled) {

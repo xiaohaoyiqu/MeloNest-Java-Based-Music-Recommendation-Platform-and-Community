@@ -1,12 +1,12 @@
-   
-                      
-                                  
-   
+
+
+
+
 package com.haoran.music.service;
 
-   
-                                                       
-   
+
+
+
 public class EmailSendResult {
 
     private final boolean success;

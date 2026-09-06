@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -47,11 +47,11 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-   
-                    
-  
-                                      
-   
+
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/external-content")
@@ -91,9 +91,9 @@ public class ExternalContentController {
         return ExternalCatalogSearchQuery.contains(value, keyword);
     }
 
-       
-                                 
-       
+
+
+
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/search/games")
     @RateLimit(maxRequests = 5, timeWindowSeconds = 1, operation = "externalFreeToGame",
@@ -126,9 +126,9 @@ public class ExternalContentController {
         }
     }
 
-       
-                      
-       
+
+
+
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/add")
     @RateLimit(maxRequests = 30, timeWindowSeconds = 60, operation = "externalContentAdd",
@@ -174,9 +174,9 @@ public class ExternalContentController {
         }
     }
 
-       
-                          
-       
+
+
+
     @GetMapping("/list/{type}")
     public Result<List<ExternalContentPublicVO>> getPublishedContent(
             @PathVariable String type,
@@ -194,9 +194,9 @@ public class ExternalContentController {
         }
     }
 
-       
-                        
-       
+
+
+
     @GetMapping("/recommend")
     public Result<List<ExternalContentPublicVO>> getRecommend(@RequestParam(defaultValue = "20") Integer limit) {
         try {
@@ -208,9 +208,9 @@ public class ExternalContentController {
         }
     }
 
-       
-                          
-       
+
+
+
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/page")
     public Result<Page<ExternalContent>> page(
@@ -247,9 +247,9 @@ public class ExternalContentController {
         }
     }
 
-       
-                     
-       
+
+
+
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PutMapping("/status")
     public Result<Void> updateStatus(@RequestParam Long id,
@@ -276,9 +276,9 @@ public class ExternalContentController {
         }
     }
 
-       
-                   
-       
+
+
+
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @DeleteMapping("/{id}")
     public Result<Void> delete(@PathVariable Long id,

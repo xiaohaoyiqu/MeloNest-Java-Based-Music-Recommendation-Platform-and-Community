@@ -1,53 +1,53 @@
-   
-                      
-                    
-                   
-                                       
-                                           
-   
 
-                                                               
-                      
-                                                                  
+
+
+
+
+
+
+
+
+
+
 :root {
-                                                                                       
+
   --app-font-body: 'LXGW WenKai Lite', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei',
     system-ui, sans-serif;
   --app-font-display: 'LXGW WenKai Lite', 'Kaiti SC', KaiTi, serif;
   --app-font-mono: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
   --el-font-family: var(--app-font-body);
 
-            
+
   --text-primary: rgba(255, 255, 255, 0.95);
   --text-secondary: rgba(255, 255, 255, 0.7);
   --text-tertiary: rgba(255, 255, 255, 0.5);
   --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 
-                      
+
   --card-background: rgba(40, 40, 40, 0.95);
   --card-bg: rgba(40, 40, 40, 0.95);
   --card-border: rgba(255, 255, 255, 0.15);
 
-                      
+
   --dropdown-background: rgba(30, 30, 30, 0.5);
   --dropdown-border: rgba(255, 255, 255, 0.15);
 
-                              
+
   --dropdown-text-primary: rgba(255, 255, 255, 0.95);
   --dropdown-text-secondary: rgba(255, 255, 255, 0.7);
 
-                                       
+
   --message-background: rgba(24, 24, 27, 0.96);
   --message-text: rgba(255, 255, 255, 0.96);
   --message-border: rgba(255, 255, 255, 0.18);
   --message-shadow: 0 8px 28px rgba(0, 0, 0, 0.42);
 
-               
+
   --button-bg: rgba(60, 60, 60, 0.5);
   --button-border: rgba(255, 255, 255, 0.2);
   --button-hover-bg: rgba(80, 80, 80, 0.6);
 
-                       
+
   --accent-color: #409eff;
   --accent-bg: rgba(64, 158, 255, 0.15);
   --accent-bg-hover: rgba(64, 158, 255, 0.25);
@@ -56,40 +56,40 @@
   --accent-shadow: rgba(64, 158, 255, 0.3);
   --accent-color-soft: rgba(64, 158, 255, 0.7);
 
-           
+
   --input-bg: rgba(60, 60, 60, 0.5);
   --input-border: rgba(255, 255, 255, 0.2);
   --input-bg-hover: rgba(255, 255, 255, 0.05);
 
-             
+
   --select-bg: rgba(50, 50, 50, 0.95);
   --select-hover-bg: rgba(80, 80, 80, 0.9);
   --select-border: rgba(255, 255, 255, 0.15);
 
-                 
+
   --detail-text-primary: rgba(255, 255, 255, 0.95);
   --detail-text-secondary: rgba(255, 255, 255, 0.75);
   --detail-text-tertiary: rgba(255, 255, 255, 0.55);
 
-                             
+
   --detail-state-surface: rgba(255, 255, 255, 0.94);
   --detail-state-text: rgba(24, 24, 27, 0.96);
   --detail-state-text-secondary: rgba(24, 24, 27, 0.68);
   --detail-state-icon: rgba(24, 24, 27, 0.96);
 
-                    
+
   --icon-primary: rgba(255, 255, 255, 0.9);
   --icon-secondary: rgba(255, 255, 255, 0.6);
   --icon-disabled: rgba(255, 255, 255, 0.3);
   --icon-hover: rgba(255, 255, 255, 1);
 
-                    
+
   --link-color: #409eff;
   --link-hover-color: #66b1ff;
   --link-active-color: #3a8ee6;
 
-                    
-                      
+
+
   --quick-vip-bg: linear-gradient(135deg, #ffd700, #ffec8b);
   --quick-vip-text: #8b4513;
   --quick-ranking-bg: linear-gradient(135deg, #667eea, #764ba2);
@@ -105,7 +105,7 @@
   --font-size-xxxl: 24px;
 }
 
-                                      
+
 .detail-stat-item {
   border-radius: 6px;
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
@@ -127,7 +127,7 @@
   }
 }
 
-                                                        
+
 .detail-adaptive-popper.el-popper,
 .detail-adaptive-select.el-popper {
   --el-bg-color-overlay: var(--dropdown-background);
@@ -206,7 +206,7 @@ html, body {
   height: 100%;
 }
 
-           
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -225,7 +225,7 @@ html, body {
   }
 }
 
-                  
+
 a {
   color: var(--link-color);
   text-decoration: none;
@@ -240,23 +240,23 @@ a {
   }
 }
 
-                                                               
-                           
-                                                                  
 
-                         
+
+
+
+
 .el-icon,
 [class*=" el-icon-"],
 [class^="el-icon-"] {
   color: var(--icon-primary) !important;
 }
 
-                 
+
 .el-button .el-icon {
   color: inherit !important;
 }
 
-            
+
 .el-input__prefix .el-icon,
 .el-input__suffix .el-icon,
 .el-input__prefix-inner .el-icon,
@@ -264,42 +264,42 @@ a {
   color: var(--icon-secondary) !important;
 }
 
-            
+
 .is-disabled .el-icon,
 [disabled] .el-icon,
 .el-button.is-disabled .el-icon {
   color: var(--icon-disabled) !important;
 }
 
-                                    
+
 a:hover .el-icon,
 button:hover .el-icon,
 .el-button:hover .el-icon {
   color: var(--icon-hover) !important;
 }
 
-            
+
 .el-dropdown-menu__item .el-icon {
   color: var(--icon-secondary) !important;
 }
 
-          
+
 .el-menu-item .el-icon,
 .el-sub-menu__title .el-icon {
   color: var(--icon-secondary) !important;
 }
 
-          
+
 .el-pagination .el-icon {
   color: var(--icon-secondary) !important;
 }
 
-          
+
 .el-table .el-icon {
   color: var(--icon-secondary) !important;
 }
 
-            
+
 .el-tag .el-tag__close {
   color: var(--icon-secondary) !important;
 
@@ -308,7 +308,7 @@ button:hover .el-icon,
   }
 }
 
-             
+
 .el-dialog__headerbtn .el-icon {
   color: var(--icon-secondary) !important;
 
@@ -317,7 +317,7 @@ button:hover .el-icon,
   }
 }
 
-            
+
 .el-drawer__close-btn {
   color: var(--icon-secondary) !important;
 
@@ -326,18 +326,18 @@ button:hover .el-icon,
   }
 }
 
-          
+
 .el-notification__icon {
   color: var(--icon-primary) !important;
 }
 
-              
+
 .el-breadcrumb__separator {
   color: var(--icon-secondary) !important;
 }
 
 
-         
+
 .text-center {
   text-align: center;
 }
@@ -370,7 +370,7 @@ button:hover .el-icon,
   margin-bottom: 24px;
 }
 
-                                            
+
 .el-message {
   position: fixed;                                
   left: 50% !important;
@@ -383,11 +383,11 @@ button:hover .el-icon,
   text-align: center;
 }
 
-                                                               
-                               
-                                                                  
 
-                        
+
+
+
+
 .el-radio-group {
   .el-radio-button {
     .el-radio-button__inner {
@@ -420,7 +420,7 @@ button:hover .el-icon,
   color: var(--el-color-white, #fff) !important;
 }
 
-                                
+
 .el-tabs {
   .el-tabs__nav-wrap {
     &::after {
@@ -450,7 +450,7 @@ button:hover .el-icon,
   }
 }
 
-                                 
+
 .el-button {
   &.el-button--default {
     background: var(--button-bg, rgba(255, 255, 255, 0.1)) !important;
@@ -489,7 +489,7 @@ button:hover .el-icon,
   }
 }
 
-                                 
+
 .el-input {
   .el-input__wrapper {
     background-color: var(--input-bg, rgba(255, 255, 255, 0.1)) !important;
@@ -517,7 +517,7 @@ button:hover .el-icon,
   }
 }
 
-                                    
+
 .el-textarea {
   .el-textarea__inner {
     background-color: var(--input-bg, rgba(255, 255, 255, 0.1)) !important;
@@ -535,7 +535,7 @@ button:hover .el-icon,
   }
 }
 
-                                           
+
 .el-input__wrapper,
 .el-select__wrapper,
 .el-textarea__inner,
@@ -565,7 +565,7 @@ select {
   border-color: var(--button-border, var(--card-border)) !important;
 }
 
-                                  
+
 .el-select {
   .el-input__wrapper {
     background-color: var(--input-bg, rgba(255, 255, 255, 0.1)) !important;
@@ -579,7 +579,7 @@ select {
 
 
 
-                                   
+
 .el-select-dropdown {
   .el-select-dropdown__wrap,
   .el-select-dropdown__list {
@@ -606,7 +606,7 @@ select {
   }
 }
 
-                              
+
 .el-tag {
   background: var(--input-bg, rgba(255, 255, 255, 0.1)) !important;
   border-color: var(--input-border, rgba(255, 255, 255, 0.2)) !important;
@@ -650,7 +650,7 @@ select {
   }
 }
 
-                             
+
 .filter-dropdown-popper {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;
@@ -681,12 +681,12 @@ select {
   }
 }
 
-                                          
-   
-                      
-                   
-                                                        
-   
+
+
+
+
+
+
 .el-popper {
   z-index: 9998;
 
@@ -708,7 +708,7 @@ select {
   }
 }
 
-                                      
+
 .el-dropdown-menu,
 .el-select-dropdown,
 .el-cascader-dropdown,
@@ -756,7 +756,7 @@ select {
   }
 }
 
-                                        
+
 .el-menu--popup {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;
@@ -772,7 +772,7 @@ select {
   }
 }
 
-                       
+
 .el-pagination {
   .el-pager li {
     background: transparent !important;
@@ -809,7 +809,7 @@ select {
   }
 }
 
-                                
+
 .el-table {
   background: transparent !important;
 
@@ -844,18 +844,18 @@ select {
   }
 }
 
-                  
+
 .el-empty {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   padding: 20px;
-  
+
   .el-empty__description p {
     color: rgba(255, 255, 255, 0.9) !important;
   }
 }
 
-                     
+
 .el-loading-mask {
   background: rgba(0, 0, 0, 0.7) !important;
 
@@ -866,12 +866,12 @@ select {
 
     .el-loading-text {
       color: var(--text-primary) !important;
-    
+
     }
   }
 }
 
-                                       
+
 .el-notification {
   background: rgba(30, 30, 30, 0.95) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
@@ -893,7 +893,7 @@ select {
   }
 }
 
-                   
+
 .el-dialog {
   background: var(--dropdown-background, rgba(30, 30, 30, 0.95)) !important;
   border: 1px solid var(--dropdown-border, rgba(255, 255, 255, 0.1));
@@ -931,12 +931,12 @@ select {
   }
 }
 
-                    
+
 .el-overlay {
   background: rgba(0, 0, 0, 0.7) !important;
 }
 
-                  
+
 .el-drawer {
   .el-drawer__header {
     color: rgba(255, 255, 255, 0.9);
@@ -948,7 +948,7 @@ select {
   }
 }
 
-                
+
 .el-form {
   .el-form-item__label {
     color: var(--text-secondary) !important;
@@ -959,7 +959,7 @@ select {
   }
 }
 
-                     
+
 .el-checkbox {
   .el-checkbox__label {
     color: var(--text-primary) !important;
@@ -973,7 +973,7 @@ select {
   }
 }
 
-                  
+
 .el-radio {
   .el-radio__label {
     color: var(--text-primary) !important;
@@ -987,7 +987,7 @@ select {
   }
 }
 
-                  
+
 .el-switch {
   &.is-checked {
     .el-switch__core {
@@ -997,7 +997,7 @@ select {
   }
 }
 
-                  
+
 .el-slider {
   .el-slider__runway {
     background-color: rgba(255, 255, 255, 0.2) !important;
@@ -1012,7 +1012,7 @@ select {
   }
 }
 
-                     
+
 .el-progress {
   .el-progress-bar__outer {
     background-color: rgba(255, 255, 255, 0.2) !important;
@@ -1023,7 +1023,7 @@ select {
   }
 }
 
-                
+
 .el-card {
   background: rgba(0, 0, 0, 0.2) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
@@ -1041,7 +1041,7 @@ select {
   }
 }
 
-                     
+
 .el-carousel {
   .el-carousel__indicators {
     .el-carousel__indicator {
@@ -1058,14 +1058,14 @@ select {
   }
 }
 
-                    
+
 .el-popover {
   background: rgba(30, 30, 30, 0.95) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
   color: rgba(255, 255, 255, 0.85) !important;
 }
 
-                   
+
 .el-tooltip__popper {
   .el-tooltip__inner {
     background: var(--dropdown-background, rgba(0, 0, 0, 0.9)) !important;
@@ -1073,14 +1073,14 @@ select {
   }
 }
 
-                 
+
 .el-alert {
   background: color-mix(in srgb, var(--dropdown-background, #1e1e1e) 84%, var(--el-color-info) 16%) !important;
   border-color: var(--dropdown-border, rgba(255, 255, 255, 0.1)) !important;
 
   .el-alert__title {
     color: var(--dropdown-text-primary, var(--text-primary)) !important;
-    
+
   }
 
   .el-alert__description {
@@ -1128,12 +1128,12 @@ select {
 
     &:hover {
       color: var(--text-primary) !important;
-    
+
     }
   }
 }
 
-                       
+
 .el-breadcrumb {
   .el-breadcrumb__item {
     .el-breadcrumb__inner {
@@ -1147,7 +1147,7 @@ select {
     &:last-child {
       .el-breadcrumb__inner {
         color: var(--text-primary) !important;
-    
+
       }
     }
   }
@@ -1157,8 +1157,8 @@ select {
   }
 }
 
-                           
-                                         
+
+
 .el-menu--horizontal {
   background: transparent !important;
   border-bottom: none !important;
@@ -1181,25 +1181,25 @@ select {
   }
 }
 
-                  
+
 .el-avatar {
   background: rgba(255, 255, 255, 0.1) !important;
 }
 
-                 
+
 .el-image {
   .el-image__placeholder {
     background: rgba(0, 0, 0, 0.3) !important;
   }
 }
 
-                        
+
 .el-row,
 .el-col {
   position: relative;
 }
 
-                    
+
 .el-divider {
   background-color: rgba(255, 255, 255, 0.1) !important;
 
@@ -1209,11 +1209,11 @@ select {
   }
 }
 
-                  
+
 .el-result {
   .el-result__title {
     color: var(--text-primary) !important;
-    
+
   }
 
   .el-result__subtitle {
@@ -1221,7 +1221,7 @@ select {
   }
 }
 
-                     
+
 .el-backtop {
   .el-backtop__icon {
     background: rgba(255, 255, 255, 0.1) !important;
@@ -1229,11 +1229,11 @@ select {
   }
 }
 
-                                                               
-                                     
-                                                                  
 
-                                  
+
+
+
+
 .el-upload-dragger {
   background: rgba(255, 255, 255, 0.03) !important;
   border-color: rgba(255, 255, 255, 0.2) !important;
@@ -1252,7 +1252,7 @@ select {
   }
 }
 
-                             
+
 .el-upload-list {
   .el-upload-list__item {
     color: rgba(255, 255, 255, 0.85) !important;
@@ -1279,7 +1279,7 @@ select {
   }
 }
 
-                        
+
 .el-upload {
   &.el-upload--text {
     color: var(--text-secondary) !important;
@@ -1290,7 +1290,7 @@ select {
   }
 }
 
-                              
+
 .el-select .el-input__wrapper {
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
@@ -1299,9 +1299,9 @@ select {
   border-color: var(--card-border) !important;
 }
 
-                                                               
-                                         
-                                                                  
+
+
+
 .dark-dropdown.el-dropdown-menu {
   background: rgba(30, 30, 30, 0.95) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
@@ -1312,12 +1312,12 @@ select {
     &:hover {
       background: rgba(255, 255, 255, 0.1) !important;
       color: var(--text-primary) !important;
-    
+
     }
   }
 }
 
-               
+
 .wallpaper-dialog {
   .el-dialog {
     max-height: min(86dvh, 760px);
@@ -1350,24 +1350,24 @@ select {
     color: rgba(255, 255, 255, 0.85);
   }
 
-            
+
   .el-overlay {
     background: rgba(0, 0, 0, 0.7) !important;
   }
 }
 
-                                                               
-                         
-                                                                  
 
-                 
+
+
+
+
 img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-            
+
 .cover-image {
   width: 100%;
   height: 100%;
@@ -1375,7 +1375,7 @@ img {
   display: block;
 }
 
-                   
+
 .cover-container {
   position: relative;
   overflow: hidden;
@@ -1401,7 +1401,7 @@ img {
   }
 }
 
-          
+
 .song-cover {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -1409,7 +1409,7 @@ img {
   border-radius: 8px;
 }
 
-          
+
 .album-cover {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -1417,7 +1417,7 @@ img {
   border-radius: 8px;
 }
 
-          
+
 .artist-avatar {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -1425,7 +1425,7 @@ img {
   border-radius: 50%;
 }
 
-          
+
 .mv-cover {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -1433,7 +1433,7 @@ img {
   border-radius: 8px;
 }
 
-          
+
 .playlist-cover {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -1441,7 +1441,7 @@ img {
   border-radius: 8px;
 }
 
-                  
+
 .el-image {
   width: 100%;
   height: 100%;
@@ -1465,7 +1465,7 @@ img {
   }
 }
 
-             
+
 @media (max-width: 768px) {
   .cover-container,
   .song-cover,
@@ -1500,9 +1500,9 @@ img {
   }
 }
 
-                                                               
-                                 
-                                                                  
+
+
+
 .detail-town-header {
   --detail-town-yellow: #f4b942;
   --detail-town-blue: #5dc6d8;
@@ -1735,28 +1735,28 @@ body > .el-popper.el-select__popper,
 }
 
 
-                                                               
-                  
-                                                                  
-   
-   
-                      
-                                                            
-                             
-   
-                                              
-                                                       
-   
 
-                                   
 
-                                                               
-                       
-                      
-                                                                  
 
-                                   
-                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 body > .el-select__popper.pagination-select-dropdown,
 .el-select__popper.pagination-select-dropdown,
 .pagination-select-dropdown.el-select__popper {
@@ -1775,7 +1775,7 @@ body > .el-select__popper.pagination-select-dropdown,
 
   .el-select-dropdown__item {
     color: var(--text-primary) !important;
-    
+
     padding: 0 16px !important;
     height: 32px !important;
     line-height: 32px !important;
@@ -1791,17 +1791,17 @@ body > .el-select__popper.pagination-select-dropdown,
   }
 }
 
-                                   
+
 .el-select__popper {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;
 }
 
-                                                               
-                          
-                                                     
-                                                                  
-                                  
+
+
+
+
+
 body > .el-select__popper {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;
@@ -1812,7 +1812,7 @@ body > .el-select__popper {
 
   .el-select-dropdown__item {
     color: var(--text-primary) !important;
-    
+
 
     &:hover {
       background: rgba(64, 158, 255, 0.15) !important;
@@ -1825,38 +1825,38 @@ body > .el-select__popper {
   }
 }
 
-                                                                          
-                                                                         
-                                                                  
-                                                               
-                           
-                                                                  
+
+
+
+
+
+
 .dark-dropdown.el-dropdown-menu,
 .dark-dropdown.el-dropdown__popper {
   z-index: 9999 !important;
 }
 
 
-                                                               
-                               
-                                                                  
-                                                      
+
+
+
+
 body > .el-dropdown__popper.song-action-dropdown {
-                                             
-                                         
+
+
   z-index: 9998 !important;
 }
 
-                                                               
-                    
-                                                                  
+
+
+
 .el-dropdown__popper.song-action-dropdown {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;
   border-radius: 8px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
   padding: 0 !important;
-                                                        
+
 }
 
 .el-dropdown__popper.song-action-dropdown .el-dropdown-menu {
@@ -1884,7 +1884,7 @@ body > .el-dropdown__popper.song-action-dropdown {
 .el-dropdown__popper.song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   color: #ffffff !important;
 }
-                
+
 .song-action-dropdown .el-dropdown-menu__item:hover .el-icon,
 body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   color: #ffffff !important;
@@ -1897,7 +1897,7 @@ body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   border-radius: 8px !important;
 }
 
-                
+
 .song-action-dropdown .el-dropdown-menu__item:hover .el-icon,
 body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   color: #ffffff !important;
@@ -1910,7 +1910,7 @@ body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5) !important;
   }
-  
+
   .el-tooltip__arrow::before {
     border-top-color: rgba(30, 30, 30, 0.95) !important;
     border-left-color: transparent !important;
@@ -1918,7 +1918,7 @@ body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   }
 }
 
-                        
+
 .el-notification {
   background: rgba(30, 30, 30, 0.95) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -1934,7 +1934,7 @@ body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   .el-notification__title {
     color: var(--text-primary) !important;
   }
-  
+
   .el-notification__content {
     color: #606266 !important;
   }
@@ -1949,7 +1949,7 @@ body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   }
 }
 
-                   
+
 .el-message {
   background: var(--message-background) !important;
   border: 1px solid var(--message-border) !important;
@@ -1968,9 +1968,9 @@ body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
   }
 }
 
-                                                               
-                    
-                                                                  
+
+
+
 .el-dropdown__popper.song-action-dropdown {
   background: var(--card-background) !important;
   border: 1px solid var(--card-border) !important;
@@ -2006,24 +2006,24 @@ body .song-action-dropdown .el-dropdown-menu__item:hover .el-icon {
 }
 
 
-                                                               
-                                   
-                                                                  
-                         
+
+
+
+
 body > .el-dropdown__popper:not(.song-action-dropdown) .el-dropdown-menu__item .el-icon {
   color: #ffffff !important;
 }
 
-                             
+
 body > .el-dropdown__popper:not(.song-action-action-dropdown) {
   background: transparent !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-                                                               
-                                  
-                                                                  
-                                              
+
+
+
+
 .el-pagination .el-select {
   .el-input__wrapper {
     background: var(--input-bg, rgba(255, 255, 255, 0.1)) !important;
@@ -2034,7 +2034,7 @@ body > .el-dropdown__popper:not(.song-action-action-dropdown) {
   }
 }
 
-                                           
+
 .el-pagination__sizes {
   .el-select-dropdown {
     background: var(--card-background) !important;
@@ -2042,9 +2042,9 @@ body > .el-dropdown__popper:not(.song-action-action-dropdown) {
   }
 }
 
-                                                               
-                             
-                                                                  
+
+
+
 .el-select-dropdown__pagination {
   background-color: var(--dropdown-background, rgba(60, 60, 60, 0.5)) !important;
   backdrop-filter: blur(12px);
@@ -2071,9 +2071,9 @@ body > .el-dropdown__popper:not(.song-action-action-dropdown) {
   }
 }
 
-                                                               
-                           
-                                                                  
+
+
+
 .admin-filter-dropdown {
   background-color: var(--dropdown-background, rgba(60, 60, 60, 0.5)) !important;
   backdrop-filter: blur(12px);
@@ -2103,9 +2103,9 @@ body > .el-dropdown__popper:not(.song-action-action-dropdown) {
   }
 }
 
-                                                               
-                       
-                                                                  
+
+
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -2257,7 +2257,7 @@ label,
   }
 }
 
-                                            
+
 body > .el-popper.el-dropdown__popper,
 body > .el-popper.el-select__popper,
 .el-popper.el-dropdown__popper,

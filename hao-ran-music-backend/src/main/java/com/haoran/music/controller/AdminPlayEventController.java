@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.controller;
 
 import com.haoran.music.common.annotation.RequireRole;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.Map;
 
-   
-               
-   
+
+
+
 @RestController
 @RequestMapping("/admin/play-events")
 @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})

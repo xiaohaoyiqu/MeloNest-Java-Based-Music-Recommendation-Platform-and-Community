@@ -1,7 +1,7 @@
-   
-                      
-                                                                    
-   
+
+
+
+
 package com.haoran.music.dto.user;
 
 import lombok.Data;
@@ -20,7 +20,7 @@ public class SendEmailCodeDTO implements Serializable {
     @Email(message = "邮箱格式不正确")
     private String email;
 
-                                                    
+
     @NotBlank(message = "验证码场景不能为空")
     @Pattern(regexp = "^(register|reset|login|change_email)$", message = "验证码场景不正确")
     private String type;

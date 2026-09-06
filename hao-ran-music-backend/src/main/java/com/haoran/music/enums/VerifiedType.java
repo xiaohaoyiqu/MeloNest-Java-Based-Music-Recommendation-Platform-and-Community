@@ -1,9 +1,9 @@
 package com.haoran.music.enums;
 
-   
-                      
-                      
-   
+
+
+
+
 public enum VerifiedType {
 
     INDIVIDUAL("individual", "个人音乐人", "User", "#409eff"),
@@ -38,9 +38,9 @@ public enum VerifiedType {
         return color;
     }
 
-       
-                 
-       
+
+
+
     public static VerifiedType fromCode(String code) {
         if (code == null) {
             return null;

@@ -1,8 +1,8 @@
- 
-                     
-                              
-                  
- 
+
+
+
+
+
 
 server:
   port: 9090
@@ -13,13 +13,13 @@ server:
       enabled: true
       force: true
   tomcat:
-                                              
+
     threads:
       max: 300
       min-spare: 20
     accept-count: 200
     max-connections: 8192
-            
+
     connection-timeout: 20000
     keep-alive-timeout: 60000
     max-keep-alive-requests: 1000
@@ -33,8 +33,8 @@ spring:
     name: hao-ran-music
   main:
     allow-circular-references: true
-                                                                          
-                                                                  
+
+
   mail:
     host: ${SMTP_HOST:}
     port: ${SMTP_PORT:465}
@@ -53,7 +53,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-                            
+
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -61,7 +61,7 @@ spring:
       url: ${DB_URL:jdbc:mysql://192.168.153.131:3306/haoranmusic_bus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&useLocalSessionState=true&cachePrepStmts=true&useServerPrepStmts=true&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false}
       username: ${DB_USERNAME:hdfs}
       password: ${DB_PASSWORD:}
-                      
+
       initial-size: 10
       min-idle: 10
       max-active: 50
@@ -72,14 +72,14 @@ spring:
       test-while-idle: true
       test-on-borrow: false
       test-on-return: false
-              
+
       pool-prepared-statements: true
       max-pool-prepared-statement-per-connection-size: 20
-              
+
       remove-abandoned: true
       remove-abandoned-timeout: 1800
       log-abandoned: true
-              
+
       stat-view-servlet:
         enabled: true
         url-pattern: /druid/*
@@ -97,7 +97,7 @@ spring:
           config:
             multi-statement-allow: true
 
-                    
+
   redis:
     host: ${REDIS_HOST:192.168.153.131}
     port: 6379
@@ -110,9 +110,9 @@ spring:
         max-idle: 20
         min-idle: 10
         max-wait: 5000ms
-              
+
       shutdown-timeout: 100ms
-          
+
     cache:
       type: redis
       redis:
@@ -121,7 +121,7 @@ spring:
         key-prefix: "hrm:"
         use-key-prefix: true
 
-           
+
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -129,17 +129,17 @@ spring:
       write-dates-as-timestamps: false
     default-property-inclusion: non_null
 
-        
+
   servlet:
     multipart:
       max-file-size: 500MB
-                                                 
+
       max-request-size: 520MB
       enabled: true
-                       
+
       file-size-threshold: 0
 
-                 
+
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:192.168.153.131:9092,192.168.153.132:9092,192.168.153.133:9092}
     producer:
@@ -152,7 +152,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-                                                  
+
 search:
   engine: ${SEARCH_ENGINE:mysql}
   elasticsearch:
@@ -168,7 +168,7 @@ search:
     bootstrap-rebuild-enabled: ${SEARCH_ES_BOOTSTRAP_REBUILD_ENABLED:true}
     bootstrap-min-documents: ${SEARCH_ES_BOOTSTRAP_MIN_DOCUMENTS:2}
 
-                                
+
 cache:
   mv:
     expire: ${CACHE_MV_EXPIRE:1800}
@@ -181,7 +181,7 @@ cache:
   null-value:
     expire: ${CACHE_NULL_EXPIRE:300}
 
-                                
+
 schedule:
   cache-warmup:
     hourly-cron: "${SCHEDULE_CACHE_WARMUP_HOURLY_CRON:0 5 * * * ?}"
@@ -224,22 +224,22 @@ schedule:
       expired-content-cron: "${SCHEDULE_TASK_COPYRIGHT_EXPIRED_CONTENT_CRON:0 0 3 * * ?}"
       inactive-creators-cron: "${SCHEDULE_TASK_COPYRIGHT_INACTIVE_CREATORS_CRON:0 0 4 ? * MON}"
 
-                       
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: com.haoran.music.entity
   configuration:
     map-underscore-to-camel-case: true
-            
+
     cache-enabled: true
-          
+
     lazy-loading-enabled: true
     aggressive-lazy-loading: false
     call-setters-on-nulls: true
     jdbc-type-for-null: 'null'
-                         
+
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
-            
+
     default-executor-type: reuse
   global-config:
     db-config:
@@ -251,27 +251,27 @@ mybatis-plus:
       update-strategy: not_null
       select-strategy: not_null
 
-                                 
-                                               
-                            
-           
-                                          
-                                
-               
 
-          
+
+
+
+
+
+
+
+
 hadoop:
   name-node: hdfs://node1:9000
   hdfs-path: /sdb1/myproject/haoranmusic
   user: hdfs
 
-        
+
 hive:
   jdbc-url: jdbc:hive2://192.168.153.131:10000/haoranmusic
   username: ${HIVE_USERNAME:hdfs}
   password:
 
-      
+
 logging:
   level:
     root: INFO
@@ -285,41 +285,41 @@ logging:
     max-size: 100MB
     max-history: 30
 
-      
+
 music:
   report-snapshot:
     stale-grace-minutes: ${MUSIC_REPORT_SNAPSHOT_STALE_GRACE_MINUTES:1440}
     refresh-failure-backoff-seconds: ${MUSIC_REPORT_SNAPSHOT_REFRESH_FAILURE_BACKOFF_SECONDS:60}
   cluster:
     enable-ip-mask: ${MUSIC_CLUSTER_ENABLE_IP_MASK:true}
-          
+
   recommend:
-              
+
     personal:
       main-type-weight: 0.6
       sub-type-weight: 0.3
       hot-weight: 0.1
       count: 16
-              
+
     random:
       taste-weight: 0.4
       hot-weight: 0.1
       random-weight: 0.5
       count: 16
-              
+
     hot-days: 14
-               
+
     hot-period: 3
-            
+
     related-count: 8
-               
+
     related-sub-type-count: 2
-        
+
   quality:
     standard: 128000
     high: 320000
     lossless: 1411000
-        
+
   upload:
     nginx-url-prefix: ${MUSIC_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
     song-path: ${MUSIC_SONG_PATH:/sdb1/haoranmusicData/Datas/songs/}
@@ -333,7 +333,7 @@ music:
     emoji-path: ${MUSIC_EMOJI_PATH:/sdb1/myprojoct/haoranmusic/data/emojis/}
     multi-file:
       path: ${MUSIC_MULTI_FILE_PATH:/sdb1/myprojoct/haoranmusic/multi-files}
-                                         
+
     private-attachment-path: ${MUSIC_PRIVATE_ATTACHMENT_PATH:/sdb1/myprojoct/haoranmusic/data/private-attachments/}
     nginx:
       url: ${MUSIC_MULTI_FILE_NGINX_URL:http://192.168.153.131:3223/multi-files}
@@ -458,43 +458,43 @@ music:
       - ${LOCAL_PROXY_PACKAGE_DIR:D:/ideaproject/HaoRanMusic/haoran-local-proxy}
       - ${LOCAL_PROXY_REMOTE_ZIP:/sdb1/myprojoct/haoranmusic/haoran-local-proxy.zip}
 
-                    
+
 audio:
   ffmpeg:
-                                        
-                                                                 
-                       
+
+
+
     path: ${FFPROBE_PATH:/usr/local/soft/ffmpeg-6.1.1/bin/ffprobe}
     enabled: ${AUDIO_FFMPEG_ENABLED:true}
     detect-timeout: ${AUDIO_FFMPEG_DETECT_TIMEOUT:30000}
     version-check-timeout-seconds: ${AUDIO_FFMPEG_VERSION_CHECK_TIMEOUT_SECONDS:5}
-              
+
   max-history-count: 560
-            
+
   max-playlist-songs: 200
-        
+
   page:
     default-size: 20
     max-size: 100
-          
+
   upload:
     song-path: /sdb1/myprojoct/haoranmusic/data/songs/
     mv-path: /sdb1/myprojoct/haoranmusic/data/mvs/
     avatar-path: /sdb1/myprojoct/haoranmusic/data/avatars/
     album-cover-path: /sdb1/myprojoct/haoranmusic/data/album-covers/
     playlist-cover-path: /sdb1/myprojoct/haoranmusic/data/playlist-covers/
-               
+
     url-prefix: ${MUSIC_FILE_URL_PREFIX:http://192.168.153.131:9090/api/files/}
-                     
+
     node3:
       host: 192.168.153.133
       user: hdfs
       playlist-path: /sdb1/haoranmusicData/Datas/playlist-covers/
-                     
+
   local-proxy:
     base-url: ${LOCAL_PROXY_BASE_URL:http://192.168.153.133:7777}
     timeout: 5000
-        
+
   default-wallpapers:
     - https://picsum.photos/1920/1080?random=1
     - https://picsum.photos/1920/1080?random=2
@@ -502,7 +502,7 @@ audio:
     - https://picsum.photos/1920/1080?random=4
     - https://picsum.photos/1920/1080?random=5
 
-                                             
+
 recommend:
   model:
     collaborative-path: ${RECOMMEND_COLLABORATIVE_MODEL_PATH:/sdb1/myprojoct/haoranmusic/models/recommendation_model.json}
@@ -528,7 +528,7 @@ haoran:
   api:
     slow-threshold-ms: ${API_SLOW_THRESHOLD_MS:800}
 
-                             
+
 hot-score:
   threshold: ${HOT_SCORE_THRESHOLD:100}
   new-song-days: ${HOT_SCORE_NEW_SONG_DAYS:7}
@@ -543,26 +543,26 @@ hot-score:
   mv-comment-weight: ${HOT_SCORE_MV_COMMENT_WEIGHT:3}
   mv-share-weight: ${HOT_SCORE_MV_SHARE_WEIGHT:2}
 
-                                 
+
 copyright:
   check:
     expiry-warning-days: ${COPYRIGHT_EXPIRY_WARNING_DAYS:30}
     inactive-creator-days: ${COPYRIGHT_INACTIVE_CREATOR_DAYS:180}
 
-            
-                                                                     
-                                       
+
+
+
 deepseek:
   base-url: ${DEEPSEEK_BASE_URL:http://192.168.153.1:11434}
   model: ${DEEPSEEK_MODEL:deepseek-r1:8b}
   api-key: ${DEEPSEEK_API_KEY:}
   timeout: ${DEEPSEEK_TIMEOUT:600}
-                                        
+
   max-retries: ${DEEPSEEK_MAX_RETRIES:0}
   temperature: ${DEEPSEEK_TEMPERATURE:0.7}
   max-tokens: ${DEEPSEEK_MAX_TOKENS:4096}
 
-                            
+
 vip:
   normal-download-quota: ${VIP_NORMAL_DOWNLOAD_QUOTA:10}
   prices:
@@ -582,7 +582,7 @@ vip:
       name: year
       discount: ${VIP_YEAR_DISCOUNT:100}
 
-                                                                                                         
+
 sms:
   enabled: ${SMS_ENABLED:false}
   provider: ${SMS_PROVIDER:disabled}
@@ -596,7 +596,7 @@ sms:
   connect-timeout-millis: ${SMS_CONNECT_TIMEOUT_MILLIS:3000}
   read-timeout-millis: ${SMS_READ_TIMEOUT_MILLIS:5000}
 
-                                                                             
+
 email:
   enabled: ${EMAIL_ENABLED:false}
   provider: ${EMAIL_PROVIDER:disabled}
@@ -606,7 +606,7 @@ email:
   disabled-message: ${EMAIL_DISABLED_MESSAGE:邮箱验证码服务暂未配置，请稍后再试}
   code-expire-minutes: ${USER_VERIFICATION_CODE_EXPIRE_MINUTES:5}
 
-                                                                                                          
+
 auth-risk:
   enabled: ${AUTH_RISK_ENABLED:true}
   enforce-captcha: ${AUTH_RISK_ENFORCE_CAPTCHA:true}
@@ -619,7 +619,7 @@ auth-risk:
   logout-login-threshold: ${AUTH_RISK_LOGOUT_LOGIN_THRESHOLD:3}
   ip-change-window-hours: ${AUTH_RISK_IP_CHANGE_WINDOW_HOURS:24}
   ip-change-threshold: ${AUTH_RISK_IP_CHANGE_THRESHOLD:3}
-                                             
+
 user:
   verification:
     code-length: ${USER_VERIFICATION_CODE_LENGTH:6}
@@ -699,7 +699,7 @@ user:
       classification-active-play-duration-seconds: ${USER_STATS_CLASSIFICATION_ACTIVE_PLAY_DURATION_SECONDS:72000}
       classification-active-unique-song-count: ${USER_STATS_CLASSIFICATION_ACTIVE_UNIQUE_SONG_COUNT:20}
 
-                       
+
 reward:
   rules:
     min-amount: ${REWARD_MIN_AMOUNT:1}
@@ -709,7 +709,7 @@ reward:
     alert-amount-threshold: ${REWARD_ALERT_AMOUNT_THRESHOLD:2000}
     daily-limit-cache-days: ${REWARD_DAILY_LIMIT_CACHE_DAYS:2}
 
-                         
+
 crawler:
   detection:
     allowed-referrers:
@@ -731,7 +731,7 @@ crawler:
     read-only-view-threshold: ${CRAWLER_READ_ONLY_VIEW_THRESHOLD:50}
     behavior-expire-seconds: ${CRAWLER_BEHAVIOR_EXPIRE_SECONDS:3600}
 
-                                                
+
 payment:
   platform-fee-rate: ${PAYMENT_PLATFORM_FEE_RATE:0.02}
   currency: ${PAYMENT_CURRENCY:CNY}
@@ -786,12 +786,12 @@ payment:
   code:
     scan-base-path: ${PAYMENT_CODE_SCAN_BASE_PATH:/sdb1/myprojoct/haoranmusic/payment-codes/}
 
-       
+
 jwt:
   secret: ${JWT_SECRET:change-me-jwt-secret-at-least-32-bytes-for-local-demo}
   expiration: ${JWT_EXPIRATION:604800000}
 
-                
+
 security:
   block-crawler:
     enabled: true
@@ -815,14 +815,14 @@ security:
   query-token-enabled: ${SECURITY_QUERY_TOKEN_ENABLED:false}
   auth-cookie-secure: ${SECURITY_AUTH_COOKIE_SECURE:false}
   auth-cookie-max-age-seconds: ${SECURITY_AUTH_COOKIE_MAX_AGE_SECONDS:604800}
-                                                                            
-                                                                
+
+
   trusted-proxies: ${SECURITY_TRUSTED_PROXIES:127.0.0.1}
   captcha-trigger-threshold: ${SECURITY_CAPTCHA_TRIGGER_THRESHOLD:80}
   captcha-trigger-window-seconds: ${SECURITY_CAPTCHA_TRIGGER_WINDOW_SECONDS:120}
-                   
+
   captcha-whitelist-minutes: 30
-                                                                                                       
+
   paid-content-daily-view-limit: ${SECURITY_PAID_CONTENT_DAILY_VIEW_LIMIT:200}
   paid-content-download-limit: ${SECURITY_PAID_CONTENT_DOWNLOAD_LIMIT:5}
   paid-content-distinct-window-seconds: ${SECURITY_PAID_CONTENT_DISTINCT_WINDOW_SECONDS:120}
@@ -832,10 +832,10 @@ security:
   creator-batch-access-threshold-seconds: ${SECURITY_CREATOR_BATCH_ACCESS_SECONDS:60}
   creator-batch-access-threshold-count: ${SECURITY_CREATOR_BATCH_ACCESS_COUNT:30}
 
-                             
+
 verify-code:
   enabled: ${VERIFY_CODE_ENABLED:true}
-         
+
   image:
     enabled: ${VERIFY_CODE_IMAGE_ENABLED:false}
     provider: ${VERIFY_CODE_IMAGE_PROVIDER:hutool}
@@ -843,22 +843,22 @@ verify-code:
     height: ${VERIFY_CODE_IMAGE_HEIGHT:48}
     length: ${VERIFY_CODE_IMAGE_LENGTH:4}
     interference-count: ${VERIFY_CODE_IMAGE_INTERFERENCE_COUNT:80}
-         
+
   slide:
     enabled: ${VERIFY_CODE_SLIDE_ENABLED:false}
     provider: ${VERIFY_CODE_SLIDE_PROVIDER:disabled}
-             
+
   expire-seconds: ${VERIFY_CODE_EXPIRE_SECONDS:300}
   arithmetic-max-operand: ${VERIFY_CODE_ARITHMETIC_MAX_OPERAND:10}
   sms-length: ${VERIFY_CODE_SMS_LENGTH:6}
   email-length: ${VERIFY_CODE_EMAIL_LENGTH:6}
 
-                                
+
 local:
   upload:
     path: ${LOCAL_UPLOAD_PATH:/sdb1/myprojoct/haoranmusic/uploads/local-music/}
 
-                                             
+
 song:
   request:
     upload:
@@ -885,7 +885,7 @@ song:
       mkdir-timeout-seconds: ${SONG_REQUEST_MKDIR_TIMEOUT_SECONDS:30}
       scp-timeout-seconds: ${SONG_REQUEST_SCP_TIMEOUT_SECONDS:600}
 
-                           
+
 moderation:
   appeal:
     max-count: ${MODERATION_APPEAL_MAX_COUNT:3}
@@ -900,7 +900,7 @@ moderation:
     today-quota-cache-days: ${MODERATION_ASSIGNMENT_TODAY_QUOTA_CACHE_DAYS:2}
     load-cache-days: ${MODERATION_ASSIGNMENT_LOAD_CACHE_DAYS:1}
 
-                               
+
 artist:
   application:
     apply-prefix: ${ARTIST_APPLICATION_APPLY_PREFIX:artist:apply:}
@@ -908,7 +908,7 @@ artist:
     apply-limit-days: ${ARTIST_APPLICATION_LIMIT_DAYS:30}
     max-applies-per-period: ${ARTIST_APPLICATION_MAX_APPLIES:3}
 
-                            
+
 work:
   submission:
     creator-work-prefix: ${WORK_SUBMISSION_CREATOR_PREFIX:creator:work:submit:}
@@ -918,7 +918,7 @@ work:
     submit-window-days: ${WORK_SUBMISSION_WINDOW_DAYS:1}
     like-lock-days: ${WORK_SUBMISSION_LIKE_LOCK_DAYS:7}
 
-                                     
+
 lyric:
   request:
     submit-prefix: ${LYRIC_REQUEST_SUBMIT_PREFIX:lyric:submit:}
@@ -937,7 +937,7 @@ lyric:
     retry-delay-seconds: ${LYRIC_TRANSLATION_RETRY_DELAY_SECONDS:60}
     max-retry-delay-seconds: ${LYRIC_TRANSLATION_MAX_RETRY_DELAY_SECONDS:900}
 
-                                  
+
 message:
   private:
     recall-time-limit-minutes: ${MESSAGE_PRIVATE_RECALL_LIMIT_MINUTES:2}
@@ -946,12 +946,12 @@ message:
     conversation-prefix: ${MESSAGE_PRIVATE_CONVERSATION_PREFIX:conversation:}
     text-max-length: ${MESSAGE_PRIVATE_TEXT_MAX_LENGTH:500}
 
-                               
+
 playlist:
   collaboration:
     max-collaborators: ${PLAYLIST_COLLABORATION_MAX_COLLABORATORS:10}
 
-                                 
+
 clamav:
   enabled: ${CLAMAV_ENABLED:true}
   host: ${CLAMAV_HOST:192.168.153.131}

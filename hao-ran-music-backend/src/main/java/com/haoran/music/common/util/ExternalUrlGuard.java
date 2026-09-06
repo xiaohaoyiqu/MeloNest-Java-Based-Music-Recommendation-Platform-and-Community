@@ -1,15 +1,15 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.common.util;
 
 import java.net.InetAddress;
 import java.net.URI;
 import java.util.Locale;
 
-   
-                                                                            
-   
+
+
+
 public final class ExternalUrlGuard {
 
     private ExternalUrlGuard() {
@@ -19,10 +19,10 @@ public final class ExternalUrlGuard {
         return validate(rawUrl, new String[0]);
     }
 
-       
-                                                                                 
-                                                                                
-       
+
+
+
+
     public static Validation validate(String rawUrl, String... trustedPrefixes) {
         if (rawUrl == null || rawUrl.trim().isEmpty()) {
             return Validation.reject("empty-url");
@@ -99,7 +99,7 @@ public final class ExternalUrlGuard {
                     return true;
                 }
             } catch (Exception ignored) {
-                                                                         
+
             }
         }
         return false;

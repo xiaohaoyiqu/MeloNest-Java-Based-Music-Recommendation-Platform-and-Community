@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                                                                          
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/admin/user")
@@ -37,11 +37,11 @@ public class AdminUserController {
     @Resource
     private UserService userService;
 
-       
-                                    
-                                  
-                                  
-       
+
+
+
+
+
         @PostMapping("/list")
     @ApiLog("Admin get user list")
     public Result<PageResult<UserVO>> getUserList(@RequestBody UserQueryDTO dto) {
@@ -55,11 +55,11 @@ public class AdminUserController {
         return Result.success(result);
     }
 
-       
-                           
-                            
-                              
-       
+
+
+
+
+
         @PostMapping("/disable/{userId}")
     @ApiLog("Admin disable user")
     public Result<Void> disableUser(@PathVariable Long userId) {
@@ -67,11 +67,11 @@ public class AdminUserController {
         return Result.success();
     }
 
-       
-                          
-                            
-                              
-       
+
+
+
+
+
         @PostMapping("/enable/{userId}")
     @ApiLog("Admin enable user")
     public Result<Void> enableUser(@PathVariable Long userId) {
@@ -79,11 +79,11 @@ public class AdminUserController {
         return Result.success();
     }
 
-       
-                          
-                                      
-                            
-       
+
+
+
+
+
         @PostMapping("/batch/disable")
     @ApiLog("Admin batch disable users")
     public Result<Map<String, Object>> batchDisableUsers(@RequestBody List<Long> userIds) {
@@ -95,11 +95,11 @@ public class AdminUserController {
         return Result.success(result);
     }
 
-       
-                         
-                                      
-                            
-       
+
+
+
+
+
         @PostMapping("/batch/enable")
     @ApiLog("Admin batch enable users")
     public Result<Map<String, Object>> batchEnableUsers(@RequestBody List<Long> userIds) {
@@ -111,12 +111,12 @@ public class AdminUserController {
         return Result.success(result);
     }
 
-       
-                       
-                            
-                                    
-                              
-       
+
+
+
+
+
+
         @PostMapping("/role/{userId}")
     @ApiLog("Admin update user role")
     public Result<Void> updateUserRole(
@@ -127,12 +127,12 @@ public class AdminUserController {
         return Result.success();
     }
 
-       
-                             
-                                      
-                                    
-                            
-       
+
+
+
+
+
+
         @PostMapping("/batch/role")
     @ApiLog("Admin batch update user role")
     public Result<Map<String, Object>> batchUpdateUserRole(
@@ -147,11 +147,11 @@ public class AdminUserController {
         return Result.success(result);
     }
 
-       
-                                    
-                            
-                              
-       
+
+
+
+
+
         @DeleteMapping("/{userId}")
     @ApiLog("Admin delete user")
     public Result<Void> deleteUser(@PathVariable Long userId) {
@@ -159,11 +159,11 @@ public class AdminUserController {
         return Result.success();
     }
 
-       
-                         
-                                      
-                            
-       
+
+
+
+
+
         @DeleteMapping("/batch")
     @ApiLog("Admin batch delete users")
     public Result<Map<String, Object>> batchDeleteUsers(@RequestBody List<Long> userIds) {
@@ -175,12 +175,12 @@ public class AdminUserController {
         return Result.success(result);
     }
 
-       
-                                            
-                            
-                                      
-                              
-       
+
+
+
+
+
+
         @PostMapping("/reset-password/{userId}")
     @ApiLog("Admin reset user password")
     public Result<Void> resetUserPassword(
@@ -191,12 +191,12 @@ public class AdminUserController {
         return Result.success();
     }
 
-       
-                                       
-                            
-                                  
-                              
-       
+
+
+
+
+
+
         @PutMapping("/edit/{userId}")
     @ApiLog("Admin edit user info")
     public Result<Void> editUserInfo(
@@ -207,11 +207,11 @@ public class AdminUserController {
         return Result.success();
     }
 
-       
-                                   
-                            
-                          
-       
+
+
+
+
+
         @GetMapping("/detail/{userId}")
     @ApiLog("Admin get user detail")
     public Result<AdminUserDetailVO> getUserDetail(@PathVariable Long userId) {

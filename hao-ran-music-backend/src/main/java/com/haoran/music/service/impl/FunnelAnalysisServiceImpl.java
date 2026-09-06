@@ -21,10 +21,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                      
-                         
-   
+
+
+
+
 @Slf4j
 @Service
 public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
@@ -47,7 +47,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
             return null;
         }
 
-                   
+
         String[] steps = getDefaultSteps(funnelType);
         if (ObjectUtils.isEmpty(steps)) {
             return null;
@@ -68,7 +68,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         analysis.setDescription("自定义漏斗分析");
         analysis.setAnalysisTime(LocalDateTime.now());
 
-                   
+
         if (ObjectUtils.isEmpty(startTime)) {
             startTime = LocalDateTime.now().minusDays(7);
         }
@@ -76,11 +76,11 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
             endTime = LocalDateTime.now();
         }
 
-                             
+
         List<FunnelAnalysisVO.FunnelStep> funnelSteps = generateFunnelStepsFromRealData(steps, startTime, endTime);
         analysis.setSteps(funnelSteps);
 
-                  
+
         if (ObjectUtils.isNotEmpty(funnelSteps) && !funnelSteps.isEmpty()) {
             FunnelAnalysisVO.FunnelStep firstStep = funnelSteps.get(0);
             FunnelAnalysisVO.FunnelStep lastStep = funnelSteps.get(funnelSteps.size() - 1);
@@ -95,7 +95,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 analysis.setOverallConversionRate(overallRate);
             }
 
-                        
+
             FunnelAnalysisVO.FunnelStep highestDropOff = funnelSteps.stream()
                     .max(Comparator.comparing(step ->
                             ObjectUtils.isNotEmpty(step.getDropOffCount()) ? step.getDropOffCount() : 0))
@@ -103,7 +103,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
             analysis.setHighestDropOffStep(highestDropOff);
         }
 
-                 
+
         String cacheKey = "funnel:analysis:" + funnelName + ":" + startTime.toLocalDate() + ":" + endTime.toLocalDate();
         redisTemplate.opsForValue().set(cacheKey, analysis, 1, TimeUnit.HOURS);
 
@@ -139,11 +139,11 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         comparison.setPeriod1(startTime1.toLocalDate() + " ~ " + endTime1.toLocalDate());
         comparison.setPeriod2(startTime2.toLocalDate() + " ~ " + endTime2.toLocalDate());
 
-                       
+
         FunnelAnalysisVO funnel1 = analyzeFunnel(funnelType, startTime1, endTime1);
         FunnelAnalysisVO funnel2 = analyzeFunnel(funnelType, startTime2, endTime2);
 
-                   
+
         List<FunnelAnalysisVO.StepComparison> stepComparisons = new ArrayList<>();
         if (ObjectUtils.isNotEmpty(funnel1.getSteps()) && ObjectUtils.isNotEmpty(funnel2.getSteps())) {
             for (int i = 0; i < Math.min(funnel1.getSteps().size(), funnel2.getSteps().size()); i++) {
@@ -155,13 +155,13 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 stepComparison.setConversionRate1(step1.getConversionRate());
                 stepComparison.setConversionRate2(step2.getConversionRate());
 
-                       
+
                 BigDecimal rate1 = ObjectUtils.isNotEmpty(step1.getConversionRate()) ? step1.getConversionRate() : BigDecimal.ZERO;
                 BigDecimal rate2 = ObjectUtils.isNotEmpty(step2.getConversionRate()) ? step2.getConversionRate() : BigDecimal.ZERO;
                 BigDecimal change = rate2.subtract(rate1);
                 stepComparison.setChange(change);
 
-                          
+
                 BigDecimal changePercent = BigDecimal.ZERO;
                 if (rate1.compareTo(BigDecimal.ZERO) != 0) {
                     changePercent = change.divide(rate1, 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100"));
@@ -173,7 +173,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         }
         comparison.setStepComparisons(stepComparisons);
 
-                 
+
         BigDecimal overall1 = ObjectUtils.isNotEmpty(funnel1.getOverallConversionRate()) ? funnel1.getOverallConversionRate() : BigDecimal.ZERO;
         BigDecimal overall2 = ObjectUtils.isNotEmpty(funnel2.getOverallConversionRate()) ? funnel2.getOverallConversionRate() : BigDecimal.ZERO;
         comparison.setOverallChange(overall2.subtract(overall1));
@@ -208,7 +208,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         List<Map<String, Object>> dropOffUsers = new ArrayList<>();
 
         try {
-                       
+
             if (ObjectUtils.isEmpty(startTime)) {
                 startTime = LocalDateTime.now().minusDays(7);
             }
@@ -216,14 +216,14 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 endTime = LocalDateTime.now();
             }
 
-                     
+
             String[] steps = getDefaultSteps(funnelType);
             if (ObjectUtils.isEmpty(steps) || stepNumber == null || stepNumber > steps.length) {
                 return dropOffUsers;
             }
 
-                           
-                                    
+
+
             LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
             wrapper.ge(ListenHistory::getListenTime, startTime)
                     .le(ListenHistory::getListenTime, endTime)
@@ -235,7 +235,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 return dropOffUsers;
             }
 
-                            
+
             Map<Long, UserStepData> userStepMap = new HashMap<>();
             for (ListenHistory history : histories) {
                 Long userId = history.getUserId();
@@ -245,19 +245,19 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 data.userId = userId;
                 data.lastActionTime = history.getListenTime();
 
-                                    
-                                 
+
+
                 data.stepCount++;
             }
 
-                                 
+
             for (UserStepData data : userStepMap.values()) {
-                                               
+
                 if (data.stepCount <= stepNumber) {
                     Map<String, Object> user = new LinkedHashMap<>();
                     user.put("userId", data.userId);
 
-                             
+
                     User userInfo = userMapper.selectById(data.userId);
                     user.put("username", userInfo != null ? userInfo.getUsername() : "user" + data.userId);
                     user.put("nickname", userInfo != null ? userInfo.getNickname() : "");
@@ -308,7 +308,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
             }
         }
 
-                  
+
         BigDecimal avgRate = BigDecimal.ZERO;
         if (!overallRates.isEmpty()) {
             avgRate = overallRates.stream()
@@ -337,12 +337,12 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         segment.put("funnelType", funnelType);
         segment.put("highConversionRate", funnel.getOverallConversionRate());
 
-                         
+
         List<String> characteristics = new ArrayList<>();
         List<String> actions = new ArrayList<>();
 
         try {
-                       
+
             LocalDateTime weekAgo = LocalDateTime.now().minusDays(7);
             LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
             wrapper.ge(ListenHistory::getListenTime, weekAgo)
@@ -351,7 +351,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
 
             List<ListenHistory> activeHistories = listenHistoryMapper.selectList(wrapper);
             if (ObjectUtils.isNotEmpty(activeHistories)) {
-                              
+
                 Map<Long, Integer> userPlayCount = new HashMap<>();
                 for (ListenHistory h : activeHistories) {
                     if (h.getUserId() != null) {
@@ -359,7 +359,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                     }
                 }
 
-                          
+
                 if (userPlayCount.values().stream().mapToInt(Integer::intValue).average().orElse(0) > 20) {
                     characteristics.add("每日播放超过20次");
                 }
@@ -371,7 +371,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         }
 
         if (characteristics.isEmpty()) {
-                       
+
             characteristics.add("近期活跃用户");
             characteristics.add("有付费历史");
             characteristics.add("使用频率高");
@@ -396,7 +396,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
 
         Long funnelId = System.currentTimeMillis();
 
-                    
+
         String configKey = "funnel:custom:" + funnelId;
         Map<String, Object> config = new LinkedHashMap<>();
         config.put("funnelId", funnelId);
@@ -407,7 +407,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
 
         redisTemplate.opsForValue().set(configKey, config, 365, TimeUnit.DAYS);
 
-                
+
         redisTemplate.opsForSet().add("funnel:custom:list", funnelId);
 
         log.info("event=funnel_created funnelId={}", funnelId);
@@ -453,7 +453,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
     public Map<String, Object> getRealTimeFunnelData(String funnelType) {
         Map<String, Object> data = new LinkedHashMap<>();
 
-                    
+
         LocalDateTime today = LocalDateTime.now().toLocalDate().atStartOfDay();
         FunnelAnalysisVO funnel = analyzeFunnel(funnelType, today, LocalDateTime.now());
 
@@ -461,7 +461,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         data.put("currentData", funnel);
         data.put("updateTime", LocalDateTime.now());
 
-                 
+
         Map<String, Object> prediction = new LinkedHashMap<>();
         prediction.put("expectedCompletionRate", funnel.getOverallConversionRate());
         prediction.put("expectedCompletedUsers", funnel.getCompletedUsers());
@@ -470,9 +470,9 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         return data;
     }
 
-       
-               
-       
+
+
+
     private String[] getDefaultSteps(String funnelType) {
         for (FunnelAnalysisVO.FunnelType type : FunnelAnalysisVO.FunnelType.values()) {
             if (type.getCode().equals(funnelType)) {
@@ -482,36 +482,36 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         return null;
     }
 
-       
-                      
-      
-                              
-                            
-                          
-                     
-       
+
+
+
+
+
+
+
+
     private List<FunnelAnalysisVO.FunnelStep> generateFunnelStepsFromRealData(
             List<String> stepNames, LocalDateTime startTime, LocalDateTime endTime) {
 
         List<FunnelAnalysisVO.FunnelStep> steps = new ArrayList<>();
 
         try {
-                                 
+
             LambdaQueryWrapper<ListenHistory> wrapper = new LambdaQueryWrapper<>();
             wrapper.ge(ListenHistory::getListenTime, startTime)
                     .le(ListenHistory::getListenTime, endTime)
                     .orderByDesc(ListenHistory::getListenTime);
 
-                                    
+
             wrapper.last("LIMIT 10000");
             List<ListenHistory> histories = listenHistoryMapper.selectList(wrapper);
 
             if (ObjectUtils.isEmpty(histories)) {
-                                
+
                 return generateDefaultFunnelSteps(stepNames);
             }
 
-                         
+
             long totalUsers = histories.stream()
                     .map(ListenHistory::getUserId)
                     .filter(Objects::nonNull)
@@ -522,8 +522,8 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 return generateDefaultFunnelSteps(stepNames);
             }
 
-                                    
-                                   
+
+
             long currentUserCount = totalUsers;
             long firstStepUsers = currentUserCount;
 
@@ -533,8 +533,8 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 step.setStepName(stepNames.get(i));
                 step.setStepDescription(stepNames.get(i));
 
-                                
-                                       
+
+
                 double dropOffRate = 0.15 + (i * 0.05);           
                 if (dropOffRate > 0.5) dropOffRate = 0.5;
 
@@ -544,14 +544,14 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                 step.setUserCount(stepUserCount);
                 step.setDropOffCount(currentUserCount - stepUserCount);
 
-                        
+
                 if (currentUserCount > 0) {
                     BigDecimal conversionRate = new BigDecimal(stepUserCount)
                             .divide(new BigDecimal(currentUserCount), 4, RoundingMode.HALF_UP)
                             .multiply(new BigDecimal("100"));
                     step.setConversionRate(conversionRate);
 
-                                    
+
                     if (i == 0) {
                         step.setCumulativeConversionRate(new BigDecimal("100"));
                     } else if (firstStepUsers > 0) {
@@ -561,11 +561,11 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                         step.setCumulativeConversionRate(cumulativeRate);
                     }
 
-                          
+
                     BigDecimal dropOffRateValue = new BigDecimal(100).subtract(conversionRate);
                     step.setDropOffRate(dropOffRateValue);
 
-                                 
+
                     if (i == 0) {
                         step.setBounceCount(currentUserCount - stepUserCount);
                         step.setBounceRate(dropOffRateValue);
@@ -575,7 +575,7 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
                     }
                 }
 
-                                     
+
                 long avgTime = 30 + (i * 15);        
                 step.setAvgTimeSpent(avgTime);
 
@@ -593,13 +593,13 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         return steps;
     }
 
-       
-                     
-       
+
+
+
     private List<FunnelAnalysisVO.FunnelStep> generateDefaultFunnelSteps(List<String> stepNames) {
         List<FunnelAnalysisVO.FunnelStep> steps = new ArrayList<>();
 
-                     
+
         long userCount = 10000;
         Random random = new Random();
 
@@ -609,13 +609,13 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
             step.setStepName(stepNames.get(i));
             step.setStepDescription(stepNames.get(i));
 
-                      
+
             long dropOffRate = i == 0 ? 0 : 10 + random.nextInt(30);
             long stepUserCount = (long) (userCount * (100 - dropOffRate) / 100.0);
             step.setUserCount(stepUserCount);
             step.setDropOffCount(userCount - stepUserCount);
 
-                    
+
             if (userCount > 0) {
                 BigDecimal conversionRate = new BigDecimal(stepUserCount)
                         .divide(new BigDecimal(userCount), 4, RoundingMode.HALF_UP)
@@ -655,9 +655,9 @@ public class FunnelAnalysisServiceImpl implements FunnelAnalysisService {
         return steps;
     }
 
-       
-                
-       
+
+
+
     private static class UserStepData {
         Long userId;
         LocalDateTime lastActionTime;

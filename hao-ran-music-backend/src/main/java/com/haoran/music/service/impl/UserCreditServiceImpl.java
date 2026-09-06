@@ -20,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class UserCreditServiceImpl extends ServiceImpl<UserCreditMapper, UserCredit> implements UserCreditService {
@@ -114,9 +114,9 @@ public class UserCreditServiceImpl extends ServiceImpl<UserCreditMapper, UserCre
                 : UserAccountPolicyConstants.CREDIT_SCORE_MAX;
     }
 
-       
-                        
-       
+
+
+
     private UserCredit getUserCreditRecord(Long userId) {
         UserCredit userCredit = getOne(new LambdaQueryWrapper<UserCredit>()
                 .eq(UserCredit::getUserId, userId));
@@ -138,9 +138,9 @@ public class UserCreditServiceImpl extends ServiceImpl<UserCreditMapper, UserCre
         return userCredit;
     }
 
-       
-                  
-       
+
+
+
     private void syncUserCreditScore(Long userId, Integer creditScore) {
         if (ObjectUtils.isEmpty(userId) || creditScore == null) {
             return;

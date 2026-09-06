@@ -25,10 +25,10 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.*;
 
-   
-                      
-                           
-   
+
+
+
+
 @Slf4j
 @Service
 public class VerifiedServiceImpl implements VerifiedService {
@@ -45,23 +45,23 @@ public class VerifiedServiceImpl implements VerifiedService {
     @Resource
     private UserVipService userVipService;
 
-       
-             
-       
+
+
+
     private static final Map<String, VerifiedTypeInfo> VERIFIED_TYPE_MAP = new HashMap<>();
 
-       
-             
-       
+
+
+
     private static final Map<String, VerifiedLevelInfo> VERIFIED_LEVEL_MAP = new HashMap<>();
 
     static {
-                                     
+
         VERIFIED_TYPE_MAP.put("individual", new VerifiedTypeInfo("个人音乐人", "icon-user", "#409eff"));
         VERIFIED_TYPE_MAP.put("band", new VerifiedTypeInfo("乐队", "icon-microphone", "#67c23a"));
         VERIFIED_TYPE_MAP.put("label", new VerifiedTypeInfo("唱片公司", "icon-office-building", "#e6a23c"));
 
-                                   
+
         VERIFIED_LEVEL_MAP.put("normal", new VerifiedLevelInfo("普通认证", 1));
         VERIFIED_LEVEL_MAP.put("premium", new VerifiedLevelInfo("优质认证", 2));
         VERIFIED_LEVEL_MAP.put("gold", new VerifiedLevelInfo("金牌认证", 3));
@@ -78,7 +78,7 @@ public class VerifiedServiceImpl implements VerifiedService {
         vo.setIsVerified(user.getIsOfficial() != null && user.getIsOfficial() == 1);
 
         if (vo.getIsVerified()) {
-                                    
+
             if (user.getCreatorType() != null) {
                 VerifiedTypeInfo typeInfo = VERIFIED_TYPE_MAP.get(user.getCreatorType());
                 if (typeInfo != null) {
@@ -89,14 +89,14 @@ public class VerifiedServiceImpl implements VerifiedService {
                 }
             }
 
-                      
+
             vo.setVerifiedLevel("normal");
             VerifiedLevelInfo levelInfo = VERIFIED_LEVEL_MAP.get("normal");
             if (levelInfo != null) {
                 vo.setVerifiedLevelName(levelInfo.name);
             }
 
-                          
+
             vo.setVerifiedReason(user.getCreatorNote());
             vo.setVerifiedTime(user.getCreatorApplyTime());
         }
@@ -125,7 +125,7 @@ public class VerifiedServiceImpl implements VerifiedService {
             wrapper.eq(User::getCreatorType, type);
         }
 
-                                
+
 
         wrapper.orderByDesc(User::getCreatorApplyTime);
 
@@ -205,18 +205,18 @@ public class VerifiedServiceImpl implements VerifiedService {
                 null, null, null, true);
     }
 
-       
-               
-       
+
+
+
     private VerifiedInfoVO createEmptyVerifiedInfo() {
         VerifiedInfoVO vo = new VerifiedInfoVO();
         vo.setIsVerified(false);
         return vo;
     }
 
-       
-              
-       
+
+
+
     private List<PublicUserVO> convertToPublicVOList(List<User> users,
                                                      Map<Long, LocalDateTime> vipExpirations) {
         List<PublicUserVO> result = new ArrayList<>();
@@ -287,9 +287,9 @@ public class VerifiedServiceImpl implements VerifiedService {
         return reason.trim();
     }
 
-       
-             
-       
+
+
+
     private static class VerifiedTypeInfo {
         String name;
         String icon;
@@ -302,9 +302,9 @@ public class VerifiedServiceImpl implements VerifiedService {
         }
     }
 
-       
-             
-       
+
+
+
     private static class VerifiedLevelInfo {
         String name;
         Integer level;

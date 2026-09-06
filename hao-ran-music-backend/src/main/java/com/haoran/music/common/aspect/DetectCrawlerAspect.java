@@ -1,7 +1,7 @@
-   
-                      
-                                                   
-   
+
+
+
+
 
 package com.haoran.music.common.aspect;
 
@@ -20,19 +20,19 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-   
-          
-  
-        
-               
-                  
-               
-            
-            
-                   
-  
-                           
-   
+
+
+
+
+
+
+
+
+
+
+
+
+
 @Slf4j
 @Aspect
 @Component
@@ -59,9 +59,9 @@ public class DetectCrawlerAspect {
     @Resource
     private ClientIpResolver clientIpResolver;
 
-       
-                            
-       
+
+
+
     @Around("@annotation(detectCrawler)")
     public Object detectCrawler(ProceedingJoinPoint joinPoint, DetectCrawler detectCrawler) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -72,19 +72,19 @@ public class DetectCrawlerAspect {
         HttpServletRequest request = attributes.getRequest();
         String uri = request.getRequestURI();
 
-                                   
+
         if (isPublicApiPath(uri, request.getMethod())) {
             log.debug("event=crawler_detection_skipped reason=public_api");
             return joinPoint.proceed();
         }
 
-                                    
+
         Long userId = (Long) request.getAttribute("userId");
 
-               
+
         CrawlerDetectionResult result = crawlerDetectionService.detectAndGetDetails(request, userId);
 
-                 
+
         String operation = detectCrawler.operation();
         String ip = clientIpResolver.resolve(request);
 
@@ -92,30 +92,30 @@ public class DetectCrawlerAspect {
         log.debug("event=crawler_detection_completed operation={} userId={} riskScore={} factorCount={}",
                 operation, userId, result.getRiskScore(), riskFactorCount);
 
-                  
+
         if (result.isCrawler()) {
             log.warn("event=crawler_request_blocked userId={} riskScore={}",
                     userId, result.getRiskScore());
 
-                            
+
             if (result.getRiskScore() >= 90) {
                 crawlerDetectionService.banIp(ip, 24, "高风险爬虫行为");
                 log.warn("event=crawler_ip_banned durationHours=24 riskScore={}", result.getRiskScore());
             }
 
-                          
+
             String message = detectCrawler.message();
             throw new BusinessException(403, message);
         }
 
-                    
+
         return joinPoint.proceed();
     }
 
-       
-                            
-          
-       
+
+
+
+
     private boolean isPublicApiPath(String uri, String method) {
         if ("GET".equalsIgnoreCase(method)
                 && (uri.matches("^/api/lyric/\\d+(?:/all)?$")

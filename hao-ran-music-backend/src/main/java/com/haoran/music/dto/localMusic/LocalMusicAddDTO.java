@@ -2,35 +2,35 @@ package com.haoran.music.dto.localMusic;
 
 import javax.validation.constraints.NotBlank;
 
-   
-                      
-                         
-   
+
+
+
+
 public class LocalMusicAddDTO {
 
-       
-                       
-       
+
+
+
     @NotBlank(message = "文件路径不能为空")
     private String filePath;
 
-       
-           
-       
+
+
+
     private String name;
 
-       
-           
-       
+
+
+
     private String artist;
 
-       
-           
-       
+
+
+
     private String album;
-     
-                                       
-     
+
+
+
   private Integer quality;
 
   public Integer getQuality() {

@@ -1,6 +1,6 @@
-   
-                      
-   
+
+
+
 package com.haoran.music.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -30,9 +30,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-   
-                                                     
-   
+
+
+
 @Slf4j
 @Service
 public class OnlineStatusService {
@@ -56,9 +56,9 @@ public class OnlineStatusService {
     private static final int DB_SYNC_INTERVAL_SECONDS = 300;
     private static final long REDIS_SCAN_COUNT = 1000L;
 
-       
-                                                                                            
-       
+
+
+
     public void updateActivity(Long userId) {
         if (userId == null) {
             return;
@@ -70,9 +70,9 @@ public class OnlineStatusService {
         updateOnlineActivity(userId, "http", null);
     }
 
-       
-                                                                            
-       
+
+
+
     public void updateUserOnlineActivity(Long userId) {
         if (userId == null) {
             return;
@@ -210,9 +210,9 @@ public class OnlineStatusService {
         return workTimeConfig.isWorkTime();
     }
 
-       
-                                                                                            
-       
+
+
+
     public boolean isOnline(Long userId) {
         if (userId == null || !workTimeConfig.isWorkTime()) {
             return false;
@@ -220,9 +220,9 @@ public class OnlineStatusService {
         return isUserOnline(userId);
     }
 
-       
-                                                                    
-       
+
+
+
     public boolean isUserOnline(Long userId) {
         if (userId == null) {
             return false;
@@ -238,9 +238,9 @@ public class OnlineStatusService {
                 || redisTemplate.opsForValue().get(wsHeartbeatKey(userId)) != null;
     }
 
-       
-                                                                        
-       
+
+
+
     public boolean isActive(Long userId) {
         if (userId == null || !workTimeConfig.isWorkTime()) {
             return false;

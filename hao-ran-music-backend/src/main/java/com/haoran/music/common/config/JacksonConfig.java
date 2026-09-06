@@ -20,19 +20,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-   
-                      
-                                                      
-  
-        
-                                                                             
-                                                    
-                               
-  
-        
-                             
-                                           
-   
+
+
+
+
+
+
+
+
+
+
+
+
+
 @Configuration
 public class JacksonConfig {
 
@@ -43,14 +43,14 @@ public class JacksonConfig {
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
 
-                  
+
         SimpleModule simpleModule = new SimpleModule();
-                            
+
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
         simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
         objectMapper.registerModule(simpleModule);
 
-                                                    
+
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
@@ -60,9 +60,9 @@ public class JacksonConfig {
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(dateFormatter));
         objectMapper.registerModule(javaTimeModule);
 
-                     
+
         objectMapper.disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                 
+
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         return objectMapper;

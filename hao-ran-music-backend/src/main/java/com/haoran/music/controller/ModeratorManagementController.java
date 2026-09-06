@@ -17,10 +17,10 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-   
-                      
-                        
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/moderator/admin")
@@ -30,9 +30,9 @@ public class ModeratorManagementController {
     @Autowired
     private ModeratorManagementService moderatorManagementService;
 
-       
-               
-       
+
+
+
     @PostMapping("/set/{userId}")
     public Result<Void> setAsModerator(
             @PathVariable Long userId,
@@ -43,18 +43,18 @@ public class ModeratorManagementController {
         return success ? Result.success() : Result.error(500, "设置失败");
     }
 
-       
-              
-       
+
+
+
     @PostMapping("/remove/{userId}")
     public Result<Void> removeModerator(@PathVariable Long userId) {
         boolean success = moderatorManagementService.removeModerator(userId);
         return success ? Result.success() : Result.error(500, "取消失败");
     }
 
-       
-              
-       
+
+
+
     @PostMapping("/status/{userId}")
     public Result<Void> updateModeratorStatus(
             @PathVariable Long userId,
@@ -64,9 +64,9 @@ public class ModeratorManagementController {
         return success ? Result.success() : Result.error(500, "更新失败");
     }
 
-       
-              
-       
+
+
+
     @PostMapping("/update/{userId}")
     public Result<Void> updateModeratorInfo(
             @PathVariable Long userId,
@@ -77,9 +77,9 @@ public class ModeratorManagementController {
         return success ? Result.success() : Result.error(500, "更新失败");
     }
 
-       
-                
-       
+
+
+
     @GetMapping("/list")
     public Result<List<ModeratorVO>> getAllModerators(
             @RequestParam(required = false) String status) {
@@ -88,9 +88,9 @@ public class ModeratorManagementController {
         return Result.success(moderators);
     }
 
-       
-                
-       
+
+
+
     @GetMapping("/page")
     public Result<IPage<ModeratorVO>> getModeratorPage(
             @RequestParam(required = false) String status,
@@ -100,27 +100,27 @@ public class ModeratorManagementController {
         return Result.success(page);
     }
 
-       
-              
-       
+
+
+
     @GetMapping("/detail/{userId}")
     public Result<ModeratorVO> getModeratorDetail(@PathVariable Long userId) {
         ModeratorVO moderator = moderatorManagementService.getModeratorDetail(userId);
         return moderator != null ? Result.success(moderator) : Result.error(404, "审核员不存在");
     }
 
-       
-                
-       
+
+
+
     @PostMapping("/reset-quota/{userId}")
     public Result<Void> resetTodayQuota(@PathVariable Long userId) {
         moderatorManagementService.resetTodayQuota(userId);
         return Result.success();
     }
 
-       
-              
-       
+
+
+
     @PostMapping("/batch-set")
     public Result<Map<String, Object>> batchSetAsModerator(@RequestBody Map<String, List<Long>> request) {
         List<Long> userIds = request.get("userIds");

@@ -1,7 +1,7 @@
-   
-                      
-                         
-   
+
+
+
+
 
 package com.haoran.music.common.util;
 
@@ -15,23 +15,23 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.Locale;
 
-   
-            
-                      
-   
+
+
+
+
 @Slf4j
 public class FileSecurityUtil {
 
-       
-                    
-       
+
+
+
     private static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList(
             "image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"
     );
 
-       
-                    
-       
+
+
+
     private static final List<String> IMAGE_MAGIC_NUMBERS = Arrays.asList(
             "FFD8FF",             
             "89504E47",           
@@ -39,33 +39,33 @@ public class FileSecurityUtil {
             "52494646"                    
     );
 
-       
-                 
-       
+
+
+
     private static final List<String> DANGEROUS_EXTENSIONS = Arrays.asList(
             "jsp", "jspx", "php", "php3", "php4", "phtml", "exe", "sh", "bat",
             "cmd", "js", "vbs", "hta", "com", "scr", "pif", "dll", "sys"
     );
 
-       
-                 
-       
+
+
+
     private static final int MAX_IMAGE_WIDTH = 4096;
     private static final int MAX_IMAGE_HEIGHT = 4096;
 
-       
-                           
-       
+
+
+
     private static final int MIN_IMAGE_SIZE = 10;
 
-       
-                 
-       
+
+
+
     private static final long MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024;        
 
-       
-           
-       
+
+
+
     public static class SecurityCheckResult {
         private boolean safe;
         private String message;
@@ -90,13 +90,13 @@ public class FileSecurityUtil {
         }
     }
 
-       
-             
-      
-                                
-                                 
-                   
-       
+
+
+
+
+
+
+
     public static SecurityCheckResult checkFileSecurity(File file, long maxSizeBytes) {
         if (file == null || !file.exists()) {
             return new SecurityCheckResult(false, "文件不存在", 0);
@@ -104,7 +104,7 @@ public class FileSecurityUtil {
 
         long fileSize = file.length();
 
-                    
+
         if (fileSize == 0) {
             return new SecurityCheckResult(false, "文件大小为0", fileSize);
         }
@@ -113,7 +113,7 @@ public class FileSecurityUtil {
                     String.format("文件大小超过限制: %d > %d", fileSize, maxSizeBytes), fileSize);
         }
 
-                     
+
         String fileName = file.getName().toLowerCase();
         for (String ext : DANGEROUS_EXTENSIONS) {
             if (fileName.endsWith("." + ext)) {
@@ -121,7 +121,7 @@ public class FileSecurityUtil {
             }
         }
 
-                             
+
         if (fileName.contains("..") || fileName.contains("/") || fileName.contains("\\")) {
             return new SecurityCheckResult(false, "非法文件名", fileSize);
         }
@@ -129,21 +129,21 @@ public class FileSecurityUtil {
         return new SecurityCheckResult(true, "检测通过", fileSize);
     }
 
-       
-                
-      
-                               
-                                       
-                   
-       
+
+
+
+
+
+
+
     public static SecurityCheckResult checkImageSecurity(File file, String contentType) {
         return checkImageSecurity(file, contentType, MAX_IMAGE_FILE_SIZE,
                 ALLOWED_IMAGE_TYPES, MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT);
     }
 
-       
-                                                                                    
-       
+
+
+
     public static SecurityCheckResult checkImageSecurity(File file, String contentType,
                                                         long maxSizeBytes,
                                                         List<String> allowedImageTypes,
@@ -153,7 +153,7 @@ public class FileSecurityUtil {
                 maxSizeBytes, allowedImageTypes, null, maxImageWidth, maxImageHeight);
     }
 
-                                                                                                             
+
     public static SecurityCheckResult checkImageSecurity(File file, String originalFileName,
                                                          String contentType, long maxSizeBytes,
                                                          List<String> allowedImageTypes,
@@ -240,12 +240,12 @@ public class FileSecurityUtil {
         }
     }
 
-       
-                   
-      
-                     
-                      
-       
+
+
+
+
+
+
     private static String getFileMagicNumber(File file) throws IOException {
         try (FileInputStream fis = new FileInputStream(file)) {
             byte[] header = new byte[12];
@@ -279,31 +279,31 @@ public class FileSecurityUtil {
         return null;
     }
 
-       
-                    
-      
-                            
-                      
-       
+
+
+
+
+
+
     public static String sanitizeFileName(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return "file";
         }
 
-                 
+
         String cleanName = new File(fileName).getName();
 
-                 
+
         cleanName = cleanName.replaceAll("[/\\\\:*?\"<>|]", "_");
 
-                  
+
         if (cleanName.length() > 100) {
             String extension = getFileExtension(cleanName);
             String nameWithoutExt = cleanName.substring(0, cleanName.lastIndexOf('.'));
             cleanName = nameWithoutExt.substring(0, 90) + extension;
         }
 
-                 
+
         if (cleanName.isEmpty() || cleanName.startsWith(".")) {
             cleanName = "file_" + System.currentTimeMillis() + getFileExtension(cleanName);
         }
@@ -311,12 +311,12 @@ public class FileSecurityUtil {
         return cleanName;
     }
 
-       
-              
-      
-                          
-                        
-       
+
+
+
+
+
+
     public static String getFileExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return "";
@@ -328,13 +328,13 @@ public class FileSecurityUtil {
         return fileName.substring(lastDotIndex);
     }
 
-       
-               
-      
-                                    
-                                        
-                     
-       
+
+
+
+
+
+
+
     public static String generateSafeFileName(String originalFileName, String prefix) {
         String extension = getFileExtension(originalFileName);
         String cleanPrefix = prefix != null ? prefix.replaceAll("[^a-zA-Z0-9_-]", "_") : "file";
@@ -342,32 +342,32 @@ public class FileSecurityUtil {
         return cleanPrefix + "_" + timestamp + "_" + java.util.UUID.randomUUID().toString().replace("-", "") + extension;
     }
 
-       
-                               
-                                           
-      
-                       
-                       
-       
+
+
+
+
+
+
+
     public static boolean containsSensitiveEXIF(File file) {
-                     
-                                 
+
+
         log.debug("event=image_exif_check_completed gpsMetadataDetected=false");
         return false;
     }
 
-       
-                     
-      
-                     
-                       
-       
+
+
+
+
+
+
     public static boolean containsScript(File file) {
         if (!file.getName().toLowerCase().endsWith(".svg")) {
             return false;
         }
 
-                      
+
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(file))) {
             String line;
             Pattern scriptPattern = Pattern.compile("<script[^>]*>.*?</script>",

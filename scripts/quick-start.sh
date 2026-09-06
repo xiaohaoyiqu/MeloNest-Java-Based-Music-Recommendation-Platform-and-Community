@@ -1,16 +1,16 @@
 #!/bin/bash
-                                                                               
-                 
-                     
-                  
-                         
-                                                                               
+
+
+
+
+
+
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-        
+
 if [ -f "${SCRIPT_DIR}/env.sh" ]; then
     source "${SCRIPT_DIR}/env.sh"
 else
@@ -23,7 +23,7 @@ export DB_PASSWORD="${DB_PASS}"
 export REDIS_PASSWORD
 export JWT_SECRET
 
-      
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -38,14 +38,14 @@ log_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
 trap 'log_error "启动失败（脚本第 ${LINENO} 行）"' ERR
 
-                                            
+
 run_local_script() {
     local script_name=$1
     shift
     bash "${SCRIPT_DIR}/${script_name}" "$@"
 }
 
-         
+
 check_ssh() {
     log_step "检查SSH连接..."
     for node in "${ALL_NODES[@]}"; do
@@ -62,7 +62,7 @@ check_ssh() {
     echo ""
 }
 
-             
+
 start_zk() {
     log_step "[1/8] 启动 ZooKeeper..."
     run_local_script "zookeeper.sh" start
@@ -70,7 +70,7 @@ start_zk() {
     echo -e "${GREEN}完成${NC}"
 }
 
-          
+
 start_hadoop() {
     log_step "[2/8] 启动 Hadoop..."
     run_local_script "hadoop.sh" start
@@ -78,7 +78,7 @@ start_hadoop() {
     echo -e "${GREEN}完成${NC}"
 }
 
-         
+
 start_kafka() {
     log_step "[3/8] 启动 Kafka..."
     run_local_script "kafka.sh" start
@@ -86,7 +86,7 @@ start_kafka() {
     echo -e "${GREEN}完成${NC}"
 }
 
-         
+
 start_redis() {
     log_step "[4/8] 启动 Redis..."
     run_local_script "redis.sh" start
@@ -94,7 +94,7 @@ start_redis() {
     echo -e "${GREEN}完成${NC}"
 }
 
-        
+
 start_hive() {
     log_step "[5/8] 启动 Hive..."
     run_local_script "hive.sh" start
@@ -102,7 +102,7 @@ start_hive() {
     echo -e "${GREEN}完成${NC}"
 }
 
-         
+
 start_spark() {
     log_step "[6/8] 启动 Spark..."
     run_local_script "spark.sh" start
@@ -110,7 +110,7 @@ start_spark() {
     echo -e "${GREEN}完成${NC}"
 }
 
-      
+
 start_backend() {
     log_step "[7/8] 启动后端..."
     pkill -f "^java.*hao-ran-music-backend-1.0.0.jar" 2>/dev/null || true
@@ -131,14 +131,14 @@ start_backend() {
     return 1
 }
 
-         
+
 start_nginx() {
     log_step "[8/8] 启动 Nginx..."
     run_local_script "nginx.sh" start
     echo -e "${GREEN}完成（node1控制 node1:3223、node2:8082、node3:8081）${NC}"
 }
 
-      
+
 show_status() {
     echo ""
     echo "=========================================="
@@ -154,7 +154,7 @@ show_status() {
     echo "=========================================="
 }
 
-     
+
 main() {
     echo ""
     echo "=========================================="

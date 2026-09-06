@@ -1,7 +1,7 @@
-   
-                      
-                      
-   
+
+
+
+
 
 package com.haoran.music.service.impl;
 
@@ -29,9 +29,9 @@ import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-   
-         
-   
+
+
+
 @Slf4j
 @Service
 public class ShareServiceImpl implements ShareService {
@@ -85,10 +85,10 @@ public class ShareServiceImpl implements ShareService {
             throw new IllegalArgumentException("资源不存在、不可见或不允许分享");
         }
 
-                  
+
         String shareCode = generateShareCode(type, resourceId);
 
-                       
+
         Map<String, Object> shareInfo = new HashMap<>();
         shareInfo.put("type", type);
         shareInfo.put("resourceId", resourceId);
@@ -98,10 +98,10 @@ public class ShareServiceImpl implements ShareService {
         String key = SHARE_KEY_PREFIX + shareCode;
         redisTemplate.opsForValue().set(key, shareInfo, SHARE_EXPIRE_HOURS, TimeUnit.HOURS);
 
-                
+
         initShareStats(type, resourceId);
 
-                  
+
         String shareUrl = buildShareUrl(shareCode);
         String qrCodeUrl = buildQrCodeUrl(shareUrl);
 
@@ -143,7 +143,7 @@ public class ShareServiceImpl implements ShareService {
         }
         Long resourceId = ((Number) resourceIdValue).longValue();
 
-                   
+
         Map<String, Object> resourceInfo = getResourceInfo(type, resourceId);
         if (resourceInfo != null) {
             resourceInfo.put("shareType", type);
@@ -170,11 +170,11 @@ public class ShareServiceImpl implements ShareService {
         String statsKey = SHARE_STATS_PREFIX + normalizedType + ":" + resourceId;
         String hashKey = "platform:" + normalizedPlatform;
 
-                   
+
         redisTemplate.opsForHash().increment(statsKey, hashKey, 1);
         redisTemplate.opsForHash().increment(statsKey, "total", 1);
 
-                 
+
         redisTemplate.expire(statsKey, 7, TimeUnit.DAYS);
         userStatisticsService.incrementInteraction(userId, "share", 1);
 
@@ -193,13 +193,13 @@ public class ShareServiceImpl implements ShareService {
             }
         }
 
-                       
+
         if (result.isEmpty()) {
             result.put("total", 0);
             result.put("views", 0);
         }
 
-                 
+
         String viewsKey = "share_views:" + type + ":" + resourceId;
         Object views = redisTemplate.opsForValue().get(viewsKey);
         if (views != null) {
@@ -271,7 +271,7 @@ public class ShareServiceImpl implements ShareService {
             String type = (String) shareInfo.get("type");
             Long resourceId = ((Number) shareInfo.get("resourceId")).longValue();
 
-                     
+
             String viewsKey = "share_views:" + type + ":" + resourceId;
             redisTemplate.opsForValue().increment(viewsKey);
             redisTemplate.expire(viewsKey, 7, TimeUnit.DAYS);
@@ -291,7 +291,7 @@ public class ShareServiceImpl implements ShareService {
             return false;
         }
 
-               
+
         Object creatorValue = shareInfo.get("creatorId");
         if (!(creatorValue instanceof Number)) {
             return false;
@@ -316,26 +316,26 @@ public class ShareServiceImpl implements ShareService {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key)) && getResourceByShareCode(shareCode) != null;
     }
 
-                                                     
 
-       
-               
-      
-                                                    
-                             
-                   
-       
+
+
+
+
+
+
+
+
     private boolean validateResource(String type, Long resourceId) {
         return getResourceInfo(type, resourceId) != null;
     }
 
-       
-               
-      
-                       
-                             
-                   
-       
+
+
+
+
+
+
+
     private Map<String, Object> getResourceInfo(String type, Long resourceId) {
         switch (type) {
             case "song":
@@ -398,13 +398,13 @@ public class ShareServiceImpl implements ShareService {
         return null;
     }
 
-       
-            
-      
-                       
-                             
-                  
-       
+
+
+
+
+
+
+
     private String generateShareCode(String type, Long resourceId) {
         byte[] randomBytes = new byte[18];
         for (int attempt = 0; attempt < 5; attempt++) {
@@ -446,34 +446,34 @@ public class ShareServiceImpl implements ShareService {
         return shareCode != null && shareCode.matches("[A-Za-z0-9_-]{8,64}");
     }
 
-       
-              
-      
-                           
-                    
-       
+
+
+
+
+
+
     private String buildShareUrl(String shareCode) {
         return "/share/" + shareCode;
     }
 
-       
-               
-      
-                            
-                     
-       
+
+
+
+
+
+
     private String buildQrCodeUrl(String shareUrl) {
-                        
-                            
+
+
         return shareUrl;
     }
 
-       
-              
-      
-                       
-                             
-       
+
+
+
+
+
+
     private void initShareStats(String type, Long resourceId) {
         String statsKey = SHARE_STATS_PREFIX + type + ":" + resourceId;
         if (!Boolean.TRUE.equals(redisTemplate.hasKey(statsKey))) {

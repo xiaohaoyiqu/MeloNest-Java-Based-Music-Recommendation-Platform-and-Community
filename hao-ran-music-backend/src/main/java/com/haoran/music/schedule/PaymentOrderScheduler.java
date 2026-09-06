@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.schedule;
 
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-   
-                           
-   
+
+
+
 @Slf4j
 @Component
 public class PaymentOrderScheduler {
@@ -26,20 +26,20 @@ public class PaymentOrderScheduler {
     private final PaymentConfig paymentConfig;
     private final String completionWorkerId = "payment-completion-" + UUID.randomUUID();
 
-       
-                       
-      
-                                        
-                                
-       
+
+
+
+
+
+
     public PaymentOrderScheduler(PaymentOrderService paymentOrderService, PaymentConfig paymentConfig) {
         this.paymentOrderService = paymentOrderService;
         this.paymentConfig = paymentConfig;
     }
 
-       
-                       
-       
+
+
+
     @Scheduled(cron = "${payment.order-timeout-cron}")
     public void handleExpiredOrders() {
         log.info("event=payment_expired_order_cleanup_started expireHours={}",
@@ -55,9 +55,9 @@ public class PaymentOrderScheduler {
         }
     }
 
-       
-                         
-       
+
+
+
     @Scheduled(cron = "${payment.order-cleanup-cron}")
     public void cleanOldCancelledOrders() {
         log.info("event=payment_cancelled_order_cleanup_started retentionDays={}",
@@ -74,9 +74,9 @@ public class PaymentOrderScheduler {
         }
     }
 
-       
-                                                     
-       
+
+
+
     @Scheduled(cron = "${payment.completion-recovery.cron:0 */1 * * * ?}")
     public void recoverPendingCompletions() {
         PaymentConfig.CompletionRecovery recovery = paymentConfig.getCompletionRecovery();
@@ -95,19 +95,19 @@ public class PaymentOrderScheduler {
         }
     }
 
-       
-                       
-       
+
+
+
     @Scheduled(cron = "${payment.order-statistics-cron}")
     public void dailyOrderStatistics() {
         log.info("event=payment_daily_statistics_started");
 
         try {
             LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-                               
-                       
-                       
-                       
+
+
+
+
             log.info("event=payment_daily_statistics_completed statisticsDate={}",
                 yesterday.toLocalDate());
 

@@ -9,10 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-   
-                      
-                      
-   
+
+
+
+
 @Data
 
 public class AlbumVO implements Serializable {
@@ -43,17 +43,17 @@ public class AlbumVO implements Serializable {
 
     private String artistIds;
 
-       
-                              
-       
+
+
+
     private Long artistId;
 
 
     private String artistNames;
 
-       
-             
-       
+
+
+
     private String artistAvatar;
 
 
@@ -92,9 +92,9 @@ public class AlbumVO implements Serializable {
 
     private LocalDateTime createTime;
 
-       
-             
-       
+
+
+
     @Data
 
     public static class SongSimpleVO implements Serializable {
@@ -142,34 +142,34 @@ public class AlbumVO implements Serializable {
         @JsonFormat(shape = JsonFormat.Shape.NUMBER)
         private Long albumId;
 
-                      
+
         private Integer albumTrackNo;
 
         private Integer isSingle;
 
-           
-                       
-           
+
+
+
         private String artistIds;
 
-           
-                     
-           
+
+
+
         private String artistNames;
 
-           
-                                                                                                        
-           
+
+
+
         private String versionType;
 
-           
-                                
-           
+
+
+
         private String versionName;
 
-           
-             
-           
+
+
+
         private String language;
 
         public String getUrlStandard() {
@@ -185,26 +185,26 @@ public class AlbumVO implements Serializable {
         }
     }
 
-                                                       
 
-       
-                      
-       
+
+
+
+
     private Integer allowDownload;
 
-       
-                      
-       
+
+
+
     private Integer allowComment;
 
-       
-                      
-       
+
+
+
     private Integer allowShare;
 
-       
-                        
-       
+
+
+
     @Data
 
     public static class AlbumSimpleVO implements Serializable {

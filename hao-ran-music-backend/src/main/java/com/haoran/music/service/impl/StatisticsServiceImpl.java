@@ -22,10 +22,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-   
-                      
-                             
-   
+
+
+
+
 @Slf4j
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
@@ -94,7 +94,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     public StatisticsService.PlatformOverviewVO getOverview() {
         StatisticsService.PlatformOverviewVO result = new StatisticsService.PlatformOverviewVO();
 
-                                           
+
         LambdaQueryWrapper<User> totalUserWrapper = new LambdaQueryWrapper<>();
         totalUserWrapper.eq(User::getDeleted, 0);
         Long totalUsers = userMapper.selectCount(totalUserWrapper);
@@ -103,7 +103,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         result.setPublicUsers(publicUsers);
         result.setRestrictedUsers(Math.max(0L, totalUsers - publicUsers));
 
-                 
+
         LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.eq(User::getDeleted, 0)
@@ -111,39 +111,39 @@ public class StatisticsServiceImpl implements StatisticsService {
         Long todayNewUsers = userMapper.selectCount(userWrapper);
         result.setTodayNewUsers(todayNewUsers);
 
-               
+
         Long totalSongs = songMapper.selectCount(null);
         result.setTotalSongs(totalSongs);
 
-               
+
         result.setTotalMvs(mvMapper.selectCount(null));
 
-                
+
         QueryWrapper<SongPlayRecord> totalPlayWrapper = new QueryWrapper<>();
         totalPlayWrapper.apply(publicActorExists("user_id"));
         Long totalPlays = songPlayRecordMapper.selectCount(totalPlayWrapper);
         result.setTotalPlays(totalPlays);
 
-                 
+
         LambdaQueryWrapper<SongPlayRecord> playWrapper = new LambdaQueryWrapper<>();
         playWrapper.ge(SongPlayRecord::getCreateTime, todayStart)
                 .apply(publicActorExists("user_id"));
         Long todayPlays = songPlayRecordMapper.selectCount(playWrapper);
         result.setTodayPlays(todayPlays);
 
-               
+
         QueryWrapper<Comment> totalCommentWrapper = new QueryWrapper<>();
         totalCommentWrapper.apply(publicActorExists("user_id"));
         Long totalComments = commentMapper.selectCount(totalCommentWrapper);
         result.setTotalComments(totalComments);
 
-                                                  
-                                     
+
+
         Long songFavorites = songLikeMapper.countPublicActiveSongFavorites();
         Long nonSongFavorites = userFavoriteMapper.countPublicActiveNonSongFavorites();
         result.setTotalFavorites(defaultLong(songFavorites) + defaultLong(nonSongFavorites));
 
-                                              
+
         LambdaQueryWrapper<User> vipWrapper = UserAccountStatusUtil.interactableUserQuery()
                 .inSql(User::getId,
                         "SELECT user_id FROM user_vip WHERE vip_status = 1 " +
@@ -151,7 +151,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         Long vipUsers = userMapper.selectCount(vipWrapper);
         result.setVipUsers(vipUsers);
 
-                                                 
+
         QueryWrapper<PaymentOrder> paymentWrapper = new QueryWrapper<>();
         paymentWrapper.select("COALESCE(SUM(amount), 0) AS today_amount")
                 .ge("review_time", todayStart)
@@ -174,11 +174,11 @@ public class StatisticsServiceImpl implements StatisticsService {
             return result;
         }
 
-                            
+
         LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-                           
+
         int daysToAdd = "week".equals(interval) ? 7 : "month".equals(interval) ? 30 : 1;
 
         LambdaQueryWrapper<User> wrapper = UserAccountStatusUtil.publicStatsUserQuery()
@@ -207,7 +207,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             vo.setDate(currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             vo.setCount(count);
 
-                    
+
             if (previousCount > 0) {
                 double growthRate = ((double) (count - previousCount) / previousCount) * 100;
                 vo.setGrowthRate(Math.round(growthRate * 100.0) / 100.0);
@@ -228,19 +228,19 @@ public class StatisticsServiceImpl implements StatisticsService {
     public StatisticsService.ContentStatisticsVO getContentStatistics() {
         StatisticsService.ContentStatisticsVO result = new StatisticsService.ContentStatisticsVO();
 
-               
+
         result.setSongCount(songMapper.selectCount(null));
 
-               
+
         result.setAlbumCount(albumMapper.selectCount(null));
 
-               
+
         result.setMvCount(mvMapper.selectCount(null));
 
-               
+
         result.setPlaylistCount(playlistMapper.selectCount(null));
 
-                
+
         LambdaQueryWrapper<Creator> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Creator::getStatus, "active")
                 .eq(Creator::getDeleted, 0);                
@@ -249,21 +249,21 @@ public class StatisticsServiceImpl implements StatisticsService {
         return result;
     }
 
-       
-       
+
+
     @Override
     public StatisticsService.InteractionStatisticsVO getInteractionStatistics() {
         StatisticsService.InteractionStatisticsVO result = new StatisticsService.InteractionStatisticsVO();
 
         LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
 
-                
+
         LambdaQueryWrapper<Comment> commentWrapper = new LambdaQueryWrapper<>();
         commentWrapper.ge(Comment::getCreateTime, todayStart)
                 .apply(publicActorExists("user_id"));
         result.setTodayComments(commentMapper.selectCount(commentWrapper));
 
-                                           
+
         LambdaQueryWrapper<SongLike> likeWrapper = new LambdaQueryWrapper<>();
         likeWrapper.eq(SongLike::getIsLike, 1)
                 .ge(SongLike::getCreateTime, todayStart)
@@ -271,13 +271,13 @@ public class StatisticsServiceImpl implements StatisticsService {
         Long todayLikes = songLikeMapper.selectCount(likeWrapper);
         result.setTodayLikes(todayLikes != null ? todayLikes : 0L);
 
-                
+
         LambdaQueryWrapper<UserFavorite> favoriteWrapper = new LambdaQueryWrapper<>();
         favoriteWrapper.ge(UserFavorite::getCreateTime, todayStart)
                 .apply(publicActorExists("user_id"));
         result.setTodayFavorites(userFavoriteMapper.selectCount(favoriteWrapper));
 
-                                  
+
         LambdaQueryWrapper<ShareRecord> shareWrapper = new LambdaQueryWrapper<>();
         shareWrapper.ge(ShareRecord::getCreateTime, todayStart)
                 .apply(publicActorExists("user_id"));
@@ -349,7 +349,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         int actualLimit = limit != null && limit > 0 ? Math.min(limit, 100) : 10;
         int candidateLimit = Math.min(actualLimit * 3, 300);
 
-                         
+
         LambdaQueryWrapper<Song> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Song::getStatus, 1)
                 .eq(Song::getDeleted, 0)
@@ -374,14 +374,14 @@ public class StatisticsServiceImpl implements StatisticsService {
         return result;
     }
 
-       
-       
+
+
     @Override
     public List<StatisticsService.HotCreatorVO> getHotCreators(Integer limit) {
         int actualLimit = limit != null && limit > 0 ? Math.min(limit, 100) : 10;
         int candidateLimit = Math.min(actualLimit * 3, 300);
 
-                              
+
         LambdaQueryWrapper<Creator> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Creator::getStatus, "active")
                 .eq(Creator::getDeleted, 0)                
@@ -412,7 +412,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             StatisticsService.HotCreatorVO vo = new StatisticsService.HotCreatorVO();
             vo.setId(creator.getUserId());
 
-                               
+
             User user = userMap.get(creator.getUserId());
             if (user != null) {
                 vo.setNickname(user.getNickname() != null ? user.getNickname() : "用户" + creator.getUserId());
@@ -425,7 +425,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
             vo.setWorkCount(workCountMap.getOrDefault(creator.getUserId(), 0L));
 
-                                             
+
             vo.setTotalPlays(0L);
             vo.setRank(i + 1);
             result.add(vo);
@@ -510,7 +510,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         return value == null ? 0L : value;
     }
 
-                                                       
+
 
     @Override
     public Map<String, Object> getAuditOverview(String startTime, String endTime, Long moderatorId) {
@@ -740,11 +740,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
         return value;
     }
-                                                     
 
-       
-                
-       
+
+
+
+
     private LocalDateTime parseDateTime(String dateTimeStr) {
         if (dateTimeStr == null || dateTimeStr.isEmpty()) {
             return null;

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-   
-                      
-                     
-   
+
+
+
+
 
 @RestController
 @RequestMapping("/album")
@@ -25,12 +25,12 @@ public class AlbumController {
     @Resource
     private AlbumService albumService;
 
-       
-             
-      
-                     
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取专辑详情")
 
     @GetMapping("/info/{id}")
@@ -40,16 +40,16 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-               
-      
-                            
-                                                        
-                       
-                        
-                                         
-                   
-       
+
+
+
+
+
+
+
+
+
+
     @ApiLog("查询专辑列表")
     @DetectCrawler(operation = "查询专辑列表", checkReferer = true)
 
@@ -65,12 +65,12 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-               
-      
-                           
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取歌手专辑列表")
 
     @GetMapping("/artist/{artistId}")
@@ -80,12 +80,12 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-              
-      
-                            
-                    
-       
+
+
+
+
+
+
     @ApiLog("获取新专辑列表")
 
     @GetMapping("/new")
@@ -95,13 +95,13 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-             
-      
-                                             
-                        
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("获取热门专辑")
 
     @GetMapping("/hot")
@@ -112,12 +112,12 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-           
-      
-                          
-                 
-       
+
+
+
+
+
+
     @ApiLog("收藏专辑")
 
     @PostMapping("/favorite/{albumId}")
@@ -130,12 +130,12 @@ public class AlbumController {
         return Result.success();
     }
 
-       
-             
-      
-                          
-                 
-       
+
+
+
+
+
+
     @ApiLog("取消收藏专辑")
 
     @DeleteMapping("/favorite/{albumId}")
@@ -148,12 +148,12 @@ public class AlbumController {
         return Result.success();
     }
 
-       
-                  
-      
-                         
-                      
-       
+
+
+
+
+
+
     @ApiLog("获取收藏专辑列表")
 
     @GetMapping("/favorites")
@@ -166,12 +166,12 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-               
-      
-                          
-                   
-       
+
+
+
+
+
+
     @ApiLog("获取专辑歌曲列表")
 
     @GetMapping("/{albumId}/songs")
@@ -181,13 +181,13 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-               
-      
-                          
-                          
-                     
-       
+
+
+
+
+
+
+
     @ApiLog("获取相似专辑推荐")
     @GetMapping("/{albumId}/similar")
     public Result<List<AlbumVO>> getSimilarAlbums(@PathVariable("albumId") Long albumId,
@@ -196,13 +196,13 @@ public class AlbumController {
         return Result.success(result);
     }
 
-       
-                   
-      
-                          
-                          
-                        
-       
+
+
+
+
+
+
+
     @ApiLog("获取艺术家其他专辑推荐")
     @GetMapping("/{albumId}/artist-albums")
     public Result<List<AlbumVO>> getArtistOtherAlbums(@PathVariable("albumId") Long albumId,

@@ -13,28 +13,28 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-   
-          
-                                  
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 public final class ConvertHelper {
 
     private ConvertHelper() {
-                    
+
     }
 
-       
-                   
-      
-                         
-                        
-                         
-                         
-                   
-       
+
+
+
+
+
+
+
+
+
     public static <E, V> V toVO(E entity, Class<V> clazz) {
         if (ObjectUtils.isEmpty(entity)) {
             return null;
@@ -42,15 +42,15 @@ public final class ConvertHelper {
         return BeanUtil.copyProperties(entity, clazz);
     }
 
-       
-                   
-      
-                        
-                           
-                        
-                        
-                       
-       
+
+
+
+
+
+
+
+
+
     public static <V, E> E toEntity(V vo, Class<E> clazz) {
         if (ObjectUtils.isEmpty(vo)) {
             return null;
@@ -58,15 +58,15 @@ public final class ConvertHelper {
         return BeanUtil.copyProperties(vo, clazz);
     }
 
-       
-                         
-      
-                               
-                          
-                           
-                           
-                   
-       
+
+
+
+
+
+
+
+
+
     public static <E, V> List<V> toVOList(List<E> entities, Class<V> clazz) {
         if (ObjectUtils.isEmpty(entities)) {
             return Collections.emptyList();
@@ -82,15 +82,15 @@ public final class ConvertHelper {
         return result;
     }
 
-       
-                    
-      
-                                   
-                              
-                              
-                              
-                   
-       
+
+
+
+
+
+
+
+
+
     public static <E, V> List<V> toVOList(List<E> entities, Function<E, V> converter) {
         if (ObjectUtils.isEmpty(entities)) {
             return Collections.emptyList();
@@ -106,15 +106,15 @@ public final class ConvertHelper {
         return result;
     }
 
-       
-                       
-      
-                            
-                       
-                        
-                        
-                   
-       
+
+
+
+
+
+
+
+
+
     public static <E, V> IPage<V> toVOPage(IPage<E> page, Class<V> clazz) {
         if (page == null || ObjectUtils.isEmpty(page.getRecords())) {
             Page<V> emptyPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
@@ -125,15 +125,15 @@ public final class ConvertHelper {
         return page.convert(entity -> toVO(entity, clazz));
     }
 
-       
-                    
-      
-                                
-                            
-                            
-                            
-                   
-       
+
+
+
+
+
+
+
+
+
     public static <E, V> IPage<V> toVOPage(IPage<E> page, Function<E, V> converter) {
         if (page == null || ObjectUtils.isEmpty(page.getRecords())) {
             long current = page != null ? page.getCurrent() : 1;
@@ -147,22 +147,22 @@ public final class ConvertHelper {
         return page.convert(converter);
     }
 
-       
-                                
-      
-                               
-                                 
-                                            
-                                 
-                               
-                               
-       
+
+
+
+
+
+
+
+
+
+
     public static <V, ID> void setFieldFromSet(List<V> voList,
                                                   Function<V, ID> idExtractor,
                                                   Set<ID> idSet,
                                                   BiConsumer<V, Boolean> setter) {
         if (ObjectUtils.isEmpty(voList) || ObjectUtils.isEmpty(idSet)) {
-                                    
+
             if (ObjectUtils.isNotEmpty(voList)) {
                 for (V vo : voList) {
                     setter.accept(vo, false);
@@ -177,15 +177,15 @@ public final class ConvertHelper {
         }
     }
 
-       
-               
-                    
-      
-                              
-                            
-                             
-                       
-       
+
+
+
+
+
+
+
+
+
     public static <V> List<V> cloneVOList(List<V> sourceList, Class<V> clazz) {
         if (ObjectUtils.isEmpty(sourceList)) {
             return Collections.emptyList();
@@ -199,15 +199,15 @@ public final class ConvertHelper {
         return result;
     }
 
-       
-                   
-      
-                              
-                                
-                              
-                              
-                   
-       
+
+
+
+
+
+
+
+
+
     public static <V, ID> List<ID> extractIds(List<V> voList, Function<V, ID> idExtractor) {
         if (ObjectUtils.isEmpty(voList)) {
             return Collections.emptyList();
@@ -219,15 +219,15 @@ public final class ConvertHelper {
                 .collect(Collectors.toList());
     }
 
-       
-                   
-      
-                              
-                                
-                              
-                              
-                   
-       
+
+
+
+
+
+
+
+
+
     public static <V, ID> Set<ID> extractIdSet(List<V> voList, Function<V, ID> idExtractor) {
         if (ObjectUtils.isEmpty(voList)) {
             return Collections.emptySet();
@@ -239,31 +239,31 @@ public final class ConvertHelper {
                 .collect(Collectors.toSet());
     }
 
-       
-              
-      
-                       
-                        
-                       
-                        
-                    
-       
+
+
+
+
+
+
+
+
+
     public static <V> IPage<V> emptyPage(long page, long size, Class<V> clazz) {
         Page<V> emptyPage = new Page<>(page, size, 0);
         emptyPage.setRecords(Collections.emptyList());
         return emptyPage;
     }
 
-       
-               
-      
-                        
-                       
-                        
-                       
-                        
-                   
-       
+
+
+
+
+
+
+
+
+
+
     public static <V> IPage<V> listToPage(List<V> list, long page, long size, Class<V> clazz) {
         if (ObjectUtils.isEmpty(list)) {
             return emptyPage(page, size, clazz);
@@ -283,13 +283,13 @@ public final class ConvertHelper {
         return resultPage;
     }
 
-       
-                             
-                            
-      
-                      
-                       
-       
+
+
+
+
+
+
+
     public static <T> String idsToSqlString(Set<T> ids) {
         if (ObjectUtils.isEmpty(ids)) {
             return "";
@@ -300,12 +300,12 @@ public final class ConvertHelper {
                 .collect(Collectors.joining(","));
     }
 
-       
-                             
-      
-                      
-                       
-       
+
+
+
+
+
+
     public static <T> String idsToSqlString(List<T> ids) {
         if (ObjectUtils.isEmpty(ids)) {
             return "";
@@ -316,14 +316,14 @@ public final class ConvertHelper {
                 .collect(Collectors.joining(","));
     }
 
-       
-              
-                         
-      
-                              
-                              
-                     
-       
+
+
+
+
+
+
+
+
     public static Integer toInteger(String value, Integer defaultValue) {
         if (ObjectUtils.isEmpty(value)) {
             return defaultValue;
@@ -335,13 +335,13 @@ public final class ConvertHelper {
         }
     }
 
-       
-               
-      
-                               
-                              
-                      
-       
+
+
+
+
+
+
+
     public static Long toLong(String value, Long defaultValue) {
         if (ObjectUtils.isEmpty(value)) {
             return defaultValue;
@@ -353,13 +353,13 @@ public final class ConvertHelper {
         }
     }
 
-       
-               
-      
-                               
-                              
-                      
-       
+
+
+
+
+
+
+
     public static Boolean toBoolean(String value, Boolean defaultValue) {
         if (ObjectUtils.isEmpty(value)) {
             return defaultValue;
@@ -372,17 +372,17 @@ public final class ConvertHelper {
         return defaultValue;
     }
 
-       
-                      
-      
-                              
-                             
-                              
-                              
-                              
-                              
-                   
-       
+
+
+
+
+
+
+
+
+
+
+
     public static <E, V> IPage<V> toPage(List<E> list,
                                            long currentPage,
                                            long pageSize,

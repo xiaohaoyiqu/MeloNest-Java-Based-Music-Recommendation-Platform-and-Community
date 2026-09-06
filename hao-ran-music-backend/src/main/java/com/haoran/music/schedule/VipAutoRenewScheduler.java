@@ -1,7 +1,7 @@
-   
-                      
-                           
-   
+
+
+
+
 package com.haoran.music.schedule;
 
 import com.haoran.music.entity.UserVip;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 
-   
-                             
-   
+
+
+
 @Slf4j
 @Component
 public class VipAutoRenewScheduler {
@@ -24,21 +24,21 @@ public class VipAutoRenewScheduler {
     private final UserVipMapper userVipMapper;
     private final UserVipService userVipService;
 
-       
-                         
-      
-                                       
-                                     
-       
+
+
+
+
+
+
     public VipAutoRenewScheduler(UserVipMapper userVipMapper,
                                   UserVipService userVipService) {
         this.userVipMapper = userVipMapper;
         this.userVipService = userVipService;
     }
 
-       
-                                 
-       
+
+
+
     @Scheduled(cron = "${schedule.vip.auto-renew-cron}")
     public void processAutoRenew() {
         log.info("event=vip_auto_renew_started trigger=scheduled");
@@ -51,9 +51,9 @@ public class VipAutoRenewScheduler {
         }
     }
 
-       
-                                  
-       
+
+
+
     @Scheduled(cron = "${schedule.vip.expiring-reminder-cron}")
     public void sendExpiringReminder() {
         log.info("event=vip_expiration_reminder_scan_started trigger=scheduled");
@@ -63,7 +63,7 @@ public class VipAutoRenewScheduler {
 
             List<UserVip> expiringVips = userVipMapper.selectExpiringVipsForReminder(now, threeDaysLater);
 
-                                           
+
             log.info("event=vip_expiration_reminder_scan_completed candidateCount={}",
                 expiringVips.size());
         } catch (Exception e) {
@@ -72,9 +72,9 @@ public class VipAutoRenewScheduler {
         }
     }
 
-       
-                       
-       
+
+
+
     @Scheduled(cron = "${schedule.vip.expired-process-cron}")
     public void processExpiredVips() {
         log.info("event=vip_expired_status_update_started trigger=scheduled");

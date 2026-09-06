@@ -1,48 +1,48 @@
-   
-                      
-                                                                    
-   
+
+
+
+
 package com.haoran.music.common.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-   
-                                                                                  
-   
+
+
+
 @Data
 @Component
 @ConfigurationProperties(prefix = "verify-code")
 public class VerifyCodeConfig {
 
-                                       
+
     private Boolean enabled = true;
 
-       
-                                       
-       
+
+
+
     private Integer expireSeconds = 300;
 
-       
-                                                               
-       
+
+
+
     private Integer arithmeticMaxOperand = 10;
 
-       
-                               
-       
+
+
+
     private Integer smsLength = 6;
 
-       
-                                 
-       
+
+
+
     private Integer emailLength = 6;
 
-                                        
+
     private Image image = new Image();
 
-                                                                            
+
     private Slide slide = new Slide();
 
     @Data

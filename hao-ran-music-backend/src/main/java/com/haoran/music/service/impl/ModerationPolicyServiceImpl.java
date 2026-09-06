@@ -19,10 +19,10 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-   
-                      
-                          
-   
+
+
+
+
 @Slf4j
 @Service
 public class ModerationPolicyServiceImpl extends ServiceImpl<ModerationPolicyMapper, ModerationPolicy>
@@ -37,9 +37,9 @@ public class ModerationPolicyServiceImpl extends ServiceImpl<ModerationPolicyMap
     @Autowired
     private ModerationMapper moderationMapper;
 
-       
-             
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePolicy(String policyCode, String policyName, String policyContent,
@@ -60,7 +60,7 @@ public class ModerationPolicyServiceImpl extends ServiceImpl<ModerationPolicyMap
         log.info("event=moderation_policy_update_started policyCode={} affectScope={} reauditRequired={}",
                 normalizedCode, normalizedScope, reauditRequired);
 
-                   
+
         boolean shouldReaudit = Boolean.TRUE.equals(reauditRequired);
 
         ModerationPolicy policy = new ModerationPolicy();
@@ -74,7 +74,7 @@ public class ModerationPolicyServiceImpl extends ServiceImpl<ModerationPolicyMap
             throw new BusinessException("审核规则写入失败");
         }
 
-                           
+
         if (shouldReaudit) {
             triggerReaudit(policy);
         }
@@ -83,9 +83,9 @@ public class ModerationPolicyServiceImpl extends ServiceImpl<ModerationPolicyMap
                 policy.getId(), normalizedCode, normalizedScope);
     }
 
-       
-             
-       
+
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void triggerReaudit(ModerationPolicy policy) {

@@ -12,11 +12,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-   
-                                                                                      
-  
-                      
-   
+
+
+
+
+
 public final class RecommendationModelArtifactValidator {
 
     private static final int CURRENT_SCHEMA_VERSION = 2;

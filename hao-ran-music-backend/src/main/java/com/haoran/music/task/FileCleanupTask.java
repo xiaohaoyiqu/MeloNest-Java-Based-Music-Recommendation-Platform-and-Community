@@ -1,7 +1,7 @@
-   
-                      
-                        
-   
+
+
+
+
 
 package com.haoran.music.task;
 
@@ -17,10 +17,10 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-   
-           
-                 
-   
+
+
+
+
 @Slf4j
 @Component
 public class FileCleanupTask {
@@ -29,19 +29,19 @@ public class FileCleanupTask {
     private final MessageService messageService;
     private final PostMediaConfig postMediaConfig;
 
-       
-                     
-       
+
+
+
     private static final int EMOJI_RETENTION_DAYS = 30;
 
-       
-                       
-       
+
+
+
     private static final int MESSAGE_RETENTION_DAYS = 180;
 
-       
-                
-       
+
+
+
     private static final int TEMP_FILE_RETENTION_HOURS = 24;
 
     public FileCleanupTask(EmojiService emojiService, MessageService messageService, PostMediaConfig postMediaConfig) {
@@ -50,23 +50,23 @@ public class FileCleanupTask {
         this.postMediaConfig = postMediaConfig;
     }
 
-       
-                     
-                           
-       
+
+
+
+
     @Scheduled(cron = "${schedule.task.file-cleanup.daily-cron}")
     public void dailyCleanup() {
         log.info("event=file_cleanup_daily_started");
 
         try {
-                            
+
             cleanupExpiredKeywords();
 
-                                       
-                                   
+
+
             cleanupOrphanedEmojis();
 
-                        
+
             logCleanupSummary();
 
         } catch (Exception e) {
@@ -76,18 +76,18 @@ public class FileCleanupTask {
         log.info("event=file_cleanup_daily_completed");
     }
 
-       
-                    
-       
+
+
+
     @Scheduled(cron = "${schedule.task.file-cleanup.weekly-deep-cron}")
     public void weeklyDeepCleanup() {
         log.info("event=file_cleanup_weekly_started");
 
         try {
-                          
+
             checkTableFragmentation();
 
-                        
+
             checkEmojiUsage();
 
         } catch (Exception e) {
@@ -97,9 +97,9 @@ public class FileCleanupTask {
         log.info("event=file_cleanup_weekly_completed");
     }
 
-       
-                    
-       
+
+
+
     @Scheduled(cron = "${schedule.task.file-cleanup.hourly-temp-cron}")
     public void hourlyTempCleanup() {
         log.debug("event=file_cleanup_temp_started");
@@ -111,13 +111,13 @@ public class FileCleanupTask {
         }
     }
 
-       
-                      
-      
-                          
-                                  
-                     
-  
+
+
+
+
+
+
+
     private int cleanupLocalDirectory(String dirPath, int retentionHours) {
         if (ObjectUtils.isEmpty(dirPath)) {
             return 0;
@@ -141,10 +141,10 @@ public class FileCleanupTask {
         return count;
     }
 
-       
-                 
-                           
-       
+
+
+
+
     private void cleanupExpiredKeywords() {
         try {
             emojiService.getEmojiStatistics();
@@ -154,12 +154,12 @@ public class FileCleanupTask {
         }
     }
 
-       
-                                 
-       
+
+
+
     private void cleanupOrphanedEmojis() {
         try {
-                       
+
             emojiService.getEmojiStatistics();
             log.info("event=file_cleanup_emoji_orphan_check_completed");
         } catch (Exception e) {
@@ -167,16 +167,16 @@ public class FileCleanupTask {
         }
     }
 
-       
-              
-       
+
+
+
     private void checkTableFragmentation() {
         log.info("event=file_cleanup_table_fragmentation_check_completed");
     }
 
-       
-                
-       
+
+
+
     private void checkEmojiUsage() {
         try {
             emojiService.getEmojiStatistics();
@@ -186,20 +186,20 @@ public class FileCleanupTask {
         }
     }
 
-       
-             
-       
+
+
+
     private void logCleanupSummary() {
         log.info("event=file_cleanup_summary tempRetentionHours={} emojiRetentionDays={} messageRetentionDays={}",
                 TEMP_FILE_RETENTION_HOURS, EMOJI_RETENTION_DAYS, MESSAGE_RETENTION_DAYS);
     }
 
-       
-                     
-      
-                                                
-                   
-       
+
+
+
+
+
+
     public Map<String, Object> manualCleanup(String cleanupType) {
         log.info("event=file_cleanup_manual_requested");
 

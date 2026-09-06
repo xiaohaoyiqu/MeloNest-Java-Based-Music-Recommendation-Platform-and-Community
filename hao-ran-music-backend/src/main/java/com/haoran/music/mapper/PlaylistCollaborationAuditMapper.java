@@ -8,11 +8,11 @@ import org.apache.ibatis.annotations.Select;
 import java.util.Map;
 import java.util.List;
 
-   
-                                  
-  
-                      
-   
+
+
+
+
+
 @Mapper
 public interface PlaylistCollaborationAuditMapper {
 
@@ -36,13 +36,13 @@ public interface PlaylistCollaborationAuditMapper {
             + "FROM playlist_collaboration_audit WHERE event_id = #{eventId} LIMIT 1")
     Map<String, Object> selectByEventId(@Param("eventId") String eventId);
 
-       
-                       
-      
-                             
-                        
-                   
-       
+
+
+
+
+
+
+
     @Select("SELECT event_id AS eventId, playlist_id AS playlistId, actor_id AS actorId, "
             + "target_user_id AS targetUserId, event_type AS eventType, before_summary AS beforeSummary, "
             + "after_summary AS afterSummary, reason, create_time AS createTime "

@@ -1,7 +1,7 @@
-   
-                      
-                       
-   
+
+
+
+
 
 package com.haoran.music.controller;
 
@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.List;
 
-   
-          
-                                  
-   
+
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/feedback")
@@ -35,9 +35,9 @@ public class FeedbackController {
         this.feedbackService = feedbackService;
     }
 
-       
-           
-       
+
+
+
     @ApiLog("提交反馈")
     @PostMapping("/submit")
     public Result submitFeedback(HttpServletRequest request,
@@ -57,9 +57,9 @@ public class FeedbackController {
                 orderId, orderType, title, content, attachmentAssetIds));
     }
 
-       
-               
-       
+
+
+
     @ApiLog("获取反馈列表")
     @GetMapping("/my")
     public Result getMyFeedbacks(HttpServletRequest request,
@@ -72,9 +72,9 @@ public class FeedbackController {
                 status, page, size));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取反馈统计")
     @GetMapping("/statistics")
     public Result getFeedbackStatistics(HttpServletRequest request) {
@@ -82,9 +82,9 @@ public class FeedbackController {
         return Result.success(feedbackService.getFeedbackStatistics(userId));
     }
 
-       
-             
-       
+
+
+
     @ApiLog("获取反馈详情")
     @GetMapping("/{feedbackId}")
     public Result getFeedbackDetail(HttpServletRequest request,
@@ -96,9 +96,9 @@ public class FeedbackController {
         return Result.success(feedbackService.getFeedbackDetail(feedbackId, currentUserId));
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("获取待处理反馈")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @GetMapping("/pending")
@@ -108,9 +108,9 @@ public class FeedbackController {
         return Result.success(feedbackService.getPendingFeedbacks(feedbackType, page, size));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("处理反馈")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{feedbackId}/handle")
@@ -126,9 +126,9 @@ public class FeedbackController {
                 status, handleResult));
     }
 
-       
-                
-       
+
+
+
     @ApiLog("关闭反馈")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{feedbackId}/close")
@@ -143,9 +143,9 @@ public class FeedbackController {
         return Result.success(feedbackService.closeFeedback(feedbackId, handlerId, closeReason));
     }
 
-       
-                     
-       
+
+
+
     @ApiLog("从反馈创建退款")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/{feedbackId}/create-refund")
@@ -158,9 +158,9 @@ public class FeedbackController {
         return Result.success(feedbackService.createRefundFromFeedback(feedbackId, operatorId));
     }
 
-       
-                  
-       
+
+
+
     @ApiLog("批量处理反馈")
     @RequireRole({UserRole.ADMIN, UserRole.SUPER_ADMIN})
     @PostMapping("/batch-handle")

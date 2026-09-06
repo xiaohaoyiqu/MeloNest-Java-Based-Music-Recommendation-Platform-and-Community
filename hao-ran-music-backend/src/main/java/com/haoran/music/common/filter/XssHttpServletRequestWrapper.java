@@ -6,16 +6,16 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
-   
-                      
-                                        
-   
+
+
+
+
 @Slf4j
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-       
-                  
-       
+
+
+
     private static final String[][] XSS_PATTERNS = {
             {"<(?i)script[^>]*>.*?</(?i)script>", ""},                         
             {"<(?i)iframe[^>]*>.*?</(?i)iframe>", ""},                         
@@ -81,19 +81,19 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         String value = super.getHeader(name);
-                           
+
         if ("User-Agent".equalsIgnoreCase(name) || "Referer".equalsIgnoreCase(name)) {
             return cleanXss(value);
         }
         return value;
     }
 
-       
-                
-      
-                       
-                    
-       
+
+
+
+
+
+
     private String cleanXss(String value) {
         if (value == null || value.isEmpty()) {
             return value;
@@ -101,12 +101,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         String cleanValue = value;
 
-                   
+
         for (String[] pattern : XSS_PATTERNS) {
             cleanValue = cleanValue.replaceAll("(?i)" + pattern[0], pattern[1]);
         }
 
-                   
+
         if (!cleanValue.equals(value)) {
             log.warn("XSS过滤: 原始长度={}, 清理后长度={}, 差异={}",
                     value.length(), cleanValue.length(), value.length() - cleanValue.length());
@@ -115,12 +115,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return cleanValue;
     }
 
-       
-                       
-      
-                        
-                                      
-       
+
+
+
+
+
+
     public static boolean containsXss(String value) {
         if (value == null || value.isEmpty()) {
             return false;

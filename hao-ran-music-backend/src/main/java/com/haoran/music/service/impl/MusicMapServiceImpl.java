@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-   
-           
-                                       
-  
-                      
-   
+
+
+
+
+
+
 @Slf4j
 @Service
 public class MusicMapServiceImpl implements MusicMapService {
@@ -58,7 +58,7 @@ public class MusicMapServiceImpl implements MusicMapService {
                 "WHERE s.status = 1 AND s.deleted = 0 AND s.energy IS NOT NULL AND s.valence IS NOT NULL "
         );
 
-                 
+
         switch (region) {
             case "energetic":
                 sql.append("AND s.energy >= 0.7 ");
@@ -76,7 +76,7 @@ public class MusicMapServiceImpl implements MusicMapService {
                 sql.append("AND s.valence >= 0.6 ");
                 break;
             default:
-                                
+
                 break;
         }
 
@@ -92,7 +92,7 @@ public class MusicMapServiceImpl implements MusicMapService {
     public Map<String, Object> getMapRegions() {
         Map<String, Object> regions = new LinkedHashMap<>();
 
-                        
+
         Map<String, Object> energetic = new HashMap<>();
         energetic.put("code", "energetic");
         energetic.put("name", "高能量区");
@@ -135,7 +135,7 @@ public class MusicMapServiceImpl implements MusicMapService {
 
     @Override
     public List<Map<String, Object>> getNearbySongs(Double valence, Double energy, Double radius, Integer limit) {
-                 
+
         double minValence = Math.max(0, valence - radius);
         double maxValence = Math.min(1, valence + radius);
         double minEnergy = Math.max(0, energy - radius);
@@ -205,7 +205,7 @@ public class MusicMapServiceImpl implements MusicMapService {
         LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
         LocalDateTime rangeStart = thirtyDaysAgo.atStartOfDay();
 
-                          
+
         String sql = "SELECT s.energy, s.valence, s.name, COUNT(*) as play_count " +
                 "FROM listen_history lh " +
                 "LEFT JOIN song s ON lh.song_id = s.id " +
@@ -216,7 +216,7 @@ public class MusicMapServiceImpl implements MusicMapService {
 
         List<Map<String, Object>> userSongs = jdbcTemplate.queryForList(sql, userId, rangeStart);
 
-                   
+
         Map<String, Integer> regionCounts = new HashMap<>();
         regionCounts.put("energetic", 0);
         regionCounts.put("calm", 0);
@@ -232,7 +232,7 @@ public class MusicMapServiceImpl implements MusicMapService {
             regionCounts.merge(region, count, Integer::sum);
         }
 
-                    
+
         String favoriteRegion = regionCounts.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
@@ -280,14 +280,14 @@ public class MusicMapServiceImpl implements MusicMapService {
         Map<String, Object> exploration = getUserExplorationMap(userId);
         Map<String, Integer> regionCounts = (Map<String, Integer>) exploration.get("regionCounts");
 
-                    
+
         List<Map<String, Object>> preferredRegions = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : regionCounts.entrySet()) {
             Map<String, Object> region = new HashMap<>();
             region.put("code", entry.getKey());
             region.put("visitCount", entry.getValue());
 
-                       
+
             Map<String, Object> regionInfo = (Map<String, Object>) getMapRegions().get(entry.getKey());
             if (regionInfo != null) {
                 region.put("name", regionInfo.get("name"));
@@ -297,7 +297,7 @@ public class MusicMapServiceImpl implements MusicMapService {
             preferredRegions.add(region);
         }
 
-                  
+
         preferredRegions.sort((a, b) -> {
             Integer countA = (Integer) a.get("visitCount");
             Integer countB = (Integer) b.get("visitCount");
@@ -307,9 +307,9 @@ public class MusicMapServiceImpl implements MusicMapService {
         return preferredRegions;
     }
 
-       
-                       
-       
+
+
+
     private String classifySongRegion(double energy, double valence) {
         if (energy >= 0.6 && valence >= 0.6) {
             return "exciting";                    

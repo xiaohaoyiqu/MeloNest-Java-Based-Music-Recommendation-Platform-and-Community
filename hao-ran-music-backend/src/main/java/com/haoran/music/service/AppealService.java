@@ -8,66 +8,66 @@ import com.haoran.music.dto.appeal.AppealReviewDTO;
 import com.haoran.music.entity.Appeal;
 import com.haoran.music.vo.appeal.AppealVO;
 
-   
-                      
-                      
-   
+
+
+
+
 public interface AppealService extends IService<Appeal> {
 
-       
-           
-      
-                         
-                          
-                   
-       
+
+
+
+
+
+
+
     Long createAppeal(Long userId, AppealCreateDTO dto);
 
-       
-               
-      
-                      
-                     
-       
+
+
+
+
+
+
     IPage<AppealVO> pageAppeals(AppealQueryDTO dto);
 
-       
-             
-      
-                           
-                   
-       
+
+
+
+
+
+
     AppealVO getAppealDetail(Long appealId);
 
-       
-           
-      
-                              
-                             
-       
+
+
+
+
+
+
     void reviewAppeal(Long reviewerId, AppealReviewDTO dto);
 
-       
-           
-      
-                           
-                           
-       
+
+
+
+
+
+
     void cancelAppeal(Long userId, Long appealId);
 
-       
-               
-      
-                         
-                         
-                     
-       
+
+
+
+
+
+
+
     IPage<AppealVO> getMyAppeals(Long userId, AppealQueryDTO dto);
 
-       
-               
-      
-                                   
-       
+
+
+
+
+
     java.util.Map<String, Long> getAppealStats();
 }

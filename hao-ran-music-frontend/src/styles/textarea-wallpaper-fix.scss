@@ -1,0 +1,124 @@
+   
+                      
+                                      
+                   
+                                                      
+   
+
+                                                               
+                                      
+                                                                  
+
+                                       
+.el-textarea .el-textarea__inner {
+  color: var(--text-primary) !important;
+}
+
+.el-textarea__inner::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+                                                               
+                                 
+                                    
+                                                                  
+
+            
+.comment-list .comment-text,
+div[class*="comment-list"] .comment-text {
+  color: var(--text-primary) !important;
+}
+
+           
+.comment-list .username,
+div[class*="comment-list"] .username {
+  color: var(--text-primary) !important;
+}
+
+          
+.comment-list .comment-time,
+div[class*="comment-list"] .comment-time {
+  color: var(--text-secondary) !important;
+}
+
+          
+.comment-list .reply-text,
+div[class*="comment-list"] .reply-text {
+  color: var(--text-primary) !important;
+}
+
+           
+.comment-list .reply-user .username,
+div[class*="comment-list"] .reply-user .username {
+  color: var(--text-primary) !important;
+}
+
+          
+.comment-list .reply-time,
+div[class*="comment-list"] .reply-time {
+  color: var(--text-tertiary) !important;
+}
+
+            
+.comment-list .reply-target,
+div[class*="comment-list"] .reply-target {
+  color: var(--text-secondary) !important;
+}
+
+            
+.comment-list .expand-hint,
+.comment-list .collapse-hint,
+div[class*="comment-list"] .expand-hint,
+div[class*="comment-list"] .collapse-hint {
+  color: var(--text-secondary) !important;
+}
+
+             
+.comment-list .comment-input-area,
+div[class*="comment-list"] .comment-input-area {
+  .el-textarea__inner {
+    color: var(--text-primary) !important;
+  }
+}
+
+           
+.comment-list .reply-input-area,
+div[class*="comment-list"] .reply-input-area {
+  .el-textarea__inner {
+    color: var(--text-primary) !important;
+  }
+
+  .reply-hint {
+    color: var(--text-secondary) !important;
+  }
+}
+
+            
+.comment-list .comment-actions .el-button,
+.comment-list .reply-actions .el-button,
+div[class*="comment-list"] .comment-actions .el-button,
+div[class*="comment-list"] .reply-actions .el-button {
+  color: var(--text-secondary) !important;
+}
+
+          
+.comment-list h3,
+.comment-list .comments-header h3,
+div[class*="comment-list"] h3,
+div[class*="comment-list"] .comments-header h3 {
+  color: var(--text-primary) !important;
+}
+
+               
+.el-icon svg,
+div[class*="comment-list"] .el-icon svg {
+  fill: currentColor !important;
+}
+
+                   
+.comment-list textarea::placeholder,
+.comment-list .el-textarea__inner::placeholder,
+div[class*="comment-list"] textarea::placeholder,
+div[class*="comment-list"] .el-textarea__inner::placeholder {
+  color: var(--text-secondary) !important;
+}

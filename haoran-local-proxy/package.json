@@ -1,0 +1,12 @@
+{
+  "name": "haoran-local-proxy",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Loopback-only local media proxy for HaoRan Music.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

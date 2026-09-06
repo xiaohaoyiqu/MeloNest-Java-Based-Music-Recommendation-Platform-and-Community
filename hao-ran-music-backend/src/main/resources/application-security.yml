@@ -1,0 +1,45 @@
+ 
+                     
+                              
+                  
+ 
+
+      
+security:
+           
+  xss:
+    enabled: true
+             
+    url-patterns: /*
+                         
+    exclude-url-patterns:
+      - /api/doc.html
+      - /api/swagger-resources
+      - /api/v3/api-docs
+      - /api/webjars/**
+      - /api/favicon.ico
+      - /api/druid/**
+
+            
+  rate-limit:
+    enabled: true
+                      
+    default-limit: 100
+    default-window: 60
+
+              
+clamav:
+  enabled: true
+  host: ${CLAMAV_HOST:192.168.153.131}
+  port: 3310
+  timeout: 30000
+  fail-on-unavailable: true
+  quarantine-enabled: true
+  quarantine-path: /sdb1/myprojoct/haoranmusic/quarantine/
+
+          
+music:
+  upload:
+            
+    virus-scan-enabled: true
+    emoji-virus-scan-enabled: true

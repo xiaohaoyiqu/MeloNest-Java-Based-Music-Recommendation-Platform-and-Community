@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    
+                                                                 
+                                                                  
+                                         
+
+                                              
+
+                                                                     
+                                                                   
+                                                                          
+                                                                     
+                                                               
+   
+
+<configuration>
+
+                                                                                  
+                               
+                      
+                   
+                 
+                                                                                   
+
+                                                                          
+
+<property>
+  <name>javax.jdo.option.ConnectionURL</name>
+  <value>jdbc:mysql://192.168.153.131:3306/haoranmusic?createDatabaseIfNotExist=true&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai&amp;allowPublicKeyRetrieval=true&amp;characterEncoding=utf8&amp;connectTimeout=10000&amp;socketTimeout=30000</value>
+  <description>MySQL元数据库连接配置</description>
+</property>
+
+<property>
+  <name>javax.jdo.option.ConnectionDriverName</name>
+  <value>com.mysql.jdbc.Driver</value>
+  <description>MySQL JDBC驱</description>
+</property>
+
+<property>
+  <name>javax.jdo.option.ConnectionUserName</name>
+  <value>hdfs</value>
+</property>
+
+<property>
+  <name>javax.jdo.option.ConnectionPassword</name>
+  <value>${REDACTED_SECRET}</value>
+</property>
+
+                
+<property>
+  <name>javax.jdo.option.ConnectionPoolSize</name>
+  <value>10</value>
+  <description>数据库连接池大小</description>
+</property>
+
+<property>
+  <name>datanucleus.connectionPoolMaxPoolSize</name>
+  <value>20</value>
+  <description>最大连接池大小</description>
+</property>
+
+               
+<property>
+  <name>hive.metastore.warehouse.dir</name>
+  <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse</value>
+  <description>Hive数据仓库HDFS路径</description>
+</property>
+
+<property>
+  <name>hive.metastore.schema.verification</name>
+  <value>false</value>
+  <description>跳过元数据版本验证</description>
+</property>
+
+                                                                             
+
+<property>
+  <name>fs.defaultFS</name>
+  <value>hdfs://mycluster</value>
+</property>
+
+<property>
+  <name>ha.zookeeper.quorum</name>
+  <value>node1:2181,node2:2181,node3:2181</value>
+  <description>ZooKeeper集群地址（使用主机名）</description>
+</property>
+
+                                                                                  
+
+<property>
+  <name>hive.server2.thrift.bind.host</name>
+  <value>node1</value>
+  <description>使用主机名</description>
+</property>
+
+<property>
+  <name>hive.server2.thrift.port</name>
+  <value>10000</value>
+</property>
+
+<property>
+  <name>hive.server2.authentication</name>
+  <value>NONE</value>
+  <description>无认证模式（测试环境）</description>
+</property>
+
+<property>
+  <name>hive.server2.long.polling.timeout</name>
+  <value>60000</value>
+</property>
+
+<property>
+  <name>hive.server2.enable.doAs</name>
+  <value>true</value>
+</property>
+
+             
+<property>
+  <name>hive.server2.thrift.max.worker.threads</name>
+  <value>100</value>
+  <description>最大工作线程数</description>
+</property>
+
+<property>
+  <name>hive.server2.thrift.min.worker.threads</name>
+  <value>10</value>
+  <description>最小工作线程数</description>
+</property>
+
+                                                                                
+
+<property>
+  <name>hive.metastore.uris</name>
+  <value>thrift://node1:9083</value>
+  <description>Metastore服务地址（使用主机名）</description>
+</property>
+
+<property>
+  <name>hive.metastore.port</name>
+  <value>9083</value>
+</property>
+
+<property>
+  <name>hive.metastore.execute.setugi</name>
+  <value>true</value>
+</property>
+
+<property>
+  <name>hive.metastore.client.socket.timeout</name>
+  <value>30000</value>
+</property>
+
+<property>
+  <name>hive.metastore.client.connect.retry.delay</name>
+  <value>5s</value>
+</property>
+
+                                                                                     
+
+<property>
+  <name>hive.execution.engine</name>
+  <value>spark</value>
+  <description>使用Spark作为执行引擎</description>
+</property>
+
+<property>
+  <name>spark.home</name>
+  <value>/usr/local/soft/spark-2.4.8</value>
+  <description>Spark安装路径</description>
+</property>
+
+<property>
+  <name>spark.master</name>
+  <value>yarn</value>
+  <description>YARN模式</description>
+</property>
+
+<property>
+  <name>spark.submit.deployMode</name>
+  <value>client</value>
+  <description>部署模式</description>
+</property>
+
+<property>
+  <name>spark.yarn.jars</name>
+  <value>hdfs://mycluster/spark/jars/*</value>
+  <description>Spark jar包HDFS路径</description>
+</property>
+
+<property>
+  <name>spark.executor.memory</name>
+  <value>1024m</value>
+  <description>Executor内存</description>
+</property>
+
+<property>
+  <name>spark.executor.memoryOverhead</name>
+  <value>256m</value>
+  <description>Executor内存开销</description>
+</property>
+
+<property>
+  <name>spark.executor.cores</name>
+  <value>1</value>
+  <description>Executor核心数</description>
+</property>
+
+<property>
+  <name>spark.executor.instances</name>
+  <value>1</value>
+  <description>初始Executor实例数</description>
+</property>
+
+<property>
+  <name>spark.driver.memory</name>
+  <value>1024m</value>
+  <description>Driver内存</description>
+</property>
+
+<property>
+  <name>spark.driver.cores</name>
+  <value>1</value>
+  <description>Driver核心数</description>
+</property>
+
+<property>
+  <name>spark.dynamicAllocation.enabled</name>
+  <value>true</value>
+  <description>启用动态资源分配</description>
+</property>
+
+<property>
+  <name>spark.dynamicAllocation.minExecutors</name>
+  <value>1</value>
+  <description>最小Executor数</description>
+</property>
+
+<property>
+  <name>spark.dynamicAllocation.maxExecutors</name>
+  <value>2</value>
+  <description>最大Executor数</description>
+</property>
+
+<property>
+  <name>spark.dynamicAllocation.initialExecutors</name>
+  <value>1</value>
+  <description>初始Executor数</description>
+</property>
+
+<property>
+  <name>spark.shuffle.service.enabled</name>
+  <value>true</value>
+  <description>启用 Shuffle Service（动态分配必需）</description>
+</property>
+
+<property>
+  <name>spark.network.timeout</name>
+  <value>300s</value>
+  <description>网络超时</description>
+</property>
+
+<property>
+  <name>spark.yarn.container.startMaxWaitTime</name>
+  <value>3m</value>
+  <description>容器启动最大等待时间</description>
+</property>
+
+<property>
+  <name>spark.yarn.executor.startMaxWaitTime</name>
+  <value>3m</value>
+  <description>Executor启动最大等待时间</description>
+</property>
+
+<property>
+  <name>spark.yarn.am.waitTime</name>
+  <value>120s</value>
+  <description>AM等待时间</description>
+</property>
+
+                                                                                     
+                                                           
+                                
+                        
+                     
+                                                                                
+
+<property>
+  <name>hive.spark.job.monitor.timeout</name>
+  <value>300s</value>
+  <description>Hive等待Spark作业提交的超时时间（默认60s太短，增加到300s）</description>
+</property>
+
+<property>
+  <name>spark.yarn.container.startMaxWaitTime</name>
+  <value>5m</value>
+  <description>容器启动最大等待时间</description>
+</property>
+
+<property>
+  <name>spark.yarn.executor.startMaxWaitTime</name>
+  <value>5m</value>
+  <description>Executor启动最大等待时间</description>
+</property>
+
+<property>
+  <name>spark.network.timeout</name>
+  <value>600s</value>
+  <description>网络超时时间</description>
+</property>
+
+<property>
+  <name>spark.yarn.maxAppAttempts</name>
+  <value>4</value>
+  <description>Spark on YARN应用最大重试次数</description>
+</property>
+
+                                                                                    
+                                       
+                                 
+                                                                                
+
+<property>
+  <name>spark.yarn.resourcemanager.address</name>
+  <value>node1:8032</value>
+  <description>YARN ResourceManager地址（使用具体主机名而非HA集群名）</description>
+</property>
+
+<property>
+  <name>spark.sql.hive.metastore.version</name>
+  <value>3.1.2</value>
+  <description>Hive Metastore版本</description>
+</property>
+
+<property>
+  <name>spark.sql.hive.convertMetastoreOrc</name>
+  <value>true</value>
+  <description>启用ORC转换</description>
+</property>
+
+<property>
+  <name>spark.sql.hive.convertMetastoreParquet</name>
+  <value>true</value>
+  <description>启用Parquet转换</description>
+</property>
+
+<property>
+  <name>spark.sql.warehouse.dir</name>
+  <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse</value>
+  <description>Spark SQL仓库目录</description>
+</property>
+
+<property>
+  <name>spark.sql.catalogImplementation</name>
+  <value>hive</value>
+  <description>使用Hive catalog</description>
+</property>
+
+                                                                             
+
+<property>
+  <name>hive.exec.parallel</name>
+  <value>true</value>
+  <description>启用并行执行</description>
+</property>
+
+<property>
+  <name>hive.exec.parallel.thread.number</name>
+  <value>8</value>
+  <description>并行线程数</description>
+</property>
+
+<property>
+  <name>hive.exec.compress.output</name>
+  <value>true</value>
+  <description>启用输出压缩（Native 库已配置）</description>
+</property>
+
+<property>
+  <name>hive.exec.compress.intermediate</name>
+  <value>true</value>
+  <description>启用中间结果压缩（Native 库已配置）</description>
+</property>
+
+                                    
+<property>
+  <name>mapreduce.map.output.compress.codec</name>
+  <value>org.apache.hadoop.io.compress.GzipCodec</value>
+  <description>Map 输出压缩编解码器（Native 库已配置）</description>
+</property>
+
+<property>
+  <name>mapreduce.output.fileoutputformat.compress.codec</name>
+  <value>org.apache.hadoop.io.compress.GzipCodec</value>
+  <description>最终输出压缩编解码器</description>
+</property>
+
+                        
+<property>
+  <name>spark.sql.parquet.compression.codec</name>
+  <value>gzip</value>
+  <description>Parquet 压缩使用 Gzip</description>
+</property>
+
+<property>
+  <name>spark.sql.orc.compression.codec</name>
+  <value>gzip</value>
+  <description>ORC 压缩使用 Gzip</description>
+</property>
+
+<property>
+  <name>hive.merge.mapfiles</name>
+  <value>true</value>
+  <description>合并小文件</description>
+</property>
+
+<property>
+  <name>hive.merge.mapredfiles</name>
+  <value>true</value>
+  <description>合并MapReduce小文件</description>
+</property>
+
+<property>
+  <name>hive.merge.size.per.task</name>
+  <value>256000000</value>
+  <description>每个任务合并后文件大小（256MB）</description>
+</property>
+
+<property>
+  <name>hive.merge.smallfiles.avgsize</name>
+  <value>128000000</value>
+  <description>小文件阈值（128MB）</description>
+</property>
+
+<property>
+  <name>hive.optimize.sort.dynamic.partition</name>
+  <value>true</value>
+  <description>优化动态分区排序</description>
+</property>
+
+                                                                           
+
+<property>
+  <name>hive.exec.dynamic.partition</name>
+  <value>true</value>
+  <description>启用动态分区</description>
+</property>
+
+<property>
+  <name>hive.exec.dynamic.partition.mode</name>
+  <value>nonstrict</value>
+  <description>动态分区模式（非严格）</description>
+</property>
+
+<property>
+  <name>hive.exec.max.dynamic.partitions</name>
+  <value>5000</value>
+  <description>最大动态分区数</description>
+</property>
+
+<property>
+  <name>hive.exec.max.dynamic.partitions.pernode</name>
+  <value>2000</value>
+  <description>每节点最大动态分区数</description>
+</property>
+
+                                                                           
+
+<property>
+  <name>hive.compute.query.using.stats</name>
+  <value>true</value>
+  <description>使用统计信息优化查询</description>
+</property>
+
+<property>
+  <name>hive.stats.fetch.partition.stats</name>
+  <value>true</value>
+  <description>获取分区统计信息</description>
+</property>
+
+<property>
+  <name>hive.stats.fetch.column.stats</name>
+  <value>true</value>
+  <description>获取列统计信息</description>
+</property>
+
+<property>
+  <name>hive.stats.autogather</name>
+  <value>true</value>
+  <description>自动收集统计信息</description>
+</property>
+
+                                                                            
+
+<property>
+  <name>hive.cli.print.header</name>
+  <value>true</value>
+  <description>显示表头</description>
+</property>
+
+<property>
+  <name>hive.cli.print.current.db</name>
+  <value>true</value>
+  <description>显示当前数据库</description>
+</property>
+
+<property>
+  <name>hive.exec.repl.bytes.per.summary</name>
+  <value>100</value>
+  <description>显示字节数</description>
+</property>
+
+                                                                               
+
+               
+<property>
+  <name>hive.database.dw.name</name>
+  <value>dw_haoranmusic</value>
+  <description>数据仓库名称</description>
+</property>
+
+                   
+<property>
+  <name>hive.table.ods.user_behavior.location</name>
+  <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/ods_user_behavior</value>
+  <description>ODS层用户行为表</description>
+</property>
+
+                   
+<property>
+  <name>hive.table.dwd.user_behavior_fact.location</name>
+  <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/dwd_user_behavior_fact</value>
+  <description>DWD层用户行为事实表</description>
+</property>
+
+                   
+<property>
+  <name>hive.table.dws.user_preference.location</name>
+  <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/dws_user_preference</value>
+  <description>DWS层用户偏好汇总表</description>
+</property>
+
+                   
+<property>
+  <name>hive.table.ads_recommend_result.location</name>
+  <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/ads_recommend_result</value>
+  <description>ADS层推荐结果表</description>
+</property>
+
+<property>
+  <name>hive.table.ads_hot_song_ranking.location</name>
+  <value>hdfs://mycluster/Datas/haoranMusicPlatform/hive/warehouse/dw_haoranmusic.db/ads_hot_song_ranking</value>
+  <description>ADS层热门歌曲榜单表</description>
+</property>
+
+               
+<property>
+  <name>hive.schedule.hot_score.interval</name>
+  <value>0 0 2/3 * * ?</value>
+  <description>热度计算Cron表达式（每3天凌晨2点）</description>
+</property>
+
+<property>
+  <name>hive.schedule.recommend_calculate.interval</name>
+  <value>0 0 3 * * ?</value>
+  <description>推荐算法Cron表达式（每天凌晨3点）</description>
+</property>
+
+</configuration>

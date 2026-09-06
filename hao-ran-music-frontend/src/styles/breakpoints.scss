@@ -1,0 +1,201 @@
+   
+                      
+                           
+                   
+  
+                               
+             
+                                         
+                      
+                                        
+                    
+                     
+  
+        
+                                                 
+                                                 
+                                                             
+   
+
+                                                  
+$breakpoint-xs: 375px !default;
+$breakpoint-sm: 480px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 1200px !default;
+$breakpoint-xl: 1440px !default;
+
+       
+$breakpoints: (
+  'xs': $breakpoint-xs,
+  'sm': $breakpoint-sm,
+  'md': $breakpoint-md,
+  'lg': $breakpoint-lg,
+  'xl': $breakpoint-xl
+) !default;
+
+                                                        
+
+                 
+                                     
+@mixin respond-above($breakpoint) {
+  $min: map-get($breakpoints, $breakpoint);
+  @if $min {
+    @media (min-width: ($min + 1px)) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+                 
+                                     
+@mixin respond-below($breakpoint) {
+  $max: map-get($breakpoints, $breakpoint);
+  @if $max {
+    @media (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+                  
+                                           
+@mixin respond-between($lower, $upper) {
+  $min: map-get($breakpoints, $lower);
+  $max: map-get($breakpoints, $upper);
+
+  @if $min != null and $max != null {
+    @media (min-width: ($min + 1px)) and (max-width: $max) {
+      @content;
+    }
+  } @else if $max == null {
+    @include respond-above($lower) {
+      @content;
+    }
+  } @else if $min == null {
+    @include respond-below($upper) {
+      @content;
+    }
+  }
+}
+
+                    
+                                    
+@mixin respond-only($breakpoint) {
+  $min: map-get($breakpoints, $breakpoint);
+  $max: null;
+
+  @if $breakpoint == 'xs' {
+    $max: $breakpoint-sm;
+  } @else if $breakpoint == 'sm' {
+    $max: $breakpoint-md;
+  } @else if $breakpoint == 'md' {
+    $max: $breakpoint-lg;
+  } @else if $breakpoint == 'lg' {
+    $max: $breakpoint-xl;
+  }
+
+  @if $max != null {
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @media (min-width: $min) {
+      @content;
+    }
+  }
+}
+
+                                                     
+
+                 
+@mixin mobile-xs {
+  @media (max-width: $breakpoint-xs) {
+    @content;
+  }
+}
+
+                  
+@mixin mobile {
+  @media (max-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+                   
+@mixin tablet {
+  @media (max-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+                    
+@mixin desktop {
+  @media (max-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+                    
+@mixin desktop-up {
+  @media (min-width: ($breakpoint-lg + 1px)) {
+    @content;
+  }
+}
+
+                     
+@mixin wide {
+  @media (min-width: ($breakpoint-xl + 1px)) {
+    @content;
+  }
+}
+
+                                                     
+
+       
+@mixin landscape {
+  @media (orientation: landscape) {
+    @content;
+  }
+}
+
+       
+@mixin portrait {
+  @media (orientation: portrait) {
+    @content;
+  }
+}
+
+                  
+@mixin retina {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @content;
+  }
+}
+
+            
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+       
+@mixin touch {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+                                                              
+                        
+:root {
+  --breakpoint-xs: #{$breakpoint-xs};
+  --breakpoint-sm: #{$breakpoint-sm};
+  --breakpoint-md: #{$breakpoint-md};
+  --breakpoint-lg: #{$breakpoint-lg};
+  --breakpoint-xl: #{$breakpoint-xl};
+}

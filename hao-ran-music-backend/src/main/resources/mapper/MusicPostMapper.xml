@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haoran.music.mapper.MusicPostMapper">
+
+        
+                           
+                        
+                               
+       
+    <select id="selectByCondition" resultType="com.haoran.music.entity.MusicPost">
+        SELECT * FROM post
+        <where>
+            <if test="params.userId != null">
+                AND user_id = #{params.userId}
+            </if>
+            <if test="params.postType != null and params.postType != ''">
+                AND post_type = #{params.postType}
+            </if>
+            <if test="params.isDeleted != null">
+                AND is_deleted = #{params.isDeleted}
+            </if>
+            <if test="params.visibility != null and params.visibility != ''">
+                AND visibility = #{params.visibility}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

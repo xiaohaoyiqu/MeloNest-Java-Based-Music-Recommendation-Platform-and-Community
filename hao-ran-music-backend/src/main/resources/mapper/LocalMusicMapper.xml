@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haoran.music.mapper.LocalMusicMapper">
+
+                   
+    <update id="incrementPlayCount">
+        UPDATE music_local_music
+        SET play_count = play_count + 1
+        WHERE id = #{id} AND user_id = #{userId} AND deleted = 0
+    </update>
+
+                             
+    <update id="incrementPlayCountWithQuality">
+        UPDATE music_local_music
+        SET play_count = play_count + 1
+        <if test="quality != null">
+            , quality = #{quality}
+        </if>
+        WHERE id = #{id} AND user_id = #{userId} AND deleted = 0
+    </update>
+
+                                   
+    <update id="incrementPlayCountWithFileInfo">
+        UPDATE music_local_music
+        SET play_count = play_count + 1
+        <if test="quality != null">
+            , quality = #{quality}
+        </if>
+        <if test="duration != null and duration > 0">
+            , duration = #{duration}
+        </if>
+        <if test="fileSize != null and fileSize > 0">
+            , file_size = #{fileSize}
+        </if>
+        WHERE id = #{id} AND deleted = 0
+    </update>
+
+</mapper>

@@ -1,0 +1,98 @@
+   
+                      
+                                   
+                               
+   
+
+                                                               
+                   
+                                                                  
+.el-message {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+
+  .el-message__content {
+    color: #ffffff !important;           
+  }
+
+  .el-message__icon {
+    color: #409eff !important;
+  }
+
+  .el-message__close {
+    color: #909399 !important;
+  }
+}
+
+                                                               
+           
+                                                                  
+
+                  
+.card-actions .action-btn.is-favorite {
+  opacity: 1 !important;
+  color: #f56c6c !important;
+  background: transparent !important;
+}
+
+                                     
+.playlist-header .el-button--warning,
+.playlist-header .el-button.is-warning {
+  background: transparent !important;
+  border-color: var(--el-border-color, #dcdfe6) !important;
+  color: var(--el-text-color-regular, #606266) !important;
+}
+
+                         
+.playlist-header .el-button--warning .el-icon,
+.playlist-header .el-button.is-warning .el-icon {
+  color: #f56c6c !important;
+}
+
+                   
+.playlist-header .el-button--warning:hover,
+.playlist-header .el-button.is-warning:hover {
+  background: var(--el-fill-color-light, #f5f7fa) !important;
+}
+
+                                                               
+                                           
+                                                                  
+
+                                  
+body > .el-dropdown__popper.song-action-dropdown {
+  position: fixed !important;
+  z-index: 10000 !important;
+                                               
+}
+
+body > .el-dropdown__popper.song-action-dropdown .el-dropdown-menu {
+  background: var(--card-background, rgba(30, 30, 30, 0.95)) !important;
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12)) !important;
+  min-width: 140px !important;
+}
+
+body > .el-dropdown__popper.song-action-dropdown .el-dropdown-menu__item {
+  color: var(--text-primary, rgba(255, 255, 255, 0.9)) !important;
+  padding: 8px 16px !important;
+}
+
+body > .el-dropdown__popper.song-action-dropdown .el-dropdown-menu__item:hover {
+  background: var(--card-background-hover, rgba(255, 255, 255, 0.1)) !important;
+}
+
+                                                               
+               
+                                                                  
+body > .el-dropdown__popper:not(.song-action-dropdown) {
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+                                                               
+                               
+                                                                  
+body > .el-dropdown__popper {
+  position: fixed !important;
+}

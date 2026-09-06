@@ -1,0 +1,529 @@
+   
+                       
+                                    
+   
+:root {
+  --hr-font-body: 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
+  --hr-font-display: Georgia, 'STZhongsong', 'Noto Serif SC', 'Songti SC', SimSun, serif;
+  --hr-font-mono: var(--app-font-mono);
+  --hr-obsidian: #061018;
+  --hr-ink: #091821;
+  --hr-panel: rgba(8, 25, 34, 0.94);
+  --hr-surface: rgba(13, 37, 48, 0.92);
+  --hr-surface-raised: #122f3a;
+  --hr-gold: #cda85a;
+  --hr-gold-bright: #f0d58a;
+  --hr-gold-dark: #80622f;
+  --hr-cyan: #45c8d4;
+  --hr-cyan-soft: rgba(69, 200, 212, 0.16);
+  --hr-text: #eef0e8;
+  --hr-text-muted: #aab8ba;
+  --hr-border: rgba(205, 168, 90, 0.36);
+  --hr-border-soft: rgba(205, 168, 90, 0.2);
+  --hr-danger: #e26d72;
+  --hr-success: #70c49a;
+  --hr-warning: #e0b663;
+  --hr-shadow: 0 18px 50px rgba(0, 4, 9, 0.48);
+  --hr-motion-fast: 160ms;
+  --hr-motion-base: 220ms;
+  --hr-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.basic-layout.admin-realm {
+  color: var(--hr-text);
+  color-scheme: dark;
+  font-family: var(--hr-font-body);
+  --text-primary: var(--hr-text) !important;
+  --text-secondary: var(--hr-text-muted) !important;
+  --text-tertiary: #809398 !important;
+  --card-background: var(--hr-panel) !important;
+  --card-bg: var(--hr-panel) !important;
+  --card-border: var(--hr-border) !important;
+  --input-bg: rgba(4, 18, 27, 0.78) !important;
+  --input-border: var(--hr-border-soft) !important;
+  --input-bg-hover: rgba(69, 200, 212, 0.08) !important;
+  --button-bg: rgba(18, 47, 58, 0.88) !important;
+  --button-border: var(--hr-border-soft) !important;
+  --button-bg-hover: rgba(205, 168, 90, 0.14) !important;
+  --accent-color: var(--hr-gold) !important;
+  --accent-bg: rgba(205, 168, 90, 0.14) !important;
+  --accent-border: var(--hr-border) !important;
+  --link-color: var(--hr-cyan) !important;
+  --icon-primary: #dbe5e2 !important;
+  --icon-secondary: var(--hr-text-muted) !important;
+  --dropdown-background: #0b202b !important;
+  --dropdown-border: var(--hr-border) !important;
+  --dropdown-text-primary: var(--hr-text) !important;
+  --dropdown-text-secondary: var(--hr-text-muted) !important;
+  --table-row-hover-bg: rgba(69, 200, 212, 0.08);
+  --table-border-color: var(--hr-border-soft);
+  --el-color-primary: var(--hr-gold);
+  --el-color-primary-light-3: #dbc27f;
+  --el-color-primary-light-5: #e5d39f;
+  --el-color-primary-light-7: #5d5138;
+  --el-color-primary-light-8: #403b2f;
+  --el-color-primary-light-9: #272a28;
+  --el-color-primary-dark-2: #a78443;
+  --el-color-success: var(--hr-success);
+  --el-color-warning: var(--hr-warning);
+  --el-color-danger: var(--hr-danger);
+  --el-bg-color: #0b202b;
+  --el-bg-color-page: var(--hr-obsidian);
+  --el-bg-color-overlay: #102731;
+  --el-fill-color-blank: transparent;
+  --el-fill-color-light: rgba(69, 200, 212, 0.06);
+  --el-fill-color-lighter: rgba(69, 200, 212, 0.04);
+  --el-fill-color-dark: rgba(0, 7, 12, 0.32);
+  --el-text-color-primary: var(--hr-text);
+  --el-text-color-regular: #c6d0ce;
+  --el-text-color-secondary: var(--hr-text-muted);
+  --el-text-color-placeholder: #788b90;
+  --el-border-color: var(--hr-border-soft);
+  --el-border-color-light: rgba(205, 168, 90, 0.14);
+  --el-border-color-lighter: rgba(205, 168, 90, 0.1);
+  --el-mask-color: rgba(0, 5, 10, 0.78);
+  --el-font-family: var(--hr-font-body);
+  font-variant-numeric: tabular-nums;
+  background: var(--hr-obsidian);
+}
+
+body.admin-rift-body {
+  --el-font-family: var(--hr-font-body);
+  font-family: var(--hr-font-body);
+}
+
+.admin-realm :is(button, input, textarea, select),
+body.admin-rift-body :is(button, input, textarea, select, .el-popper, .el-dialog, .el-drawer, .el-message-box, .el-notification, .el-message) {
+  font-family: var(--hr-font-body);
+}
+
+.admin-realm .content-card,
+.admin-realm .layout-container {
+  background:
+    radial-gradient(circle at 78% 9%, rgba(69, 200, 212, 0.08), transparent 27%),
+    linear-gradient(rgba(6, 16, 24, 0.96), rgba(6, 16, 24, 0.99));
+}
+
+.admin-realm .layout-bg {
+  background:
+    radial-gradient(circle at 78% 9%, rgba(69, 200, 212, 0.14), transparent 27%),
+    radial-gradient(circle at 16% 28%, rgba(205, 168, 90, 0.12), transparent 24%),
+    linear-gradient(rgba(6, 16, 24, 0.92), rgba(6, 16, 24, 0.98)),
+    repeating-linear-gradient(120deg, transparent 0 48px, rgba(205, 168, 90, 0.025) 49px 50px),
+    var(--hr-obsidian) !important;
+}
+
+.admin-realm .layout-container {
+  padding: 16px 20px 24px;
+}
+
+.admin-realm .layout-header {
+  margin-bottom: 16px;
+}
+
+.admin-realm .header-content {
+  min-height: 68px;
+  padding: 12px 18px;
+  background:
+    linear-gradient(90deg, rgba(205, 168, 90, 0.08), transparent 22%, transparent 78%, rgba(69, 200, 212, 0.06)),
+    rgba(5, 20, 29, 0.95);
+  border: 1px solid var(--hr-border);
+  border-radius: 4px;
+  box-shadow: 0 10px 32px rgba(0, 4, 9, 0.42), inset 0 1px rgba(240, 213, 138, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.admin-realm .header-content::before,
+.admin-realm .header-content::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  width: 70px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hr-gold));
+  pointer-events: none;
+}
+
+.admin-realm .header-content::before {
+  left: 18px;
+}
+
+.admin-realm .header-content::after {
+  right: 18px;
+  transform: scaleX(-1);
+}
+
+.admin-realm .logo {
+  padding: 4px 10px 4px 4px;
+  border-right: 1px solid var(--hr-border-soft);
+}
+
+.admin-realm .logo .logo-img {
+  height: 38px;
+  border: 1px solid var(--hr-border);
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  box-shadow: 0 0 18px rgba(69, 200, 212, 0.12);
+}
+
+.admin-realm .layout-main {
+  align-items: flex-start;
+  position: relative;
+}
+
+                             
+.admin-realm .layout-main > * {
+  width: 100%;
+  max-width: none !important;
+  margin-inline: 0 !important;
+}
+
+.admin-realm .layout-main > * {
+  position: relative;
+  background: var(--hr-panel) !important;
+  border: 1px solid var(--hr-border) !important;
+  border-radius: 4px !important;
+  box-shadow: var(--hr-shadow);
+}
+
+.admin-realm .layout-main > *::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -1px;
+  left: 28px;
+  right: 28px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--hr-gold), var(--hr-cyan), transparent);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.admin-realm :is(h1, h2, h3, .page-title),
+.admin-realm .layout-main .page-header h2 {
+  color: var(--hr-gold-bright);
+  font-family: var(--hr-font-display);
+  letter-spacing: 0.035em;
+  text-shadow: 0 1px 12px rgba(205, 168, 90, 0.14);
+}
+
+.admin-realm .layout-main .page-header h2 {
+  color: var(--hr-gold-bright) !important;
+}
+
+.admin-realm .page-header {
+  position: relative;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hr-border-soft);
+}
+
+.admin-realm .page-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 72px;
+  height: 2px;
+  background: var(--hr-cyan);
+  box-shadow: 0 0 12px rgba(69, 200, 212, 0.46);
+}
+
+.admin-realm :is(.el-card, .user-list-section, .filter-bar, .advanced-filter-bar, .batch-actions-bar, .progress-card) {
+  background: var(--hr-surface) !important;
+  border-color: var(--hr-border-soft) !important;
+  border-radius: 4px !important;
+  box-shadow: inset 0 1px rgba(240, 213, 138, 0.04), 0 8px 24px rgba(0, 4, 9, 0.2) !important;
+}
+
+.admin-realm .el-card {
+  color: var(--hr-text);
+}
+
+.admin-realm .el-card__header {
+  border-bottom-color: var(--hr-border-soft);
+}
+
+.admin-realm :is(.el-button, .el-input__wrapper, .el-select__wrapper, .el-textarea__inner, .el-date-editor, .el-input-number) {
+  min-height: 40px;
+  border-radius: 3px;
+  transition:
+    color var(--hr-motion-fast) var(--hr-ease-out),
+    background-color var(--hr-motion-fast) var(--hr-ease-out),
+    border-color var(--hr-motion-fast) var(--hr-ease-out),
+    box-shadow var(--hr-motion-fast) var(--hr-ease-out),
+    transform var(--hr-motion-fast) var(--hr-ease-out);
+}
+
+.admin-realm .el-button {
+  border-color: var(--hr-border-soft);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.admin-realm .el-button--primary {
+  color: #07131a;
+  background: linear-gradient(135deg, var(--hr-gold-bright), var(--hr-gold));
+  border-color: var(--hr-gold-bright);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.28), 0 4px 16px rgba(205, 168, 90, 0.16);
+}
+
+.admin-realm .el-button:active {
+  transform: scale(0.97);
+}
+
+.admin-realm :is(.el-button, .el-input__wrapper, .el-select__wrapper, .el-textarea__inner):focus-visible,
+.admin-realm :is(.el-input__wrapper, .el-select__wrapper).is-focus {
+  outline: 2px solid var(--hr-cyan);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(69, 200, 212, 0.16) !important;
+}
+
+.admin-realm .el-input__wrapper.is-focus {
+  outline: none;
+  box-shadow: inset 0 -3px 0 rgba(69, 200, 212, 0.82), 0 8px 18px rgba(4, 10, 14, 0.24) !important;
+}
+
+.admin-realm .el-input__inner:focus-visible {
+  outline: none;
+}
+
+.admin-realm .el-table {
+  --el-table-bg-color: rgba(5, 20, 29, 0.78);
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(18, 47, 58, 0.9);
+  --el-table-row-hover-bg-color: rgba(69, 200, 212, 0.09);
+  --el-table-border-color: var(--hr-border-soft);
+  --el-table-header-text-color: var(--hr-gold-bright);
+  --el-table-text-color: #dce4e1;
+  border: 1px solid var(--hr-border-soft);
+  border-radius: 3px;
+}
+
+.admin-realm .el-table th.el-table__cell {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+}
+
+.admin-realm .el-table td.el-table__cell,
+.admin-realm .el-table th.el-table__cell {
+  border-bottom-color: rgba(205, 168, 90, 0.12);
+}
+
+.admin-realm .el-tabs__item {
+  min-height: 44px;
+  color: var(--hr-text-muted);
+}
+
+.admin-realm .el-tabs__item.is-active,
+.admin-realm .el-tabs__item:hover {
+  color: var(--hr-gold-bright);
+}
+
+.admin-realm .el-tabs__active-bar {
+  background: linear-gradient(90deg, var(--hr-gold), var(--hr-cyan));
+}
+
+.admin-realm .el-pagination button,
+.admin-realm .el-pager li {
+  min-width: 36px;
+  min-height: 36px;
+  color: var(--hr-text-muted);
+  background: rgba(5, 20, 29, 0.78);
+  border: 1px solid rgba(205, 168, 90, 0.12);
+}
+
+.admin-realm .el-pager li.is-active {
+  color: #07131a;
+  background: var(--hr-gold);
+  border-color: var(--hr-gold-bright);
+}
+
+.admin-realm .stat-card {
+  min-width: 0;
+  min-height: 112px;
+  background:
+    linear-gradient(135deg, rgba(205, 168, 90, 0.055), transparent 44%),
+    var(--hr-surface) !important;
+  border: 1px solid var(--hr-border-soft) !important;
+  border-radius: 4px !important;
+}
+
+.admin-realm .stat-card .stat-icon {
+  flex: 0 0 auto;
+  color: var(--hr-cyan) !important;
+  background: var(--hr-cyan-soft) !important;
+  border: 1px solid rgba(69, 200, 212, 0.28);
+  border-radius: 3px !important;
+}
+
+.admin-realm .stat-card .stat-value {
+  color: var(--hr-text) !important;
+  font-family: var(--hr-font-mono);
+  letter-spacing: -0.035em;
+}
+
+.admin-realm .stat-card .stat-label,
+.admin-realm .stat-card .stat-desc {
+  color: var(--hr-text-muted) !important;
+}
+
+.admin-realm .chart-card,
+.admin-realm .progress-card {
+  background: var(--hr-surface) !important;
+}
+
+                                                                              
+                                                                                  
+.admin-realm :is(.content-card, .interaction-card, .overview-card, .audit-stat-card, .realtime-card, .ranking-card, .type-chart-card, .metrics-card, .behavior-card, .hot-card, .creator-card) {
+  background: var(--hr-surface) !important;
+  border: 1px solid var(--hr-border-soft) !important;
+  border-radius: 4px !important;
+  box-shadow: inset 0 1px rgba(240, 213, 138, 0.04), 0 8px 24px rgba(0, 4, 9, 0.2) !important;
+}
+
+.admin-realm :is(.content-card, .interaction-card, .overview-card, .audit-stat-card, .realtime-card, .ranking-card, .type-chart-card, .metrics-card, .behavior-card, .hot-card, .creator-card) :is(.content-value, .interaction-value, .stat-value, .value, .card-header, .creator-name, .song-name, .detail-name) {
+  color: var(--hr-text) !important;
+}
+
+.admin-realm :is(.content-card, .interaction-card, .overview-card, .audit-stat-card, .realtime-card, .ranking-card, .type-chart-card, .metrics-card, .behavior-card, .hot-card, .creator-card) :is(.content-label, .interaction-label, .stat-label, .stat-desc, .creator-stats, .song-artist, .detail-meta, .label) {
+  color: var(--hr-text-muted) !important;
+}
+
+.admin-realm :is(.content-card, .interaction-card, .overview-card, .audit-stat-card, .realtime-card, .ranking-card, .type-chart-card, .metrics-card, .behavior-card, .hot-card, .creator-card) .el-card__header {
+  border-bottom-color: var(--hr-border-soft) !important;
+}
+
+.admin-realm :is(.content-card, .interaction-card, .overview-card, .audit-stat-card, .realtime-card, .ranking-card, .type-chart-card, .metrics-card, .behavior-card, .hot-card, .creator-card) .el-descriptions__label {
+  color: var(--hr-text-muted) !important;
+}
+
+.admin-realm .chart-card .card-title,
+.admin-realm .progress-card :is(.label, .value) {
+  color: var(--hr-text) !important;
+}
+
+.admin-realm .feedback-float-btn {
+  color: #07131a !important;
+  background: linear-gradient(135deg, var(--hr-gold-bright), var(--hr-gold)) !important;
+  border: 1px solid var(--hr-gold-bright) !important;
+  border-radius: 3px !important;
+  box-shadow: 0 8px 24px rgba(0, 4, 9, 0.38), 0 0 18px rgba(205, 168, 90, 0.18) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-realm .el-button:hover,
+  .admin-realm .stat-card:hover {
+    border-color: var(--hr-border) !important;
+    box-shadow: 0 8px 24px rgba(0, 4, 9, 0.3), 0 0 0 1px rgba(205, 168, 90, 0.06) !important;
+  }
+
+  .admin-realm .stat-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-realm .layout-container {
+    padding: 8px;
+  }
+
+  .admin-realm .layout-header {
+    margin-bottom: 8px;
+  }
+
+  .admin-realm .header-content {
+    min-height: 56px;
+    padding: 8px 10px;
+  }
+
+  .admin-realm .layout-main > * {
+    padding: 16px 12px !important;
+  }
+
+  .admin-realm .page-header {
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .admin-realm .page-header :is(.header-actions, .header-actions .el-button) {
+    width: 100%;
+  }
+
+  .admin-realm :is(.el-button, .el-input__wrapper, .el-select__wrapper, .el-textarea__inner, .el-date-editor, .el-input-number) {
+    min-height: 44px;
+  }
+
+  .admin-realm :is(.filter-bar, .advanced-filter-bar, .appeal-filter-bar) {
+    padding: 12px;
+  }
+
+  .admin-realm :is(.filter-bar, .advanced-filter-bar, .appeal-filter-bar) > * {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .admin-realm .el-table {
+    min-width: 760px;
+  }
+
+  .admin-realm :is(.el-table__inner-wrapper, .el-tabs__nav-scroll) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-realm .el-pagination button,
+  .admin-realm .el-pager li {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .admin-realm .feedback-float-btn {
+    right: 4px !important;
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    padding: 0 !important;
+  }
+
+  .admin-realm .feedback-float-btn .feedback-text {
+    display: none;
+  }
+
+  .admin-realm .moderator-item {
+    align-items: flex-start !important;
+    flex-wrap: wrap;
+  }
+
+  .admin-realm .moderator-item .moderator-load {
+    flex-basis: 100%;
+  }
+
+  .admin-realm :is(.overview-section, .stats-row, .interaction-stats, .report-cards, .stats-grid, .data-overview) > .el-col {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 12px;
+  }
+
+  .admin-realm :is(.actions, .header-actions, .ranking-header, .card-header) {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .admin-realm :is(.actions, .header-actions, .ranking-header) :is(.el-button, .el-input, .el-select, .el-date-editor) {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-realm *,
+  .admin-realm *::before,
+  .admin-realm *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

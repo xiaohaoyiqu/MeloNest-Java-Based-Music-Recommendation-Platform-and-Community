@@ -1,0 +1,10 @@
+cluster.name: haoran-music-search
+node.name: node1-search
+path.data: /sdb1/haoranmusicData/elasticsearch-data
+path.logs: /sdb1/haoranmusicData/elasticsearch-logs
+network.host: 127.0.0.1
+http.port: 9200
+discovery.type: single-node
+xpack.security.enabled: false
+bootstrap.memory_lock: false
+action.destructive_requires_name: true

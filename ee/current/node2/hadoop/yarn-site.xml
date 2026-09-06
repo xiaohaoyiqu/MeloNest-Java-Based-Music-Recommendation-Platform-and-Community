@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+    
+                                                                    
+                                                                      
+                                                                     
+                                                                                          
+                                                                  
+                                         
+
+                                              
+
+                                                                     
+                                                                   
+                                                                          
+                                                                     
+                                
+   
+
+                                                                                  
+                         
+                      
+                   
+                 
+                                                                                   
+
+<configuration>
+
+                                                                         
+
+<property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>node1</value>
+    <description>ResourceManager主机名</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle,spark_shuffle</value>
+    <description>NodeManager辅助服务（添加 Spark Shuffle Service 以支持动态分配）</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    <description>MapReduce Shuffle Handler</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.aux-services.spark_shuffle.class</name>
+    <value>org.apache.spark.network.yarn.YarnShuffleService</value>
+    <description>Spark Shuffle Handler（支持动态分配必需）</description>
+</property>
+
+                                                                           
+
+<property>
+    <name>yarn.resourcemanager.address</name>
+    <value>node1:8032</value>
+    <description>ResourceManager对外服务地址</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.admin.address</name>
+    <value>node1:8141</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.scheduler.address</name>
+    <value>node1:8030</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.resource-tracker.address</name>
+    <value>node1:8031</value>
+    <description>NodeManager注册端口</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.webapp.address</name>
+    <value>node1:8088</value>
+    <description>ResourceManager Web UI端口</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.webapp.https.address</name>
+    <value>node1:8090</value>
+</property>
+
+<property>
+    <name>yarn.timeline-service.address</name>
+    <value>node1:10200</value>
+</property>
+
+<property>
+    <name>yarn.timeline-service.webapp.address</name>
+    <value>node1:8188</value>
+</property>
+
+                                                                         
+
+<property>
+    <name>yarn.resourcemanager.fs.state-store.uri</name>
+    <value>/sdb1/hadoop-3.3.6/yarn/rm-ha-state</value>
+    <description>RM状态存储路径（软件安装目录下）</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.local-dirs</name>
+    <value>/sdb1/hadoop-3.3.6/yarn/nm-local</value>
+    <description>NodeManager本地存储目录（软件安装目录下）</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.log-dirs</name>
+    <value>/sdb1/hadoop-3.3.6/logs/userlogs</value>
+    <description>NodeManager日志目录（软件安装目录下）</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.remote-app-log-dir</name>
+    <value>hdfs://mycluster/Datas/haoranMusicPlatform/logs/yarn/apps</value>
+    <description>远程应用日志目录（HDFS）</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.remote-app-log-dir-suffix</name>
+    <value>logs</value>
+</property>
+
+                                                                           
+
+<property>
+    <name>yarn.log-aggregation.enable</name>
+    <value>true</value>
+    <description>启用日志聚合</description>
+</property>
+
+<property>
+    <name>yarn.log-aggregation.retain-seconds</name>
+    <value>604800</value>
+    <description>日志保留时间（秒），604800=7天</description>
+</property>
+
+<property>
+    <name>yarn.log-aggregation.policy.class</name>
+    <value>org.apache.hadoop.yarn.server.webapp.amrm.AMLogAggregationPolicyTTL</value>
+    <description>日志聚合策略</description>
+</property>
+
+<property>
+    <name>yarn.log.server.url</name>
+    <value>http://node1:19888/jobhistory/logs</value>
+    <description>日志服务器URL</description>
+</property>
+
+                                                                         
+
+<property>
+    <name>yarn.resourcemanager.ha.enabled</name>
+    <value>true</value>
+    <description>启用RM高可用</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.cluster-id</name>
+    <value>mycluster</value>
+    <description>集群ID</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.ha.rm-ids</name>
+    <value>rm1,rm2</value>
+    <description>ResourceManager列表</description>
+</property>
+
+                   
+<property>
+    <name>yarn.resourcemanager.hostname.rm1</name>
+    <value>node1</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.webapp.address.rm1</name>
+    <value>node1:8088</value>
+</property>
+
+                   
+<property>
+    <name>yarn.resourcemanager.hostname.rm2</name>
+    <value>node2</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.webapp.address.rm2</name>
+    <value>node2:8088</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.address.rm1</name>
+    <value>node1:8032</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.address.rm2</name>
+    <value>node2:8032</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.resource-tracker.address.rm1</name>
+    <value>node1:8031</value>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.resource-tracker.address.rm2</name>
+    <value>node2:8031</value>
+</property>
+
+                                                                                
+
+<property>
+    <name>hadoop.zk.address</name>
+    <value>192.168.153.131:2181,192.168.153.132:2181,192.168.153.133:2181</value>
+    <description>ZooKeeper集群地址</description>
+</property>
+
+                                                                                 
+
+<property>
+    <name>mapreduce.jobhistory.address</name>
+    <value>node1:10020</value>
+    <description>JobHistoryServer RPC地址</description>
+</property>
+
+<property>
+    <name>mapreduce.jobhistory.webapp.address</name>
+    <value>node1:19888</value>
+    <description>JobHistoryServer Web界面地址</description>
+</property>
+
+<property>
+    <name>mapreduce.jobhistory.intermediate-done-dir</name>
+    <value>/sdb1/hadoop-3.3.6/mr-history/tmp</value>
+    <description>中间数据目录（软件安装目录下）</description>
+</property>
+
+<property>
+    <name>mapreduce.jobhistory.done-dir</name>
+    <value>hdfs://mycluster/Datas/haoranMusicPlatform/logs/mr-history</value>
+    <description>历史任务目录</description>
+</property>
+
+                                                                         
+
+<property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>8192</value>
+    <description>NodeManager可用内存（MB），根据节点硬件调整</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.resource.cpu-vcores</name>
+    <value>4</value>
+    <description>NodeManager可用CPU核数，根据节点硬件调整</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>512</value>
+    <description>容器最小内存</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>6144</value>
+    <description>容器最大内存（需≥Spark Executor内存）</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.minimum-allocation-vcores</name>
+    <value>1</value>
+    <description>容器最小CPU核心</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.maximum-allocation-vcores</name>
+    <value>4</value>
+    <description>容器最大CPU核心（需≥Spark Executor核心数）</description>
+</property>
+
+                                                                                  
+
+                                         
+<property>
+    <name>yarn.nodemanager.env-whitelist</name>
+    <value>JAVA_HOME,HADOOP_COMMON_LIB_HOME,LD_LIBRARY_PATH,HADOOP_COMMON_LIB_NATIVE_DIR</value>
+    <description>允许传递到 Container 的环境变量（Native 库支持）</description>
+</property>
+
+                         
+<property>
+    <name>yarn.nodemanager.admin-env</name>
+    <value>LD_LIBRARY_PATH=/sdb1/hadoop-3.3.6/lib/native,HADOOP_COMMON_LIB_NATIVE_DIR=/sdb1/hadoop-3.3.6/lib/native</value>
+    <description>NodeManager 启动时的环境变量</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.container-monitor.address</name>
+    <value>0.0.0.0:45454</value>
+</property>
+
+<property>
+    <name>yarn.nodemanager.connection.timeout-ms</name>
+    <value>15000</value>
+</property>
+
+<property>
+    <name>yarn.nodemanager.container-monitor.interval-ms</name>
+    <value>3000</value>
+    <description>容器监控间隔（毫秒）</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.pmem-check-enabled</name>
+    <value>true</value>
+    <description>启用物理内存检查</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>false</value>
+    <description>禁用虚拟内存检查</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.vmem-pmem-ratio</name>
+    <value>2.1</value>
+    <description>虚拟内存与物理内存比率</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.health-checker.interval-ms</name>
+    <value>60000</value>
+    <description>健康检查间隔（毫秒）</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.health-checker.script.timeout-ms</name>
+    <value>120000</value>
+    <description>健康检查脚本超时（毫秒）</description>
+</property>
+
+                                                                           
+
+<property>
+    <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
+    <value>90</value>
+    <description>磁盘最大使用率阈值</description>
+</property>
+
+<property>
+    <name>yarn.nodemanager.disk-health-checker.min-free-space-per-disk-mb</name>
+    <value>1024</value>
+    <description>最小可用空间（MB）</description>
+</property>
+
+                                                                                      
+
+<property>
+    <name>yarn.nodemanager.webapp.address</name>
+    <value>0.0.0.0:8042</value>
+    <description>NodeManager Web界面地址</description>
+</property>
+
+                                                                          
+
+<property>
+    <name>yarn.scheduler.capacity.root.default-capacity</name>
+    <value>100</value>
+    <description>默认队列容量</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.capacity.root.maximum-capacity</name>
+    <value>100</value>
+    <description>最大队列容量</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.capacity.root.default-application-lifetime</name>
+    <value>86400000</value>
+    <description>默认应用生命周期（毫秒），24小时</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.capacity.root.maximum-application-lifetime</name>
+    <value>604800000</value>
+    <description>最大应用生命周期（毫秒），7天</description>
+</property>
+
+                                                                         
+
+<property>
+    <name>yarn.resourcemanager.container.liveness-monitor.expiry-interval-ms</name>
+    <value>60000</value>
+    <description>容器存活检查间隔</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.nm.container-reuse.locality.delay-allocation.ms</name>
+    <value>-1</value>
+    <description>容器重用延迟分配</description>
+</property>
+
+                                                                           
+
+<property>
+    <name>yarn.resourcemanager.recovery.enabled</name>
+    <value>true</value>
+    <description>启用RM恢复</description>
+</property>
+
+                                                                
+<property>
+    <name>yarn.resourcemanager.store.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.FileSystemRMStateStore</value>
+    <description>RM状态存储类（使用HDFS而非ZooKeeper）</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.fs.state-store.uri</name>
+    <value>hdfs://mycluster/yarn/rmstore</value>
+    <description>RM状态存储HDFS路径</description>
+</property>
+
+                                                                             
+
+<property>
+    <name>yarn.application.classpath</name>
+    <value>/usr/local/soft/hadoop-3.3.6/etc/hadoop,/usr/local/soft/hadoop-3.3.6/share/hadoop/common/*,/usr/local/soft/hadoop-3.3.6/share/hadoop/mapreduce/*,/usr/local/soft/hadoop-3.3.6/share/hadoop/yarn/*,/usr/local/soft/hadoop-3.3.6/share/hadoop/hdfs/*</value>
+    <description>应用程序类路径</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.am.max-attempts</name>
+    <value>3</value>
+    <description>ApplicationMaster最大重试次数</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.am.expiry-interval-ms</name>
+    <value>86400000</value>
+    <description>AM过期时间（毫秒），24小时</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.nodes.include-path</name>
+    <value>/sdb1/hadoop-3.3.6/etc/hadoop/include</value>
+    <description>包含节点列表文件路径（软件配置目录下）</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.nodes.exclude-path</name>
+    <value>/sdb1/hadoop-3.3.6/etc/hadoop/exclude</value>
+    <description>排除节点列表文件路径（软件配置目录下）</description>
+</property>
+
+                                                                           
+
+<property>
+    <name>yarn.resourcemanager.scheduler.client.thread-count</name>
+    <value>50</value>
+    <description>调度器客户端线程数</description>
+</property>
+
+<property>
+    <name>yarn.ipc.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+    <description>调度器实现类</description>
+</property>
+
+                                                                         
+
+<property>
+    <name>yarn.resourcemanager.max-completed-applications-held</name>
+    <value>10000</value>
+    <description>保留的最大已完成应用数</description>
+</property>
+
+<property>
+    <name>yarn.resourcemanager.max-am-attempt-failures-validity-interval-ms</name>
+    <value>86400000</value>
+    <description>AM失败有效性间隔（毫秒），24小时</description>
+</property>
+
+</configuration>

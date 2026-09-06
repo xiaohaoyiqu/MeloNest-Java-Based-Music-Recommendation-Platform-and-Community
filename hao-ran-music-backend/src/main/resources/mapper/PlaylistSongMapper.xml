@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haoran.music.mapper.PlaylistSongMapper">
+
+    <select id="selectVisibleSongPage" resultType="com.haoran.music.entity.PlaylistSong">
+        SELECT ps.*
+        FROM playlist_song ps
+        JOIN song s ON s.id = ps.song_id
+        WHERE ps.playlist_id = #{playlistId}
+          AND ps.deleted = 0
+          AND s.status = 1
+          AND s.deleted = 0
+        <if test="publicPlaylist">
+          AND (
+            s.uploader_id IS NULL
+            <if test="allowedUploaderIds != null and !allowedUploaderIds.isEmpty()">
+              OR s.uploader_id IN
+              <foreach collection="allowedUploaderIds" item="uploaderId" open="(" separator="," close=")">
+                #{uploaderId}
+              </foreach>
+            </if>
+          )
+        </if>
+        <if test="keyword != null and keyword != ''">
+          AND (s.name LIKE CONCAT('%', #{keyword}, '%')
+            OR s.artist_names LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="language != null and language != ''">
+          AND s.language = #{language}
+        </if>
+        <choose>
+          <when test="sortBy == 'name'">ORDER BY s.name ASC, ps.id ASC</when>
+          <when test="sortBy == 'artist'">ORDER BY s.artist_names ASC, s.name ASC, ps.id ASC</when>
+          <when test="sortBy == 'duration'">ORDER BY s.duration ASC, ps.id ASC</when>
+          <otherwise>ORDER BY ps.sort_order ASC, ps.id ASC</otherwise>
+        </choose>
+    </select>
+
+    <select id="countVisibleSongs" resultType="long">
+        SELECT COUNT(*)
+        FROM playlist_song ps
+        JOIN song s ON s.id = ps.song_id
+        WHERE ps.playlist_id = #{playlistId}
+          AND ps.deleted = 0
+          AND s.status = 1
+          AND s.deleted = 0
+        <if test="publicPlaylist">
+          AND (
+            s.uploader_id IS NULL
+            <if test="allowedUploaderIds != null and !allowedUploaderIds.isEmpty()">
+              OR s.uploader_id IN
+              <foreach collection="allowedUploaderIds" item="uploaderId" open="(" separator="," close=")">
+                #{uploaderId}
+              </foreach>
+            </if>
+          )
+        </if>
+    </select>
+
+</mapper>

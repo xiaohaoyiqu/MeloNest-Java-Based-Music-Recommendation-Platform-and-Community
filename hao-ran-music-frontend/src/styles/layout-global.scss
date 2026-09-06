@@ -1,0 +1,187 @@
+   
+                      
+                                         
+                   
+  
+                                             
+                    
+  
+                                                 
+   
+
+                                                                     
+
+                  
+.el-input .el-input__wrapper,
+.el-input--large .el-input__wrapper,
+.el-input__wrapper {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+.el-input:hover .el-input__wrapper,
+.el-input--large:hover .el-input__wrapper {
+  background: var(--input-bg-hover) !important;
+  border-color: var(--input-border) !important;
+}
+
+.el-input.is-focus .el-input__wrapper,
+.el-input--large.is-focus .el-input__wrapper {
+  background: var(--input-bg-hover) !important;
+  border-color: var(--input-border) !important;
+}
+
+.el-input .el-input__inner,
+.el-input--large .el-input__inner,
+.el-input__inner {
+  color: var(--text-primary) !important;
+}
+
+.el-input .el-input__inner::placeholder,
+.el-input--large .el-input__inner::placeholder,
+.el-input__inner::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+.el-input .el-input__prefix,
+.el-input--large .el-input__prefix,
+.el-input .el-input__suffix,
+.el-input--large .el-input__suffix,
+.el-input__prefix,
+.el-input__suffix {
+  color: var(--text-secondary) !important;
+}
+
+                     
+.el-select .el-input__wrapper {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+.el-select:hover .el-input__wrapper {
+  border-color: var(--input-border) !important;
+}
+
+.el-select .el-input__inner {
+  color: var(--text-primary) !important;
+}
+
+                     
+.el-textarea .el-textarea__inner {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  --el-input-text-color: var(--text-primary);
+  --el-input-placeholder-color: var(--text-secondary);
+}
+
+.el-select__selected-item,
+.el-select__input,
+.el-input__count-inner {
+  color: var(--text-primary) !important;
+}
+
+                           
+.el-radio-button__inner {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-radio-button__original-radio:checked + .el-radio-button__inner {
+  background: var(--el-color-primary, #409eff) !important;
+  border-color: var(--el-color-primary, #409eff) !important;
+  color: #fff !important;
+  box-shadow: -1px 0 0 0 var(--input-border);
+}
+
+.el-radio-button:first-child .el-radio-button__inner {
+  border-left: 1px solid var(--input-border) !important;
+}
+
+                             
+.el-select-dropdown {
+  background: var(--card-background) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+.el-select-dropdown__item {
+  color: var(--text-primary) !important;
+}
+
+.el-select-dropdown__item.is-selected {
+  color: var(--el-color-primary, #409eff) !important;
+}
+
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background: var(--input-bg-hover) !important;
+}
+
+                                   
+                      
+                                  
+
+                    
+                    
+                        
+                   
+                  
+                     
+
+                  
+.el-switch.is-checked .el-switch__core {
+  background-color: var(--el-color-primary, #409eff) !important;
+  border-color: var(--el-color-primary, #409eff) !important;
+}
+
+                  
+.el-slider__runway {
+  background: var(--input-bg) !important;
+}
+
+.el-slider__bar {
+  background: var(--el-color-primary, #409eff) !important;
+}
+
+.el-slider__button {
+  border: 2px solid var(--el-color-primary, #409eff) !important;
+}
+
+                     
+.el-progress__text {
+  color: var(--text-primary) !important;
+}
+
+.el-progress-bar__outer {
+  background: var(--input-bg) !important;
+}
+
+.el-progress-bar__inner {
+  background: var(--el-color-primary, #409eff) !important;
+}
+
+                    
+.el-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+                                                      
+
+body {
+  margin: 0;
+  font-family: var(--app-font-body);
+}
+
+                                                               
+                                     
+:root {
+  --text-primary: rgba(30, 30, 30, 0.95);
+  --text-secondary: rgba(60, 60, 60, 0.75);
+  --text-tertiary: rgba(100, 100, 100, 0.6);
+}

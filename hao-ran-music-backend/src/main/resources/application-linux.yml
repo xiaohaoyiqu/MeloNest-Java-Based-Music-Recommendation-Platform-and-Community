@@ -1,0 +1,202 @@
+ 
+                     
+                                   
+                  
+                          
+ 
+
+server:
+  port: 9090
+  tomcat:
+    threads:
+      max: 800
+      min-spare: 100
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: ${DB_URL:jdbc:mysql://192.168.153.131:3306/haoranmusic_bus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai}
+      username: ${DB_USERNAME:hdfs}
+      password: ${DB_PASSWORD:}
+               
+      initial-size: 20
+      min-idle: 20
+      max-active: 100
+                    
+      max-wait: 10000
+                    
+      time-between-eviction-runs-millis: 60000
+                  
+      min-evictable-idle-time-millis: 300000
+                   
+      validation-query: SELECT 1
+                  
+      test-while-idle: true
+                      
+      test-on-borrow: false
+                      
+      test-on-return: false
+                     
+      remove-abandoned: true
+      remove-abandoned-timeout: 300
+      log-abandoned: true
+                
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+
+                  
+  autoconfigure:
+    exclude:
+      - org.redisson.spring.starter.RedissonAutoConfiguration
+
+  data:
+    redis:
+      host: ${REDIS_HOST:192.168.153.131}
+      port: 6379
+      password: ${REDIS_PASSWORD:}
+      lettuce:
+        pool:
+          max-active: 500
+          max-idle: 100
+          min-idle: 20
+
+           
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:192.168.153.131:9092,192.168.153.132:9092,192.168.153.133:9092}
+
+                      
+jwt:
+  secret: ${JWT_SECRET:}
+  expiration: 604800000
+
+               
+music:
+  playback:
+    source-url-prefix: ${MUSIC_PLAYBACK_SOURCE_URL_PREFIX:http://192.168.153.133:8081/}
+    nginx-accel-enabled: ${MUSIC_PLAYBACK_NGINX_ACCEL_ENABLED:false}
+        
+  cluster:
+    enabled: true
+                   
+    node-name: ${NODE_NAME:node1}
+    node-id: ${NODE_ID:192.168.153.131}
+            
+    nodes:
+      - id: 192.168.153.131
+        name: node1
+        ip: 192.168.153.131
+        port: 9090
+      - id: 192.168.153.132
+        name: node2
+        ip: 192.168.153.132
+        port: 9090
+      - id: 192.168.153.133
+        name: node3
+        ip: 192.168.153.133
+        port: 9090
+                                 
+  upload:
+    song-path: /sdb1/haoranmusicData/Datas/songs/
+    mv-path: /sdb1/haoranmusicData/Datas/mvs/
+    avatar-path: /sdb1/haoranmusicData/Datas/images/avatars/
+    album-cover-path: /sdb1/haoranmusicData/Datas/images/covers/
+    playlist-cover-path: /sdb1/haoranmusicData/Datas/playlist-covers/
+                   
+  node3:
+    host: 192.168.153.133
+    user: hdfs
+    port: 22
+    key-path: /sdb1/myprojoct/haoranmusic/scripts/ssh/id_rsa
+    lyric-path: /sdb1/haoranmusicData/Datas/lyrics/
+    lyric-url: http://192.168.153.133:8081/lyrics/
+    images-path: /sdb1/haoranmusicData/Datas/images/
+                            
+  nginx-url-prefix: ${MUSIC_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
+
+                          
+                       
+                                        
+  post:
+              
+    video-original-path: /sdb1/haoranmusicData/Datas/posts/videos/original/
+            
+    video-cache-path: /sdb1/myprojoct/haoranmusic/tmp/posts/videos/cache/
+           
+    video-thumbnail-path: /sdb1/haoranmusicData/Datas/posts/videos/thumbnails/
+            
+    video-temp-path: /sdb1/myprojoct/haoranmusic/tmp/posts/videos/upload/
+                      
+    video-480p-path: /sdb1/haoranmusicData/Datas/posts/videos/480p/
+    video-720p-path: /sdb1/haoranmusicData/Datas/posts/videos/720p/
+                   
+    video-nginx-url-prefix: ${MUSIC_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
+                    
+    video-ffmpeg-path: ${MUSIC_POST_VIDEO_FFMPEG_PATH:${FFMPEG_PATH:/usr/local/soft/ffmpeg-6.1.1/bin/ffmpeg}}
+    video-ffprobe-path: ${MUSIC_POST_VIDEO_FFPROBE_PATH:${FFPROBE_PATH:/usr/local/soft/ffmpeg-6.1.1/bin/ffprobe}}
+    video-probe-timeout-seconds: 30
+    video-transcode-timeout-seconds: 600
+    video-ssh-timeout-seconds: 60
+                   
+    video-max-size: 524288000
+               
+    video-max-duration: 300
+              
+    video-min-duration: 3
+                       
+    video-cache-days: 7
+              
+    image-original-path: /sdb1/myprojoct/haoranmusic/posts/images/original/
+    image-compressed-path: /sdb1/myprojoct/haoranmusic/posts/images/compressed/
+    image-thumbnail-path: /sdb1/myprojoct/haoranmusic/posts/images/thumbnails/
+
+          
+hadoop:
+  name-node: hdfs://mycluster:8020
+  hdfs-path: /Datas/haoranMusicPlatform
+  user: hdfs
+
+        
+hive:
+  jdbc-url: jdbc:hive2://192.168.153.131:10000/haoran_music
+  username: ${HIVE_USERNAME:hdfs}
+  password:
+
+               
+logging:
+  level:
+    root: INFO
+    com.haoran.music: INFO
+  file:
+    name: /sdb1/myprojoct/haoranmusic/logs/hadooplogs/haoran-music.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+
+      
+                                                  
+security:
+  ip-rate-limit-enabled: false
+  ip-rate-limit-per-day: 300
+  ip-rate-limit-per-day-for-logged-in: 5000
+  user-agent-check-enabled: true
+  sensitive-log-enabled: false
+  captcha-trigger-threshold: 80
+  captcha-trigger-window-seconds: 120
+  paid-content-daily-view-limit: 200
+  paid-content-download-limit: 5
+  paid-content-distinct-window-seconds: 120
+  paid-content-distinct-warn-threshold: 40
+  paid-content-distinct-block-threshold: 80
+  paid-content-hard-block-enabled: true
+  creator-batch-access-threshold-seconds: 60
+  creator-batch-access-threshold-count: 30
+
+                       
+springfox:
+  documentation:
+    enabled: false
+swagger:
+  enabled: false
+
+

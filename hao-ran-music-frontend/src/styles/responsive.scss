@@ -1,0 +1,144 @@
+   
+                      
+                                     
+                   
+  
+                                                          
+                         
+   
+
+                                                           
+
+.song-stats,
+.album-stats,
+.artist-stats,
+.mv-stats,
+.playlist-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+
+                      
+  .stat-item,
+  > span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .stat-item {
+    .stat-label {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .stat-value {
+      color: var(--el-color-primary);
+      font-weight: 600;
+    }
+
+    .el-icon {
+      font-size: 14px;
+    }
+  }
+
+              
+  .stat-number {
+    color: var(--el-color-primary);
+    font-weight: 600;
+    cursor: help;
+    border-bottom: 1px dashed rgba(64, 158, 255, 0.5);
+    transition: all 0.3s;
+
+    &:hover {
+      border-bottom-color: #409eff;
+      color: #409eff;
+    }
+  }
+}
+
+                                                              
+
+@media (max-width: 768px) {
+  .song-stats,
+  .album-stats,
+  .artist-stats,
+  .mv-stats,
+  .playlist-stats {
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 14px;
+
+    .stat-item,
+    > span {
+      font-size: 12px;
+      gap: 4px;
+    }
+
+    .stat-item .el-icon {
+      font-size: 13px;
+    }
+  }
+}
+
+                                                              
+
+@media (max-width: 480px) {
+  .song-stats,
+  .album-stats,
+  .artist-stats,
+  .mv-stats,
+  .playlist-stats {
+    gap: 8px;
+    padding: 8px 10px;
+    justify-content: space-between;
+
+    .stat-item,
+    > span {
+      font-size: 10px;
+      gap: 3px;
+    }
+
+    .stat-item .el-icon {
+      font-size: 12px;
+    }
+
+                          
+    .stat-item .stat-label {
+      display: none;
+    }
+
+    .stat-item .stat-value {
+      font-size: 11px;
+    }
+
+                
+    .stat-number {
+      font-size: 11px;
+    }
+  }
+}
+
+                                                               
+
+@media (max-width: 375px) {
+  .song-stats,
+  .album-stats,
+  .artist-stats,
+  .mv-stats,
+  .playlist-stats {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+
+    .stat-item,
+    > span {
+      min-width: fit-content;
+      padding-right: 8px;
+    }
+  }
+}

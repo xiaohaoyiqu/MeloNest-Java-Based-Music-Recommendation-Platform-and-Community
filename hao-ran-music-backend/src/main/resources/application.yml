@@ -1,0 +1,963 @@
+ 
+                     
+                              
+                  
+ 
+
+server:
+  port: 9090
+  servlet:
+    context-path: /api
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  tomcat:
+                                              
+    threads:
+      max: 300
+      min-spare: 20
+    accept-count: 200
+    max-connections: 8192
+            
+    connection-timeout: 20000
+    keep-alive-timeout: 60000
+    max-keep-alive-requests: 1000
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+
+spring:
+  application:
+    name: hao-ran-music
+  main:
+    allow-circular-references: true
+                                                                          
+                                                                  
+  mail:
+    host: ${SMTP_HOST:}
+    port: ${SMTP_PORT:465}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      "mail.smtp.auth": ${SMTP_AUTH:true}
+      "mail.smtp.ssl.enable": ${SMTP_SSL_ENABLED:true}
+      "mail.smtp.starttls.enable": ${SMTP_STARTTLS_ENABLED:false}
+      "mail.smtp.connectiontimeout": ${SMTP_CONNECT_TIMEOUT_MILLIS:5000}
+      "mail.smtp.timeout": ${SMTP_READ_TIMEOUT_MILLIS:5000}
+      "mail.smtp.writetimeout": ${SMTP_WRITE_TIMEOUT_MILLIS:5000}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+                            
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: ${DB_URL:jdbc:mysql://192.168.153.131:3306/haoranmusic_bus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&useLocalSessionState=true&cachePrepStmts=true&useServerPrepStmts=true&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false}
+      username: ${DB_USERNAME:hdfs}
+      password: ${DB_PASSWORD:}
+                      
+      initial-size: 10
+      min-idle: 10
+      max-active: 50
+      max-wait: 10000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+              
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+              
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      log-abandoned: true
+              
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: ${DRUID_USERNAME:admin}
+        login-password: ${DRUID_PASSWORD:}
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          enabled: true
+          config:
+            multi-statement-allow: true
+
+                    
+  redis:
+    host: ${REDIS_HOST:192.168.153.131}
+    port: 6379
+    password: ${REDIS_PASSWORD:}
+    database: 0
+    timeout: 10000ms
+    lettuce:
+      pool:
+        max-active: 50
+        max-idle: 20
+        min-idle: 10
+        max-wait: 5000ms
+              
+      shutdown-timeout: 100ms
+          
+    cache:
+      type: redis
+      redis:
+        time-to-live: 5000
+        cache-null-values: false
+        key-prefix: "hrm:"
+        use-key-prefix: true
+
+           
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+        
+  servlet:
+    multipart:
+      max-file-size: 500MB
+                                                 
+      max-request-size: 520MB
+      enabled: true
+                       
+      file-size-threshold: 0
+
+                 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:192.168.153.131:9092,192.168.153.132:9092,192.168.153.133:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      batch-size: 16384
+      buffer-memory: 33554432
+    consumer:
+      group-id: music-consumer-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+                                                  
+search:
+  engine: ${SEARCH_ENGINE:mysql}
+  elasticsearch:
+    enabled: ${SEARCH_ES_ENABLED:false}
+    uris: ${SEARCH_ES_URIS:http://127.0.0.1:9200}
+    username: ${SEARCH_ES_USERNAME:}
+    password: ${SEARCH_ES_PASSWORD:}
+    index-prefix: ${SEARCH_ES_INDEX_PREFIX:haoran_music}
+    connect-timeout-ms: ${SEARCH_ES_CONNECT_TIMEOUT_MS:1000}
+    socket-timeout-ms: ${SEARCH_ES_SOCKET_TIMEOUT_MS:2000}
+    rebuild-enabled: ${SEARCH_ES_REBUILD_ENABLED:false}
+    rebuild-cron: "${SEARCH_ES_REBUILD_CRON:0 0 3 * * ?}"
+    bootstrap-rebuild-enabled: ${SEARCH_ES_BOOTSTRAP_REBUILD_ENABLED:true}
+    bootstrap-min-documents: ${SEARCH_ES_BOOTSTRAP_MIN_DOCUMENTS:2}
+
+                                
+cache:
+  mv:
+    expire: ${CACHE_MV_EXPIRE:1800}
+  song:
+    expire: ${CACHE_SONG_EXPIRE:3600}
+  recommend:
+    expire: ${CACHE_RECOMMEND_EXPIRE:1800}
+  hot:
+    expire: ${CACHE_HOT_EXPIRE:86400}
+  null-value:
+    expire: ${CACHE_NULL_EXPIRE:300}
+
+                                
+schedule:
+  cache-warmup:
+    hourly-cron: "${SCHEDULE_CACHE_WARMUP_HOURLY_CRON:0 5 * * * ?}"
+    rankings-cron: "${SCHEDULE_CACHE_WARMUP_RANKINGS_CRON:0 0/30 * * * ?}"
+    daily-cron: "${SCHEDULE_CACHE_WARMUP_DAILY_CRON:0 0 2 * * ?}"
+    clean-expired-cron: "${SCHEDULE_CACHE_WARMUP_CLEAN_EXPIRED_CRON:0 0 3 ? * MON}"
+  daily-reset:
+    quota-cron: "${SCHEDULE_DAILY_RESET_QUOTA_CRON:0 0 0 * * ?}"
+    vip-expiry-cron: "${SCHEDULE_DAILY_RESET_VIP_EXPIRY_CRON:0 0 1 * * ?}"
+    expired-data-cron: "${SCHEDULE_DAILY_RESET_EXPIRED_DATA_CRON:0 0 2 * * ?}"
+    credit-score-cron: "${SCHEDULE_DAILY_RESET_CREDIT_SCORE_CRON:-}"
+    report-cron: "${SCHEDULE_DAILY_RESET_REPORT_CRON:0 0 5 * * ?}"
+  credit:
+    monthly-reset-cron: "${SCHEDULE_CREDIT_MONTHLY_RESET_CRON:0 0 0 1 * ?}"
+  work-time:
+    pending-tasks-cron: "${SCHEDULE_WORK_TIME_PENDING_TASKS_CRON:0 */5 * * * ?}"
+    moderator-online-refresh-cron: "${SCHEDULE_WORK_TIME_MODERATOR_ONLINE_REFRESH_CRON:0 */1 * * * ?}"
+    online-status-cleanup-cron: "${SCHEDULE_WORK_TIME_ONLINE_STATUS_CLEANUP_CRON:0 */30 * * * ?}"
+    daily-quota-reset-cron: "${SCHEDULE_WORK_TIME_DAILY_QUOTA_RESET_CRON:0 0 0 * * ?}"
+    ending-reminder-cron: "${SCHEDULE_WORK_TIME_ENDING_REMINDER_CRON:0 */5 * * * ?}"
+  vip:
+    auto-renew-cron: "${SCHEDULE_VIP_AUTO_RENEW_CRON:0 0 * * * ?}"
+    expiring-reminder-cron: "${SCHEDULE_VIP_EXPIRING_REMINDER_CRON:0 0 9 * * ?}"
+    expired-process-cron: "${SCHEDULE_VIP_EXPIRED_PROCESS_CRON:0 30 0 * * ?}"
+  task:
+    simple-user:
+      daily-classification-cron: "${SCHEDULE_TASK_SIMPLE_USER_DAILY_CLASSIFICATION_CRON:0 0 2 * * ?}"
+      bot-check-cron: "${SCHEDULE_TASK_SIMPLE_USER_BOT_CHECK_CRON:0 0 * * * ?}"
+    music-intelligence:
+      report-refresh-retry-cron: "${SCHEDULE_TASK_MUSIC_INTELLIGENCE_REPORT_REFRESH_RETRY_CRON:0 */5 * * * ?}"
+    hot-score:
+      calculation-cron: "${SCHEDULE_TASK_HOT_SCORE_CALCULATION_CRON:0 0 2 */3 * ?}"
+    file-cleanup:
+      daily-cron: "${SCHEDULE_TASK_FILE_CLEANUP_DAILY_CRON:0 0 2 * * ?}"
+      weekly-deep-cron: "${SCHEDULE_TASK_FILE_CLEANUP_WEEKLY_DEEP_CRON:0 0 3 ? * SUN}"
+      hourly-temp-cron: "${SCHEDULE_TASK_FILE_CLEANUP_HOURLY_TEMP_CRON:0 0 * * * ?}"
+    media-derivative-retry-cron: "${SCHEDULE_TASK_MEDIA_DERIVATIVE_RETRY_CRON:0 */5 * * * ?}"
+    copyright:
+      expiry-check-cron: "${SCHEDULE_TASK_COPYRIGHT_EXPIRY_CHECK_CRON:0 0 2 * * ?}"
+      expired-content-cron: "${SCHEDULE_TASK_COPYRIGHT_EXPIRED_CONTENT_CRON:0 0 3 * * ?}"
+      inactive-creators-cron: "${SCHEDULE_TASK_COPYRIGHT_INACTIVE_CREATORS_CRON:0 0 4 ? * MON}"
+
+                       
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.haoran.music.entity
+  configuration:
+    map-underscore-to-camel-case: true
+            
+    cache-enabled: true
+          
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+                         
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+            
+    default-executor-type: reuse
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      insert-strategy: not_null
+      update-strategy: not_null
+      select-strategy: not_null
+
+                                 
+                                               
+                            
+           
+                                          
+                                
+               
+
+          
+hadoop:
+  name-node: hdfs://node1:9000
+  hdfs-path: /sdb1/myproject/haoranmusic
+  user: hdfs
+
+        
+hive:
+  jdbc-url: jdbc:hive2://192.168.153.131:10000/haoranmusic
+  username: ${HIVE_USERNAME:hdfs}
+  password:
+
+      
+logging:
+  level:
+    root: INFO
+    com.haoran.music: DEBUG
+    com.baomidou.mybatisplus: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+  file:
+    name: logs/haoran-music.log
+    max-size: 100MB
+    max-history: 30
+
+      
+music:
+  report-snapshot:
+    stale-grace-minutes: ${MUSIC_REPORT_SNAPSHOT_STALE_GRACE_MINUTES:1440}
+    refresh-failure-backoff-seconds: ${MUSIC_REPORT_SNAPSHOT_REFRESH_FAILURE_BACKOFF_SECONDS:60}
+  cluster:
+    enable-ip-mask: ${MUSIC_CLUSTER_ENABLE_IP_MASK:true}
+          
+  recommend:
+              
+    personal:
+      main-type-weight: 0.6
+      sub-type-weight: 0.3
+      hot-weight: 0.1
+      count: 16
+              
+    random:
+      taste-weight: 0.4
+      hot-weight: 0.1
+      random-weight: 0.5
+      count: 16
+              
+    hot-days: 14
+               
+    hot-period: 3
+            
+    related-count: 8
+               
+    related-sub-type-count: 2
+        
+  quality:
+    standard: 128000
+    high: 320000
+    lossless: 1411000
+        
+  upload:
+    nginx-url-prefix: ${MUSIC_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
+    song-path: ${MUSIC_SONG_PATH:/sdb1/haoranmusicData/Datas/songs/}
+    mv-path: ${MUSIC_MV_PATH:/sdb1/haoranmusicData/Datas/mvs/}
+    url-prefix: ${MUSIC_FILE_URL_PREFIX:http://192.168.153.131:9090/api/files/}
+    avatar-path: ${MUSIC_AVATAR_PATH:/sdb1/haoranmusicData/avatars/}
+    album-cover-path: ${MUSIC_ALBUM_COVER_PATH:/sdb1/myprojoct/haoranmusic/data/album-covers/}
+    playlist-cover-path: ${MUSIC_PLAYLIST_COVER_PATH:/sdb1/myprojoct/haoranmusic/data/playlist-covers/}
+    base-path: ${MUSIC_UPLOAD_BASE_PATH:/data/music/}
+    storage-path: ${MUSIC_UPLOAD_STORAGE_PATH:/sdb1/storage/mirror}
+    emoji-path: ${MUSIC_EMOJI_PATH:/sdb1/myprojoct/haoranmusic/data/emojis/}
+    multi-file:
+      path: ${MUSIC_MULTI_FILE_PATH:/sdb1/myprojoct/haoranmusic/multi-files}
+                                         
+    private-attachment-path: ${MUSIC_PRIVATE_ATTACHMENT_PATH:/sdb1/myprojoct/haoranmusic/data/private-attachments/}
+    nginx:
+      url: ${MUSIC_MULTI_FILE_NGINX_URL:http://192.168.153.131:3223/multi-files}
+    max-files: ${MUSIC_UPLOAD_MAX_FILES:20}
+    max-total-size: ${MUSIC_UPLOAD_MAX_TOTAL_SIZE:524288000}
+    single-file-max-size: ${MUSIC_UPLOAD_SINGLE_FILE_MAX_SIZE:524288000}
+    archive-max-file-size: ${MUSIC_UPLOAD_ARCHIVE_MAX_FILE_SIZE:524288000}
+    image-max-file-size: ${MUSIC_UPLOAD_IMAGE_MAX_FILE_SIZE:5242880}
+    image-max-width: ${MUSIC_UPLOAD_IMAGE_MAX_WIDTH:4096}
+    image-max-height: ${MUSIC_UPLOAD_IMAGE_MAX_HEIGHT:4096}
+    allowed-image-types:
+      - image/jpeg
+      - image/jpg
+      - image/png
+      - image/gif
+      - image/webp
+    allowed-image-extensions:
+      - jpg
+      - jpeg
+      - png
+      - gif
+      - webp
+    compress-enabled: ${MUSIC_UPLOAD_COMPRESS_ENABLED:true}
+    compress-threshold: ${MUSIC_UPLOAD_COMPRESS_THRESHOLD:51200}
+    virus-scan-enabled: ${MUSIC_UPLOAD_VIRUS_SCAN_ENABLED:true}
+    emoji-max-file-size: ${MUSIC_EMOJI_MAX_FILE_SIZE:5242880}
+    emoji-max-files: ${MUSIC_EMOJI_MAX_FILES:20}
+    emoji-max-width: ${MUSIC_EMOJI_MAX_WIDTH:4096}
+    emoji-max-height: ${MUSIC_EMOJI_MAX_HEIGHT:4096}
+    emoji-compress-enabled: ${MUSIC_EMOJI_COMPRESS_ENABLED:true}
+    emoji-compress-threshold: ${MUSIC_EMOJI_COMPRESS_THRESHOLD:102400}
+    emoji-virus-scan-enabled: ${MUSIC_EMOJI_VIRUS_SCAN_ENABLED:true}
+    emoji-retention-days: ${MUSIC_EMOJI_RETENTION_DAYS:30}
+    emoji-temp-retention-hours: ${MUSIC_EMOJI_TEMP_RETENTION_HOURS:24}
+    emoji-max-editable-packages-per-user: ${MUSIC_EMOJI_MAX_EDITABLE_PACKAGES_PER_USER:5}
+    emoji-max-pending-packages-per-user: ${MUSIC_EMOJI_MAX_PENDING_PACKAGES_PER_USER:2}
+    emoji-daily-max-files-per-user: ${MUSIC_EMOJI_DAILY_MAX_FILES_PER_USER:80}
+    emoji-daily-max-bytes-per-user: ${MUSIC_EMOJI_DAILY_MAX_BYTES_PER_USER:209715200}
+    emoji-max-processing-batches-per-user: ${MUSIC_EMOJI_MAX_PROCESSING_BATCHES_PER_USER:1}
+    emoji-max-concurrent-uploads: ${MUSIC_EMOJI_MAX_CONCURRENT_UPLOADS:2}
+    emoji-batch-processing-minutes: ${MUSIC_EMOJI_BATCH_PROCESSING_MINUTES:30}
+    emoji-cleanup-delay-ms: ${MUSIC_EMOJI_CLEANUP_DELAY_MS:300000}
+  upload-url-prefix: ${MUSIC_FILE_URL_PREFIX:http://192.168.153.131:9090/api/files/}
+  nginx-url-prefix: ${MUSIC_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
+  nginx-video-url-prefix: ${MUSIC_NGINX_VIDEO_URL_PREFIX:http://192.168.153.131:3223/}
+  node3:
+    host: ${NODE3_HOST:192.168.153.133}
+    user: ${NODE3_USER:hdfs}
+    port: ${NODE3_PORT:22}
+    key-path: ${NODE3_KEY_PATH:/sdb1/myprojoct/haoranmusic/scripts/ssh/id_rsa}
+    lyric-path: ${NODE3_LYRIC_PATH:/sdb1/haoranmusicData/Datas/lyrics/}
+    lyric-url: ${NODE3_LYRIC_URL:http://192.168.153.133:8081/lyrics/}
+    images-path: ${NODE3_IMAGES_PATH:/sdb1/haoranmusicData/Datas/images/}
+    playlist-path: ${NODE3_PLAYLIST_PATH:/sdb1/haoranmusicData/Datas/playlist-covers/}
+    emoji-path: ${NODE3_EMOJI_PATH:/sdb1/haoranmusicData/Datas/emojis/}
+    reconcile-root: ${NODE3_RECONCILE_ROOT:/sdb1/haoranmusicData/Datas}
+    reconcile-max-hash-bytes: ${NODE3_RECONCILE_MAX_HASH_BYTES:536870912}
+  node4:
+    host: ${NODE4_HOST:192.168.153.132}
+    user: ${NODE4_USER:hdfs}
+    path: ${NODE4_CACHE_PATH:/sdb1/myprojoct/haoranmusic/cache/}
+  video:
+    upload-path: ${MUSIC_VIDEO_UPLOAD_PATH:/sdb1/haoranmusicData/Datas/video/posts/}
+    temp-path: ${MUSIC_VIDEO_TEMP_PATH:/sdb1/haoranmusicData/Datas/video/temp/}
+    max-size: ${MUSIC_VIDEO_MAX_SIZE:104857600}
+    max-duration: ${MUSIC_VIDEO_MAX_DURATION:300}
+    min-duration: ${MUSIC_VIDEO_MIN_DURATION:3}
+    nginx-url: ${MUSIC_VIDEO_NGINX_URL:http://192.168.153.133:8082/video/}
+    temp-retention-hours: ${MUSIC_VIDEO_TEMP_RETENTION_HOURS:1}
+    allowed-formats:
+      - mp4
+      - mov
+      - avi
+      - mkv
+  post:
+    nginx-url-prefix: ${MUSIC_POST_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
+    video-nginx-url-prefix: ${MUSIC_POST_VIDEO_NGINX_URL_PREFIX:http://192.168.153.131:3223/}
+    image-original-path: ${MUSIC_POST_IMAGE_ORIGINAL_PATH:/sdb1/myprojoct/haoranmusic/posts/images/original/}
+    image-compressed-path: ${MUSIC_POST_IMAGE_COMPRESSED_PATH:/sdb1/myprojoct/haoranmusic/posts/images/compressed/}
+    image-thumbnail-path: ${MUSIC_POST_IMAGE_THUMBNAIL_PATH:/sdb1/myprojoct/haoranmusic/posts/images/thumbnails/}
+    image-compressed-quality: ${MUSIC_POST_IMAGE_COMPRESSED_QUALITY:0.85}
+    image-thumbnail-quality: ${MUSIC_POST_IMAGE_THUMBNAIL_QUALITY:0.80}
+    image-max-file-size: ${MUSIC_POST_IMAGE_MAX_FILE_SIZE:10485760}
+    image-max-files: ${MUSIC_POST_IMAGE_MAX_FILES:9}
+    image-allowed-extensions:
+      - ".jpeg"
+      - ".jpg"
+      - ".png"
+      - ".webp"
+    video-original-path: ${MUSIC_POST_VIDEO_ORIGINAL_PATH:/sdb1/haoranmusicData/Datas/posts/videos/original/}
+    video-cache-path: ${MUSIC_POST_VIDEO_CACHE_PATH:/sdb1/myprojoct/haoranmusic/tmp/posts/videos/cache/}
+    video-thumbnail-path: ${MUSIC_POST_VIDEO_THUMBNAIL_PATH:/sdb1/haoranmusicData/Datas/posts/videos/thumbnails/}
+    video-temp-path: ${MUSIC_POST_VIDEO_TEMP_PATH:/sdb1/myprojoct/haoranmusic/tmp/posts/videos/upload/}
+    video-480p-path: ${MUSIC_POST_VIDEO_480P_PATH:/sdb1/haoranmusicData/Datas/posts/videos/480p/}
+    video-720p-path: ${MUSIC_POST_VIDEO_720P_PATH:/sdb1/haoranmusicData/Datas/posts/videos/720p/}
+    video-max-size: ${MUSIC_POST_VIDEO_MAX_SIZE:524288000}
+    video-max-duration: ${MUSIC_POST_VIDEO_MAX_DURATION:300}
+    video-min-duration: ${MUSIC_POST_VIDEO_MIN_DURATION:3}
+    video-cache-days: ${MUSIC_POST_VIDEO_CACHE_DAYS:7}
+    video-crf-720p: ${MUSIC_POST_VIDEO_CRF_720P:24}
+    video-crf-480p: ${MUSIC_POST_VIDEO_CRF_480P:26}
+    video-thumbnail-time: ${MUSIC_POST_VIDEO_THUMBNAIL_TIME:5}
+    video-ffmpeg-path: ${MUSIC_POST_VIDEO_FFMPEG_PATH:${FFMPEG_PATH:/usr/local/soft/ffmpeg-6.1.1/bin/ffmpeg}}
+    video-ffprobe-path: ${MUSIC_POST_VIDEO_FFPROBE_PATH:${FFPROBE_PATH:/usr/local/soft/ffmpeg-6.1.1/bin/ffprobe}}
+    video-probe-timeout-seconds: ${MUSIC_POST_VIDEO_PROBE_TIMEOUT_SECONDS:30}
+    video-transcode-timeout-seconds: ${MUSIC_POST_VIDEO_TRANSCODE_TIMEOUT_SECONDS:600}
+    video-ssh-timeout-seconds: ${MUSIC_POST_VIDEO_SSH_TIMEOUT_SECONDS:60}
+    video-allowed-content-types:
+      - video/mp4
+      - video/quicktime
+      - video/x-msvideo
+  storage:
+    url-mappings:
+      - url-prefix: ${NODE3_STATIC_URL:http://192.168.153.133:8081}
+        local-path: ${NODE3_DATA_PATH:/sdb1/haoranmusicData/Datas}
+      - url-prefix: ${SONG_REQUEST_STATIC_URL:http://192.168.153.131:3223/song-requests}
+        local-path: ${SONG_REQUEST_DATA_PATH:/sdb1/myprojoct/haoranmusic/song_requests}
+      - url-prefix: ${NODE1_STATIC_URL:http://192.168.153.131:3223}
+        local-path: ${NODE1_DATA_PATH:/sdb1/myprojoct/haoranmusic}
+    local-proxy-package-paths:
+      - ${LOCAL_PROXY_PACKAGE_ZIP:D:/ideaproject/HaoRanMusic/haoran-local-proxy.zip}
+      - ${LOCAL_PROXY_PACKAGE_DIR:D:/ideaproject/HaoRanMusic/haoran-local-proxy}
+      - ${LOCAL_PROXY_REMOTE_ZIP:/sdb1/myprojoct/haoranmusic/haoran-local-proxy.zip}
+
+                    
+audio:
+  ffmpeg:
+                                        
+                                                                 
+                       
+    path: ${FFPROBE_PATH:/usr/local/soft/ffmpeg-6.1.1/bin/ffprobe}
+    enabled: ${AUDIO_FFMPEG_ENABLED:true}
+    detect-timeout: ${AUDIO_FFMPEG_DETECT_TIMEOUT:30000}
+    version-check-timeout-seconds: ${AUDIO_FFMPEG_VERSION_CHECK_TIMEOUT_SECONDS:5}
+              
+  max-history-count: 560
+            
+  max-playlist-songs: 200
+        
+  page:
+    default-size: 20
+    max-size: 100
+          
+  upload:
+    song-path: /sdb1/myprojoct/haoranmusic/data/songs/
+    mv-path: /sdb1/myprojoct/haoranmusic/data/mvs/
+    avatar-path: /sdb1/myprojoct/haoranmusic/data/avatars/
+    album-cover-path: /sdb1/myprojoct/haoranmusic/data/album-covers/
+    playlist-cover-path: /sdb1/myprojoct/haoranmusic/data/playlist-covers/
+               
+    url-prefix: ${MUSIC_FILE_URL_PREFIX:http://192.168.153.131:9090/api/files/}
+                     
+    node3:
+      host: 192.168.153.133
+      user: hdfs
+      playlist-path: /sdb1/haoranmusicData/Datas/playlist-covers/
+                     
+  local-proxy:
+    base-url: ${LOCAL_PROXY_BASE_URL:http://192.168.153.133:7777}
+    timeout: 5000
+        
+  default-wallpapers:
+    - https://picsum.photos/1920/1080?random=1
+    - https://picsum.photos/1920/1080?random=2
+    - https://picsum.photos/1920/1080?random=3
+    - https://picsum.photos/1920/1080?random=4
+    - https://picsum.photos/1920/1080?random=5
+
+                                             
+recommend:
+  model:
+    collaborative-path: ${RECOMMEND_COLLABORATIVE_MODEL_PATH:/sdb1/myprojoct/haoranmusic/models/recommendation_model.json}
+    audio-similarity-path: ${RECOMMEND_AUDIO_SIMILARITY_MODEL_PATH:/sdb1/myprojoct/haoranmusic/models/audio_similarity_model.json}
+    hybrid-path: ${RECOMMEND_HYBRID_MODEL_PATH:/sdb1/myprojoct/haoranmusic/models/hybrid_recommend_model.json}
+    require-manifest: ${RECOMMEND_MODEL_REQUIRE_MANIFEST:true}
+  collaborative:
+    weight: ${RECOMMEND_COLLABORATIVE_WEIGHT:0.4}
+  content:
+    weight: ${RECOMMEND_CONTENT_WEIGHT:0.3}
+  popularity:
+    weight: ${RECOMMEND_POPULARITY_WEIGHT:0.2}
+  social:
+    weight: ${RECOMMEND_SOCIAL_WEIGHT:0.1}
+
+haoran:
+  kafka:
+    play-topic: ${HAORAN_KAFKA_PLAY_TOPIC:play-events}
+    play-consumer-group: ${HAORAN_KAFKA_PLAY_CONSUMER_GROUP:haoran-music-consumer}
+  content-statistic:
+    startup-sync:
+      enabled: ${CONTENT_STATISTIC_STARTUP_SYNC_ENABLED:false}
+  api:
+    slow-threshold-ms: ${API_SLOW_THRESHOLD_MS:800}
+
+                             
+hot-score:
+  threshold: ${HOT_SCORE_THRESHOLD:100}
+  new-song-days: ${HOT_SCORE_NEW_SONG_DAYS:7}
+  calculation-period-days: ${HOT_SCORE_CALCULATION_PERIOD_DAYS:3}
+  favorite-weight: ${HOT_SCORE_FAVORITE_WEIGHT:5}
+  comment-weight: ${HOT_SCORE_COMMENT_WEIGHT:3}
+  comment-like-weight: ${HOT_SCORE_COMMENT_LIKE_WEIGHT:2}
+  comment-reply-weight: ${HOT_SCORE_COMMENT_REPLY_WEIGHT:1}
+  play-count-divisor: ${HOT_SCORE_PLAY_COUNT_DIVISOR:100}
+  mv-like-weight: ${HOT_SCORE_MV_LIKE_WEIGHT:3}
+  mv-favorite-weight: ${HOT_SCORE_MV_FAVORITE_WEIGHT:5}
+  mv-comment-weight: ${HOT_SCORE_MV_COMMENT_WEIGHT:3}
+  mv-share-weight: ${HOT_SCORE_MV_SHARE_WEIGHT:2}
+
+                                 
+copyright:
+  check:
+    expiry-warning-days: ${COPYRIGHT_EXPIRY_WARNING_DAYS:30}
+    inactive-creator-days: ${COPYRIGHT_INACTIVE_CREATOR_DAYS:180}
+
+            
+                                                                     
+                                       
+deepseek:
+  base-url: ${DEEPSEEK_BASE_URL:http://192.168.153.1:11434}
+  model: ${DEEPSEEK_MODEL:deepseek-r1:8b}
+  api-key: ${DEEPSEEK_API_KEY:}
+  timeout: ${DEEPSEEK_TIMEOUT:600}
+                                        
+  max-retries: ${DEEPSEEK_MAX_RETRIES:0}
+  temperature: ${DEEPSEEK_TEMPERATURE:0.7}
+  max-tokens: ${DEEPSEEK_MAX_TOKENS:4096}
+
+                            
+vip:
+  normal-download-quota: ${VIP_NORMAL_DOWNLOAD_QUOTA:10}
+  prices:
+    month:
+      price: ${VIP_MONTH_PRICE:1000}
+      days: ${VIP_MONTH_DAYS:30}
+      name: month
+      discount: ${VIP_MONTH_DISCOUNT:100}
+    quarter:
+      price: ${VIP_QUARTER_PRICE:2500}
+      days: ${VIP_QUARTER_DAYS:90}
+      name: quarter
+      discount: ${VIP_QUARTER_DISCOUNT:100}
+    year:
+      price: ${VIP_YEAR_PRICE:10000}
+      days: ${VIP_YEAR_DAYS:365}
+      name: year
+      discount: ${VIP_YEAR_DISCOUNT:100}
+
+                                                                                                         
+sms:
+  enabled: ${SMS_ENABLED:false}
+  provider: ${SMS_PROVIDER:disabled}
+  disabled-message: ${SMS_DISABLED_MESSAGE:短信服务暂未配置，请稍后再试}
+  access-key-id: ${SMS_ACCESS_KEY_ID:}
+  access-key-secret: ${SMS_ACCESS_KEY_SECRET:}
+  sign-name: ${SMS_SIGN_NAME:}
+  template-code: ${SMS_TEMPLATE_CODE:}
+  code-param-name: ${SMS_CODE_PARAM_NAME:code}
+  endpoint: ${SMS_ENDPOINT:dysmsapi.aliyuncs.com}
+  connect-timeout-millis: ${SMS_CONNECT_TIMEOUT_MILLIS:3000}
+  read-timeout-millis: ${SMS_READ_TIMEOUT_MILLIS:5000}
+
+                                                                             
+email:
+  enabled: ${EMAIL_ENABLED:false}
+  provider: ${EMAIL_PROVIDER:disabled}
+  from: ${EMAIL_FROM:noreply@haoranmusic.com}
+  from-name: ${EMAIL_FROM_NAME:HaoRanMusic}
+  subject: ${EMAIL_SUBJECT:浩然音乐验证码}
+  disabled-message: ${EMAIL_DISABLED_MESSAGE:邮箱验证码服务暂未配置，请稍后再试}
+  code-expire-minutes: ${USER_VERIFICATION_CODE_EXPIRE_MINUTES:5}
+
+                                                                                                          
+auth-risk:
+  enabled: ${AUTH_RISK_ENABLED:true}
+  enforce-captcha: ${AUTH_RISK_ENFORCE_CAPTCHA:true}
+  login-failure-window-minutes: ${AUTH_RISK_LOGIN_FAILURE_WINDOW_MINUTES:15}
+  account-failure-threshold: ${AUTH_RISK_ACCOUNT_FAILURE_THRESHOLD:3}
+  account-block-threshold: ${AUTH_RISK_ACCOUNT_BLOCK_THRESHOLD:10}
+  ip-failure-threshold: ${AUTH_RISK_IP_FAILURE_THRESHOLD:10}
+  force-captcha-minutes: ${AUTH_RISK_FORCE_CAPTCHA_MINUTES:30}
+  logout-window-minutes: ${AUTH_RISK_LOGOUT_WINDOW_MINUTES:10}
+  logout-login-threshold: ${AUTH_RISK_LOGOUT_LOGIN_THRESHOLD:3}
+  ip-change-window-hours: ${AUTH_RISK_IP_CHANGE_WINDOW_HOURS:24}
+  ip-change-threshold: ${AUTH_RISK_IP_CHANGE_THRESHOLD:3}
+                                             
+user:
+  verification:
+    code-length: ${USER_VERIFICATION_CODE_LENGTH:6}
+    code-expire-minutes: ${USER_VERIFICATION_CODE_EXPIRE_MINUTES:5}
+    resend-interval-seconds: ${USER_VERIFICATION_RESEND_INTERVAL_SECONDS:60}
+    max-send-count-per-hour: ${USER_VERIFICATION_MAX_SEND_COUNT_PER_HOUR:5}
+    max-fail-count: ${USER_VERIFICATION_MAX_FAIL_COUNT:5}
+    default-query-limit: ${USER_VERIFICATION_DEFAULT_QUERY_LIMIT:10}
+  growth:
+    checkin:
+      daily-points: ${USER_CHECKIN_DAILY_POINTS:5}
+      weekly-bonus: ${USER_CHECKIN_WEEKLY_BONUS:15}
+      weekly-vip-days: ${USER_CHECKIN_WEEKLY_VIP_DAYS:5}
+      monthly-bonus: ${USER_CHECKIN_MONTHLY_BONUS:100}
+      makeup-window-days: ${USER_CHECKIN_MAKEUP_WINDOW_DAYS:7}
+      makeup-cost-points: ${USER_CHECKIN_MAKEUP_COST_POINTS:10}
+    points:
+      daily-limit: ${USER_POINTS_DAILY_LIMIT:100}
+      checkin-points: ${USER_POINTS_CHECKIN_POINTS:10}
+      listen-points: ${USER_POINTS_LISTEN_POINTS:1}
+      share-points: ${USER_POINTS_SHARE_POINTS:5}
+      comment-points: ${USER_POINTS_COMMENT_POINTS:2}
+      exp-divisor: ${USER_POINTS_EXP_DIVISOR:10}
+      extended-level-step-exp: ${USER_POINTS_EXTENDED_LEVEL_STEP_EXP:1000}
+      level-exp-thresholds:
+        - 100
+        - 300
+        - 600
+        - 1000
+        - 1500
+        - 2100
+        - 2800
+        - 3600
+        - 4500
+        - 5500
+      level-titles:
+        2: rookie
+        4: junior
+        6: intermediate
+        8: senior
+        10: expert
+    activity:
+      cache-key-prefix: "activity:score:"
+      cache-expire-minutes: ${USER_ACTIVITY_CACHE_EXPIRE_MINUTES:30}
+      max-score: ${USER_ACTIVITY_MAX_SCORE:100}
+      month-checkin-max-score: ${USER_ACTIVITY_MONTH_CHECKIN_MAX_SCORE:50}
+      month-checkin-per-day-score: ${USER_ACTIVITY_MONTH_CHECKIN_PER_DAY_SCORE:2}
+      continuous-max-score: ${USER_ACTIVITY_CONTINUOUS_MAX_SCORE:20}
+      continuous-per-day-score: ${USER_ACTIVITY_CONTINUOUS_PER_DAY_SCORE:2}
+      points-max-score: ${USER_ACTIVITY_POINTS_MAX_SCORE:20}
+      points-per-score: ${USER_ACTIVITY_POINTS_PER_SCORE:10}
+      total-checkin-max-score: ${USER_ACTIVITY_TOTAL_CHECKIN_MAX_SCORE:10}
+      total-checkin-per-score: ${USER_ACTIVITY_TOTAL_CHECKIN_PER_SCORE:10}
+      active-min-score: ${USER_ACTIVITY_ACTIVE_MIN_SCORE:60}
+      super-active-min-score: ${USER_ACTIVITY_SUPER_ACTIVE_MIN_SCORE:80}
+      normal-min-score: ${USER_ACTIVITY_NORMAL_MIN_SCORE:30}
+      social-score-max: ${USER_ACTIVITY_SOCIAL_SCORE_MAX:100}
+      social-follow-max-score: ${USER_ACTIVITY_SOCIAL_FOLLOW_MAX_SCORE:20}
+      social-comment-max-score: ${USER_ACTIVITY_SOCIAL_COMMENT_MAX_SCORE:40}
+      social-like-max-score: ${USER_ACTIVITY_SOCIAL_LIKE_MAX_SCORE:30}
+      social-share-max-score: ${USER_ACTIVITY_SOCIAL_SHARE_MAX_SCORE:10}
+      social-comment-per-score: ${USER_ACTIVITY_SOCIAL_COMMENT_PER_SCORE:2}
+      social-like-per-score: ${USER_ACTIVITY_SOCIAL_LIKE_PER_SCORE:1}
+      social-share-per-score: ${USER_ACTIVITY_SOCIAL_SHARE_PER_SCORE:2}
+    statistics:
+      cache-days: ${USER_STATS_CACHE_DAYS:2}
+      bot-max-daily-play-count: ${USER_STATS_BOT_MAX_DAILY_PLAY_COUNT:800}
+      bot-max-daily-duration-seconds: ${USER_STATS_BOT_MAX_DAILY_DURATION_SECONDS:50400}
+      risk-play-count-warn-threshold: ${USER_STATS_RISK_PLAY_COUNT_WARN_THRESHOLD:600}
+      risk-duration-warn-seconds: ${USER_STATS_RISK_DURATION_WARN_SECONDS:36000}
+      risk-login-count-warn-threshold: ${USER_STATS_RISK_LOGIN_COUNT_WARN_THRESHOLD:20}
+      risk-search-count-warn-threshold: ${USER_STATS_RISK_SEARCH_COUNT_WARN_THRESHOLD:200}
+      risk-interaction-count-warn-threshold: ${USER_STATS_RISK_INTERACTION_COUNT_WARN_THRESHOLD:300}
+      risk-low-diversity-play-count-threshold: ${USER_STATS_RISK_LOW_DIVERSITY_PLAY_COUNT_THRESHOLD:100}
+      risk-low-diversity-unique-song-threshold: ${USER_STATS_RISK_LOW_DIVERSITY_UNIQUE_SONG_THRESHOLD:3}
+      risk-abnormal-score-threshold: ${USER_STATS_RISK_ABNORMAL_SCORE_THRESHOLD:70}
+      classification-active-play-duration-seconds: ${USER_STATS_CLASSIFICATION_ACTIVE_PLAY_DURATION_SECONDS:72000}
+      classification-active-unique-song-count: ${USER_STATS_CLASSIFICATION_ACTIVE_UNIQUE_SONG_COUNT:20}
+
+                       
+reward:
+  rules:
+    min-amount: ${REWARD_MIN_AMOUNT:1}
+    max-amount: ${REWARD_MAX_AMOUNT:200}
+    daily-max-count: ${REWARD_DAILY_MAX_COUNT:10}
+    daily-max-amount: ${REWARD_DAILY_MAX_AMOUNT:200}
+    alert-amount-threshold: ${REWARD_ALERT_AMOUNT_THRESHOLD:2000}
+    daily-limit-cache-days: ${REWARD_DAILY_LIMIT_CACHE_DAYS:2}
+
+                         
+crawler:
+  detection:
+    allowed-referrers:
+      - localhost:3000
+      - 127.0.0.1:3000
+      - 192.168.
+      - hao-ran-music
+      - haoranmusic
+    missing-user-agent-risk: ${CRAWLER_MISSING_USER_AGENT_RISK:40}
+    spider-user-agent-risk: ${CRAWLER_SPIDER_USER_AGENT_RISK:50}
+    missing-referer-risk: ${CRAWLER_MISSING_REFERER_RISK:20}
+    external-referer-risk: ${CRAWLER_EXTERNAL_REFERER_RISK:10}
+    suspicious-access-risk: ${CRAWLER_SUSPICIOUS_ACCESS_RISK:20}
+    read-only-risk: ${CRAWLER_READ_ONLY_RISK:20}
+    crawler-risk-threshold: ${CRAWLER_RISK_THRESHOLD:60}
+    access-window-seconds: ${CRAWLER_ACCESS_WINDOW_SECONDS:60}
+    access-burst-threshold: ${CRAWLER_ACCESS_BURST_THRESHOLD:30}
+    access-no-interaction-threshold: ${CRAWLER_ACCESS_NO_INTERACTION_THRESHOLD:20}
+    read-only-view-threshold: ${CRAWLER_READ_ONLY_VIEW_THRESHOLD:50}
+    behavior-expire-seconds: ${CRAWLER_BEHAVIOR_EXPIRE_SECONDS:3600}
+
+                                                
+payment:
+  platform-fee-rate: ${PAYMENT_PLATFORM_FEE_RATE:0.02}
+  currency: ${PAYMENT_CURRENCY:CNY}
+  order-expire-hours: ${PAYMENT_ORDER_EXPIRE_HOURS:1}
+  order-expire-minutes: ${PAYMENT_ORDER_EXPIRE_MINUTES:30}
+  order-retention-days: ${PAYMENT_ORDER_RETENTION_DAYS:30}
+  scan-interval-hours: ${PAYMENT_SCAN_INTERVAL_HOURS:3}
+  scan-cron: "${PAYMENT_SCAN_CRON:0 0 */3 * * ?}"
+  order-timeout-cron: "${PAYMENT_ORDER_TIMEOUT_CRON:0 */10 * * * ?}"
+  order-cleanup-cron: "${PAYMENT_ORDER_CLEANUP_CRON:0 0 2 * * ?}"
+  order-statistics-cron: "${PAYMENT_ORDER_STATISTICS_CRON:0 0 1 * * ?}"
+  completion-recovery:
+    enabled: ${PAYMENT_COMPLETION_RECOVERY_ENABLED:false}
+    cron: "${PAYMENT_COMPLETION_RECOVERY_CRON:0 */1 * * * ?}"
+    batch-size: ${PAYMENT_COMPLETION_RECOVERY_BATCH_SIZE:20}
+    max-attempts: ${PAYMENT_COMPLETION_RECOVERY_MAX_ATTEMPTS:8}
+    lease-seconds: ${PAYMENT_COMPLETION_RECOVERY_LEASE_SECONDS:300}
+    base-backoff-seconds: ${PAYMENT_COMPLETION_RECOVERY_BASE_BACKOFF_SECONDS:30}
+    max-backoff-seconds: ${PAYMENT_COMPLETION_RECOVERY_MAX_BACKOFF_SECONDS:3600}
+  verification-hmac-secret: ${PAYMENT_VERIFICATION_HMAC_SECRET:}
+  previous-verification-hmac-secret: ${PAYMENT_VERIFICATION_PREVIOUS_HMAC_SECRET:}
+  scan-path: ${PAYMENT_SCAN_PATH:/sdb1/myprojoct/haoranmusic/song_requests/payment/}
+  platform-path: ${PAYMENT_PLATFORM_PATH:/sdb1/myprojoct/haoranmusic/song_requests/payment/platform/}
+  creator-path: ${PAYMENT_CREATOR_PATH:/sdb1/myprojoct/haoranmusic/song_requests/payment/creator/}
+  proof-path: ${PAYMENT_PROOF_PATH:/sdb1/myprojoct/haoranmusic/song_requests/payment/proof/}
+  url-prefix: ${PAYMENT_PUBLIC_URL_PREFIX:http://192.168.153.131:3223/payment-assets/}
+  vip:
+    price-per-month: ${VIP_PRICE_PER_MONTH:1000}
+    min-months: ${VIP_MIN_MONTHS:1}
+    max-months: ${VIP_MAX_MONTHS:12}
+    days-per-month: ${VIP_DAYS_PER_MONTH:30}
+  alipay:
+    app-id: ${ALIPAY_APP_ID:}
+    private-key: ${ALIPAY_PRIVATE_KEY:}
+    public-key: ${ALIPAY_PUBLIC_KEY:}
+    gateway: ${ALIPAY_GATEWAY:https://openapi.alipaydev.com/gateway.do}
+  wechat:
+    app-id: ${WECHAT_APP_ID:}
+    mch-id: ${WECHAT_MCH_ID:}
+    api-key: ${WECHAT_API_KEY:}
+    notify-url: ${WECHAT_NOTIFY_URL:}
+    client-ip: ${WECHAT_CLIENT_IP:127.0.0.1}
+  ssh:
+    host: ${PAYMENT_SSH_HOST:192.168.153.132}
+    port: ${PAYMENT_SSH_PORT:22}
+    user: ${PAYMENT_SSH_USER:hdfs}
+    password: ${PAYMENT_SSH_PASSWORD:}
+    private-key-path: ${PAYMENT_SSH_PRIVATE_KEY:/home/hdfs/.ssh/id_rsa}
+    known-hosts-path: ${PAYMENT_SSH_KNOWN_HOSTS:/home/hdfs/.ssh/known_hosts}
+    connect-timeout: ${PAYMENT_SSH_CONNECT_TIMEOUT:30000}
+    read-timeout: ${PAYMENT_SSH_READ_TIMEOUT:60000}
+  code:
+    scan-base-path: ${PAYMENT_CODE_SCAN_BASE_PATH:/sdb1/myprojoct/haoranmusic/payment-codes/}
+
+       
+jwt:
+  secret: ${JWT_SECRET:change-me-jwt-secret-at-least-32-bytes-for-local-demo}
+  expiration: ${JWT_EXPIRATION:604800000}
+
+                
+security:
+  block-crawler:
+    enabled: true
+  content-type:
+    paid-content-types:
+      - paid
+      - premium
+      - vip
+    creator-content-types:
+      - creator
+      - creator-work
+      - music-square-work
+    vip-content-types:
+      - vip-exclusive
+      - vip-only
+      - vip-feature
+  allowed-origins:
+    - http://localhost:3000
+    - http://127.0.0.1:3000
+    - http://192.168.153.131:3223
+  query-token-enabled: ${SECURITY_QUERY_TOKEN_ENABLED:false}
+  auth-cookie-secure: ${SECURITY_AUTH_COOKIE_SECURE:false}
+  auth-cookie-max-age-seconds: ${SECURITY_AUTH_COOKIE_MAX_AGE_SECONDS:604800}
+                                                                            
+                                                                
+  trusted-proxies: ${SECURITY_TRUSTED_PROXIES:127.0.0.1}
+  captcha-trigger-threshold: ${SECURITY_CAPTCHA_TRIGGER_THRESHOLD:80}
+  captcha-trigger-window-seconds: ${SECURITY_CAPTCHA_TRIGGER_WINDOW_SECONDS:120}
+                   
+  captcha-whitelist-minutes: 30
+                                                                                                       
+  paid-content-daily-view-limit: ${SECURITY_PAID_CONTENT_DAILY_VIEW_LIMIT:200}
+  paid-content-download-limit: ${SECURITY_PAID_CONTENT_DOWNLOAD_LIMIT:5}
+  paid-content-distinct-window-seconds: ${SECURITY_PAID_CONTENT_DISTINCT_WINDOW_SECONDS:120}
+  paid-content-distinct-warn-threshold: ${SECURITY_PAID_CONTENT_DISTINCT_WARN_THRESHOLD:40}
+  paid-content-distinct-block-threshold: ${SECURITY_PAID_CONTENT_DISTINCT_BLOCK_THRESHOLD:80}
+  paid-content-hard-block-enabled: ${SECURITY_PAID_CONTENT_HARD_BLOCK_ENABLED:true}
+  creator-batch-access-threshold-seconds: ${SECURITY_CREATOR_BATCH_ACCESS_SECONDS:60}
+  creator-batch-access-threshold-count: ${SECURITY_CREATOR_BATCH_ACCESS_COUNT:30}
+
+                             
+verify-code:
+  enabled: ${VERIFY_CODE_ENABLED:true}
+         
+  image:
+    enabled: ${VERIFY_CODE_IMAGE_ENABLED:false}
+    provider: ${VERIFY_CODE_IMAGE_PROVIDER:hutool}
+    width: ${VERIFY_CODE_IMAGE_WIDTH:130}
+    height: ${VERIFY_CODE_IMAGE_HEIGHT:48}
+    length: ${VERIFY_CODE_IMAGE_LENGTH:4}
+    interference-count: ${VERIFY_CODE_IMAGE_INTERFERENCE_COUNT:80}
+         
+  slide:
+    enabled: ${VERIFY_CODE_SLIDE_ENABLED:false}
+    provider: ${VERIFY_CODE_SLIDE_PROVIDER:disabled}
+             
+  expire-seconds: ${VERIFY_CODE_EXPIRE_SECONDS:300}
+  arithmetic-max-operand: ${VERIFY_CODE_ARITHMETIC_MAX_OPERAND:10}
+  sms-length: ${VERIFY_CODE_SMS_LENGTH:6}
+  email-length: ${VERIFY_CODE_EMAIL_LENGTH:6}
+
+                                
+local:
+  upload:
+    path: ${LOCAL_UPLOAD_PATH:/sdb1/myprojoct/haoranmusic/uploads/local-music/}
+
+                                             
+song:
+  request:
+    upload:
+      path: ${SONG_REQUEST_UPLOAD_PATH:/sdb1/myprojoct/haoranmusic/song_requests}
+    nginx:
+      url: ${SONG_REQUEST_NGINX_URL:http://192.168.153.131:3223/song-requests}
+    node2:
+      host: ${SONG_REQUEST_NODE2_HOST:192.168.153.132}
+      user: ${SONG_REQUEST_NODE2_USER:hdfs}
+      path: ${SONG_REQUEST_NODE2_PATH:/sdb1/myprojoct/haoranmusic/song_requests}
+    limits:
+      daily-max-requests: ${SONG_REQUEST_DAILY_MAX_REQUESTS:20}
+      max-file-size: ${SONG_REQUEST_MAX_FILE_SIZE:524288000}
+      allowed-formats:
+        - mp3
+        - flac
+        - wav
+        - m4a
+        - aac
+        - ogg
+        - wma
+        - ape
+    sync:
+      mkdir-timeout-seconds: ${SONG_REQUEST_MKDIR_TIMEOUT_SECONDS:30}
+      scp-timeout-seconds: ${SONG_REQUEST_SCP_TIMEOUT_SECONDS:600}
+
+                           
+moderation:
+  appeal:
+    max-count: ${MODERATION_APPEAL_MAX_COUNT:3}
+    window-days: ${MODERATION_APPEAL_WINDOW_DAYS:7}
+    count-cache-days: ${MODERATION_APPEAL_COUNT_CACHE_DAYS:90}
+    count-prefix: ${MODERATION_APPEAL_COUNT_PREFIX:appeal:count:}
+  assignment:
+    load-prefix: ${MODERATION_ASSIGNMENT_LOAD_PREFIX:moderation:load:}
+    today-prefix: ${MODERATION_ASSIGNMENT_TODAY_PREFIX:moderation:today:}
+    default-daily-quota: ${MODERATION_ASSIGNMENT_DEFAULT_DAILY_QUOTA:100}
+    auto-assign-batch-limit: ${MODERATION_ASSIGNMENT_AUTO_ASSIGN_BATCH_LIMIT:50}
+    today-quota-cache-days: ${MODERATION_ASSIGNMENT_TODAY_QUOTA_CACHE_DAYS:2}
+    load-cache-days: ${MODERATION_ASSIGNMENT_LOAD_CACHE_DAYS:1}
+
+                               
+artist:
+  application:
+    apply-prefix: ${ARTIST_APPLICATION_APPLY_PREFIX:artist:apply:}
+    apply-count-prefix: ${ARTIST_APPLICATION_APPLY_COUNT_PREFIX:artist:apply:count:}
+    apply-limit-days: ${ARTIST_APPLICATION_LIMIT_DAYS:30}
+    max-applies-per-period: ${ARTIST_APPLICATION_MAX_APPLIES:3}
+
+                            
+work:
+  submission:
+    creator-work-prefix: ${WORK_SUBMISSION_CREATOR_PREFIX:creator:work:submit:}
+    creator-work-daily-limit: ${WORK_SUBMISSION_CREATOR_DAILY_LIMIT:5}
+    music-square-prefix: ${WORK_SUBMISSION_MUSIC_SQUARE_PREFIX:music_square:submit:}
+    music-square-daily-limit: ${WORK_SUBMISSION_MUSIC_SQUARE_DAILY_LIMIT:10}
+    submit-window-days: ${WORK_SUBMISSION_WINDOW_DAYS:1}
+    like-lock-days: ${WORK_SUBMISSION_LIKE_LOCK_DAYS:7}
+
+                                     
+lyric:
+  request:
+    submit-prefix: ${LYRIC_REQUEST_SUBMIT_PREFIX:lyric:submit:}
+    submit-limit-per-song: ${LYRIC_REQUEST_SUBMIT_LIMIT_PER_SONG:5}
+    submit-limit-period-hours: ${LYRIC_REQUEST_SUBMIT_LIMIT_PERIOD_HOURS:24}
+  translation:
+    quota-prefix: ${LYRIC_TRANSLATION_QUOTA_PREFIX:lyric:translation:quota:}
+    lock-prefix: ${LYRIC_TRANSLATION_LOCK_PREFIX:lyric:translation:lock:}
+    limit-per-user: ${LYRIC_TRANSLATION_LIMIT_PER_USER:10}
+    limit-period-hours: ${LYRIC_TRANSLATION_LIMIT_PERIOD_HOURS:24}
+    lock-minutes: ${LYRIC_TRANSLATION_LOCK_MINUTES:20}
+    recovery-batch-size: ${LYRIC_TRANSLATION_RECOVERY_BATCH_SIZE:20}
+    recovery-delay-ms: ${LYRIC_TRANSLATION_RECOVERY_DELAY_MS:60000}
+    stale-processing-minutes: ${LYRIC_TRANSLATION_STALE_PROCESSING_MINUTES:20}
+    max-attempts: ${LYRIC_TRANSLATION_MAX_ATTEMPTS:3}
+    retry-delay-seconds: ${LYRIC_TRANSLATION_RETRY_DELAY_SECONDS:60}
+    max-retry-delay-seconds: ${LYRIC_TRANSLATION_MAX_RETRY_DELAY_SECONDS:900}
+
+                                  
+message:
+  private:
+    recall-time-limit-minutes: ${MESSAGE_PRIVATE_RECALL_LIMIT_MINUTES:2}
+    unread-count-prefix: ${MESSAGE_PRIVATE_UNREAD_PREFIX:unread_count:}
+    unread-count-cache-ttl-seconds: ${MESSAGE_PRIVATE_UNREAD_CACHE_TTL_SECONDS:300}
+    conversation-prefix: ${MESSAGE_PRIVATE_CONVERSATION_PREFIX:conversation:}
+    text-max-length: ${MESSAGE_PRIVATE_TEXT_MAX_LENGTH:500}
+
+                               
+playlist:
+  collaboration:
+    max-collaborators: ${PLAYLIST_COLLABORATION_MAX_COLLABORATORS:10}
+
+                                 
+clamav:
+  enabled: ${CLAMAV_ENABLED:true}
+  host: ${CLAMAV_HOST:192.168.153.131}
+  port: ${CLAMAV_PORT:3310}
+  timeout: ${CLAMAV_TIMEOUT:30000}
+  fail-on-unavailable: ${CLAMAV_FAIL_ON_UNAVAILABLE:true}
+  quarantine-enabled: ${CLAMAV_QUARANTINE_ENABLED:true}
+  quarantine-path: ${CLAMAV_QUARANTINE_PATH:/sdb1/myprojoct/haoranmusic/quarantine/}
+

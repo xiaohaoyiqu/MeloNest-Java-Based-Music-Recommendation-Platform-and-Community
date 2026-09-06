@@ -1,0 +1,27 @@
+# Copy to a protected local SSH configuration and replace IdentityFile.
+# @author xiaohaoyiqu
+
+Host node1
+    HostName 192.168.153.131
+    User hdfs
+    IdentityFile D:/secure/path/to/haoran_cluster_key
+    StrictHostKeyChecking yes
+    UserKnownHostsFile ~/.ssh/known_hosts
+    BatchMode yes
+
+Host node2
+    HostName 192.168.153.132
+    User hdfs
+    IdentityFile D:/secure/path/to/haoran_cluster_key
+    StrictHostKeyChecking yes
+    UserKnownHostsFile ~/.ssh/known_hosts
+    BatchMode yes
+
+Host node3
+    HostName 192.168.153.133
+    User hdfs
+    IdentityFile D:/secure/path/to/haoran_cluster_key
+    StrictHostKeyChecking yes
+    UserKnownHostsFile ~/.ssh/known_hosts
+    BatchMode yes
+

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haoran.music.mapper.MVMapper">
+
+    <select id="selectPageWithFilters" resultType="com.haoran.music.entity.MV">
+        SELECT m.*
+        FROM mv m
+        LEFT JOIN song filter_song
+          ON filter_song.id = m.song_id
+         AND filter_song.status = 1
+         AND filter_song.deleted = 0
+        LEFT JOIN album filter_album
+          ON filter_album.id = filter_song.album_id
+         AND filter_album.status = 1
+         AND filter_album.deleted = 0
+        <where>
+            m.status = 1
+            AND m.deleted = 0
+            <if test="area != null and area != ''">
+                <choose>
+                    <when test="area == '内地'">
+                        AND filter_album.id IS NOT NULL
+                        AND (
+                            (filter_album.country IN ('中国', '中国大陆', 'CN', 'China', 'PRC')
+                             AND COALESCE(filter_album.province, '') NOT IN
+                                 ('香港', '台湾', '澳门', '中国香港', '中国台湾', '中国澳门'))
+                            OR filter_album.region IN ('内地', '大陆', '中国大陆')
+                        )
+                    </when>
+                    <when test="area == '港台'">
+                        AND filter_album.id IS NOT NULL
+                        AND (
+                            filter_album.country IN ('香港', '台湾', '澳门', '中国香港', '中国台湾', '中国澳门', 'HK', 'TW', 'MO')
+                            OR filter_album.province IN ('香港', '台湾', '澳门', '中国香港', '中国台湾', '中国澳门')
+                            OR filter_album.region IN ('港台', '香港', '台湾', '澳门')
+                        )
+                    </when>
+                    <when test="area == '欧美'">
+                        AND filter_album.id IS NOT NULL
+                        AND (
+                            filter_album.country IN ('美国', '英国', '法国', '德国', '加拿大', '意大利', '比利时',
+                                '西班牙', '葡萄牙', '荷兰', '爱尔兰', '瑞典', '挪威', '芬兰', '丹麦', '瑞士',
+                                '奥地利', '澳大利亚', '新西兰', 'US', 'USA', 'GB', 'UK', 'FR', 'DE', 'CA',
+                                'IT', 'BE', 'ES', 'PT', 'NL', 'IE', 'SE', 'NO', 'FI', 'DK', 'CH', 'AT', 'AU', 'NZ')
+                            OR filter_album.region IN ('欧美', '欧洲', '北美', '大洋洲')
+                        )
+                    </when>
+                    <when test="area == '日本'">
+                        AND filter_album.id IS NOT NULL
+                        AND (filter_album.country IN ('日本', 'JP', 'Japan') OR filter_album.region = '日本')
+                    </when>
+                    <when test="area == '韩国'">
+                        AND filter_album.id IS NOT NULL
+                        AND (filter_album.country IN ('韩国', 'KR', 'Korea', 'South Korea') OR filter_album.region = '韩国')
+                    </when>
+                    <otherwise>
+                        AND (
+                            filter_song.id IS NULL
+                            OR filter_album.id IS NULL
+                            OR (
+                                COALESCE(filter_album.country, '') NOT IN ('中国', '中国大陆', 'CN', 'China', 'PRC',
+                                    '香港', '台湾', '澳门', '中国香港', '中国台湾', '中国澳门', 'HK', 'TW', 'MO',
+                                    '美国', '英国', '法国', '德国', '加拿大', '意大利', '比利时', '西班牙', '葡萄牙',
+                                    '荷兰', '爱尔兰', '瑞典', '挪威', '芬兰', '丹麦', '瑞士', '奥地利', '澳大利亚',
+                                    '新西兰', 'US', 'USA', 'GB', 'UK', 'FR', 'DE', 'CA', 'IT', 'BE', 'ES',
+                                    'PT', 'NL', 'IE', 'SE', 'NO', 'FI', 'DK', 'CH', 'AT', 'AU', 'NZ',
+                                    '日本', 'JP', 'Japan', '韩国', 'KR', 'Korea', 'South Korea')
+                                AND COALESCE(filter_album.region, '') NOT IN
+                                    ('内地', '大陆', '中国大陆', '港台', '香港', '台湾', '澳门', '欧美', '欧洲',
+                                     '北美', '大洋洲', '日本', '韩国')
+                            )
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="genre != null and genre != ''">
+                <choose>
+                    <when test="genre == '其他'">
+                        AND (
+                            filter_song.id IS NULL
+                            OR CONCAT(COALESCE(filter_song.main_type, ''), ' ', COALESCE(filter_song.main_genre, ''))
+                               NOT REGEXP '流行|摇滚|说唱|嘻哈|电子|民谣|古风|爵士|纯音乐|乡村|金属|拉丁|古典|R&amp;B|R＆B|节奏布鲁斯'
+                        )
+                    </when>
+                    <when test="genre == '说唱'">
+                        AND CONCAT(COALESCE(filter_song.main_type, ''), ' ', COALESCE(filter_song.main_genre, ''))
+                            REGEXP '说唱|嘻哈|Hip[- ]?Hop|Rap'
+                    </when>
+                    <when test="genre == 'R&amp;B'">
+                        AND CONCAT(COALESCE(filter_song.main_type, ''), ' ', COALESCE(filter_song.main_genre, ''))
+                            REGEXP 'R&amp;B|R＆B|节奏布鲁斯'
+                    </when>
+                    <otherwise>
+                        AND (
+                            filter_song.main_type LIKE CONCAT('%', #{genre}, '%')
+                            OR filter_song.main_genre LIKE CONCAT('%', #{genre}, '%')
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    m.name LIKE CONCAT('%', #{keyword}, '%') ESCAPE '\\'
+                    OR m.artist_names LIKE CONCAT('%', #{keyword}, '%') ESCAPE '\\'
+                    OR m.description LIKE CONCAT('%', #{keyword}, '%') ESCAPE '\\'
+                    OR filter_song.name LIKE CONCAT('%', #{keyword}, '%') ESCAPE '\\'
+                    OR filter_album.name LIKE CONCAT('%', #{keyword}, '%') ESCAPE '\\'
+                )
+            </if>
+            <if test="language != null and language != ''">
+                <choose>
+                    <when test="language == 'other'">
+                        AND (filter_song.id IS NULL OR COALESCE(filter_song.language, '') NOT IN
+                            ('zh', 'en', 'ja', 'ko', 'fr', 'es', 'de', 'it', 'th'))
+                    </when>
+                    <otherwise>
+                        AND filter_song.language = #{language}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="publishYear != null">
+                AND YEAR(m.publish_date) = #{publishYear}
+            </if>
+            <if test="publishDateStart != null">
+                AND m.publish_date &gt;= #{publishDateStart}
+            </if>
+            <if test="publishDateEnd != null">
+                AND m.publish_date &lt;= #{publishDateEnd}
+            </if>
+            <if test="minDuration != null">
+                AND m.duration &gt;= #{minDuration}
+            </if>
+            <if test="maxDuration != null">
+                AND m.duration &lt;= #{maxDuration}
+            </if>
+            <if test="quality != null and quality == '4k'">
+                AND NULLIF(TRIM(m.url_2160p), '') IS NOT NULL
+            </if>
+            <if test="quality != null and quality == '1080p'">
+                AND NULLIF(TRIM(m.url_1080p), '') IS NOT NULL
+            </if>
+            <if test="quality != null and quality == '720p'">
+                AND NULLIF(TRIM(m.url_720p), '') IS NOT NULL
+            </if>
+            <if test="quality != null and quality == '360p'">
+                AND NULLIF(TRIM(m.url_360p), '') IS NOT NULL
+            </if>
+            <if test="binding != null and binding == 'bound'">
+                AND filter_song.id IS NOT NULL
+            </if>
+            <if test="binding != null and binding == 'other'">
+                AND filter_song.id IS NULL
+            </if>
+            <if test="albumType != null and albumType != ''">
+                <choose>
+                    <when test="albumType == 'single'">
+                        AND LOWER(filter_album.type) IN ('single', 'singles', '单曲')
+                    </when>
+                    <when test="albumType == 'ep'">
+                        AND LOWER(filter_album.type) IN ('ep', '迷你专辑')
+                    </when>
+                    <when test="albumType == 'album'">
+                        AND LOWER(filter_album.type) IN ('album', 'albums', '专辑')
+                    </when>
+                    <when test="albumType == 'live'">
+                        AND LOWER(filter_album.type) IN ('live', '现场')
+                    </when>
+                    <when test="albumType == 'compilation'">
+                        AND LOWER(filter_album.type) IN ('compilation', '合辑')
+                    </when>
+                    <otherwise>
+                        AND (filter_album.id IS NULL OR COALESCE(LOWER(filter_album.type), '') NOT IN
+                            ('single', 'singles', '单曲', 'ep', '迷你专辑', 'album', 'albums', '专辑',
+                             'live', '现场', 'compilation', '合辑'))
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        <choose>
+            <when test="sortBy != null and (sortBy == 'new' or sortBy == 'newest')">
+                ORDER BY m.publish_date DESC, m.update_time DESC, m.play_count DESC
+            </when>
+            <otherwise>
+                ORDER BY m.play_count DESC, m.favorite_count DESC, m.update_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

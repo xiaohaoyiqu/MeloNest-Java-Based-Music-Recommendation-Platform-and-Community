@@ -1,0 +1,320 @@
+[
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/core-site.xml",
+        "target":  "hadoop/core-site.xml",
+        "sha256":  "99ded4dd8a319b10b64ef30014fa9fcbc9742a88abd870954876bd06ed8a7f21"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/hdfs-site.xml",
+        "target":  "hadoop/hdfs-site.xml",
+        "sha256":  "d1a32fe42dd7b5d1c80e39aa94c0e493f79890044dd06d3d3ee4cbe0ea022f90"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/mapred-site.xml",
+        "target":  "hadoop/mapred-site.xml",
+        "sha256":  "bbd383ff624edec40a20ae5731da816f4f4cfa7ca4f0009e303b972afbc01ad6"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/yarn-site.xml",
+        "target":  "hadoop/yarn-site.xml",
+        "sha256":  "e4aef0f4f97c3ca63079d0e0a37dc043e3ad09fcfd5093f9f4f1cfc5f23fb18b"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hive-3.1.2/conf/hive-site.xml",
+        "target":  "hive/hive-site.xml",
+        "sha256":  "9e7531b635c98b79ad839936c67033525118b542e8013d209db30537afd26661"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hive-3.1.2/conf/hive-env.sh",
+        "target":  "hive/hive-env.sh",
+        "sha256":  "e940f6122b950feece79597212a788c632959796a1f8e85b5fd338533ee909fd"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hbase-2.5.12/conf/hbase-site.xml",
+        "target":  "hbase/hbase-site.xml",
+        "sha256":  "8c4aa2328d081d5401153b768854c5c3d66184352452b936740277dffcc10feb"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hbase-2.5.12/conf/hbase-env.sh",
+        "target":  "hbase/hbase-env.sh",
+        "sha256":  "6ef64d41b75df442915ad6ea1472c3cf05441f0019801e0862a9651a3b3fc422"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/hbase-2.5.12/conf/regionservers",
+        "target":  "hbase/regionservers",
+        "sha256":  "42ba9f2b9b6e44a1b2744a243201d3147d174232de467899ab7e20df374101df"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/spark-defaults.conf",
+        "target":  "spark/spark-defaults.conf",
+        "sha256":  "f7b044436b16355724d514b928880b3878cce62e5061f4c0095d432bca09314a"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/spark-env.sh",
+        "target":  "spark/spark-env.sh",
+        "sha256":  "147ba56feceab15b658dde01d194c150b1a0163a3ff018596b44f6de1600573f"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/workers",
+        "target":  "spark/workers",
+        "sha256":  "b4614d2939733a495ad8f09935c1d1a6e913ed23e72c0a9dd20f23cdf77ef097"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/kafka-2.4.1/config/server.properties",
+        "target":  "kafka/server.properties",
+        "sha256":  "2524ec044145c218f337f93f031e4d6ff793b9d18afd45848daf877379a74ff0"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/kafka-2.4.1/config/log4j.properties",
+        "target":  "kafka/log4j.properties",
+        "sha256":  "c94278192311d915c36f7eb2272169079ba7b08d16f68fb6339dcc9c859f2422"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/zookeeper-3.7.2/conf/zoo.cfg",
+        "target":  "zookeeper/zoo.cfg",
+        "sha256":  "ec06b503f95ccef0d3d341ff26a3693f2cdb04baa8e5e9fab971c99efe3c399b"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/redis5.0.14/redis.conf",
+        "target":  "redis/redis.conf",
+        "sha256":  "ac2b7ea1b1afcdca97aa28d15c6212d5801c57500a8ad74aa641b7edb0eceb4e"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/redis5.0.14/sentinel.conf",
+        "target":  "redis/sentinel.conf",
+        "sha256":  "b596ad1e69af8729873af0e99916f7985e3dc1a40181d6a5d1a5d297b65192c5"
+    },
+    {
+        "node":  "node1",
+        "source":  "/usr/local/soft/nginx-1.28.0/conf/nginx.conf",
+        "target":  "nginx/nginx.conf",
+        "sha256":  "26e8dbc0ec8e17708ea9d5fcd262609ef131bc9a737f3de4c3bade0ce55210a9"
+    },
+    {
+        "node":  "node1",
+        "source":  "/sdb1/haoranmusicData/elasticsearch-7.17.24/config/elasticsearch.yml",
+        "target":  "elasticsearch/elasticsearch.yml",
+        "sha256":  "bfdc5aea6bc1dcb198d8867d0d3cd317959ff042d1281d8a45653f82ff7ffab1"
+    },
+    {
+        "node":  "node1",
+        "source":  "/sdb1/haoranmusicData/elasticsearch-7.17.24/config/jvm.options",
+        "target":  "elasticsearch/jvm.options",
+        "sha256":  "01b7e49969c569518815020d781e12736153973874004621657eb15413ae1678"
+    },
+    {
+        "node":  "node1",
+        "source":  "/etc/my.cnf",
+        "target":  "mysql/my.cnf",
+        "sha256":  "2d2add8300ee537781262f37a6465ef3f590e5cfed93a1efdb5d7f1ab85cefda"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/core-site.xml",
+        "target":  "hadoop/core-site.xml",
+        "sha256":  "99ded4dd8a319b10b64ef30014fa9fcbc9742a88abd870954876bd06ed8a7f21"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/hdfs-site.xml",
+        "target":  "hadoop/hdfs-site.xml",
+        "sha256":  "d1a32fe42dd7b5d1c80e39aa94c0e493f79890044dd06d3d3ee4cbe0ea022f90"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/mapred-site.xml",
+        "target":  "hadoop/mapred-site.xml",
+        "sha256":  "bbd383ff624edec40a20ae5731da816f4f4cfa7ca4f0009e303b972afbc01ad6"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/yarn-site.xml",
+        "target":  "hadoop/yarn-site.xml",
+        "sha256":  "e4aef0f4f97c3ca63079d0e0a37dc043e3ad09fcfd5093f9f4f1cfc5f23fb18b"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/hive-3.1.2/conf/hive-site.xml",
+        "target":  "hive/hive-site.xml",
+        "sha256":  "9e7531b635c98b79ad839936c67033525118b542e8013d209db30537afd26661"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/hive-3.1.2/conf/hive-env.sh",
+        "target":  "hive/hive-env.sh",
+        "sha256":  "fcac08ba3511b002f6d5db779c1b97950a48e7be4b0f5849865a1588709ebfa7"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/spark-defaults.conf",
+        "target":  "spark/spark-defaults.conf",
+        "sha256":  "f7b044436b16355724d514b928880b3878cce62e5061f4c0095d432bca09314a"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/spark-env.sh",
+        "target":  "spark/spark-env.sh",
+        "sha256":  "147ba56feceab15b658dde01d194c150b1a0163a3ff018596b44f6de1600573f"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/workers",
+        "target":  "spark/workers",
+        "sha256":  "b4614d2939733a495ad8f09935c1d1a6e913ed23e72c0a9dd20f23cdf77ef097"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/kafka-2.4.1/config/server.properties",
+        "target":  "kafka/server.properties",
+        "sha256":  "298a86d4b360eadd871a0dd53a9f698deaa12602cebdaa1974bea38850a9fad9"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/kafka-2.4.1/config/log4j.properties",
+        "target":  "kafka/log4j.properties",
+        "sha256":  "c94278192311d915c36f7eb2272169079ba7b08d16f68fb6339dcc9c859f2422"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/zookeeper-3.7.2/conf/zoo.cfg",
+        "target":  "zookeeper/zoo.cfg",
+        "sha256":  "ec06b503f95ccef0d3d341ff26a3693f2cdb04baa8e5e9fab971c99efe3c399b"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/redis5.0.14/redis.conf",
+        "target":  "redis/redis.conf",
+        "sha256":  "4c3418cf0e40a339274e8423642c5ef86ae7df8d1d585a0ad42111f34190c402"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/redis5.0.14/sentinel.conf",
+        "target":  "redis/sentinel.conf",
+        "sha256":  "95af5ed754c69b9ed2e71f328998c69f835bd98855c8b376b36f7c2a0db870da"
+    },
+    {
+        "node":  "node2",
+        "source":  "/usr/local/soft/nginx-1.28.0/conf/nginx.conf",
+        "target":  "nginx/nginx.conf",
+        "sha256":  "81e4ff6b04b26940b0a7ae55cadbf9445932c4636126e2580c7e2163a0d60aeb"
+    },
+    {
+        "node":  "node2",
+        "source":  "/etc/my.cnf",
+        "target":  "mysql/my.cnf",
+        "sha256":  "2d2add8300ee537781262f37a6465ef3f590e5cfed93a1efdb5d7f1ab85cefda"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/core-site.xml",
+        "target":  "hadoop/core-site.xml",
+        "sha256":  "99ded4dd8a319b10b64ef30014fa9fcbc9742a88abd870954876bd06ed8a7f21"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/hdfs-site.xml",
+        "target":  "hadoop/hdfs-site.xml",
+        "sha256":  "d1a32fe42dd7b5d1c80e39aa94c0e493f79890044dd06d3d3ee4cbe0ea022f90"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/mapred-site.xml",
+        "target":  "hadoop/mapred-site.xml",
+        "sha256":  "bbd383ff624edec40a20ae5731da816f4f4cfa7ca4f0009e303b972afbc01ad6"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/hadoop-3.3.6/etc/hadoop/yarn-site.xml",
+        "target":  "hadoop/yarn-site.xml",
+        "sha256":  "e4aef0f4f97c3ca63079d0e0a37dc043e3ad09fcfd5093f9f4f1cfc5f23fb18b"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/hive-3.1.2/conf/hive-site.xml",
+        "target":  "hive/hive-site.xml",
+        "sha256":  "9e7531b635c98b79ad839936c67033525118b542e8013d209db30537afd26661"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/hive-3.1.2/conf/hive-env.sh",
+        "target":  "hive/hive-env.sh",
+        "sha256":  "fcac08ba3511b002f6d5db779c1b97950a48e7be4b0f5849865a1588709ebfa7"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/spark-defaults.conf",
+        "target":  "spark/spark-defaults.conf",
+        "sha256":  "f7b044436b16355724d514b928880b3878cce62e5061f4c0095d432bca09314a"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/spark-env.sh",
+        "target":  "spark/spark-env.sh",
+        "sha256":  "147ba56feceab15b658dde01d194c150b1a0163a3ff018596b44f6de1600573f"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/spark-2.4.8/conf/workers",
+        "target":  "spark/workers",
+        "sha256":  "b4614d2939733a495ad8f09935c1d1a6e913ed23e72c0a9dd20f23cdf77ef097"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/kafka-2.4.1/config/server.properties",
+        "target":  "kafka/server.properties",
+        "sha256":  "51fc9b83137b2e57cb556168f06830447f6f2e97c6ad433b2bafada52ce7ecd5"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/kafka-2.4.1/config/log4j.properties",
+        "target":  "kafka/log4j.properties",
+        "sha256":  "c94278192311d915c36f7eb2272169079ba7b08d16f68fb6339dcc9c859f2422"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/zookeeper-3.7.2/conf/zoo.cfg",
+        "target":  "zookeeper/zoo.cfg",
+        "sha256":  "ec06b503f95ccef0d3d341ff26a3693f2cdb04baa8e5e9fab971c99efe3c399b"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/redis5.0.14/redis.conf",
+        "target":  "redis/redis.conf",
+        "sha256":  "46451279508ca105d8f84b884c74e990fe049f4d66b05a75e058d57404561850"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/redis5.0.14/sentinel.conf",
+        "target":  "redis/sentinel.conf",
+        "sha256":  "314e8b3e765e01760b0f791a8f98ba68f33fc8cbccd4d4c48fc1f4e19ee7a7ee"
+    },
+    {
+        "node":  "node3",
+        "source":  "/usr/local/soft/nginx-1.28.0/conf/nginx.conf",
+        "target":  "nginx/nginx.conf",
+        "sha256":  "fb38f2169fe2ec06164fc6282d178860741ccbe71173bb395e6a70667ed93c69"
+    },
+    {
+        "node":  "node3",
+        "source":  "/etc/my.cnf",
+        "target":  "mysql/my.cnf",
+        "sha256":  "2d2add8300ee537781262f37a6465ef3f590e5cfed93a1efdb5d7f1ab85cefda"
+    }
+]

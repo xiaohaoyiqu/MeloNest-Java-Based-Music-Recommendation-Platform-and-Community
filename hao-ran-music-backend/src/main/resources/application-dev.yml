@@ -1,0 +1,63 @@
+ 
+                     
+                     
+                  
+ 
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/haoranmuisc?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      filters: stat,wall,log4j2
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: ${DRUID_USERNAME:admin}
+        login-password: ${DRUID_PASSWORD:}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+      password:
+      database: 0
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
+          max-wait: 3000ms
+
+jwt:
+  secret: ${JWT_SECRET:change-me-jwt-secret-at-least-32-bytes-for-local-demo}
+  expiration: 604800000
+
+file:
+  upload-path: D:/upload/haoran-music/
+  song-path: D:/upload/haoran-music/songs/
+  cover-path: D:/upload/haoran-music/covers/
+  avatar-path: D:/upload/haoran-music/avatars/
+  mv-path: D:/upload/haoran-music/mv/
+
+music:
+  upload:
+    private-attachment-path: ${MUSIC_PRIVATE_ATTACHMENT_PATH:D:/upload/haoran-music/private-attachments/}

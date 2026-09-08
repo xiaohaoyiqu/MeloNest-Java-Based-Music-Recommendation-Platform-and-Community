@@ -70,10 +70,10 @@
 
 ## 文档入口
 
-- [项目文档索引](docs/README.md)
+- [项目文档索引](docs/public-project-guide.md#文档索引)
 - [软件与配置](docs/software-and-configuration.md)
-- [集群部署与运维](docs/06-cluster-deployment-and-operations.md)
-- [测试与验证](docs/testing-and-verification.md)
+- [集群部署与运维](docs/public-project-guide.md#集群部署与运维)
+- [测试与验证](docs/public-project-guide.md#测试与验证)
 - [Node3 资源登记](sql/README.md)
 
 ## 发布说明
